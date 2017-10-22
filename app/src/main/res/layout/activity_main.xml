@@ -2,12 +2,121 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
+    android:background="@color/ui_back"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.yw.gourmet.main.MainActivity">
+    tools:context="com.yw.gourmet.ui.main.MainActivity">
+    <com.yw.gourmet.widget.MyViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />
+    <LinearLayout
+        android:layout_above="@+id/ll_menu"
+        android:background="@mipmap/dev"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+
+    <LinearLayout
+        android:id="@+id/ll_menu"
+        android:clickable="true"
+        android:background="@color/menu_back"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <LinearLayout
+            android:id="@+id/ll_home"
+            android:padding="2dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/img_home"
+                android:src="@drawable/home_choose"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:text="@string/Gourmet"
+                android:textColor="@color/menu_color"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/ll_message"
+            android:padding="2dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/img_message"
+                android:src="@drawable/message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:text="@string/message"
+                android:textColor="@color/menu_color"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_add"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent">
+            <ImageView
+                android:src="@drawable/ic_add_box_black_24dp"
+                android:layout_width="55dp"
+                android:layout_height="55dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_search"
+            android:padding="2dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/img_search"
+                android:src="@drawable/search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:text="@string/search"
+                android:textColor="@color/menu_color"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/ll_my"
+            android:padding="2dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/img_my"
+                android:src="@drawable/my"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:text="@string/my"
+                android:textColor="@color/menu_color"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
 </RelativeLayout>

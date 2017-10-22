@@ -54,6 +54,7 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
             mPresenter.setContext(this);
             mPresenter.setmView(this);
         }
+        changeWindow();
         setContentView(getLayoutId());
         initView();
     }
@@ -74,7 +75,7 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
             if (isWhile) {
                 Window window = getWindow();
                 window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                window.setStatusBarColor(ContextCompat.getColor(this, android.R.color.white));
+//                window.setStatusBarColor(ContextCompat.getColor(this, android.R.color.white));
                 window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
             } else {
                 Window window = getWindow();

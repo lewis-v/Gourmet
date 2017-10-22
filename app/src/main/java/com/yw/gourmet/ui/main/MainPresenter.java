@@ -1,4 +1,4 @@
-package com.yw.gourmet.main;
+package com.yw.gourmet.ui.main;
 
 import com.yw.gourmet.base.BasePresenter;
 

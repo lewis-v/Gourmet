@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Gourmet</string>
+    <string name="Gourmet">美食圈</string>
+    <string name="message">消息</string>
+    <string name="search">发现</string>
+    <string name="my">我</string>
 </resources>
