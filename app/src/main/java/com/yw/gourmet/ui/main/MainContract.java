@@ -6,7 +6,7 @@ package com.yw.gourmet.ui.main;
 
 public interface MainContract {
     interface View{
-
+        void addFragmentFunction(boolean isShow);
     }
 
     interface Presenter{

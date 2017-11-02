@@ -1,10 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="com.yw.gourmet.ui.main.MainActivity">
+<android.support.design.widget.AppBarLayout
+    android:id="@+id/app_bar"
+    android:background="@color/dev"
+    android:layout_width="match_parent"
+    android:layout_height="180dp"
+    android:fitsSystemWindows="true"
+    android:theme="@style/AppTheme.AppBarOverlay">
 
-    <TextView
-        android:text="@string/my"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-</LinearLayout>
+    <android.support.design.widget.CollapsingToolbarLayout
+        android:id="@+id/toolbar_layout"
+        android:background="@mipmap/share_video"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        app:contentScrim="?attr/colorPrimary"
+        app:layout_scrollFlags="scroll|exitUntilCollapsed"
+        app:toolbarId="@+id/toolbar">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:layout_collapseMode="pin"
+            app:popupTheme="@style/AppTheme.PopupOverlay" >
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.CollapsingToolbarLayout>
+
+</android.support.design.widget.AppBarLayout>
+    <include layout="@layout/content_scroll"/>
+    <android.support.design.widget.FloatingActionButton
+        app:layout_anchorGravity="bottom|end"
+        app:layout_anchor="@id/app_bar"
+        app:backgroundTint="@android:color/transparent"
+        app:rippleColor="@android:color/holo_blue_bright"
+        app:borderWidth="0dp"
+        android:layout_margin="16dp"
+        android:src="@mipmap/share_video"
+        app:elevation="0sp"
+        app:pressedTranslationZ="99dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp" />
+</android.support.design.widget.CoordinatorLayout>

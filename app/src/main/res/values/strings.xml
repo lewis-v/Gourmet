@@ -4,4 +4,13 @@
     <string name="message">消息</string>
     <string name="search">发现</string>
     <string name="my">我</string>
+    <string name="text">文本</string>
+    <string name="photo">照片</string>
+    <string name="take_photo">拍摄</string>
+    <string name="video">视频</string>
+    <string name="diary">美食日记</string>
+    <string name="menu">食谱</string>
+    <string name="raiders">攻略</string>
+    <string name="share">分享</string>
+    <string name="compose">撰写</string>
 </resources>

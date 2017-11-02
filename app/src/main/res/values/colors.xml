@@ -9,4 +9,5 @@
     <color name="menu_color">#333333</color>
     <color name="ui_back">#f2f2f2</color>
     <color name="dev">#e6e6e6</color>
+    <color name="close">#939393</color>
 </resources>

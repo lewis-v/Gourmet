@@ -74,9 +74,15 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (isWhile) {
                 Window window = getWindow();
+                window.requestFeature(Window.FEATURE_NO_TITLE);
+                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
+                        | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+                window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
                 window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-//                window.setStatusBarColor(ContextCompat.getColor(this, android.R.color.white));
-                window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                window.setStatusBarColor(Color.TRANSPARENT);
+                window.setNavigationBarColor(Color.TRANSPARENT);
             } else {
                 Window window = getWindow();
                 window.setStatusBarColor(Color.BLUE);

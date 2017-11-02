@@ -4,9 +4,11 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -17,6 +19,7 @@ import com.yw.gourmet.ui.gourmet.GourmetFragment;
 import com.yw.gourmet.ui.message.MessageFragment;
 import com.yw.gourmet.ui.my.MyFragment;
 import com.yw.gourmet.ui.search.SearchFragment;
+import com.yw.gourmet.utils.WindowUtil;
 import com.yw.gourmet.widget.DepthPageTransformer;
 import com.yw.gourmet.widget.MyViewPager;
 
@@ -26,18 +29,24 @@ import java.util.List;
 public class MainActivity extends BaseActivity<MainPresenter> implements MainContract.View,View.OnClickListener{
     private LinearLayout ll_menu,ll_home,ll_message,ll_search,ll_my,ll_add;
     private ImageView img_home,img_message,img_search,img_my;
+    private FrameLayout fl_function;
     private MyViewPager viewpager;
     private MyFragmentAdapter adapter;
     private List<Fragment> fragmentList = new ArrayList<>();
     private int position = 0;//目前选择的功能位置
+    private boolean isFunction = false;//是否打开功能fragment
+    private FunctionFragment functionFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        WindowUtil.initWindowUtil(getWindowManager());
     }
 
     @Override
     protected void initView() {
+        fl_function = (FrameLayout)findViewById(R.id.fl_function);
+
         ll_menu = (LinearLayout)findViewById(R.id.ll_menu);
         ll_home = (LinearLayout)findViewById(R.id.ll_home);
         ll_message = (LinearLayout)findViewById(R.id.ll_message);
@@ -111,9 +120,18 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
                 }
                 break;
             case R.id.ll_add:
-
+                addFragmentFunction(true);
                 break;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (isFunction){
+            addFragmentFunction(false);
+            return;
+        }
+        super.onBackPressed();
     }
 
     /**
@@ -135,5 +153,26 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
                 img_my.setImageResource(R.drawable.my);
                 break;
         }
+    }
+
+    /**
+     * 打开功能fragment
+     * @param isShow 是否显示
+     */
+    public void addFragmentFunction(boolean isShow){
+        fl_function.setVisibility(View.VISIBLE);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        if (isShow){
+            if (functionFragment == null){
+                functionFragment = new FunctionFragment();
+            }
+            fragmentTransaction.add(R.id.fl_function,functionFragment);
+        }else {
+            if (functionFragment != null) {
+                fragmentTransaction.remove(functionFragment);
+            }
+        }
+        fragmentTransaction.commit();
+        isFunction = isShow;
     }
 }
