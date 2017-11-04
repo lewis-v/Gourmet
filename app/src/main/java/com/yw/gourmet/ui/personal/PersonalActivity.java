@@ -6,6 +6,7 @@ import android.animation.ObjectAnimator;
 import android.graphics.Color;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -62,10 +63,10 @@ public class PersonalActivity extends BaseActivity {
 
         toolbar_layout = (CollapsingToolbarLayout)findViewById(R.id.toolbar_layout);
         toolbar_layout.setTitle("测试文字阿双方尽快收到回复is倒海翻江可视电话");//
-//        toolbar_layout.setCollapsedTitleTextColor(Color.RED);//上滑后的文本颜色
+        toolbar_layout.setCollapsedTitleTextColor(Color.BLACK);//上滑后的文本颜色
 //        toolbar_layout.setContentScrimColor(Color.BLUE);//上画后的toolbar颜色
-        toolbar_layout.setExpandedTitleColor(Color.BLACK);//下滑的文本颜色
-        toolbar_layout.setStatusBarScrimColor(Color.WHITE);
+        toolbar_layout.setExpandedTitleColor(ContextCompat.getColor(this,R.color.word_black));//下滑的文本颜色
+//        toolbar_layout.setStatusBarScrimColor(Color.WHITE);
 
         app_bar = (AppBarLayout)findViewById(R.id.app_bar);
         app_bar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {

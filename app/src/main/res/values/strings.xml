@@ -17,6 +17,12 @@
     <string name="customer_service">客服中心</string>
     <string name="my_good">我的点赞</string>
     <string name="collection">收藏</string>
+    <string name="nick_name">昵称</string>
+    <string name="sex">性别</string>
+    <string name="address">所在地</string>
+    <string name="introduction">简介</string>
+    <string name="top">置顶</string>
+    <string name="more">更多</string>
     <string name="test_num">123</string>
-    <string name="test_text">测试文字阿双方尽快收到回复is倒海翻江可视电话</string>
+    <string name="test_text">测试文字阿双方尽快收到回复is倒海翻江可</string>
 </resources>

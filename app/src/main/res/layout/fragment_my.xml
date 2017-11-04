@@ -23,7 +23,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/my"
-                android:textColor="@android:color/black"
+                android:textColor="@color/word_black"
                 android:textSize="20sp" />
         </LinearLayout>
     </android.support.v7.widget.Toolbar>
@@ -65,7 +65,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="昵称"
-                    android:textColor="@android:color/black"
+                    android:textColor="@color/word_black"
                     android:textSize="18sp" />
 
                 <ImageView
@@ -101,7 +101,7 @@
                         android:text="@string/test_num"
                         android:layout_marginBottom="5dp"
                         android:textSize="16sp"
-                        android:textColor="@android:color/black"
+                        android:textColor="@color/word_black"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
                     <TextView
@@ -125,7 +125,7 @@
                         android:text="@string/test_num"
                         android:layout_marginBottom="5dp"
                         android:textSize="16sp"
-                        android:textColor="@android:color/black"
+                        android:textColor="@color/word_black"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
                     <TextView
@@ -149,7 +149,7 @@
                         android:text="@string/test_num"
                         android:layout_marginBottom="5dp"
                         android:textSize="16sp"
-                        android:textColor="@android:color/black"
+                        android:textColor="@color/word_black"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
                     <TextView
@@ -182,7 +182,7 @@
                 <TextView
                     android:text="@string/collection"
                     android:textSize="16sp"
-                    android:textColor="@android:color/black"
+                    android:textColor="@color/word_black"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content" />
@@ -211,7 +211,7 @@
                 <TextView
                     android:text="@string/my_good"
                     android:textSize="16sp"
-                    android:textColor="@android:color/black"
+                    android:textColor="@color/word_black"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content" />
@@ -242,7 +242,7 @@
                 <TextView
                     android:text="@string/customer_service"
                     android:textSize="16sp"
-                    android:textColor="@android:color/black"
+                    android:textColor="@color/word_black"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content" />
@@ -273,7 +273,7 @@
                 <TextView
                     android:text="@string/draft"
                     android:textSize="16sp"
-                    android:textColor="@android:color/black"
+                    android:textColor="@color/word_black"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content" />
