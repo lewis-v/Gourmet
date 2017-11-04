@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#f7f7f7</color>
-    <color name="colorPrimaryDark">@color/menu_back</color>
+    <color name="colorPrimary">@android:color/white</color>
+    <color name="colorPrimaryDark">@android:color/white</color>
     <color name="colorAccent">#ff8200</color>
 
 

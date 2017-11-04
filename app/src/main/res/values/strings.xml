@@ -13,4 +13,10 @@
     <string name="raiders">攻略</string>
     <string name="share">分享</string>
     <string name="compose">撰写</string>
+    <string name="draft">草稿箱</string>
+    <string name="customer_service">客服中心</string>
+    <string name="my_good">我的点赞</string>
+    <string name="collection">收藏</string>
+    <string name="test_num">123</string>
+    <string name="test_text">测试文字阿双方尽快收到回复is倒海翻江可视电话</string>
 </resources>
