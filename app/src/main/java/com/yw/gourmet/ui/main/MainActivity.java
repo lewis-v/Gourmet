@@ -1,5 +1,6 @@
 package com.yw.gourmet.ui.main;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import com.yw.gourmet.R;
 import com.yw.gourmet.adapter.MyFragmentAdapter;
 import com.yw.gourmet.base.BaseActivity;
 import com.yw.gourmet.ui.gourmet.GourmetFragment;
+import com.yw.gourmet.ui.login.LoginActivity;
 import com.yw.gourmet.ui.message.MessageFragment;
 import com.yw.gourmet.ui.my.MyFragment;
 import com.yw.gourmet.ui.search.SearchFragment;
@@ -26,7 +28,7 @@ import com.yw.gourmet.widget.MyViewPager;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends BaseActivity<MainPresenter> implements MainContract.View,View.OnClickListener{
+public class MainActivity extends MainContract.View implements View.OnClickListener{
     private LinearLayout ll_menu,ll_home,ll_message,ll_search,ll_my,ll_add;
     private ImageView img_home,img_message,img_search,img_my;
     private FrameLayout fl_function;
@@ -76,6 +78,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         viewpager.setCurrentItem(0);
         viewpager.setPageTransformer(true,new DepthPageTransformer());
 
+        startActivity(new Intent(this, LoginActivity.class));
     }
 
     @Override
@@ -159,6 +162,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
      * 打开功能fragment
      * @param isShow 是否显示
      */
+    @Override
     public void addFragmentFunction(boolean isShow){
         fl_function.setVisibility(View.VISIBLE);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();

@@ -1,10 +1,14 @@
 package com.yw.gourmet.api;
 
 
+import com.yw.gourmet.data.BaseData;
+
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -12,13 +16,15 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Part;
+import rx.Observable;
 
 /**
  * Created by yw 2017-08-08.
  */
 
 public class Api {
-    public final static String API_BASE_URL = "";//这里是服务器连接的接口的固定部分
+    public final static String API_BASE_URL = "http://192.168.0.101:47423";//这里是服务器连接的接口的固定部分
     public static Api instance;//单例
     private ApiService service;//声明apiservier,下面要通过这个调用与服务器交互的方法
     private OkHttpClient okHttpClient;
@@ -43,7 +49,6 @@ public class Api {
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);//设置打印请求的记录级别  NONE:不记录; BASIC:请求/响应行; HEADER:请求/响应行+请求头; BODY:请求/响应行+请求头+请求体(所有信息)
 
         okHttpClient = new OkHttpClient.Builder()//建立OkHttpClient,OkHttp3的连接及设置
-                .connectTimeout(10, TimeUnit.SECONDS)//请求连接超时10秒,这里有个writeTimeout没设置,方法跟其他超时的设置一样
                 .connectTimeout(20 * 1000, TimeUnit.MILLISECONDS)//请求连接超时20秒
                 .readTimeout(20 * 1000, TimeUnit.MILLISECONDS)//数据传输超时20秒
                 .addInterceptor(mInterceptor)//添加请求头的拦截器
@@ -67,4 +72,7 @@ public class Api {
         return instance;
     }
 
+    public Observable<BaseData> Login(List<MultipartBody.Part> parts){
+        return service.Login(parts);
+    }
 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.yw.gourmet">
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:name=".App"
@@ -16,7 +17,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.personal.PersonalActivity"></activity>
+        <!--个人中心-->
+        <activity android:name=".ui.personal.PersonalActivity" />
+        <!--登录-->
+        <activity android:name=".ui.login.LoginActivity"/>
     </application>
 
 </manifest>

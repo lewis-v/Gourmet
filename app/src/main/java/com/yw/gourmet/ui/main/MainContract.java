@@ -1,15 +1,18 @@
 package com.yw.gourmet.ui.main;
 
+import com.yw.gourmet.base.BaseActivity;
+import com.yw.gourmet.base.BasePresenter;
+
 /**
  * Created by yw on 2017/10/22.
  */
 
 public interface MainContract {
-    interface View{
-        void addFragmentFunction(boolean isShow);
+    abstract class View extends BaseActivity<MainPresenter> {
+        public abstract void addFragmentFunction(boolean isShow);
     }
 
-    interface Presenter{
+    abstract class Presenter extends BasePresenter<MainActivity>{
 
     }
 }
