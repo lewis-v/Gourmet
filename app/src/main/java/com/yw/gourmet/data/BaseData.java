@@ -6,7 +6,7 @@ package com.yw.gourmet.data;
 
 public class BaseData<T> {
     private int status;
-    private String Message;
+    private String message;
     private T data;
 
     public int getStatus() {
@@ -19,11 +19,11 @@ public class BaseData<T> {
     }
 
     public String getMessage() {
-        return Message;
+        return message;
     }
 
     public BaseData setMessage(String message) {
-        Message = message;
+        this.message = message;
         return this;
     }
 
@@ -36,5 +36,12 @@ public class BaseData<T> {
         return this;
     }
 
-
+    @Override
+    public String toString() {
+        return "BaseData{" +
+                "status=" + status +
+                ", message='" + message + '\'' +
+                ", data=" + data +
+                '}';
+    }
 }

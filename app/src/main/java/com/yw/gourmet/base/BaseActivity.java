@@ -29,7 +29,7 @@ import java.util.List;
  * Created by yw on 2017-08-07.
  */
 
-public abstract class BaseActivity<P extends BasePresenter> extends AppCompatActivity {
+public abstract class BaseActivity<P extends BasePresenter> extends AppCompatActivity implements BaseView{
     protected P mPresenter;
     private boolean isWhile = true;
     private MyDialogLoadFragment myDialogLoadFragment;
@@ -48,8 +48,11 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
                     .newInstance();
 
         } catch (InstantiationException e) {
+            e.printStackTrace();
         } catch (IllegalAccessException e) {
+            e.printStackTrace();
         } catch (ClassCastException e) {
+            e.printStackTrace();
         }
         if (mPresenter != null){
             mPresenter.setContext(this);
@@ -115,7 +118,6 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
             extraFlagField.invoke(activity.getWindow(), darkmode ? darkModeFlag : 0, darkModeFlag);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
         }
         return false;
     }

@@ -2,6 +2,7 @@ package com.yw.gourmet.api;
 
 
 import com.yw.gourmet.data.BaseData;
+import com.yw.gourmet.data.UserData;
 
 import java.util.List;
 
@@ -20,5 +21,5 @@ public interface ApiService {
     //登录
     @Multipart
     @POST("/Login")
-    Observable<BaseData> Login(@Part List<MultipartBody.Part> parts);
+    Observable<BaseData<UserData>> Login(@Part List<MultipartBody.Part> parts);
 }

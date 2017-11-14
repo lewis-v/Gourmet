@@ -1,19 +1,19 @@
 package com.yw.gourmet.ui.login;
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.yw.gourmet.Constant;
 import com.yw.gourmet.R;
 import com.yw.gourmet.base.BaseActivity;
 import com.yw.gourmet.data.BaseData;
+import com.yw.gourmet.data.UserData;
 
 import okhttp3.MultipartBody;
-import retrofit2.http.Multipart;
 
-public class LoginActivity extends LoginContract.View implements View.OnClickListener{
+public class LoginActivity extends BaseActivity<LoginPresenter> implements LoginContract.View,View.OnClickListener{
     private EditText et_id,et_password;
     private Button bt_login;
 
@@ -37,7 +37,11 @@ public class LoginActivity extends LoginContract.View implements View.OnClickLis
                 MultipartBody.Builder builder = new MultipartBody.Builder()
                         .addFormDataPart("id",et_id.getText().toString())
                         .addFormDataPart("password",et_password.getText().toString());
-                mPresenter.login(builder.build().parts());
+                if (mPresenter == null){
+                    Log.i("---null---","1");
+                }else {
+                    mPresenter.login(builder.build().parts());
+                }
                 break;
         }
     }
@@ -48,8 +52,9 @@ public class LoginActivity extends LoginContract.View implements View.OnClickLis
      * @param model
      */
     @Override
-    void onLoginSuccess(BaseData model) {
+    public void onLoginSuccess(BaseData<UserData> model) {
         onSuccess(model.getMessage());
+        Constant.userData = model.getData();
         finish();
     }
 }

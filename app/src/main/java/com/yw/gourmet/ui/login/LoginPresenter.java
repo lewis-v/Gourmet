@@ -5,6 +5,7 @@ import com.yw.gourmet.base.BasePresenter;
 import com.yw.gourmet.base.rx.RxApiCallback;
 import com.yw.gourmet.base.rx.RxSubscriberCallBack;
 import com.yw.gourmet.data.BaseData;
+import com.yw.gourmet.data.UserData;
 
 import java.util.List;
 
@@ -16,9 +17,9 @@ import okhttp3.MultipartBody;
 
 public class LoginPresenter extends LoginContract.Presenter{
     public void login(List<MultipartBody.Part> parts){
-        mRxManager.add(Api.getInstance().Login(parts),new RxSubscriberCallBack<BaseData>(new RxApiCallback<BaseData>() {
+        mRxManager.add(Api.getInstance().Login(parts),new RxSubscriberCallBack<BaseData<UserData>>(new RxApiCallback<BaseData<UserData>>() {
             @Override
-            public void onSuccess(BaseData model) {
+            public void onSuccess(BaseData<UserData> model) {
                 if (model.getStatus() == 1){
                     mView.onFail(model.getMessage());
                 }else if (model.getStatus() == 0){
