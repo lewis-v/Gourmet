@@ -25,6 +25,7 @@
                 android:layout_width="70dp"
                 android:layout_height="wrap_content" />
             <TextView
+                android:id="@+id/tv_nickname"
                 android:textColor="@color/word_black"
                 android:text="@string/test_text"
                 android:textSize="14sp"
@@ -52,6 +53,7 @@
                 android:layout_width="70dp"
                 android:layout_height="wrap_content" />
             <TextView
+                android:id="@+id/tv_sex"
                 android:textColor="@color/word_black"
                 android:textSize="14sp"
                 android:text="@string/test_text"
@@ -79,6 +81,7 @@
                 android:layout_width="70dp"
                 android:layout_height="wrap_content" />
             <TextView
+                android:id="@+id/tv_address"
                 android:textColor="@color/word_black"
                 android:textSize="14sp"
                 android:text="@string/test_text"
@@ -106,6 +109,7 @@
                 android:layout_width="70dp"
                 android:layout_height="wrap_content" />
             <TextView
+                android:id="@+id/tv_introduction"
                 android:textColor="@color/word_black"
                 android:textSize="14sp"
                 android:text="@string/test_text"

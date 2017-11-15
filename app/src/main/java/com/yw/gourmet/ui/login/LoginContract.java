@@ -21,6 +21,12 @@ public interface LoginContract {
          * @param model
          */
         void onLoginSuccess(BaseData<UserData> model);
+
+         /**
+          * 输入的账号密码是否为空
+          * @return
+          */
+        boolean isEmpty();
     }
 
     abstract class Presenter extends BasePresenter<View>{

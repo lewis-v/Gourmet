@@ -31,7 +31,6 @@ import java.util.List;
 
 public abstract class BaseActivity<P extends BasePresenter> extends AppCompatActivity implements BaseView{
     protected P mPresenter;
-    private boolean isWhile = true;
     private MyDialogLoadFragment myDialogLoadFragment;
     protected List<Thread> threadList = new ArrayList<>();
     private boolean isReLogining = false;
@@ -76,7 +75,7 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
     //改变通知栏颜色
     public void changeWindow(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (isWhile) {
+            if (isWhile()) {
                 Window window = getWindow();
                 window.requestFeature(Window.FEATURE_NO_TITLE);
                 window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
@@ -96,14 +95,18 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
 
             }
         }
-        if (isWhile){
+        if (isWhile()){
             setMiuiStatusBarDarkMode(this,true);
             setMeizuStatusBarDarkIcon(this,true);
         }
     }
 
-    public void setWhile(boolean aWhile) {
-        isWhile = aWhile;
+    /**
+     * 获取是否设置状态栏颜色
+     * @return
+     */
+    public boolean isWhile(){
+        return true;
     }
 
     //设置成白色的背景，字体颜色为黑色。miui

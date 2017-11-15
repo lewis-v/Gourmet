@@ -11,7 +11,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.yw.gourmet.Constant;
 import com.yw.gourmet.R;
 import com.yw.gourmet.base.BaseActivity;
 
@@ -21,15 +23,20 @@ public class PersonalActivity extends BaseActivity {
     private AppBarLayout app_bar;
     private LinearLayout ll_tool;
     private AnimatorSet animatorSetToolBarShow,animatorSetToolBarHide;//toolbar的显示隐藏动画
+    private TextView tv_nickname,tv_sex,tv_address,tv_introduction;
 
     /**
      * 初始化UI
      */
     @Override
     protected void initView() {
-
         toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        tv_nickname = (TextView)findViewById(R.id.tv_nickname);
+        tv_sex = (TextView)findViewById(R.id.tv_sex);
+        tv_address = (TextView)findViewById(R.id.tv_address);
+        tv_introduction = (TextView)findViewById(R.id.tv_introduction);
 
         ll_tool = (LinearLayout) findViewById(R.id.ll_tool);
 
@@ -100,7 +107,19 @@ public class PersonalActivity extends BaseActivity {
 
             }
         });
+        setData();
+    }
 
+    /**
+     * 设置显示的个人数据
+     */
+    public void setData(){
+        if (Constant.userData != null) {
+            tv_nickname.setText(Constant.userData.getNike_name());
+            tv_sex.setText(Constant.userData.getSex());
+            tv_address.setText(Constant.userData.getAddress());
+            tv_introduction.setText(Constant.userData.getIntroduction());
+        }
     }
 
     @Override

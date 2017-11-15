@@ -28,7 +28,7 @@ import com.yw.gourmet.widget.MyViewPager;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends MainContract.View implements View.OnClickListener{
+public class MainActivity extends BaseActivity<MainPresenter> implements MainContract.View, View.OnClickListener{
     private LinearLayout ll_menu,ll_home,ll_message,ll_search,ll_my,ll_add;
     private ImageView img_home,img_message,img_search,img_my;
     private FrameLayout fl_function;
@@ -77,8 +77,6 @@ public class MainActivity extends MainContract.View implements View.OnClickListe
         viewpager.setAdapter(adapter);
         viewpager.setCurrentItem(0);
         viewpager.setPageTransformer(true,new DepthPageTransformer());
-
-        startActivity(new Intent(this, LoginActivity.class));
     }
 
     @Override

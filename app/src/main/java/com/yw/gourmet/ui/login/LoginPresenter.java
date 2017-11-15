@@ -29,7 +29,7 @@ public class LoginPresenter extends LoginContract.Presenter{
 
             @Override
             public void onFailure(int code, String msg) {
-
+                mView.onFail(msg);
             }
         }));
     }
