@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import com.yw.gourmet.R;
 import com.yw.gourmet.adapter.MyFragmentAdapter;
 import com.yw.gourmet.base.BaseActivity;
+import com.yw.gourmet.rxbus.RxBus;
 import com.yw.gourmet.ui.gourmet.GourmetFragment;
 import com.yw.gourmet.ui.login.LoginActivity;
 import com.yw.gourmet.ui.message.MessageFragment;
@@ -176,5 +177,12 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         }
         fragmentTransaction.commit();
         isFunction = isShow;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //清除观察者
+        RxBus.getDefault().removeAllStickyEvents();
     }
 }

@@ -7,7 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.yw.gourmet.Constant;
 import com.yw.gourmet.dialog.MyDialogLoadFragment;
+import com.yw.gourmet.rxbus.EventSticky;
+import com.yw.gourmet.rxbus.RxBus;
 import com.yw.gourmet.utils.ToastUtils;
 
 import java.lang.reflect.ParameterizedType;
@@ -115,6 +118,8 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment {
             return;
         }
         isReLogining = true;
+        RxBus.getDefault().postSticky(new EventSticky("out"));
+        Constant.userData = null;
         onFail(msg);
         Intent i = getActivity().getPackageManager().getLaunchIntentForPackage(getActivity().getPackageName());
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

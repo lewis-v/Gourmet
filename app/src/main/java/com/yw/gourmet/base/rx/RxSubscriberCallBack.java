@@ -23,21 +23,28 @@ public class RxSubscriberCallBack<T> extends Subscriber<T> {
     }
     @Override
     public void onError(Throwable e) {//获取服务器信息失败
-        e.printStackTrace();
-        Log.e("---onerr---",e.getMessage());
-        //网络
-        if (!NetWorkUtils.isNetConnected(App.getApp().getContext())) {//是否无网络
-            rxApiCallback.onFailure(0, "无网络连接");
-        }
-        //服务器
-        else{
-            rxApiCallback.onFailure(1, "获取服务器数据失败");
+        try {
+            e.printStackTrace();
+            Log.e("---onerr---", e.getMessage());
+            //网络
+            if (!NetWorkUtils.isNetConnected(App.getApp().getContext())) {//是否无网络
+                rxApiCallback.onFailure(0, "无网络连接");
+            }
+            //服务器
+            else {
+                rxApiCallback.onFailure(1, "获取服务器数据失败");
+            }
+        }catch (Exception e1){
+            e1.printStackTrace();
         }
     }
     @Override
     public void onNext(T t) {//成功时回调
-        rxApiCallback.onSuccess(t);
-
+        try {
+            rxApiCallback.onSuccess(t);
+        }catch (Exception e){
+            onError(e);
+        }
     }
 }
 

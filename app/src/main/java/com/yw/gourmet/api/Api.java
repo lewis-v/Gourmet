@@ -2,6 +2,7 @@ package com.yw.gourmet.api;
 
 
 import com.yw.gourmet.data.BaseData;
+import com.yw.gourmet.data.ShareListData;
 import com.yw.gourmet.data.UserData;
 
 import java.io.IOException;
@@ -75,5 +76,9 @@ public class Api {
 
     public Observable<BaseData<UserData>> Login(List<MultipartBody.Part> parts){
         return service.Login(parts);
+    }
+
+    public Observable<BaseData<List<ShareListData<String>>>> LoadShareList(List<MultipartBody.Part> parts){
+        return service.LoadShareList(parts);
     }
 }

@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.yw.gourmet.ui.set.SetActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        app:contentInsetStart="0dp"
+        android:background="@android:color/white"
+        android:layout_width="match_parent"
+        android:layout_height="65dp">
+
+        <RelativeLayout
+            android:paddingTop="25dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/setting"
+                android:textColor="@color/word_black"
+                android:textSize="20sp" />
+
+            <LinearLayout
+                android:id="@+id/ll_back"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:gravity="center">
+                <ImageView
+                    android:src="@drawable/back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+        </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
+
+    <LinearLayout
+        android:id="@+id/ll_dev"
+        android:orientation="vertical"
+        android:background="@mipmap/dev"
+        android:rotation="180"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"/>
+
+    <LinearLayout
+        app:layout_constraintBottom_toTopOf="@+id/ll_change_password"
+        android:background="@color/dev"
+        android:layout_width="match_parent"
+        android:layout_height="1px"/>
+
+    <LinearLayout
+        android:id="@+id/ll_change_password"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@+id/ll_dev"
+        android:background="@drawable/ll_back_change"
+        android:padding="8dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:text="@string/change_password"
+            android:textSize="16sp"
+            android:textColor="@color/word_black"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:src="@drawable/chevron_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        app:layout_constraintTop_toBottomOf="@+id/ll_change_password"
+        android:background="@color/dev"
+        android:layout_width="match_parent"
+        android:layout_height="1px"/>
+
+    <LinearLayout
+        app:layout_constraintBottom_toTopOf="@+id/ll_feedback"
+        android:background="@color/dev"
+        android:layout_width="match_parent"
+        android:layout_height="1px"/>
+
+    <LinearLayout
+        android:id="@+id/ll_feedback"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@+id/ll_change_password"
+        android:background="@drawable/ll_back_change"
+        android:padding="8dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:text="@string/feedback"
+            android:textSize="16sp"
+            android:textColor="@color/word_black"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:src="@drawable/chevron_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        app:layout_constraintTop_toBottomOf="@+id/ll_feedback"
+        android:background="@color/dev"
+        android:layout_width="match_parent"
+        android:layout_height="1px"/>
+
+    <LinearLayout
+        android:id="@+id/ll_customer_service"
+        app:layout_constraintTop_toBottomOf="@+id/ll_feedback"
+        android:background="@drawable/ll_back_change"
+        android:padding="8dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:text="@string/customer_service"
+            android:textSize="16sp"
+            android:textColor="@color/word_black"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:src="@drawable/chevron_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        app:layout_constraintTop_toBottomOf="@+id/ll_customer_service"
+        android:background="@color/dev"
+        android:layout_width="match_parent"
+        android:layout_height="1px"/>
+
+    <LinearLayout
+        android:id="@+id/ll_about"
+        app:layout_constraintTop_toBottomOf="@+id/ll_customer_service"
+        android:background="@drawable/ll_back_change"
+        android:padding="8dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:text="@string/about_us"
+            android:textSize="16sp"
+            android:textColor="@color/word_black"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:src="@drawable/chevron_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        app:layout_constraintTop_toBottomOf="@+id/ll_about"
+        android:background="@color/dev"
+        android:layout_width="match_parent"
+        android:layout_height="1px"/>
+
+    <TextView
+        android:id="@+id/tv_out"
+        app:layout_constraintTop_toBottomOf="@+id/ll_about"
+        android:text="@string/out"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:textColor="@color/colorAccent"
+        android:background="@drawable/ll_back_change"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="40dp" />
+</android.support.constraint.ConstraintLayout>

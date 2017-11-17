@@ -14,8 +14,12 @@ import android.view.Window;
 import android.view.WindowManager;
 
 
+import com.yw.gourmet.Constant;
 import com.yw.gourmet.R;
 import com.yw.gourmet.dialog.MyDialogLoadFragment;
+import com.yw.gourmet.rxbus.EventSticky;
+import com.yw.gourmet.rxbus.RxBus;
+import com.yw.gourmet.utils.SPUtils;
 import com.yw.gourmet.utils.ToastUtils;
 
 import java.lang.reflect.Field;
@@ -211,7 +215,10 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
             return;
         }
         isReLogining = true;
+        RxBus.getDefault().postSticky(new EventSticky("out"));
+        Constant.userData = null;
         onFail(msg);
+        SPUtils.setSharedStringData(getApplicationContext(),"token","");
         Intent i = getPackageManager().getLaunchIntentForPackage(this.getPackageName());
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(i);
@@ -226,5 +233,6 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
         ToastUtils.showSingleToast(msg);
         setLoadDialog(false);
     }
+
 
 }

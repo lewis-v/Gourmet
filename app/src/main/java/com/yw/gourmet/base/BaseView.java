@@ -7,4 +7,5 @@ package com.yw.gourmet.base;
 public interface BaseView {
     void onFail(String msg);
     void onSuccess(String msg);
+    void onReLoginFail(String msg);
 }

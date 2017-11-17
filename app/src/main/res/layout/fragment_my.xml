@@ -25,6 +25,16 @@
                 android:text="@string/my"
                 android:textColor="@color/word_black"
                 android:textSize="20sp" />
+            <TextView
+                android:id="@+id/tv_set"
+                android:text="@string/setting"
+                android:gravity="center"
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp"
+                android:textColor="@color/word_black"
+                android:textSize="16sp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
         </LinearLayout>
     </android.support.v7.widget.Toolbar>
     <LinearLayout
@@ -171,7 +181,7 @@
                 android:layout_height="1px"/>
 
             <LinearLayout
-                android:background="@android:color/white"
+                android:background="@drawable/ll_back_change"
                 android:padding="8dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
@@ -200,7 +210,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1px"/>
             <LinearLayout
-                android:background="@android:color/white"
+                android:background="@drawable/ll_back_change"
                 android:padding="8dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
@@ -231,7 +241,7 @@
                 android:layout_height="1px"/>
 
             <LinearLayout
-                android:background="@android:color/white"
+                android:background="@drawable/ll_back_change"
                 android:padding="8dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
@@ -262,7 +272,7 @@
                 android:layout_height="1px"/>
 
             <LinearLayout
-                android:background="@android:color/white"
+                android:background="@drawable/ll_back_change"
                 android:padding="8dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
