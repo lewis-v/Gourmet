@@ -11,6 +11,8 @@ public class UserData {
     private String nike_name;
     private String introduction;
     private String token;
+    private String img_header;
+    private String personal_back;
 
     public String getSex() {
         return sex;
@@ -66,6 +68,24 @@ public class UserData {
         return this;
     }
 
+    public String getImg_header() {
+        return img_header;
+    }
+
+    public UserData setImg_header(String img_header) {
+        this.img_header = img_header;
+        return this;
+    }
+
+    public String getPersonal_back() {
+        return personal_back;
+    }
+
+    public UserData setPersonal_back(String personal_back) {
+        this.personal_back = personal_back;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "UserData{" +
@@ -75,6 +95,8 @@ public class UserData {
                 ", nike_name='" + nike_name + '\'' +
                 ", introduction='" + introduction + '\'' +
                 ", token='" + token + '\'' +
+                ", img_header='" + img_header + '\'' +
+                ", personal_back='" + personal_back + '\'' +
                 '}';
     }
 }

@@ -69,8 +69,7 @@
                     android:id="@+id/img_header"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_margin="10dp"
-                    android:src="@mipmap/ic_launcher" />
+                    android:layout_margin="10dp"/>
 
                 <TextView
                     android:id="@+id/tv_nickname"

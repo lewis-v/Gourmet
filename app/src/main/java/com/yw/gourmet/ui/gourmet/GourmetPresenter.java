@@ -5,6 +5,7 @@ import com.yw.gourmet.base.rx.RxApiCallback;
 import com.yw.gourmet.base.rx.RxSubscriberCallBack;
 import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.data.ShareListData;
+import com.yw.gourmet.myenum.LoadEnum;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ import okhttp3.MultipartBody;
 
 public class GourmetPresenter extends GourmetContract.Presenter {
     @Override
-    void load(List<MultipartBody.Part> parts, final int flag) {
+    void load(List<MultipartBody.Part> parts, final LoadEnum flag) {
         mRxManager.add(Api.getInstance().LoadShareList(parts),new RxSubscriberCallBack<BaseData<List<ShareListData<String>>>>(new RxApiCallback<BaseData<List<ShareListData<String>>>>() {
             @Override
             public void onSuccess(BaseData<List<ShareListData<String>>> model) {

@@ -14,6 +14,6 @@ public class Constant {
         public static final int RAIDERS = 1;//攻略
         public static final int MENU = 2;//食谱
         public static final int SHARE = 3;//普通分享
-
     }
+
 }

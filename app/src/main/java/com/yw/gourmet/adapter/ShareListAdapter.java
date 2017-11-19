@@ -3,7 +3,6 @@ package com.yw.gourmet.adapter;
 import android.content.Context;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +11,7 @@ import android.widget.TextView;
 
 import com.yw.gourmet.R;
 import com.yw.gourmet.data.ShareListData;
+import com.yw.gourmet.listener.OnItemClickListener;
 
 import java.util.List;
 
@@ -22,8 +22,14 @@ import java.util.List;
 public class ShareListAdapter extends RecyclerView.Adapter<ShareListAdapter.MyViewHolder>{
     private Context context;
     private List<ShareListData<String>> listData;
+    private OnItemClickListener listener;
 
-    public ShareListAdapter(Context context,List<ShareListData<String>> listData){
+    public ShareListAdapter setListener(OnItemClickListener listener) {
+        this.listener = listener;
+        return this;
+    }
+
+    public ShareListAdapter(Context context, List<ShareListData<String>> listData){
         this.context = context;
         this.listData = listData;
     }
@@ -35,11 +41,24 @@ public class ShareListAdapter extends RecyclerView.Adapter<ShareListAdapter.MyVi
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
-        Log.i("---position---",position+"");
+    public void onBindViewHolder(final MyViewHolder holder, int position) {
         holder.tv_content.setText(listData.get(position).getContent());
         holder.tv_time.setText(listData.get(position).getPut_time());
         holder.tv_nickname.setText(listData.get(position).getNickname());
+        if (listener != null){
+            holder.constraint_item.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.OnClick(v,holder.getLayoutPosition());
+                }
+            });
+            holder.constraint_item.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    return listener.OnLongClick(v,holder.getLayoutPosition());
+                }
+            });
+        }
     }
 
     @Override
@@ -51,7 +70,7 @@ public class ShareListAdapter extends RecyclerView.Adapter<ShareListAdapter.MyVi
         ConstraintLayout constraint_item;
         ImageView img_header;
         TextView tv_nickname,tv_time,tv_content;
-        public MyViewHolder(View itemView) {
+        MyViewHolder(View itemView) {
             super(itemView);
             constraint_item = (ConstraintLayout)itemView.findViewById(R.id.constraint_item);
             img_header = (ImageView)itemView.findViewById(R.id.img_header);

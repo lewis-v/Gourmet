@@ -8,10 +8,12 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.yw.gourmet.Constant;
 import com.yw.gourmet.R;
 import com.yw.gourmet.base.BaseFragment;
@@ -39,6 +41,7 @@ public class MyFragment extends BaseFragment implements View.OnClickListener{
     private Button bt_login,bt_register;
     private ConstraintLayout constraint_my;
     private Subscription mRxSubSticky;
+    private ImageView img_header;
 
     /**
      * 初始化UI
@@ -47,6 +50,8 @@ public class MyFragment extends BaseFragment implements View.OnClickListener{
     protected void initView() {
         ll_set = (LinearLayout)view.findViewById(R.id.ll_set);
         ll_set.setOnClickListener(this);
+
+        img_header = (ImageView) view.findViewById(R.id.img_header);
 
         constraint_my = (ConstraintLayout)view.findViewById(R.id.constraint_my);
 
@@ -76,6 +81,7 @@ public class MyFragment extends BaseFragment implements View.OnClickListener{
      */
     public void setData(){
         tv_nickname.setText(Constant.userData.getNike_name());
+        Glide.with(this).load(Constant.userData.getImg_header()).into(img_header);
     }
 
     /**

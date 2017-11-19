@@ -25,7 +25,6 @@ public class RxSubscriberCallBack<T> extends Subscriber<T> {
     public void onError(Throwable e) {//获取服务器信息失败
         try {
             e.printStackTrace();
-            Log.e("---onerr---", e.getMessage());
             //网络
             if (!NetWorkUtils.isNetConnected(App.getApp().getContext())) {//是否无网络
                 rxApiCallback.onFailure(0, "无网络连接");

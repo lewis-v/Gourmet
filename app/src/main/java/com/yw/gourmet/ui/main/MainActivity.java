@@ -1,9 +1,11 @@
 package com.yw.gourmet.ui.main;
 
+import android.Manifest;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
@@ -28,6 +30,8 @@ import com.yw.gourmet.widget.MyViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.support.v4.content.PermissionChecker.PERMISSION_DENIED;
 
 public class MainActivity extends BaseActivity<MainPresenter> implements MainContract.View, View.OnClickListener{
     private LinearLayout ll_menu,ll_home,ll_message,ll_search,ll_my,ll_add;
@@ -74,10 +78,23 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         fragmentList.add(new SearchFragment());
         fragmentList.add(new MyFragment());
         viewpager = (MyViewPager)findViewById(R.id.viewpager);
+        viewpager.setOffscreenPageLimit(3);
         adapter = new MyFragmentAdapter(getSupportFragmentManager(),fragmentList);
         viewpager.setAdapter(adapter);
         viewpager.setCurrentItem(0);
         viewpager.setPageTransformer(true,new DepthPageTransformer());
+        initPermission();
+    }
+
+    public void initPermission(){
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                == PERMISSION_DENIED ||
+                ActivityCompat.checkSelfPermission(this,Manifest.permission.READ_EXTERNAL_STORAGE)
+                == PERMISSION_DENIED){
+            ActivityCompat.requestPermissions(this
+                    ,new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    ,Manifest.permission.READ_EXTERNAL_STORAGE},0);
+        }
     }
 
     @Override

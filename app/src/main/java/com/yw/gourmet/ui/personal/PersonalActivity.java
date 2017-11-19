@@ -6,24 +6,30 @@ import android.animation.ObjectAnimator;
 import android.graphics.Color;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.yw.gourmet.Constant;
 import com.yw.gourmet.R;
 import com.yw.gourmet.base.BaseActivity;
 
-public class PersonalActivity extends BaseActivity {
+public class PersonalActivity extends BaseActivity implements View.OnClickListener{
     private Toolbar toolbar;
     private CollapsingToolbarLayout toolbar_layout;
     private AppBarLayout app_bar;
     private LinearLayout ll_tool;
     private AnimatorSet animatorSetToolBarShow,animatorSetToolBarHide;//toolbar的显示隐藏动画
     private TextView tv_nickname,tv_sex,tv_address,tv_introduction;
+    private FloatingActionButton float_action_header;
+    private ImageView img_tool_back,img_header;
 
     /**
      * 初始化UI
@@ -37,6 +43,11 @@ public class PersonalActivity extends BaseActivity {
         tv_sex = (TextView)findViewById(R.id.tv_sex);
         tv_address = (TextView)findViewById(R.id.tv_address);
         tv_introduction = (TextView)findViewById(R.id.tv_introduction);
+
+        img_tool_back = (ImageView)findViewById(R.id.img_tool_back);
+        img_header = (ImageView)findViewById(R.id.img_header);
+
+        float_action_header = (FloatingActionButton)findViewById(R.id.float_action_header);
 
         ll_tool = (LinearLayout) findViewById(R.id.ll_tool);
 
@@ -69,7 +80,7 @@ public class PersonalActivity extends BaseActivity {
         });
 
         toolbar_layout = (CollapsingToolbarLayout)findViewById(R.id.toolbar_layout);
-        toolbar_layout.setTitle("测试文字阿双方尽快收到回复is倒海翻江可视电话");//
+        toolbar_layout.setTitle(" ");//显示标题内容
         toolbar_layout.setCollapsedTitleTextColor(Color.BLACK);//上滑后的文本颜色
 //        toolbar_layout.setContentScrimColor(Color.BLUE);//上画后的toolbar颜色
         toolbar_layout.setExpandedTitleColor(ContextCompat.getColor(this,R.color.word_black));//下滑的文本颜色
@@ -107,6 +118,7 @@ public class PersonalActivity extends BaseActivity {
 
             }
         });
+        app_bar.setOnClickListener(this);
         setData();
     }
 
@@ -119,11 +131,23 @@ public class PersonalActivity extends BaseActivity {
             tv_sex.setText(Constant.userData.getSex());
             tv_address.setText(Constant.userData.getAddress());
             tv_introduction.setText(Constant.userData.getIntroduction());
+            Glide.with(this).load(Constant.userData.getImg_header()).into(float_action_header);
+            Glide.with(this).load(Constant.userData.getImg_header()).into(img_header);
+            Glide.with(this).load(Constant.userData.getPersonal_back()).into(img_tool_back);
         }
     }
 
     @Override
     protected int getLayoutId() {
         return R.layout.activity_personal;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.app_bar:
+                Log.i("---bar---","");
+                break;
+        }
     }
 }
