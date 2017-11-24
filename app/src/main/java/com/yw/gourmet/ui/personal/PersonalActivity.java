@@ -127,7 +127,7 @@ public class PersonalActivity extends BaseActivity implements View.OnClickListen
      */
     public void setData(){
         if (Constant.userData != null) {
-            tv_nickname.setText(Constant.userData.getNike_name());
+            tv_nickname.setText(Constant.userData.getNickname());
             tv_sex.setText(Constant.userData.getSex());
             tv_address.setText(Constant.userData.getAddress());
             tv_introduction.setText(Constant.userData.getIntroduction());

@@ -27,5 +27,5 @@ public interface ApiService {
     //加载分享列表
     @Multipart
     @POST("/ShareList/Load")
-    Observable<BaseData<List<ShareListData<String>>>> LoadShareList(@Part List<MultipartBody.Part> parts);
+    Observable<BaseData<List<ShareListData<List<String>>>>> LoadShareList(@Part List<MultipartBody.Part> parts);
 }

@@ -26,7 +26,7 @@ import rx.Observable;
  */
 
 public class Api {
-    public final static String API_BASE_URL = "http://172.16.113.114:47423";//这里是服务器连接的接口的固定部分
+    public final static String API_BASE_URL = "http://192.168.31.6:47423";//这里是服务器连接的接口的固定部分
     public static Api instance;//单例
     private ApiService service;//声明apiservier,下面要通过这个调用与服务器交互的方法
     private OkHttpClient okHttpClient;
@@ -78,7 +78,7 @@ public class Api {
         return service.Login(parts);
     }
 
-    public Observable<BaseData<List<ShareListData<String>>>> LoadShareList(List<MultipartBody.Part> parts){
+    public Observable<BaseData<List<ShareListData<List<String>>>>> LoadShareList(List<MultipartBody.Part> parts){
         return service.LoadShareList(parts);
     }
 }

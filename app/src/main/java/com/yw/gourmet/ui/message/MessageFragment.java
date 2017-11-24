@@ -7,7 +7,7 @@ import com.yw.gourmet.base.BaseFragment;
  * Created by Administrator on 2017/10/22.
  */
 
-public class MessageFragment extends BaseFragment {
+public class MessageFragment extends BaseFragment<MessagePresenter> implements MessageContract.View {
 
     /**
      * 初始化UI

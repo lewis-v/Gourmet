@@ -109,6 +109,16 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment {
     public void onFail(String msg){
         ToastUtils.showSingleToast(msg);
     }
+
+    /**
+     * 默认成功返回
+     * @param msg
+     */
+    public void onSuccess(String msg){
+        ToastUtils.showSingleToast(msg);
+        setLoadDialog(false);
+    }
+
     /**
      * 重新登录错误
      * @param msg

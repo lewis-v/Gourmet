@@ -80,7 +80,7 @@ public class MyFragment extends BaseFragment implements View.OnClickListener{
      * 设置个人信息参数显示
      */
     public void setData(){
-        tv_nickname.setText(Constant.userData.getNike_name());
+        tv_nickname.setText(Constant.userData.getNickname());
         Glide.with(this).load(Constant.userData.getImg_header()).into(img_header);
     }
 

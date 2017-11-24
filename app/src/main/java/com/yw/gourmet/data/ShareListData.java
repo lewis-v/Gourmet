@@ -18,6 +18,7 @@ public class ShareListData<T> {
     private T img;//照片数组
     private int type;//分享类型
     private String nickname;//分享者姓名
+    private String img_header;//分享者头像
 
     public String getId() {
         return id;
@@ -136,6 +137,15 @@ public class ShareListData<T> {
         return this;
     }
 
+    public String getImg_header() {
+        return img_header;
+    }
+
+    public ShareListData setImg_header(String img_header) {
+        this.img_header = img_header;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "ShareListData{" +
@@ -152,6 +162,7 @@ public class ShareListData<T> {
                 ", img=" + img +
                 ", type=" + type +
                 ", nickname='" + nickname + '\'' +
+                ", img_header='" + img_header + '\'' +
                 '}';
     }
 }

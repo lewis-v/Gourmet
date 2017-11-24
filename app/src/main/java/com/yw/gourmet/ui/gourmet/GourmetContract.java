@@ -16,7 +16,7 @@ import okhttp3.MultipartBody;
 
 public interface GourmetContract {
     interface View extends BaseView{
-        void onLoadSuccess(BaseData<List<ShareListData<String>>> model,LoadEnum flag);
+        void onLoadSuccess(BaseData<List<ShareListData<List<String>>>> model,LoadEnum flag);
         void onLoadFail(String msg,LoadEnum flag);
     }
     abstract class Presenter extends BasePresenter<View>{

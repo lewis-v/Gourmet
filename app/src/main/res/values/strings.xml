@@ -33,7 +33,9 @@
     <string name="feedback">反馈意见</string>
     <string name="about_us">关于我们</string>
     <string name="out">退出当前账号</string>
-
+    <string name="comment">评论</string>
+    <string name="good">赞</string>
+    <string name="bad">踩</string>
 
     <string name="test_num">123</string>
     <string name="test_text">测试文字阿双方尽快收到回复is倒海翻江可</string>

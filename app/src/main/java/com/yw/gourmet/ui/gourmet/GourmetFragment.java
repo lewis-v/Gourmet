@@ -31,7 +31,7 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
         ,OnRefreshListener,OnLoadMoreListener{
     private RecyclerView swipe_target;
     private SwipeToLoadLayout swipeToLoadLayout;
-    private List<ShareListData<String>> listData = new ArrayList<>();
+    private List<ShareListData<List<String>>> listData = new ArrayList<>();
     private ShareListAdapter adapter;
 
     /**
@@ -58,11 +58,11 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
                 return false;
             }
         });
+        MultipartBody.Builder builder = new MultipartBody.Builder();
         if (Constant.userData != null) {
-            MultipartBody.Builder builder = new MultipartBody.Builder()
-                    .addFormDataPart("token", Constant.userData.getToken());
-            mPresenter.load(builder.build().parts(), LoadEnum.REFRESH);
+            builder.addFormDataPart("token", Constant.userData.getToken());
         }
+        mPresenter.load(builder.build().parts(), LoadEnum.REFRESH);
     }
 
     /**
@@ -79,8 +79,9 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
     }
 
     @Override
-    public void onLoadSuccess(BaseData<List<ShareListData<String>>> model, LoadEnum flag) {
+    public void onLoadSuccess(BaseData<List<ShareListData<List<String>>>> model, LoadEnum flag) {
         if (flag == LoadEnum.REFRESH) {
+            Log.i("---list---",model.getData().toString());
             listData.clear();
             listData.addAll(model.getData());
             adapter.notifyDataSetChanged();

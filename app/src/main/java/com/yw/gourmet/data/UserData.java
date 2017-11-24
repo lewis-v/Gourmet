@@ -8,7 +8,7 @@ public class UserData {
     private String sex;
     private String like;
     private String address;
-    private String nike_name;
+    private String nickname;
     private String introduction;
     private String token;
     private String img_header;
@@ -41,12 +41,12 @@ public class UserData {
         return this;
     }
 
-    public String getNike_name() {
-        return nike_name;
+    public String getNickname() {
+        return nickname;
     }
 
-    public UserData setNike_name(String nike_name) {
-        this.nike_name = nike_name;
+    public UserData setNickname(String nickname) {
+        this.nickname = nickname;
         return this;
     }
 
@@ -92,7 +92,7 @@ public class UserData {
                 "sex='" + sex + '\'' +
                 ", like='" + like + '\'' +
                 ", address='" + address + '\'' +
-                ", nike_name='" + nike_name + '\'' +
+                ", nickname='" + nickname + '\'' +
                 ", introduction='" + introduction + '\'' +
                 ", token='" + token + '\'' +
                 ", img_header='" + img_header + '\'' +

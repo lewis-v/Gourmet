@@ -18,9 +18,9 @@ import okhttp3.MultipartBody;
 public class GourmetPresenter extends GourmetContract.Presenter {
     @Override
     void load(List<MultipartBody.Part> parts, final LoadEnum flag) {
-        mRxManager.add(Api.getInstance().LoadShareList(parts),new RxSubscriberCallBack<BaseData<List<ShareListData<String>>>>(new RxApiCallback<BaseData<List<ShareListData<String>>>>() {
+        mRxManager.add(Api.getInstance().LoadShareList(parts),new RxSubscriberCallBack<BaseData<List<ShareListData<List<String>>>>>(new RxApiCallback<BaseData<List<ShareListData<List<String>>>>>() {
             @Override
-            public void onSuccess(BaseData<List<ShareListData<String>>> model) {
+            public void onSuccess(BaseData<List<ShareListData<List<String>>>> model) {
                 if (model.getStatus() == 0){
                     mView.onLoadSuccess(model,flag);
                 }else if (model.getStatus() == 1){
@@ -30,7 +30,7 @@ public class GourmetPresenter extends GourmetContract.Presenter {
 
             @Override
             public void onFailure(int code, String msg) {
-
+                mView.onLoadFail(msg,flag);
             }
         }));
     }
