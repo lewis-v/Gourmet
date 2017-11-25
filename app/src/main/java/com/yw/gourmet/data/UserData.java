@@ -5,6 +5,7 @@ package com.yw.gourmet.data;
  */
 
 public class UserData {
+    private String id;
     private String sex;
     private String like;
     private String address;
@@ -13,6 +14,15 @@ public class UserData {
     private String token;
     private String img_header;
     private String personal_back;
+
+    public String getId() {
+        return id;
+    }
+
+    public UserData setId(String id) {
+        this.id = id;
+        return this;
+    }
 
     public String getSex() {
         return sex;
@@ -89,7 +99,8 @@ public class UserData {
     @Override
     public String toString() {
         return "UserData{" +
-                "sex='" + sex + '\'' +
+                "id='" + id + '\'' +
+                ", sex='" + sex + '\'' +
                 ", like='" + like + '\'' +
                 ", address='" + address + '\'' +
                 ", nickname='" + nickname + '\'' +

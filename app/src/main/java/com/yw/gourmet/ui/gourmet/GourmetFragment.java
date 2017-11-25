@@ -59,9 +59,7 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
             }
         });
         MultipartBody.Builder builder = new MultipartBody.Builder();
-        if (Constant.userData != null) {
-            builder.addFormDataPart("token", Constant.userData.getToken());
-        }
+        builder.addFormDataPart("token", Constant.userData == null ? "0" :  Constant.userData.getToken());
         mPresenter.load(builder.build().parts(), LoadEnum.REFRESH);
     }
 

@@ -20,7 +20,7 @@
                 android:textSize="18sp"
                 android:textColor="@color/word_black"
                 android:text="@string/message"
-                android:layout_width="0"
+                android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content" />
         </LinearLayout>
@@ -30,10 +30,26 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="1px"/>
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_message"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
 
+
+    <com.aspsine.swipetoloadlayout.SwipeToLoadLayout
+        android:id="@+id/swipeToLoadLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.yw.gourmet.swipAnim.RefreshHeaderView
+            android:id="@+id/swipe_refresh_header"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:gravity="center"/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/swipe_target"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </com.aspsine.swipetoloadlayout.SwipeToLoadLayout>
+    <View
+        android:background="@color/dev"
+        android:layout_width="match_parent"
+        android:layout_height="1px"/>
 
 </LinearLayout>
