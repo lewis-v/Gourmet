@@ -8,16 +8,8 @@ public class MessageListData {
     private String id;
     private String nickname;
     private String content;
-    private String time;
+    private String put_time;
     private String img_header;
-
-    public MessageListData(String id, String nickname, String content, String time, String img_header) {
-        this.id = id;
-        this.nickname = nickname;
-        this.content = content;
-        this.time = time;
-        this.img_header = img_header;
-    }
 
     public String getId() {
         return id;
@@ -47,11 +39,11 @@ public class MessageListData {
     }
 
     public String getTime() {
-        return time;
+        return put_time;
     }
 
     public MessageListData setTime(String time) {
-        this.time = time;
+        this.put_time = time;
         return this;
     }
 
@@ -70,7 +62,7 @@ public class MessageListData {
                 "id='" + id + '\'' +
                 ", nickname='" + nickname + '\'' +
                 ", content='" + content + '\'' +
-                ", time='" + time + '\'' +
+                ", time='" + put_time + '\'' +
                 ", img_header='" + img_header + '\'' +
                 '}';
     }

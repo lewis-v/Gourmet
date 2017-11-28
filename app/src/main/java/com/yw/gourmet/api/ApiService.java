@@ -2,6 +2,7 @@ package com.yw.gourmet.api;
 
 
 import com.yw.gourmet.data.BaseData;
+import com.yw.gourmet.data.MessageListData;
 import com.yw.gourmet.data.ShareListData;
 import com.yw.gourmet.data.UserData;
 
@@ -28,4 +29,9 @@ public interface ApiService {
     @Multipart
     @POST("/ShareList/Load")
     Observable<BaseData<List<ShareListData<List<String>>>>> LoadShareList(@Part List<MultipartBody.Part> parts);
+
+    //加载消息列表
+    @Multipart
+    @POST("/Message/Get/List")
+    Observable<BaseData<List<MessageListData>>> LoadMessageList(@Part List<MultipartBody.Part> parts);
 }

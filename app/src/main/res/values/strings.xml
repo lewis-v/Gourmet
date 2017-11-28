@@ -27,7 +27,8 @@
     <string name="password">密码</string>
     <string name="login">登录</string>
     <string name="register">注册</string>
-    <string name="my_tip">登录后,你的个人资料后显示在这里,展示给别人</string>
+    <string name="my_tip">登录后,你的个人资料显示在这里</string>
+    <string name="message_tip">登录后,你的消息信息显示在这里</string>
     <string name="setting">设置</string>
     <string name="change_password">修改密码</string>
     <string name="feedback">反馈意见</string>

@@ -26,30 +26,76 @@
         </LinearLayout>
     </android.support.v7.widget.Toolbar>
     <LinearLayout
-        android:background="@color/dev"
+        android:id="@+id/ll_message"
+        android:visibility="gone"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="1px"/>
-
-
-    <com.aspsine.swipetoloadlayout.SwipeToLoadLayout
-        android:id="@+id/swipeToLoadLayout"
-        android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <com.yw.gourmet.swipAnim.RefreshHeaderView
-            android:id="@+id/swipe_refresh_header"
+        <LinearLayout
+            android:background="@color/dev"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:gravity="center"/>
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/swipe_target"
-            android:gravity="center"
+            android:layout_height="1px"/>
+        <com.aspsine.swipetoloadlayout.SwipeToLoadLayout
+            android:id="@+id/swipeToLoadLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-    </com.aspsine.swipetoloadlayout.SwipeToLoadLayout>
-    <View
-        android:background="@color/dev"
+            android:layout_height="wrap_content">
+            <com.yw.gourmet.swipAnim.RefreshHeaderView
+                android:id="@+id/swipe_refresh_header"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:gravity="center"/>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/swipe_target"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </com.aspsine.swipetoloadlayout.SwipeToLoadLayout>
+        <View
+            android:background="@color/dev"
+            android:layout_width="match_parent"
+            android:layout_height="1px"/>
+    </LinearLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraint_message"
         android:layout_width="match_parent"
-        android:layout_height="1px"/>
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/tv_tip"
+            android:text="@string/message_tip"
+            android:textSize="16sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@+id/constraint_message"
+            app:layout_constraintBottom_toBottomOf="@+id/constraint_message"
+            app:layout_constraintRight_toRightOf="@+id/constraint_message"
+            app:layout_constraintLeft_toLeftOf="@+id/constraint_message"
+            app:layout_constraintVertical_bias="0.3"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            app:layout_constraintTop_toBottomOf="@+id/tv_tip"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/bt_register"
+                android:text="@string/register"
+                android:layout_marginRight="20dp"
+                android:textColor="@android:color/white"
+                android:background="@drawable/bt_back_login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <Button
+                android:id="@+id/bt_login"
+                android:layout_marginLeft="20dp"
+                android:textColor="@android:color/white"
+                android:background="@drawable/bt_back_login"
+                android:text="@string/login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
 
 </LinearLayout>
