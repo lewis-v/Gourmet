@@ -53,9 +53,9 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
      */
     @Override
     public void onLoginSuccess(BaseData<UserData> model) {
-        SPUtils.setSharedStringData(getApplicationContext(),"token",model.getData().getToken());
         onSuccess(model.getMessage());
         Constant.userData = model.getData();
+        SPUtils.setSharedStringData(getApplicationContext(),"token",model.getData().getToken());
         finish();
     }
 

@@ -34,4 +34,9 @@ public interface ApiService {
     @Multipart
     @POST("/Message/Get/List")
     Observable<BaseData<List<MessageListData>>> LoadMessageList(@Part List<MultipartBody.Part> parts);
+
+    //点赞与踩
+    @Multipart
+    @POST("/ReMark/Put")
+    Observable<BaseData<ShareListData<List<String>>>> PutReMark(@Part List<MultipartBody.Part> parts);
 }

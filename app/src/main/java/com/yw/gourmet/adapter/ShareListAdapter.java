@@ -18,6 +18,8 @@ import com.bumptech.glide.Glide;
 import com.yw.gourmet.R;
 import com.yw.gourmet.data.ShareListData;
 import com.yw.gourmet.listener.OnItemClickListener;
+import com.yw.gourmet.listener.OnMoreListener;
+import com.yw.gourmet.listener.OnReMarkListener;
 
 import java.util.List;
 
@@ -29,9 +31,21 @@ public class ShareListAdapter extends RecyclerView.Adapter<ShareListAdapter.MyVi
     private Context context;
     private List<ShareListData<List<String>>> listData;
     private OnItemClickListener listener;
+    private OnReMarkListener onReMarkListener;
+    private OnMoreListener onMoreListener;
 
     public ShareListAdapter setListener(OnItemClickListener listener) {
         this.listener = listener;
+        return this;
+    }
+
+    public ShareListAdapter setOnReMarkListener(OnReMarkListener onReMarkListener) {
+        this.onReMarkListener = onReMarkListener;
+        return this;
+    }
+
+    public ShareListAdapter setOnMoreListener(OnMoreListener onMoreListener) {
+        this.onMoreListener = onMoreListener;
         return this;
     }
 
@@ -52,6 +66,21 @@ public class ShareListAdapter extends RecyclerView.Adapter<ShareListAdapter.MyVi
         holder.tv_time.setText(listData.get(position).getPut_time());
         holder.tv_nickname.setText(listData.get(position).getNickname());
         Glide.with(context).load(listData.get(position).getImg_header()).into(holder.img_header);
+        if (listData.get(position).getComment_num() > 0 ){
+            holder.tv_comment.setText(listData.get(position).getComment_num()+"");
+        }else {
+            holder.tv_comment.setText(R.string.comment);
+        }
+        if (listData.get(position).getGood_num() > 0){
+            holder.tv_good.setText(listData.get(position).getGood_num()+"");
+        }else {
+            holder.tv_good.setText(R.string.good);
+        }
+        if (listData.get(position).getBad_num() > 0){
+            holder.tv_bad.setText(listData.get(position).getBad_num()+"");
+        }else {
+            holder.tv_bad.setText(R.string.bad);
+        }
         if (listData.get(position).getImg() == null
                 || listData.get(position).getImg().size() == 0){
             holder.recycler_share.setVisibility(View.GONE);
@@ -68,6 +97,8 @@ public class ShareListAdapter extends RecyclerView.Adapter<ShareListAdapter.MyVi
             holder.recycler_share.setItemAnimator(new DefaultItemAnimator());
             holder.recycler_share.setAdapter(new ImgAdapter(context,listData.get(position).getImg()));
         }
+
+
         if (listener != null){
             holder.constraint_item.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -82,6 +113,34 @@ public class ShareListAdapter extends RecyclerView.Adapter<ShareListAdapter.MyVi
                 }
             });
         }
+        if (onReMarkListener != null){
+            holder.ll_comment.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onReMarkListener.OnCommentClick(v,holder.getLayoutPosition());
+                }
+            });
+            holder.ll_good.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onReMarkListener.OnGoodClick(v,holder.getLayoutPosition());
+                }
+            });
+            holder.ll_bad.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onReMarkListener.OnBadClick(v,holder.getLayoutPosition());
+                }
+            });
+        }
+        if (onMoreListener != null){
+            holder.img_more.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onMoreListener.OnMoreClick(v,holder.getLayoutPosition());
+                }
+            });
+        }
     }
 
     @Override
@@ -91,20 +150,27 @@ public class ShareListAdapter extends RecyclerView.Adapter<ShareListAdapter.MyVi
 
     class MyViewHolder extends RecyclerView.ViewHolder{
         ConstraintLayout constraint_item;
-        ImageView img_header,img_share;
-        TextView tv_nickname,tv_time,tv_content;
-        LinearLayout ll_img;
+        ImageView img_header,img_share,img_more;
+        TextView tv_nickname,tv_time,tv_content,tv_comment,tv_good,tv_bad;
+        LinearLayout ll_img,ll_comment,ll_good,ll_bad;
         RecyclerView recycler_share;
         MyViewHolder(View itemView) {
             super(itemView);
             constraint_item = (ConstraintLayout)itemView.findViewById(R.id.constraint_item);
             img_header = (ImageView)itemView.findViewById(R.id.img_header);
             img_share = (ImageView)itemView.findViewById(R.id.img_share);
+            img_more = (ImageView)itemView.findViewById(R.id.img_more);
             recycler_share = (RecyclerView)itemView.findViewById(R.id.recycler_share);
             ll_img = (LinearLayout)itemView.findViewById(R.id.ll_img);
+            ll_comment = (LinearLayout)itemView.findViewById(R.id.ll_comment);
+            ll_good = (LinearLayout) itemView.findViewById(R.id.ll_good);
+            ll_bad = (LinearLayout) itemView.findViewById(R.id.ll_bad);
             tv_nickname = (TextView)itemView.findViewById(R.id.tv_nickname);
             tv_time = (TextView)itemView.findViewById(R.id.tv_time);
             tv_content = (TextView) itemView.findViewById(R.id.tv_content);
+            tv_comment = (TextView)itemView.findViewById(R.id.tv_comment);
+            tv_good = (TextView) itemView.findViewById(R.id.tv_good);
+            tv_bad = (TextView)itemView.findViewById(R.id.tv_bad);
         }
     }
 }

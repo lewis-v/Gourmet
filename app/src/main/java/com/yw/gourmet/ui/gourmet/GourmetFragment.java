@@ -16,7 +16,9 @@ import com.yw.gourmet.base.BaseFragment;
 import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.data.ShareListData;
 import com.yw.gourmet.listener.OnItemClickListener;
+import com.yw.gourmet.listener.OnReMarkListener;
 import com.yw.gourmet.myenum.LoadEnum;
+import com.yw.gourmet.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +60,40 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
                 return false;
             }
         });
+        adapter.setOnReMarkListener(new OnReMarkListener() {
+            @Override
+            public void OnGoodClick(View view, int position) {
+                if (Constant.userData == null){
+                    ToastUtils.showSingleToast("请登陆后再进行操作");
+                }else {
+                    MultipartBody.Builder builder = new MultipartBody.Builder()
+                            .addFormDataPart("id", Constant.userData.getId())
+                            .addFormDataPart("type",listData.get(position).getType()+"")
+                            .addFormDataPart("act_id",listData.get(position).getId())
+                            .addFormDataPart("act","1");
+                    mPresenter.reMark(builder.build().parts(),position);
+                }
+            }
+
+            @Override
+            public void OnBadClick(View view, int position) {
+                if (Constant.userData == null){
+                    ToastUtils.showSingleToast("请登陆后再进行操作");
+                }else {
+                    MultipartBody.Builder builder = new MultipartBody.Builder()
+                            .addFormDataPart("id", Constant.userData.getId())
+                            .addFormDataPart("type",listData.get(position).getType()+"")
+                            .addFormDataPart("act_id",listData.get(position).getId())
+                            .addFormDataPart("act","0");
+                    mPresenter.reMark(builder.build().parts(),position);
+                }
+            }
+
+            @Override
+            public void OnCommentClick(View view, int position) {
+
+            }
+        });
         MultipartBody.Builder builder = new MultipartBody.Builder();
         builder.addFormDataPart("token", Constant.userData == null ? "0" :  Constant.userData.getToken());
         mPresenter.load(builder.build().parts(), LoadEnum.REFRESH);
@@ -97,6 +133,12 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
         }else {
             swipeToLoadLayout.setLoadingMore(false);
         }
+    }
+
+    @Override
+    public void onReMarkSuccess(BaseData<ShareListData<List<String>>> model,int position) {
+        listData.set(position,model.getData());
+        adapter.notifyItemChanged(position);
     }
 
     @Override

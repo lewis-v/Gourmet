@@ -86,4 +86,8 @@ public class Api {
     public  Observable<BaseData<List<MessageListData>>> LoadMessageList(List<MultipartBody.Part> parts){
         return service.LoadMessageList(parts);
     }
+
+    public Observable<BaseData<ShareListData<List<String>>>> PutReMark(List<MultipartBody.Part> parts){
+        return  service.PutReMark(parts);
+    }
 }

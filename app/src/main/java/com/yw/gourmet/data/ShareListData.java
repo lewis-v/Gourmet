@@ -19,6 +19,9 @@ public class ShareListData<T> {
     private int type;//分享类型
     private String nickname;//分享者姓名
     private String img_header;//分享者头像
+    private int comment_num;//评论数量
+    private int good_num;//点赞数量
+    private int bad_num;//踩数量
 
     public String getId() {
         return id;
@@ -146,6 +149,33 @@ public class ShareListData<T> {
         return this;
     }
 
+    public int getComment_num() {
+        return comment_num;
+    }
+
+    public ShareListData setComment_num(int comment_num) {
+        this.comment_num = comment_num;
+        return this;
+    }
+
+    public int getGood_num() {
+        return good_num;
+    }
+
+    public ShareListData setGood_num(int good_num) {
+        this.good_num = good_num;
+        return this;
+    }
+
+    public int getBad_num() {
+        return bad_num;
+    }
+
+    public ShareListData setBad_num(int bad_num) {
+        this.bad_num = bad_num;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "ShareListData{" +
@@ -163,6 +193,9 @@ public class ShareListData<T> {
                 ", type=" + type +
                 ", nickname='" + nickname + '\'' +
                 ", img_header='" + img_header + '\'' +
+                ", comment_num=" + comment_num +
+                ", good_num=" + good_num +
+                ", bad_num=" + bad_num +
                 '}';
     }
 }

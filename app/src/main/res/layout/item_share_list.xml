@@ -130,11 +130,12 @@
                 android:layout_width="0dp"
                 android:gravity="center"
                 android:layout_height="match_parent">
+
                 <ImageView
                     android:id="@+id/img_good"
-                    android:src="@drawable/good"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/good" />
                 <TextView
                     android:id="@+id/tv_good"
                     android:layout_marginLeft="10dp"

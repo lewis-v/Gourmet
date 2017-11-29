@@ -67,8 +67,8 @@ public class MessageFragment extends BaseFragment<MessagePresenter> implements M
 
         ll_message = (LinearLayout)view.findViewById(R.id.ll_message);
 
-        bt_register = (Button)view.findViewById(R.id.bt_register);
-        bt_login = (Button)view.findViewById(R.id.bt_login);
+        bt_register = (Button)view.findViewById(R.id.bt_register_message);
+        bt_login = (Button)view.findViewById(R.id.bt_login_message);
         bt_register.setOnClickListener(this);
         bt_login.setOnClickListener(this);
 
@@ -122,16 +122,28 @@ public class MessageFragment extends BaseFragment<MessagePresenter> implements M
 
     @Override
     public void onClick(View v) {
-        switch (view.getId()){
-            case R.id.bt_register:
+        switch (v.getId()){
+            case R.id.bt_register_message:
 
                 break;
-            case R.id.bt_login:
+            case R.id.bt_login_message:
                 startActivity(new Intent(getContext(), LoginActivity.class));
                 break;
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (Constant.userData == null){
+            constraint_message.setVisibility(View.VISIBLE);
+            ll_message.setVisibility(View.GONE);
+        }else {
+            constraint_message.setVisibility(View.GONE);
+            ll_message.setVisibility(View.VISIBLE);
+            swipeToLoadLayout.setRefreshing(true);
+        }
+    }
 
     public void setRxBus(){
         if (mRxSubSticky != null && !mRxSubSticky.isUnsubscribed()) {
