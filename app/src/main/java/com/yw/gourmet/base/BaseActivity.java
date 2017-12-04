@@ -162,21 +162,23 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
      * @param isLoadDialog
      */
     public void setLoadDialog(boolean isLoadDialog){
-        if (isLoadDialog){
-            if (myDialogLoadFragment == null){
-                myDialogLoadFragment = new MyDialogLoadFragment();
-                myDialogLoadFragment.show(getSupportFragmentManager(),"");
-            }else{
-                myDialogLoadFragment.dismiss();
-                myDialogLoadFragment = new MyDialogLoadFragment();
-                myDialogLoadFragment.show(getSupportFragmentManager(),"");
+        try {
+            if (isLoadDialog) {
+                if (myDialogLoadFragment == null) {
+                    myDialogLoadFragment = new MyDialogLoadFragment();
+                    myDialogLoadFragment.show(getSupportFragmentManager(), "");
+                } else {
+                    myDialogLoadFragment.dismiss();
+                    myDialogLoadFragment = new MyDialogLoadFragment();
+                    myDialogLoadFragment.show(getSupportFragmentManager(), "");
+                }
+            } else {
+                if (myDialogLoadFragment != null) {
+                    myDialogLoadFragment.dismiss();
+                    myDialogLoadFragment = null;
+                }
             }
-        }else{
-            if (myDialogLoadFragment != null) {
-                myDialogLoadFragment.dismiss();
-                myDialogLoadFragment = null;
-            }
-        }
+        }catch (Exception e){}
     }
 
     @Override

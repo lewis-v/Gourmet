@@ -39,4 +39,14 @@ public interface ApiService {
     @Multipart
     @POST("/ReMark/Put")
     Observable<BaseData<ShareListData<List<String>>>> PutReMark(@Part List<MultipartBody.Part> parts);
+
+    //修改个人信息
+    @Multipart
+    @POST("/User/ChangeDetail")
+    Observable<BaseData<UserData>> ChangeUserDetail(@Part List<MultipartBody.Part> parts);
+
+    //上传照片
+    @Multipart
+    @POST("/Img/Up")
+    Observable<BaseData<String>> UpImg(@Part List<MultipartBody.Part> parts);
 }

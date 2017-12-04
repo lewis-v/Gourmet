@@ -67,6 +67,7 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
                     ToastUtils.showSingleToast("请登陆后再进行操作");
                 }else {
                     MultipartBody.Builder builder = new MultipartBody.Builder()
+                            .setType(MultipartBody.FORM)
                             .addFormDataPart("id", Constant.userData.getId())
                             .addFormDataPart("type",listData.get(position).getType()+"")
                             .addFormDataPart("act_id",listData.get(position).getId())
@@ -81,6 +82,7 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
                     ToastUtils.showSingleToast("请登陆后再进行操作");
                 }else {
                     MultipartBody.Builder builder = new MultipartBody.Builder()
+                            .setType(MultipartBody.FORM)
                             .addFormDataPart("id", Constant.userData.getId())
                             .addFormDataPart("type",listData.get(position).getType()+"")
                             .addFormDataPart("act_id",listData.get(position).getId())
@@ -94,7 +96,8 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
 
             }
         });
-        MultipartBody.Builder builder = new MultipartBody.Builder();
+        MultipartBody.Builder builder = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM);
         builder.addFormDataPart("token", Constant.userData == null ? "0" :  Constant.userData.getToken());
         mPresenter.load(builder.build().parts(), LoadEnum.REFRESH);
     }
@@ -151,6 +154,7 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
         Log.i("---refresh---","");
         if (Constant.userData != null) {
             MultipartBody.Builder builder = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
                     .addFormDataPart("token", Constant.userData.getToken());
             mPresenter.load(builder.build().parts(), LoadEnum.REFRESH);
         }else {

@@ -3,6 +3,7 @@ package com.yw.gourmet.ui.personal;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -20,16 +21,19 @@ import com.bumptech.glide.Glide;
 import com.yw.gourmet.Constant;
 import com.yw.gourmet.R;
 import com.yw.gourmet.base.BaseActivity;
+import com.yw.gourmet.ui.changeDetail.ChangeDetailActivity;
 
-public class PersonalActivity extends BaseActivity implements View.OnClickListener{
+public class PersonalActivity extends BaseActivity<PersonalPresenter> implements PersonalContract.View
+        ,View.OnClickListener{
     private Toolbar toolbar;
     private CollapsingToolbarLayout toolbar_layout;
     private AppBarLayout app_bar;
-    private LinearLayout ll_tool;
+    private LinearLayout ll_tool,ll_change_detail,ll_change_bottom,ll_change_top;
     private AnimatorSet animatorSetToolBarShow,animatorSetToolBarHide;//toolbar的显示隐藏动画
     private TextView tv_nickname,tv_sex,tv_address,tv_introduction;
     private FloatingActionButton float_action_header;
     private ImageView img_tool_back,img_header;
+    private String id;//用户id
 
     /**
      * 初始化UI
@@ -50,6 +54,10 @@ public class PersonalActivity extends BaseActivity implements View.OnClickListen
         float_action_header = (FloatingActionButton)findViewById(R.id.float_action_header);
 
         ll_tool = (LinearLayout) findViewById(R.id.ll_tool);
+        ll_change_bottom = (LinearLayout)findViewById(R.id.ll_change_bottom);
+        ll_change_top = (LinearLayout)findViewById(R.id.ll_change_top);
+        ll_change_detail = (LinearLayout)findViewById(R.id.ll_change_detail);
+        ll_change_detail.setOnClickListener(this);
 
         ObjectAnimator animatorToolBarShow = ObjectAnimator.ofFloat(ll_tool,"alpha",0f,1f);
         ObjectAnimator animatorToolBarHide = ObjectAnimator.ofFloat(ll_tool,"alpha",1f,0f);
@@ -126,14 +134,25 @@ public class PersonalActivity extends BaseActivity implements View.OnClickListen
      * 设置显示的个人数据
      */
     public void setData(){
-        if (Constant.userData != null) {
-            tv_nickname.setText(Constant.userData.getNickname());
-            tv_sex.setText(Constant.userData.getSex());
-            tv_address.setText(Constant.userData.getAddress());
-            tv_introduction.setText(Constant.userData.getIntroduction());
-            Glide.with(this).load(Constant.userData.getImg_header()).into(float_action_header);
-            Glide.with(this).load(Constant.userData.getImg_header()).into(img_header);
-            Glide.with(this).load(Constant.userData.getPersonal_back()).into(img_tool_back);
+        id = getIntent().getStringExtra("id");
+        if (id != null && id.length()>0){//查看其它用户信息
+            ll_change_detail.setVisibility(View.GONE);
+            ll_change_bottom.setVisibility(View.GONE);
+            ll_change_top.setVisibility(View.GONE);
+
+        }else {//查看自身信息
+            if (Constant.userData != null) {
+                ll_change_detail.setVisibility(View.VISIBLE);
+                ll_change_bottom.setVisibility(View.VISIBLE);
+                ll_change_top.setVisibility(View.VISIBLE);
+                tv_nickname.setText(Constant.userData.getNickname());
+                tv_sex.setText(Constant.userData.getSex());
+                tv_address.setText(Constant.userData.getAddress());
+                tv_introduction.setText(Constant.userData.getIntroduction());
+                Glide.with(this).load(Constant.userData.getImg_header()).into(float_action_header);
+                Glide.with(this).load(Constant.userData.getImg_header()).into(img_header);
+                Glide.with(this).load(Constant.userData.getPersonal_back()).into(img_tool_back);
+            }
         }
     }
 
@@ -147,6 +166,9 @@ public class PersonalActivity extends BaseActivity implements View.OnClickListen
         switch (v.getId()){
             case R.id.app_bar:
                 Log.i("---bar---","");
+                break;
+            case R.id.ll_change_detail:
+                startActivity(new Intent(this, ChangeDetailActivity.class));
                 break;
         }
     }

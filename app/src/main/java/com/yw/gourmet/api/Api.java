@@ -27,7 +27,7 @@ import rx.Observable;
  */
 
 public class Api {
-    public final static String API_BASE_URL = "http://192.168.0.102:47423";//这里是服务器连接的接口的固定部分
+    public final static String API_BASE_URL = "http://172.16.113.114:47423";//这里是服务器连接的接口的固定部分
     public static Api instance;//单例
     private ApiService service;//声明apiservier,下面要通过这个调用与服务器交互的方法
     private OkHttpClient okHttpClient;
@@ -37,7 +37,7 @@ public class Api {
         @Override
         public Response intercept(Chain chain) throws IOException {
             Request original = chain.request();
-            String head = "";//头部
+            String head = "head";//头部
             //这里添加头部,这里可以用addHeader来添加多个头部,如果使用header方法就只能添加一个头部
             Request.Builder requestBuilder = original.newBuilder()//添加头部信息
                     .addHeader("head", head);
@@ -52,8 +52,8 @@ public class Api {
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);//设置打印请求的记录级别  NONE:不记录; BASIC:请求/响应行; HEADER:请求/响应行+请求头; BODY:请求/响应行+请求头+请求体(所有信息)
 
         okHttpClient = new OkHttpClient.Builder()//建立OkHttpClient,OkHttp3的连接及设置
-                .connectTimeout(20 * 1000, TimeUnit.MILLISECONDS)//请求连接超时20秒
-                .readTimeout(20 * 1000, TimeUnit.MILLISECONDS)//数据传输超时20秒
+                .connectTimeout(40 * 1000, TimeUnit.MILLISECONDS)//请求连接超时40秒
+                .readTimeout(60 * 1000, TimeUnit.MILLISECONDS)//数据传输超时60秒
                 .addInterceptor(mInterceptor)//添加请求头的拦截器
                 .addInterceptor(interceptor)//打印请求信息拦截器
                 .retryOnConnectionFailure(true)//连接失败后重试(断网重连)
@@ -89,5 +89,13 @@ public class Api {
 
     public Observable<BaseData<ShareListData<List<String>>>> PutReMark(List<MultipartBody.Part> parts){
         return  service.PutReMark(parts);
+    }
+
+    public Observable<BaseData<UserData>> ChangeUserDetail(List<MultipartBody.Part> parts){
+        return service.ChangeUserDetail(parts);
+    }
+
+    public Observable<BaseData<String>> UpImg(List<MultipartBody.Part> parts){
+        return service.UpImg(parts);
     }
 }

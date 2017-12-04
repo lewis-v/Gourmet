@@ -1,13 +1,18 @@
 package com.yw.gourmet.base;
 
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+
+import com.yw.gourmet.utils.WindowUtil;
 
 import java.lang.reflect.ParameterizedType;
 
@@ -20,10 +25,19 @@ public abstract class BaseDialogFragment<P extends BasePresenter> extends Dialog
     protected View view;
 
     @Override
+    public void onStart() {
+        super.onStart();
+        getDialog().getWindow().setLayout((int) (WindowUtil.width * 0.75), ViewGroup.LayoutParams.WRAP_CONTENT);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreateView(inflater,container,savedInstanceState);
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
+        try {
+            getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }catch (Exception e){}
         try {
             //getGenericSuperclass获取类的超类的类型即<P>p的类型,ParameterizedType参数化类型
             // ,getActualTypeArguments返回表示此类型实际类型参数的 Type 对象的数组
@@ -41,7 +55,7 @@ public abstract class BaseDialogFragment<P extends BasePresenter> extends Dialog
         }
         view = inflater.inflate(getLayoutId(), container, false);
         initView();
-        //设置返回键dismiss并处罚onBack()方法
+        //设置返回键dismiss并处发onBack()方法
         getDialog().setOnKeyListener(new DialogInterface.OnKeyListener() {
             @Override
             public boolean onKey(DialogInterface dialogInterface, int i, KeyEvent keyEvent) {

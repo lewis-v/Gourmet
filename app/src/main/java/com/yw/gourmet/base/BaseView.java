@@ -8,4 +8,5 @@ public interface BaseView {
     void onFail(String msg);
     void onSuccess(String msg);
     void onReLoginFail(String msg);
+    void setLoadDialog(boolean isLoadDialog);
 }

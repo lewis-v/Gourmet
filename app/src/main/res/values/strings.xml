@@ -37,6 +37,12 @@
     <string name="comment">评论</string>
     <string name="good">赞</string>
     <string name="bad">踩</string>
+    <string name="change_detail">修改个人信息</string>
+    <string name="header_img">头像</string>
+    <string name="header_change_tip">(点击更换头像)</string>
+    <string name="enter">确认</string>
+    <string name="cancel">取消</string>
+    <string name="choose_photo">选择照片</string>
 
     <string name="test_num">123</string>
     <string name="test_text">测试文字阿双方尽快收到回复is倒海翻江可</string>

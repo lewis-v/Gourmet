@@ -37,7 +37,7 @@ import rx.functions.Func1;
 public class MyFragment extends BaseFragment implements View.OnClickListener{
     private LinearLayout ll_set;
     private ScrollView scroll_my;
-    private TextView tv_nickname,tv_set;
+    private TextView tv_nickname,tv_set,tv_diary,tv_menu,tv_raiders;
     private Button bt_login,bt_register;
     private ConstraintLayout constraint_my;
     private Subscription mRxSubSticky;
@@ -56,6 +56,9 @@ public class MyFragment extends BaseFragment implements View.OnClickListener{
         constraint_my = (ConstraintLayout)view.findViewById(R.id.constraint_my);
 
         tv_nickname = (TextView)view.findViewById(R.id.tv_nickname);
+        tv_diary = (TextView)view.findViewById(R.id.tv_diary);
+        tv_menu = (TextView)view.findViewById(R.id.tv_menu);
+        tv_raiders = (TextView)view.findViewById(R.id.tv_raiders);
         tv_set = (TextView)view.findViewById(R.id.tv_set);
         tv_set.setOnClickListener(this);
 
@@ -82,6 +85,9 @@ public class MyFragment extends BaseFragment implements View.OnClickListener{
     public void setData(){
         tv_nickname.setText(Constant.userData.getNickname());
         Glide.with(this).load(Constant.userData.getImg_header()).into(img_header);
+        tv_raiders.setText(Constant.userData.getRaiders_num()+"");
+        tv_menu.setText(Constant.userData.getMenu_num()+"");
+        tv_diary.setText(Constant.userData.getDiary_num()+"");
     }
 
     /**

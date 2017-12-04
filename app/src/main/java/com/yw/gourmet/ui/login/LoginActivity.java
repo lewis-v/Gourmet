@@ -38,6 +38,7 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
                 if (!isEmpty()) {
                     setLoadDialog(true);
                     MultipartBody.Builder builder = new MultipartBody.Builder()
+                            .setType(MultipartBody.FORM)
                             .addFormDataPart("id", et_id.getText().toString())
                             .addFormDataPart("password", et_password.getText().toString());
                     mPresenter.login(builder.build().parts());

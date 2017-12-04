@@ -83,7 +83,7 @@ public class ShareListAdapter extends RecyclerView.Adapter<ShareListAdapter.MyVi
         }
         if (listData.get(position).getImg() == null
                 || listData.get(position).getImg().size() == 0){
-            holder.recycler_share.setVisibility(View.GONE);
+//            holder.recycler_share.setVisibility(View.GONE);
             holder.ll_img.setVisibility(View.GONE);
         }else if (listData.get(position).getImg().size() == 1){
             holder.ll_img.setVisibility(View.VISIBLE);

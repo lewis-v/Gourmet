@@ -33,6 +33,7 @@ public class FlashActivity extends BaseActivity<FlashPresenter> implements Flash
             finish();
         }else {
             MultipartBody.Builder builder = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
                     .addFormDataPart("token", token);
             mPresenter.onLogin(builder.build().parts());
         }

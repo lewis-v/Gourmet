@@ -99,6 +99,7 @@ public class MessageFragment extends BaseFragment<MessagePresenter> implements M
     public void onRefresh() {
         if (Constant.userData != null) {
             MultipartBody.Builder builder = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
                 .addFormDataPart("id", Constant.userData.getId());
             mPresenter.LoadMessageList(builder.build().parts());
         }else {
