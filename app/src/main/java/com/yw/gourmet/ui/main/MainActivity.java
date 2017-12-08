@@ -18,18 +18,22 @@ import android.widget.LinearLayout;
 import com.yw.gourmet.R;
 import com.yw.gourmet.adapter.MyFragmentAdapter;
 import com.yw.gourmet.base.BaseActivity;
+import com.yw.gourmet.listener.MyAction;
 import com.yw.gourmet.rxbus.RxBus;
 import com.yw.gourmet.ui.gourmet.GourmetFragment;
 import com.yw.gourmet.ui.login.LoginActivity;
 import com.yw.gourmet.ui.message.MessageFragment;
 import com.yw.gourmet.ui.my.MyFragment;
 import com.yw.gourmet.ui.search.SearchFragment;
+import com.yw.gourmet.ui.share.common.CommonShareActivity;
 import com.yw.gourmet.utils.WindowUtil;
 import com.yw.gourmet.widget.DepthPageTransformer;
 import com.yw.gourmet.widget.MyViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import rx.Subscriber;
 
 import static android.support.v4.content.PermissionChecker.PERMISSION_DENIED;
 
@@ -194,6 +198,38 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         }
         fragmentTransaction.commit();
         isFunction = isShow;
+    }
+
+    public void addFragmentFunction(final boolean isShow, final MyAction action){
+        fl_function.setVisibility(View.VISIBLE);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        if (isShow){
+            if (functionFragment == null){
+                functionFragment = new FunctionFragment();
+            }
+            fragmentTransaction.add(R.id.fl_function,functionFragment);
+        }else {
+            if (functionFragment != null) {
+                fragmentTransaction.remove(functionFragment);
+            }
+        }
+        fragmentTransaction.runOnCommit(new Runnable() {
+            @Override
+            public void run() {
+                isFunction = isShow;
+                action.Action1();
+            }
+        });
+        fragmentTransaction.commit();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (isFunction){
+            addFragmentFunction(false);
+        }
     }
 
     @Override

@@ -26,9 +26,14 @@ public class MyViewPager extends ViewPager {
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
         if (this.enabled) {
-            return super.onInterceptTouchEvent(event);
+            try {
+                return super.onInterceptTouchEvent(event);
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+            } catch (ArrayIndexOutOfBoundsException e) {
+                e.printStackTrace();
+            }
         }
-
         return false;
     }
     public void setPagingEnabled(boolean enabled) {

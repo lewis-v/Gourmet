@@ -1,7 +1,9 @@
 package com.yw.gourmet.dialog;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
@@ -11,6 +13,7 @@ import com.yw.gourmet.R;
 import com.yw.gourmet.base.BaseDialogFragment;
 import com.yw.gourmet.listener.OnCancelClickListener;
 import com.yw.gourmet.listener.OnPhotoChooseListener;
+import com.yw.gourmet.utils.UriToFileUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,12 +34,17 @@ import cn.finalteam.rxgalleryfinal.ui.base.IRadioImageCheckedListener;
  */
 
 public class MyDialogPhotoChooseFragment extends BaseDialogFragment implements View.OnClickListener{
+    public final static int COMMON = 0;//普通
+    public final static int PHOTO = 1;//照片选择
+    public final static int TAKE_PHOTO = 2;//拍照
+
     private TextView tv_take,tv_choose,tv_cancel;
     private OnCancelClickListener onCancelClickListener;
     private OnPhotoChooseListener onPhotoChooseListener;
     private int chooseNum = 1;//选择数量,默认1张,最大9张
     private boolean isCrop = false;//是否剪裁,默认不剪裁
     private List<String> list = new ArrayList<>();//选择结果
+    private int type = COMMON;//类型,默认为普通
 
     @Override
     protected void initView() {
@@ -66,6 +74,16 @@ public class MyDialogPhotoChooseFragment extends BaseDialogFragment implements V
                                 return true;
                             }
                         });
+        tv_cancel.post(new Runnable() {
+            @Override
+            public void run() {
+                if (type == PHOTO){
+                    onClick(tv_choose);
+                }else if (type == TAKE_PHOTO){
+                    onClick(tv_take);
+                }
+            }
+        });
 
     }
 
@@ -157,8 +175,10 @@ public class MyDialogPhotoChooseFragment extends BaseDialogFragment implements V
     @Override
     public void startActivityForResult(Intent intent, int requestCode) {
         if (requestCode == RxGalleryFinalApi.TAKE_IMAGE_REQUEST_CODE){
-            if (onPhotoChooseListener != null){
-                list.add(intent.getStringExtra("output"));
+            if (onPhotoChooseListener != null && intent.getExtras().get(MediaStore.EXTRA_OUTPUT)!=null){
+                list.add(UriToFileUtil.getPath(getContext()
+                        ,Uri.parse(intent.getExtras().get(MediaStore.EXTRA_OUTPUT).toString())));
+                Log.i("---intent---",list.toString());
                 onPhotoChooseListener.OnChoose(list,getTag());
             }
         }
@@ -182,6 +202,11 @@ public class MyDialogPhotoChooseFragment extends BaseDialogFragment implements V
 
     public MyDialogPhotoChooseFragment setCrop(boolean crop) {
         isCrop = crop;
+        return this;
+    }
+
+    public MyDialogPhotoChooseFragment setType(int type) {
+        this.type = type;
         return this;
     }
 }

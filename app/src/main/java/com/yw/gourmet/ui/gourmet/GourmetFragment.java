@@ -45,7 +45,7 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
         swipe_target = (RecyclerView)view.findViewById(R.id.swipe_target);
         swipe_target.setLayoutManager(new LinearLayoutManager(getContext()));
         swipe_target.setItemAnimator(new DefaultItemAnimator());
-        adapter = new ShareListAdapter(getContext(),listData);
+        adapter = new ShareListAdapter(getContext(),listData,getFragmentManager());
         swipe_target.setAdapter(adapter);
         swipeToLoadLayout.setOnRefreshListener(this);
         swipeToLoadLayout.setOnLoadMoreListener(this);
@@ -141,7 +141,7 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
     @Override
     public void onReMarkSuccess(BaseData<ShareListData<List<String>>> model,int position) {
         listData.set(position,model.getData());
-        adapter.notifyItemChanged(position);
+        adapter.notifyDataSetChanged();
     }
 
     @Override

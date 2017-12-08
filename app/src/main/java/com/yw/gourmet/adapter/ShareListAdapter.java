@@ -1,7 +1,10 @@
 package com.yw.gourmet.adapter;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,8 +18,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.yw.gourmet.R;
 import com.yw.gourmet.data.ShareListData;
+import com.yw.gourmet.dialog.MyDialogPhotoShowFragment;
 import com.yw.gourmet.listener.OnItemClickListener;
 import com.yw.gourmet.listener.OnMoreListener;
 import com.yw.gourmet.listener.OnReMarkListener;
@@ -33,6 +41,7 @@ public class ShareListAdapter extends RecyclerView.Adapter<ShareListAdapter.MyVi
     private OnItemClickListener listener;
     private OnReMarkListener onReMarkListener;
     private OnMoreListener onMoreListener;
+    private FragmentManager fragmentManager;
 
     public ShareListAdapter setListener(OnItemClickListener listener) {
         this.listener = listener;
@@ -49,9 +58,10 @@ public class ShareListAdapter extends RecyclerView.Adapter<ShareListAdapter.MyVi
         return this;
     }
 
-    public ShareListAdapter(Context context, List<ShareListData<List<String>>> listData){
+    public ShareListAdapter(Context context, List<ShareListData<List<String>>> listData,FragmentManager fragmentManager){
         this.context = context;
         this.listData = listData;
+        this.fragmentManager = fragmentManager;
     }
 
     @Override
@@ -65,7 +75,23 @@ public class ShareListAdapter extends RecyclerView.Adapter<ShareListAdapter.MyVi
         holder.tv_content.setText(listData.get(position).getContent());
         holder.tv_time.setText(listData.get(position).getPut_time());
         holder.tv_nickname.setText(listData.get(position).getNickname());
-        Glide.with(context).load(listData.get(position).getImg_header()).into(holder.img_header);
+        Glide.with(context).load(listData.get(position).getImg_header()).listener(new RequestListener<Drawable>() {
+            @Override
+            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                holder.img_header.setImageResource(R.mipmap.load_fail);
+                return true;
+            }
+
+            @Override
+            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                return false;
+            }
+        }).into(holder.img_header);
+        if (listData.get(position).getContent() == null || listData.get(position).getContent().length() == 0){
+            holder.tv_content.setVisibility(View.GONE);
+        }else {
+            holder.tv_content.setVisibility(View.VISIBLE);
+        }
         if (listData.get(position).getComment_num() > 0 ){
             holder.tv_comment.setText(listData.get(position).getComment_num()+"");
         }else {
@@ -82,20 +108,51 @@ public class ShareListAdapter extends RecyclerView.Adapter<ShareListAdapter.MyVi
             holder.tv_bad.setText(R.string.bad);
         }
         if (listData.get(position).getImg() == null
-                || listData.get(position).getImg().size() == 0){
-//            holder.recycler_share.setVisibility(View.GONE);
+                || listData.get(position).getImg().size() == 0){//无图片
+            holder.recycler_share.setVisibility(View.GONE);
             holder.ll_img.setVisibility(View.GONE);
-        }else if (listData.get(position).getImg().size() == 1){
+        }else if (listData.get(position).getImg().size() == 1){//单张图片
             holder.ll_img.setVisibility(View.VISIBLE);
             holder.recycler_share.setVisibility(View.GONE);
-            Glide.with(context).load(listData.get(position).getImg().get(0)).into(holder.img_share);
-        }else if (listData.size() > 1){
+            Glide.with(context).load(listData.get(position).getImg().get(0)).listener(new RequestListener<Drawable>() {
+                @Override
+                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                    holder.img_header.setImageResource(R.mipmap.load_fail);
+                    return true;
+                }
+
+                @Override
+                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                    return false;
+                }
+            }).into(holder.img_share);
+            holder.img_share.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new MyDialogPhotoShowFragment().setImgString(listData.get(holder.getLayoutPosition())
+                            .getImg()).show(fragmentManager,"imgShow");
+                }
+            });
+        }else if (listData.size() > 1){//多张图片
+            ImgAdapter adapter = new ImgAdapter(context,listData.get(position).getImg());
             holder.ll_img.setVisibility(View.GONE);
             holder.recycler_share.setVisibility(View.VISIBLE);
             holder.recycler_share.setLayoutManager(new StaggeredGridLayoutManager(3
                     ,StaggeredGridLayoutManager.VERTICAL));
             holder.recycler_share.setItemAnimator(new DefaultItemAnimator());
-            holder.recycler_share.setAdapter(new ImgAdapter(context,listData.get(position).getImg()));
+            holder.recycler_share.setAdapter(adapter);
+            adapter.setOnItemClickListener(new OnItemClickListener() {
+                @Override
+                public void OnClick(View v, int position) {
+                    new MyDialogPhotoShowFragment().setImgString(listData.get(holder.getLayoutPosition()).getImg())
+                            .setPosition(position).show(fragmentManager,"imgShow");
+                }
+
+                @Override
+                public boolean OnLongClick(View v, int position) {
+                    return false;
+                }
+            });
         }
 
 

@@ -49,4 +49,8 @@ public interface ApiService {
     @Multipart
     @POST("/Img/Up")
     Observable<BaseData<String>> UpImg(@Part List<MultipartBody.Part> parts);
+
+    @Multipart
+    @POST("/Share/Common")
+    Observable<BaseData> ShareCommon(@Part List<MultipartBody.Part> parts);
 }

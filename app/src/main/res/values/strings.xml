@@ -43,6 +43,9 @@
     <string name="enter">确认</string>
     <string name="cancel">取消</string>
     <string name="choose_photo">选择照片</string>
+    <string name="send">发送</string>
+    <string name="put">发布</string>
+    <string name="share_tip">享你所想</string>
 
     <string name="test_num">123</string>
     <string name="test_text">测试文字阿双方尽快收到回复is倒海翻江可</string>

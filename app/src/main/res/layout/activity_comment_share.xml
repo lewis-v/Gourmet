@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.yw.gourmet.ui.share.common.CommonShareActivity">
+    <android.support.v7.widget.Toolbar
+        android:paddingTop="25dp"
+        app:contentInsetStart="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="65dp">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/tv_cancel"
+                android:text="@string/cancel"
+                android:gravity="center"
+                android:textSize="16sp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+            <TextView
+                android:gravity="center"
+                android:text="@string/share_tip"
+                android:textColor="@color/word_black"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
+            <TextView
+                android:id="@+id/tv_send"
+                android:textColor="@color/colorAccent"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="@string/put"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+    </android.support.v7.widget.Toolbar>
+    <TextView
+        android:background="@mipmap/dev"
+        android:layout_width="match_parent"
+        android:layout_height="1dp" />
+    <EditText
+        android:id="@+id/et_content"
+        android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:gravity="start"
+        android:background="@null"
+        android:layout_height="wrap_content"
+        android:minLines="8"
+        android:maxLines="10"
+        android:maxLength="240"/>
+    <TextView
+        android:background="@color/dev"
+        android:layout_width="match_parent"
+        android:layout_height="1px" />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="20dp">
+
+    </LinearLayout>
+    <TextView
+        android:background="@color/dev"
+        android:layout_width="match_parent"
+        android:layout_height="1px" />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_share"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>

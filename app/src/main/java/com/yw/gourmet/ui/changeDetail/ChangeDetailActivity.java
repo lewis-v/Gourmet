@@ -153,44 +153,44 @@ public class ChangeDetailActivity extends BaseActivity<ChangeDetailPresenter> im
 
     @Override
     public void OnChoose(List<String> img, String tag) {
-        Luban.with(this).load(new File(img.get(0)))
-                .setCompressListener(new OnCompressListener() {
-                    @Override
-                    public void onStart() {
-
-                    }
-
-                    @Override
-                    public void onSuccess(File file) {
-                        Log.i("---length---",file.length()+"");
-                        MultipartBody.Builder builder = new MultipartBody.Builder()
-                                .setType(MultipartBody.FORM)
-                                .addFormDataPart("id",Constant.userData.getId())
-                                .addFormDataPart("path",file.getName(), RequestBody.create(MediaType.parse("multipart/form-data"), file));
-                        mPresenter.upImg(builder.build().parts());
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                    }
-                }).launch();
-
-//        new Compressor(this)
-//                .compressToFileAsFlowable(new File(img.get(0)))
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Consumer<File>() {
+//        Luban.with(this).load(new File(img.get(0)))
+//                .setCompressListener(new OnCompressListener() {
 //                    @Override
-//                    public void accept(File file) throws Exception {
+//                    public void onStart() {
+//
+//                    }
+//
+//                    @Override
+//                    public void onSuccess(File file) {
 //                        Log.i("---length---",file.length()+"");
-//                        RequestBody imageBody = RequestBody.create(MediaType.parse("multipart/form-data"), file);
 //                        MultipartBody.Builder builder = new MultipartBody.Builder()
 //                                .setType(MultipartBody.FORM)
 //                                .addFormDataPart("id",Constant.userData.getId())
-//                                .addFormDataPart("path",file.getName(),imageBody);
+//                                .addFormDataPart("path",file.getName(), RequestBody.create(MediaType.parse("multipart/form-data"), file));
 //                        mPresenter.upImg(builder.build().parts());
 //                    }
-//                });
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//                        e.printStackTrace();
+//                    }
+//                }).launch();
+
+        new Compressor(this)
+                .compressToFileAsFlowable(new File(img.get(0)))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<File>() {
+                    @Override
+                    public void accept(File file) throws Exception {
+                        Log.i("---length---",file.length()+"");
+                        RequestBody imageBody = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+                        MultipartBody.Builder builder = new MultipartBody.Builder()
+                                .setType(MultipartBody.FORM)
+                                .addFormDataPart("id",Constant.userData.getId())
+                                .addFormDataPart("path",file.getName(),imageBody);
+                        mPresenter.upImg(builder.build().parts());
+                    }
+                });
     }
 }

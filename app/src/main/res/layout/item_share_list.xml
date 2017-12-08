@@ -55,122 +55,122 @@
             android:text="@string/test_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-        <TextView
-            android:id="@+id/tv_content"
+
+        <LinearLayout
+            android:id="@+id/ll_content"
             app:layout_constraintTop_toBottomOf="@+id/img_header"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:textColor="@color/word_black"
-            android:textSize="16sp"
-            android:text="@string/test_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <LinearLayout
-            android:id="@+id/ll_img"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            app:layout_constraintBottom_toTopOf="@+id/ll_position"
-            app:layout_constraintLeft_toLeftOf="@+id/constraint_item"
-            app:layout_constraintRight_toRightOf="@+id/constraint_item"
-            app:layout_constraintTop_toBottomOf="@+id/tv_content">
-
-            <ImageView
-                android:id="@+id/img_share"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="20dp"
-                android:scaleType="fitCenter" />
-        </LinearLayout>
-
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_share"
-            app:layout_constraintTop_toBottomOf="@+id/tv_content"
-            app:layout_constraintLeft_toLeftOf="@+id/constraint_item"
-            app:layout_constraintRight_toRightOf="@+id/constraint_item"
-            app:layout_constraintBottom_toTopOf="@+id/ll_position"
-            android:layout_margin="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-
-
-        <LinearLayout
-            android:id="@+id/ll_position"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="@+id/constraint_item"
-            android:layout_width="match_parent"
-            android:layout_height="30dp">
-            <LinearLayout
-                android:id="@+id/ll_comment"
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:gravity="center"
-                android:layout_height="match_parent">
-                <ImageView
-                    android:id="@+id/img_comment"
-                    android:src="@drawable/comment"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                <TextView
-                    android:id="@+id/tv_comment"
-                    android:layout_marginLeft="10dp"
-                    android:text="@string/comment"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/ll_good"
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:gravity="center"
-                android:layout_height="match_parent">
-
-                <ImageView
-                    android:id="@+id/img_good"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/good" />
-                <TextView
-                    android:id="@+id/tv_good"
-                    android:layout_marginLeft="10dp"
-                    android:text="@string/good"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/ll_bad"
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:gravity="center"
-                android:layout_height="match_parent">
-                <ImageView
-                    android:id="@+id/img_bad"
-                    android:src="@drawable/bad"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                <TextView
-                    android:id="@+id/tv_bad"
-                    android:layout_marginLeft="10dp"
-                    android:text="@string/bad"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            app:layout_constraintBottom_toTopOf="@+id/ll_position"
-            android:background="@color/dev"
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="1px"/>
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/tv_content"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:textColor="@color/word_black"
+                android:textSize="16sp"
+                android:text="@string/test_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:id="@+id/ll_img"
+                android:layout_width="match_parent"
+                android:layout_height="200dp">
+
+                <ImageView
+                    android:id="@+id/img_share"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="20dp"
+                    android:scaleType="centerCrop" />
+            </LinearLayout>
+
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_share"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <LinearLayout
+                android:background="@color/dev"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="1px"/>
+
+            <LinearLayout
+                android:id="@+id/ll_position"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="@+id/constraint_item"
+                android:layout_width="match_parent"
+                android:layout_height="30dp">
+                <LinearLayout
+                    android:id="@+id/ll_comment"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:gravity="center"
+                    android:layout_height="match_parent">
+                    <ImageView
+                        android:id="@+id/img_comment"
+                        android:src="@drawable/comment"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:id="@+id/tv_comment"
+                        android:layout_marginLeft="10dp"
+                        android:text="@string/comment"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_good"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:gravity="center"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/img_good"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/good" />
+                    <TextView
+                        android:id="@+id/tv_good"
+                        android:layout_marginLeft="10dp"
+                        android:text="@string/good"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_bad"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:gravity="center"
+                    android:layout_height="match_parent">
+                    <ImageView
+                        android:id="@+id/img_bad"
+                        android:src="@drawable/bad"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:id="@+id/tv_bad"
+                        android:layout_marginLeft="10dp"
+                        android:text="@string/bad"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+
+
+
         <LinearLayout
             app:layout_constraintBottom_toBottomOf="@+id/constraint_item"
             android:background="@color/dev"

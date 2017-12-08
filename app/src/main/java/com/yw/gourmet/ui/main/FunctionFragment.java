@@ -1,6 +1,7 @@
 package com.yw.gourmet.ui.main;
 
 import android.animation.ObjectAnimator;
+import android.content.Intent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -8,6 +9,7 @@ import android.widget.LinearLayout;
 
 import com.yw.gourmet.R;
 import com.yw.gourmet.base.BaseFragment;
+import com.yw.gourmet.ui.share.common.CommonShareActivity;
 import com.yw.gourmet.utils.WindowUtil;
 
 /**
@@ -51,16 +53,19 @@ public class FunctionFragment extends BaseFragment implements View.OnClickListen
 
     @Override
     public void onClick(View view) {
-        ((MainContract.View) getActivity()).addFragmentFunction(false);
         switch (view.getId()) {
             case R.id.ll_text:
-
+                startActivity(new Intent(getContext(), CommonShareActivity.class));
                 break;
             case R.id.ll_photo:
-
+                Intent intent = new Intent(getContext(),CommonShareActivity.class);
+                intent.putExtra("type","photo");
+                startActivity(intent);
                 break;
             case R.id.ll_take_photo:
-
+                Intent intent1 = new Intent(getContext(),CommonShareActivity.class);
+                intent1.putExtra("type","take_photo");
+                startActivity(intent1);
                 break;
             case R.id.ll_diary:
 
@@ -72,6 +77,7 @@ public class FunctionFragment extends BaseFragment implements View.OnClickListen
 
                 break;
             case R.id.ll_close:
+                ((MainContract.View) getActivity()).addFragmentFunction(false);
                 break;
         }
     }

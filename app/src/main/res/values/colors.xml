@@ -5,7 +5,7 @@
     <color name="colorAccent">#ff8200</color>
 
 
-    <color name="menu_back">#aff7f7f7</color>
+    <color name="menu_back">#eff7f7f7</color>
     <color name="menu_color">#333333</color>
     <color name="ui_back">#f2f2f2</color>
     <color name="dev">#e6e6e6</color>
@@ -15,6 +15,8 @@
     <color name="login_edit_back">#8fdfd5d6</color>
     <color name="common_divider_narrow">#E3E3E3</color>
     <color name="list_more">#c4c4c4</color>
+    <color name="close_back">#7f939393</color>
+    <color name="img_back">#8f000000</color>
 
     <color name="theme_orange_primary">#FF5722</color>
     <color name="theme_orange_dark">#E64A19</color>

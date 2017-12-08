@@ -41,21 +41,25 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!--修改个人信息-->
+        <!-- 修改个人信息 -->
         <activity
             android:name=".ui.changeDetail.ChangeDetailActivity"
-            android:screenOrientation="portrait"
-            />
-        <!--照片选择.剪裁-->
+            android:screenOrientation="portrait" />
+        <!-- 照片选择.剪裁 -->
         <activity
             android:name="cn.finalteam.rxgalleryfinal.ui.activity.MediaActivity"
-            android:screenOrientation="portrait"
             android:exported="true"
-            android:theme="@style/AppTheme.Orange"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Orange" />
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Orange"/>
+            android:theme="@style/AppTheme.Orange" />
+        <!-- 普通分享 -->
+        <activity
+            android:name=".ui.share.common.CommonShareActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.share.diary.DiaryActivity"></activity>
     </application>
 
 </manifest>
