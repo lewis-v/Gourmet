@@ -23,7 +23,6 @@ import java.io.File;
 import java.util.List;
 
 import id.zelory.compressor.Compressor;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.MediaType;
@@ -103,7 +102,7 @@ public class ChangeDetailActivity extends BaseActivity<ChangeDetailPresenter> im
                 finish();
                 break;
             case R.id.ll_header:
-                new MyDialogPhotoChooseFragment().setChooseNum(1).setCrop(true)
+                new MyDialogPhotoChooseFragment().setChooseNum(1).setCrop(true).setRatio(1)
                         .setOnPhotoChooseListener(this).show(getSupportFragmentManager(),"header");
                 break;
             case R.id.ll_nickname:
@@ -179,7 +178,7 @@ public class ChangeDetailActivity extends BaseActivity<ChangeDetailPresenter> im
         new Compressor(this)
                 .compressToFileAsFlowable(new File(img.get(0)))
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.io())
                 .subscribe(new Consumer<File>() {
                     @Override
                     public void accept(File file) throws Exception {

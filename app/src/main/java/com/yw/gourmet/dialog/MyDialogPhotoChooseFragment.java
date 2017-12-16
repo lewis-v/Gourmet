@@ -1,33 +1,36 @@
 package com.yw.gourmet.dialog;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.yalantis.ucrop.UCrop;
 import com.yw.gourmet.R;
 import com.yw.gourmet.base.BaseDialogFragment;
 import com.yw.gourmet.listener.OnCancelClickListener;
 import com.yw.gourmet.listener.OnPhotoChooseListener;
+import com.yw.gourmet.utils.ToastUtils;
 import com.yw.gourmet.utils.UriToFileUtil;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import cn.finalteam.rxgalleryfinal.RxGalleryFinal;
-import cn.finalteam.rxgalleryfinal.RxGalleryFinalApi;
-import cn.finalteam.rxgalleryfinal.bean.ImageCropBean;
-import cn.finalteam.rxgalleryfinal.bean.MediaBean;
-import cn.finalteam.rxgalleryfinal.imageloader.ImageLoaderType;
-import cn.finalteam.rxgalleryfinal.rxbus.RxBusResultDisposable;
-import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
-import cn.finalteam.rxgalleryfinal.rxbus.event.ImageRadioResultEvent;
-import cn.finalteam.rxgalleryfinal.ui.RxGalleryListener;
-import cn.finalteam.rxgalleryfinal.ui.base.IRadioImageCheckedListener;
+import me.iwf.photopicker.PhotoPicker;
+
+import static android.app.Activity.RESULT_OK;
+
 
 /**
  * Created by LYW on 2017/11/30.
@@ -38,6 +41,8 @@ public class MyDialogPhotoChooseFragment extends BaseDialogFragment implements V
     public final static int PHOTO = 1;//照片选择
     public final static int TAKE_PHOTO = 2;//拍照
 
+    private final static int REQUEST_CODE_CAPTURE_CAMEIA = 888;
+
     private TextView tv_take,tv_choose,tv_cancel;
     private OnCancelClickListener onCancelClickListener;
     private OnPhotoChooseListener onPhotoChooseListener;
@@ -45,6 +50,7 @@ public class MyDialogPhotoChooseFragment extends BaseDialogFragment implements V
     private boolean isCrop = false;//是否剪裁,默认不剪裁
     private List<String> list = new ArrayList<>();//选择结果
     private int type = COMMON;//类型,默认为普通
+    private float ratio = 0;//裁剪比例
 
     @Override
     protected void initView() {
@@ -56,24 +62,6 @@ public class MyDialogPhotoChooseFragment extends BaseDialogFragment implements V
         tv_choose.setOnClickListener(this);
         tv_cancel.setOnClickListener(this);
 
-        //裁剪图片的回调
-        RxGalleryListener
-                .getInstance()
-                .setRadioImageCheckedListener(
-                        new IRadioImageCheckedListener() {
-                            @Override
-                            public void cropAfter(Object t) {
-                                list.add(t.toString());
-                                if (onPhotoChooseListener != null) {
-                                    onPhotoChooseListener.OnChoose(list, getTag());
-                                }
-                            }
-
-                            @Override
-                            public boolean isActivityFinish() {
-                                return true;
-                            }
-                        });
         tv_cancel.post(new Runnable() {
             @Override
             public void run() {
@@ -101,69 +89,35 @@ public class MyDialogPhotoChooseFragment extends BaseDialogFragment implements V
                 }
                 dismiss();
                 break;
-            case R.id.tv_choose:
+            case R.id.tv_choose://照片选择
                 dismiss();
-                if (chooseNum == 1) {
-                    //自定义方法的单选
-                    if (isCrop){
-                        RxGalleryFinal.with(getContext())
-                                .image()
-                                .radio()
-                                .hideCamera()
-                                .cropWithAspectRatio(1,1)
-                                .crop()
-                                .imageLoader(ImageLoaderType.PICASSO)
-                                .subscribe(new RxBusResultDisposable<ImageRadioResultEvent>() {
-                                    @Override
-                                    protected void onEvent(ImageRadioResultEvent imageMultipleResultEvent) throws Exception {
-
-                                    }
-
-                                }).openGallery();
-                    }else {
-                        RxGalleryFinal
-                                .with(getContext())
-                                .image()
-                                .radio()
-                                .hideCamera()
-                                .imageLoader(ImageLoaderType.PICASSO)
-                                .subscribe(new RxBusResultDisposable<ImageRadioResultEvent>() {
-                                    @Override
-                                    protected void onEvent(ImageRadioResultEvent imageRadioResultEvent) throws Exception {
-                                        list.add(imageRadioResultEvent.getResult().getOriginalPath());
-                                        if (onPhotoChooseListener != null) {
-                                            onPhotoChooseListener.OnChoose(list, getTag());
-                                        }
-                                    }
-                                }).openGallery();
-                    }
-                }else {
-                    //自定义方法的多选
-                    RxGalleryFinal.with(getContext())
-                            .image()
-                            .multiple()
-                            .maxSize(chooseNum)
-                            .hideCamera()
-                            .imageLoader(ImageLoaderType.PICASSO)
-                            .subscribe(new RxBusResultDisposable<ImageMultipleResultEvent>() {
-                                @Override
-                                protected void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) throws Exception {
-                                   for (MediaBean mediaBean : imageMultipleResultEvent.getResult()) {
-                                       list.add(mediaBean.getOriginalPath());
-                                   }
-                                   if (onPhotoChooseListener != null){
-                                       onPhotoChooseListener.OnChoose(list,getTag());
-                                   }
-                                }
-
-                            }).openGallery();
-                }
+                PhotoPicker.builder()
+                        .setPhotoCount(chooseNum)
+                        .setShowCamera(false)
+                        .setShowGif(false)
+                        .setPreviewEnabled(false)
+                        .start(getActivity(), PhotoPicker.REQUEST_CODE);
                 break;
             case R.id.tv_take:
                 dismiss();
                 //手机拍照
-                RxGalleryFinalApi.openZKCamera(this);
+                getImageFromCamera();
                 break;
+        }
+    }
+
+    /**
+     * 拍照并获取照片
+     */
+    protected void getImageFromCamera() {
+        String state = Environment.getExternalStorageState();
+        if (state.equals(Environment.MEDIA_MOUNTED)) {
+            Intent getImageByCamera = new Intent("android.media.action.IMAGE_CAPTURE");
+//            getImageByCamera.putExtra(MediaStore.EXTRA_OUTPUT, photoPath);//存入指定路径
+            startActivityForResult(getImageByCamera, REQUEST_CODE_CAPTURE_CAMEIA);
+        }
+        else {
+            ToastUtils.showSingleToast("请确认已经插入SD卡");
         }
     }
 
@@ -173,16 +127,68 @@ public class MyDialogPhotoChooseFragment extends BaseDialogFragment implements V
     }
 
     @Override
-    public void startActivityForResult(Intent intent, int requestCode) {
-        if (requestCode == RxGalleryFinalApi.TAKE_IMAGE_REQUEST_CODE){
-            if (onPhotoChooseListener != null && intent.getExtras().get(MediaStore.EXTRA_OUTPUT)!=null){
-                list.add(UriToFileUtil.getPath(getContext()
-                        ,Uri.parse(intent.getExtras().get(MediaStore.EXTRA_OUTPUT).toString())));
-                Log.i("---intent---",list.toString());
-                onPhotoChooseListener.OnChoose(list,getTag());
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == PhotoPicker.REQUEST_CODE) {
+                if (data != null) {
+                    list = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
+                    if (chooseNum == 1 && isCrop && list.size() > 0){
+                        String cropPath = Environment.getExternalStorageDirectory().getPath() + "/data/gourmet/"+new Date()+".jpg";
+                        UCrop uCrop = UCrop.of(Uri.fromFile(new File(list.get(0))),Uri.fromFile(new File(cropPath)));
+                        if (ratio != 0){
+                            uCrop.withAspectRatio(1,ratio);
+                        }
+                        uCrop.start(getContext(),this);
+                    }else {
+                        if (onPhotoChooseListener != null) {
+                            onPhotoChooseListener.OnChoose(list, getTag());
+                        }
+                    }
+                }
+            }else if (requestCode == REQUEST_CODE_CAPTURE_CAMEIA) {
+                Uri uri = data.getData();
+                if (uri == null) {
+                    Bundle bundle = data.getExtras();
+                    Bitmap bitmap = (Bitmap) bundle.get("data");
+                    String path = Environment.getExternalStorageDirectory().getPath() + "/data/gourmet/";
+                    try {
+                        File dirFile = new File(path);
+                        if (!dirFile.exists()) {
+                            dirFile.mkdir();
+                        }
+                        File myCaptureFile = new File(path +new Date().getTime()+ "photo.jpeg");
+                        if (!myCaptureFile.exists()){
+                            myCaptureFile.createNewFile();
+                        }
+                        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(myCaptureFile));
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, bos);
+                        bos.flush();
+                        bos.close();
+                        uri = Uri.fromFile(myCaptureFile);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        return;
+                    }
+                }
+                if (isCrop){
+                    String cropPath = Environment.getExternalStorageDirectory().getPath() + "/data/gourmet/"+new Date()+".jpg";
+                    UCrop uCrop = UCrop.of(Uri.fromFile(new File(list.get(0))),Uri.fromFile(new File(cropPath)));
+                    if (ratio != 0){
+                        uCrop.withAspectRatio(1,ratio);
+                    }
+                    uCrop.start(getContext(),this);
+                }else {
+                    list.add(UriToFileUtil.getPath(getContext(), uri));
+                    if (onPhotoChooseListener != null) {
+                        onPhotoChooseListener.OnChoose(list, getTag());
+                    }
+                }
+            }else if (requestCode == UCrop.REQUEST_CROP){//此处只做提示,实际不触发,会触发父activity的这个方法
+                Uri resultUri = UCrop.getOutput(data);//裁剪的结果
+                Log.i("---crop---",resultUri.toString());
             }
         }
-        super.startActivityForResult(intent, requestCode);
     }
 
     public MyDialogPhotoChooseFragment setOnCancelClickListener(OnCancelClickListener onCancelClickListener) {
@@ -207,6 +213,11 @@ public class MyDialogPhotoChooseFragment extends BaseDialogFragment implements V
 
     public MyDialogPhotoChooseFragment setType(int type) {
         this.type = type;
+        return this;
+    }
+
+    public MyDialogPhotoChooseFragment setRatio(float ratio) {
+        this.ratio = ratio;
         return this;
     }
 }

@@ -46,20 +46,20 @@
             android:name=".ui.changeDetail.ChangeDetailActivity"
             android:screenOrientation="portrait" />
         <!-- 照片选择.剪裁 -->
-        <activity
-            android:name="cn.finalteam.rxgalleryfinal.ui.activity.MediaActivity"
-            android:exported="true"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Orange" />
+        <activity android:name="me.iwf.photopicker.PhotoPickerActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity android:name="me.iwf.photopicker.PhotoPagerActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"/>
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Orange" />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <!-- 普通分享 -->
         <activity
             android:name=".ui.share.common.CommonShareActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.share.diary.DiaryActivity"></activity>
+        <!--日记分享-->
+        <activity android:name=".ui.share.diary.DiaryActivity"/>
     </application>
 
 </manifest>
