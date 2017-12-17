@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.yw.gourmet.Constant;
+import com.yw.gourmet.GlideApp;
 import com.yw.gourmet.R;
 import com.yw.gourmet.base.BaseActivity;
 import com.yw.gourmet.ui.changeDetail.ChangeDetailActivity;
@@ -149,9 +150,9 @@ public class PersonalActivity extends BaseActivity<PersonalPresenter> implements
                 tv_sex.setText(Constant.userData.getSex());
                 tv_address.setText(Constant.userData.getAddress());
                 tv_introduction.setText(Constant.userData.getIntroduction());
-                Glide.with(this).load(Constant.userData.getImg_header()).into(float_action_header);
-                Glide.with(this).load(Constant.userData.getImg_header()).into(img_header);
-                Glide.with(this).load(Constant.userData.getPersonal_back()).into(img_tool_back);
+                GlideApp.with(this).load(Constant.userData.getImg_header()).error(R.mipmap.load_fail).into(float_action_header);
+                GlideApp.with(this).load(Constant.userData.getImg_header()).error(R.mipmap.load_fail).into(img_header);
+                GlideApp.with(this).load(Constant.userData.getPersonal_back()).error(R.mipmap.load_fail).into(img_tool_back);
             }
         }
     }

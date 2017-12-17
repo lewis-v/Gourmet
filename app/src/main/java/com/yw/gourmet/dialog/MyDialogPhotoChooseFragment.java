@@ -5,8 +5,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -15,7 +13,6 @@ import com.yalantis.ucrop.UCrop;
 import com.yw.gourmet.R;
 import com.yw.gourmet.base.BaseDialogFragment;
 import com.yw.gourmet.listener.OnCancelClickListener;
-import com.yw.gourmet.listener.OnPhotoChooseListener;
 import com.yw.gourmet.utils.ToastUtils;
 import com.yw.gourmet.utils.UriToFileUtil;
 
@@ -42,10 +39,12 @@ public class MyDialogPhotoChooseFragment extends BaseDialogFragment implements V
     public final static int TAKE_PHOTO = 2;//拍照
 
     private final static int REQUEST_CODE_CAPTURE_CAMEIA = 888;
+    private final static String path = Environment.getExternalStorageDirectory().getPath() + "/data/gourmet/";//存储目录
 
     private TextView tv_take,tv_choose,tv_cancel;
     private OnCancelClickListener onCancelClickListener;
-    private OnPhotoChooseListener onPhotoChooseListener;
+    private OnChooseLister onPhotoChooseListener;
+    private OnCropListener onCropListener;
     private int chooseNum = 1;//选择数量,默认1张,最大9张
     private boolean isCrop = false;//是否剪裁,默认不剪裁
     private List<String> list = new ArrayList<>();//选择结果
@@ -90,16 +89,14 @@ public class MyDialogPhotoChooseFragment extends BaseDialogFragment implements V
                 dismiss();
                 break;
             case R.id.tv_choose://照片选择
-                dismiss();
                 PhotoPicker.builder()
                         .setPhotoCount(chooseNum)
                         .setShowCamera(false)
                         .setShowGif(false)
                         .setPreviewEnabled(false)
-                        .start(getActivity(), PhotoPicker.REQUEST_CODE);
+                        .start(getContext(),this, PhotoPicker.REQUEST_CODE);
                 break;
             case R.id.tv_take:
-                dismiss();
                 //手机拍照
                 getImageFromCamera();
                 break;
@@ -129,12 +126,17 @@ public class MyDialogPhotoChooseFragment extends BaseDialogFragment implements V
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.i("---result---",requestCode+";"+resultCode+";"+data.toString());
         if (resultCode == RESULT_OK) {
             if (requestCode == PhotoPicker.REQUEST_CODE) {
                 if (data != null) {
                     list = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
                     if (chooseNum == 1 && isCrop && list.size() > 0){
-                        String cropPath = Environment.getExternalStorageDirectory().getPath() + "/data/gourmet/"+new Date()+".jpg";
+                        File file = new File(path);
+                        if (!file.exists()){
+                            file.mkdirs();
+                        }
+                        String cropPath = path+new Date()+".jpg";
                         UCrop uCrop = UCrop.of(Uri.fromFile(new File(list.get(0))),Uri.fromFile(new File(cropPath)));
                         if (ratio != 0){
                             uCrop.withAspectRatio(1,ratio);
@@ -144,6 +146,7 @@ public class MyDialogPhotoChooseFragment extends BaseDialogFragment implements V
                         if (onPhotoChooseListener != null) {
                             onPhotoChooseListener.OnChoose(list, getTag());
                         }
+                        dismiss();
                     }
                 }
             }else if (requestCode == REQUEST_CODE_CAPTURE_CAMEIA) {
@@ -151,7 +154,7 @@ public class MyDialogPhotoChooseFragment extends BaseDialogFragment implements V
                 if (uri == null) {
                     Bundle bundle = data.getExtras();
                     Bitmap bitmap = (Bitmap) bundle.get("data");
-                    String path = Environment.getExternalStorageDirectory().getPath() + "/data/gourmet/";
+
                     try {
                         File dirFile = new File(path);
                         if (!dirFile.exists()) {
@@ -183,12 +186,32 @@ public class MyDialogPhotoChooseFragment extends BaseDialogFragment implements V
                     if (onPhotoChooseListener != null) {
                         onPhotoChooseListener.OnChoose(list, getTag());
                     }
+                    dismiss();
                 }
-            }else if (requestCode == UCrop.REQUEST_CROP){//此处只做提示,实际不触发,会触发父activity的这个方法
+            }else if (requestCode == UCrop.REQUEST_CROP){
                 Uri resultUri = UCrop.getOutput(data);//裁剪的结果
-                Log.i("---crop---",resultUri.toString());
+                if (onCropListener != null){
+                    onCropListener.OnCrop(UriToFileUtil.getPath(getContext(),resultUri),getTag());
+                }
+                dismiss();
             }
+        }else if (resultCode == UCrop.RESULT_ERROR){
+            ToastUtils.showLongToast("剪裁出错");
         }
+    }
+
+    /**
+     * 剪裁监听器
+     */
+    public interface OnCropListener{
+        void OnCrop(String path,String tag);
+    }
+
+    /**
+     * 选择照片监听器
+     */
+    public interface OnChooseLister{
+        void OnChoose(List<String> imgs,String tag);
     }
 
     public MyDialogPhotoChooseFragment setOnCancelClickListener(OnCancelClickListener onCancelClickListener) {
@@ -196,7 +219,7 @@ public class MyDialogPhotoChooseFragment extends BaseDialogFragment implements V
         return this;
     }
 
-    public MyDialogPhotoChooseFragment setOnPhotoChooseListener(OnPhotoChooseListener onPhotoChooseListener) {
+    public MyDialogPhotoChooseFragment setOnPhotoChooseListener(OnChooseLister onPhotoChooseListener) {
         this.onPhotoChooseListener = onPhotoChooseListener;
         return this;
     }
@@ -218,6 +241,11 @@ public class MyDialogPhotoChooseFragment extends BaseDialogFragment implements V
 
     public MyDialogPhotoChooseFragment setRatio(float ratio) {
         this.ratio = ratio;
+        return this;
+    }
+
+    public MyDialogPhotoChooseFragment setOnCropListener(OnCropListener onCropListener) {
+        this.onCropListener = onCropListener;
         return this;
     }
 }

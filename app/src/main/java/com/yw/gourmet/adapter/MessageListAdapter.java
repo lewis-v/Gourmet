@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.yw.gourmet.GlideApp;
 import com.yw.gourmet.R;
 import com.yw.gourmet.data.MessageListData;
 import com.yw.gourmet.listener.OnItemClickListener;
@@ -47,7 +48,8 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
         holder.tv_time.setText(listData.get(position).getTime());
         holder.tv_content.setText(listData.get(position).getContent());
         holder.tv_nickname.setText(listData.get(position).getNickname());
-        Glide.with(context).load(listData.get(position).getImg_header()).into(holder.img_header);
+        GlideApp.with(context).load(listData.get(position).getImg_header()).error(R.mipmap.load_fail)
+                .into(holder.img_header);
         if (onItemClickListener != null){
             holder.constraint_item.setOnClickListener(new View.OnClickListener() {
                 @Override

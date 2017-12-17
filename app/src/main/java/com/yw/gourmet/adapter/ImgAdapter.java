@@ -14,6 +14,7 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.yw.gourmet.GlideApp;
 import com.yw.gourmet.R;
 import com.yw.gourmet.listener.OnItemClickListener;
 
@@ -46,18 +47,7 @@ public class ImgAdapter extends RecyclerView.Adapter<ImgAdapter.MyViewHolder>{
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-        Glide.with(context).load(listImg.get(position)).listener(new RequestListener<Drawable>() {
-            @Override
-            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                holder.img.setImageResource(R.mipmap.load_fail);
-                return true;
-            }
-
-            @Override
-            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                return false;
-            }
-        }).into(holder.img);
+        GlideApp.with(context).load(listImg.get(position)).error(R.mipmap.load_fail).into(holder.img);
         if (onItemClickListener != null){
             holder.img.setOnClickListener(new View.OnClickListener() {
                 @Override

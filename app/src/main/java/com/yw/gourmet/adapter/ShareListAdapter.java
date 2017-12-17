@@ -22,6 +22,7 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.yw.gourmet.GlideApp;
 import com.yw.gourmet.R;
 import com.yw.gourmet.data.ShareListData;
 import com.yw.gourmet.dialog.MyDialogPhotoShowFragment;
@@ -75,18 +76,8 @@ public class ShareListAdapter extends RecyclerView.Adapter<ShareListAdapter.MyVi
         holder.tv_content.setText(listData.get(position).getContent());
         holder.tv_time.setText(listData.get(position).getPut_time());
         holder.tv_nickname.setText(listData.get(position).getNickname());
-        Glide.with(context).load(listData.get(position).getImg_header()).listener(new RequestListener<Drawable>() {
-            @Override
-            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                holder.img_header.setImageResource(R.mipmap.load_fail);
-                return true;
-            }
-
-            @Override
-            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                return false;
-            }
-        }).into(holder.img_header);
+        GlideApp.with(context).load(listData.get(position).getImg_header())
+                .error(R.mipmap.load_fail).into(holder.img_header);
         if (listData.get(position).getContent() == null || listData.get(position).getContent().length() == 0){
             holder.tv_content.setVisibility(View.GONE);
         }else {
@@ -114,18 +105,7 @@ public class ShareListAdapter extends RecyclerView.Adapter<ShareListAdapter.MyVi
         }else if (listData.get(position).getImg().size() == 1){//单张图片
             holder.ll_img.setVisibility(View.VISIBLE);
             holder.recycler_share.setVisibility(View.GONE);
-            Glide.with(context).load(listData.get(position).getImg().get(0)).listener(new RequestListener<Drawable>() {
-                @Override
-                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                    holder.img_header.setImageResource(R.mipmap.load_fail);
-                    return true;
-                }
-
-                @Override
-                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                    return false;
-                }
-            }).into(holder.img_share);
+            GlideApp.with(context).load(listData.get(position).getImg().get(0)).error(R.mipmap.load_fail).into(holder.img_share);
             holder.img_share.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

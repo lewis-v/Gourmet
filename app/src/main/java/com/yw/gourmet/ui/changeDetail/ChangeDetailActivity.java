@@ -16,7 +16,6 @@ import com.yw.gourmet.data.UserData;
 import com.yw.gourmet.dialog.MyDialogEditFragment;
 import com.yw.gourmet.dialog.MyDialogPhotoChooseFragment;
 import com.yw.gourmet.listener.OnEditDialogEnterClickListener;
-import com.yw.gourmet.listener.OnPhotoChooseListener;
 import com.yw.gourmet.utils.ToastUtils;
 
 import java.io.File;
@@ -28,11 +27,11 @@ import io.reactivex.schedulers.Schedulers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import top.zibin.luban.Luban;
-import top.zibin.luban.OnCompressListener;
+
+import static com.yw.gourmet.dialog.MyDialogPhotoChooseFragment.*;
 
 public class ChangeDetailActivity extends BaseActivity<ChangeDetailPresenter> implements ChangeDetailContract.View
-        ,View.OnClickListener,OnEditDialogEnterClickListener,OnPhotoChooseListener {
+        ,View.OnClickListener,OnEditDialogEnterClickListener,OnCropListener {
     private LinearLayout ll_nickname,ll_sex,ll_address,ll_introduction,ll_header;
     private ImageView img_back,img_header;
     private TextView tv_nickname,tv_sex,tv_address,tv_introduction;
@@ -103,7 +102,7 @@ public class ChangeDetailActivity extends BaseActivity<ChangeDetailPresenter> im
                 break;
             case R.id.ll_header:
                 new MyDialogPhotoChooseFragment().setChooseNum(1).setCrop(true).setRatio(1)
-                        .setOnPhotoChooseListener(this).show(getSupportFragmentManager(),"header");
+                        .setOnCropListener(this).show(getSupportFragmentManager(),"header");
                 break;
             case R.id.ll_nickname:
                 if (Constant.userData != null) {
@@ -151,7 +150,25 @@ public class ChangeDetailActivity extends BaseActivity<ChangeDetailPresenter> im
     }
 
     @Override
-    public void OnChoose(List<String> img, String tag) {
+    public void OnCrop(String path, String tag) {
+        new Compressor(this)
+                .compressToFileAsFlowable(new File(path))
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
+                .subscribe(new Consumer<File>() {
+                    @Override
+                    public void accept(File file) throws Exception {
+                        Log.i("---length---",file.length()+"");
+                        RequestBody imageBody = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+                        MultipartBody.Builder builder = new MultipartBody.Builder()
+                                .setType(MultipartBody.FORM)
+                                .addFormDataPart("id",Constant.userData.getId())
+                                .addFormDataPart("path",file.getName(),imageBody);
+                        mPresenter.upImg(builder.build().parts());
+                    }
+                });
+
+
 //        Luban.with(this).load(new File(img.get(0)))
 //                .setCompressListener(new OnCompressListener() {
 //                    @Override
@@ -174,22 +191,5 @@ public class ChangeDetailActivity extends BaseActivity<ChangeDetailPresenter> im
 //                        e.printStackTrace();
 //                    }
 //                }).launch();
-
-        new Compressor(this)
-                .compressToFileAsFlowable(new File(img.get(0)))
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.io())
-                .subscribe(new Consumer<File>() {
-                    @Override
-                    public void accept(File file) throws Exception {
-                        Log.i("---length---",file.length()+"");
-                        RequestBody imageBody = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-                        MultipartBody.Builder builder = new MultipartBody.Builder()
-                                .setType(MultipartBody.FORM)
-                                .addFormDataPart("id",Constant.userData.getId())
-                                .addFormDataPart("path",file.getName(),imageBody);
-                        mPresenter.upImg(builder.build().parts());
-                    }
-                });
     }
 }

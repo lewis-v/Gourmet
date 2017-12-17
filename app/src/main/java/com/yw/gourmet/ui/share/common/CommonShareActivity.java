@@ -13,9 +13,9 @@ import com.yw.gourmet.adapter.ImgAddAdapter;
 import com.yw.gourmet.base.BaseActivity;
 import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.dialog.MyDialogPhotoChooseFragment;
+import com.yw.gourmet.dialog.MyDialogPhotoChooseFragment.OnChooseLister;
 import com.yw.gourmet.listener.OnDeleteListener;
 import com.yw.gourmet.listener.OnItemClickListener;
-import com.yw.gourmet.listener.OnPhotoChooseListener;
 import com.yw.gourmet.utils.ThreadUtils;
 import com.yw.gourmet.utils.ToastUtils;
 
@@ -35,7 +35,7 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
 public class CommonShareActivity extends BaseActivity<CommonSharePresenter> implements CommonShareContract.View
-        ,View.OnClickListener,OnPhotoChooseListener{
+        ,View.OnClickListener,OnChooseLister{
     private TextView tv_cancel,tv_send;
     private EditText et_content;
     private RecyclerView recycler_share;
