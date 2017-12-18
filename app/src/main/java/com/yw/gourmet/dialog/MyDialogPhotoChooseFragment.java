@@ -61,6 +61,10 @@ public class MyDialogPhotoChooseFragment extends BaseDialogFragment implements V
         tv_choose.setOnClickListener(this);
         tv_cancel.setOnClickListener(this);
 
+        if (type != COMMON){
+            view.findViewById(R.id.ll_photo).setVisibility(View.GONE);
+        }
+
         tv_cancel.post(new Runnable() {
             @Override
             public void run() {
@@ -126,8 +130,7 @@ public class MyDialogPhotoChooseFragment extends BaseDialogFragment implements V
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.i("---result---",requestCode+";"+resultCode+";"+data.toString());
-        if (resultCode == RESULT_OK) {
+        if (resultCode == RESULT_OK && data != null) {
             if (requestCode == PhotoPicker.REQUEST_CODE) {
                 if (data != null) {
                     list = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
@@ -197,6 +200,8 @@ public class MyDialogPhotoChooseFragment extends BaseDialogFragment implements V
             }
         }else if (resultCode == UCrop.RESULT_ERROR){
             ToastUtils.showLongToast("剪裁出错");
+        }else {
+            dismiss();
         }
     }
 

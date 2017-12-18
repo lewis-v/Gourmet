@@ -2,11 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ll_share_diary"
     android:orientation="vertical"
+    android:background="@android:color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.yw.gourmet.ui.share.diary.DiaryActivity">
     <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:paddingTop="25dp"
         app:contentInsetStart="0dp"
         android:layout_width="match_parent"
@@ -49,5 +52,81 @@
         android:background="@mipmap/dev"
         android:layout_width="match_parent"
         android:layout_height="1dp" />
-
+    <EditText
+        android:id="@+id/et_title"
+        android:layout_margin="10dp"
+        android:hint="@string/diary_title_tip"
+        android:textColor="@color/word_black"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:background="@null"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:layout_marginBottom="5dp"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/tv_address"
+            android:hint="@string/address"
+            android:textSize="14sp"
+            android:textColor="@color/word_black"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/tv_time"
+            android:hint="@string/time"
+            android:textSize="14sp"
+            android:textColor="@color/word_black"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/tv_auth"
+            android:hint="@string/auth"
+            android:textSize="14sp"
+            android:textColor="@color/word_black"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <jp.wasabeef.richeditor.RichEditor
+            android:id="@+id/richeditor_diary"
+            android:layout_margin="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+        <ImageView
+            android:id="@+id/img_tool"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:src="@drawable/add_circle"
+            android:tint="@color/colorAccent"
+            android:layout_width="60dp"
+            android:layout_height="60dp"/>
+        <FrameLayout
+            android:id="@+id/fl_tool"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="-20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_alignTop="@+id/img_tool"
+            android:layout_alignBottom="@+id/img_tool"
+            android:layout_toLeftOf="@+id/img_tool"
+            android:layout_toStartOf="@+id/img_tool"
+            android:layout_marginEnd="-20dp" />
+    </RelativeLayout>
 </LinearLayout>

@@ -3,6 +3,8 @@ package com.yw.gourmet.ui.share.common;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -36,7 +38,7 @@ import okhttp3.RequestBody;
 
 public class CommonShareActivity extends BaseActivity<CommonSharePresenter> implements CommonShareContract.View
         ,View.OnClickListener,OnChooseLister{
-    private TextView tv_cancel,tv_send;
+    private TextView tv_cancel,tv_send,tv_count;
     private EditText et_content;
     private RecyclerView recycler_share;
     private ImgAddAdapter addAdapter;
@@ -55,10 +57,27 @@ public class CommonShareActivity extends BaseActivity<CommonSharePresenter> impl
     protected void initView() {
         tv_cancel = (TextView)findViewById(R.id.tv_cancel);
         tv_send = (TextView)findViewById(R.id.tv_send);
+        tv_count = (TextView)findViewById(R.id.tv_count);
         tv_cancel.setOnClickListener(this);
         tv_send.setOnClickListener(this);
 
         et_content = (EditText)findViewById(R.id.et_content);
+        et_content.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                tv_count.setText(String.valueOf(charSequence.length()));
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 
         recycler_share = (RecyclerView)findViewById(R.id.recycler_share);
         recycler_share.setLayoutManager(new StaggeredGridLayoutManager(3

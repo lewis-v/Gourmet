@@ -34,7 +34,7 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment {
         super.onCreateView(inflater,container,savedInstanceState);
         try {
             //getGenericSuperclass获取类的超类的类型即<P>p的类型,ParameterizedType参数化类型
-            // ,getActualTypeArguments返回表示此类型实际类型参数的 Type 对象的数组
+            // ,getActualTypeArguments返回表示此类型实际类型参数的 ToolType 对象的数组
             mPresenter = ((Class<P>) ((ParameterizedType) (getClass()
                     .getGenericSuperclass())).getActualTypeArguments()[0])
                     .newInstance();

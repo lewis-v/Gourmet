@@ -90,14 +90,18 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         initPermission();
     }
 
-    public void initPermission(){
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    public void initPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 == PERMISSION_DENIED ||
-                ActivityCompat.checkSelfPermission(this,Manifest.permission.READ_EXTERNAL_STORAGE)
-                == PERMISSION_DENIED){
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                        == PERMISSION_DENIED ||
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                        == PERMISSION_DENIED) {
             ActivityCompat.requestPermissions(this
-                    ,new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    ,Manifest.permission.READ_EXTERNAL_STORAGE},0);
+                    , new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE
+                            , Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 0);
+
         }
     }
 

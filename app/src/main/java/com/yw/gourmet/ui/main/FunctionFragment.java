@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import com.yw.gourmet.R;
 import com.yw.gourmet.base.BaseFragment;
 import com.yw.gourmet.ui.share.common.CommonShareActivity;
+import com.yw.gourmet.ui.share.diary.DiaryActivity;
 import com.yw.gourmet.utils.WindowUtil;
 
 /**
@@ -68,7 +69,7 @@ public class FunctionFragment extends BaseFragment implements View.OnClickListen
                 startActivity(intent1);
                 break;
             case R.id.ll_diary:
-
+                startActivity(new Intent(getContext(),DiaryActivity.class));
                 break;
             case R.id.ll_menu:
 
