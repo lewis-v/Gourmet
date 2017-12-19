@@ -144,6 +144,17 @@ public class ShareListAdapter extends RecyclerView.Adapter<ShareListAdapter.MyVi
             holder.tv_title.setText(listData.get(position).getTitle());
             GlideApp.with(context).load(listData.get(position).getCover()).error(R.mipmap.load_fail)
                     .into(holder.img_cover);
+            switch (listData.get(position).getType()){
+                case Constant.TypeFlag.DIARY://日记
+                    holder.tv_title.setBackgroundResource(R.drawable.diary_back);
+                    break;
+                case Constant.TypeFlag.MENU://食谱
+                    holder.tv_title.setBackgroundResource(R.drawable.menu_back);
+                    break;
+                case Constant.TypeFlag.RAIDERS://攻略
+                    holder.tv_title.setBackgroundResource(R.drawable.raiders_back);
+                    break;
+            }
         }
 
         if (listener != null){

@@ -123,6 +123,9 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
             listData.addAll(model.getData());
             adapter.notifyDataSetChanged();
             swipeToLoadLayout.setRefreshing(false);
+            if (listData.size()>0) {
+                swipe_target.smoothScrollToPosition(0);
+            }
         }else {
             swipeToLoadLayout.setLoadingMore(false);
         }
