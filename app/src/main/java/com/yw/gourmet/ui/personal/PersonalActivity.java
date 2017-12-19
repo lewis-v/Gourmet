@@ -22,16 +22,30 @@ import com.yw.gourmet.Constant;
 import com.yw.gourmet.GlideApp;
 import com.yw.gourmet.R;
 import com.yw.gourmet.base.BaseActivity;
+import com.yw.gourmet.data.BaseData;
+import com.yw.gourmet.data.UserData;
+import com.yw.gourmet.dialog.MyDialogPhotoChooseFragment;
+import com.yw.gourmet.dialog.MyDialogPhotoShowFragment;
 import com.yw.gourmet.ui.changeDetail.ChangeDetailActivity;
+import com.yw.gourmet.utils.ToastUtils;
+
+import java.io.File;
+
+import id.zelory.compressor.Compressor;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 
 public class PersonalActivity extends BaseActivity<PersonalPresenter> implements PersonalContract.View
-        ,View.OnClickListener{
+        ,View.OnClickListener, MyDialogPhotoChooseFragment.OnCropListener {
     private Toolbar toolbar;
     private CollapsingToolbarLayout toolbar_layout;
     private AppBarLayout app_bar;
     private LinearLayout ll_tool,ll_change_detail,ll_change_bottom,ll_change_top;
     private AnimatorSet animatorSetToolBarShow,animatorSetToolBarHide;//toolbar的显示隐藏动画
-    private TextView tv_nickname,tv_sex,tv_address,tv_introduction;
+    private TextView tv_nickname,tv_sex,tv_address,tv_introduction,tv_change_back;
     private FloatingActionButton float_action_header;
     private ImageView img_tool_back,img_header;
     private String id;//用户id
@@ -48,11 +62,16 @@ public class PersonalActivity extends BaseActivity<PersonalPresenter> implements
         tv_sex = (TextView)findViewById(R.id.tv_sex);
         tv_address = (TextView)findViewById(R.id.tv_address);
         tv_introduction = (TextView)findViewById(R.id.tv_introduction);
+        tv_change_back = (TextView)findViewById(R.id.tv_change_back);
+        tv_change_back.setOnClickListener(this);
 
         img_tool_back = (ImageView)findViewById(R.id.img_tool_back);
         img_header = (ImageView)findViewById(R.id.img_header);
 
+        img_header.setOnClickListener(this);
+
         float_action_header = (FloatingActionButton)findViewById(R.id.float_action_header);
+        float_action_header.setOnClickListener(this);
 
         ll_tool = (LinearLayout) findViewById(R.id.ll_tool);
         ll_change_bottom = (LinearLayout)findViewById(R.id.ll_change_bottom);
@@ -166,11 +185,96 @@ public class PersonalActivity extends BaseActivity<PersonalPresenter> implements
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.app_bar:
-                Log.i("---bar---","");
+                setBackChangeShow();
                 break;
             case R.id.ll_change_detail:
                 startActivity(new Intent(this, ChangeDetailActivity.class));
                 break;
+            case R.id.img_header:
+            case R.id.float_action_header:
+                new MyDialogPhotoShowFragment().addImgString(Constant.userData.getImg_header()).show(getSupportFragmentManager(),"header");
+                break;
+            case R.id.tv_change_back:
+                new MyDialogPhotoChooseFragment().setCrop(true).setChooseNum(1).setRatio(2/3f)
+                        .setOnCropListener(this).show(getSupportFragmentManager(),"changeBack");
+                break;
         }
+    }
+
+    /**
+     * 设置更改背景的点击控件的显示与隐藏
+     */
+    public synchronized void setBackChangeShow(){
+        ObjectAnimator objectAnimator;
+        final boolean isShow;
+        if (tv_change_back.getVisibility() == View.VISIBLE){//原来显示,设为隐藏
+            isShow = false;
+            objectAnimator = ObjectAnimator.ofFloat(tv_change_back,"translationX",0,-tv_change_back.getWidth());
+        }else {
+            isShow = true;
+            objectAnimator = ObjectAnimator.ofFloat(tv_change_back,"translationX",-tv_change_back.getWidth(),0);
+        }
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.play(objectAnimator);
+        tv_change_back.setVisibility(View.VISIBLE);
+        animatorSet.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                if (!isShow){
+                    tv_change_back.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+        animatorSet.start();
+    }
+
+    @Override
+    public void OnCrop(String path, String tag) {
+        setLoadDialog(true);
+        new Compressor(this).compressToFileAsFlowable(new File(path))
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
+                .subscribe(new Consumer<File>() {
+                    @Override
+                    public void accept(File file) throws Exception {
+                        MultipartBody.Builder builder = new MultipartBody.Builder()
+                                .setType(MultipartBody.FORM)
+                                .addFormDataPart("id",Constant.userData.getId())
+                                .addFormDataPart("path",file.getName(), RequestBody.create(MediaType.parse(""),file));
+                        mPresenter.upImg(builder.build().parts());
+                    }
+                });
+    }
+
+    @Override
+    public void onUpImgSuccess(BaseData<String> model) {
+        MultipartBody.Builder builder = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("id",Constant.userData.getId())
+                .addFormDataPart("personal_back",model.getData());
+        mPresenter.changeBack(builder.build().parts());
+    }
+
+    @Override
+    public void onChangeSuccess(BaseData<UserData> model) {
+        setLoadDialog(false);
+        Constant.userData = model.getData();
+        setData();
+        ToastUtils.showLongToast(model.getMessage());
     }
 }

@@ -102,4 +102,8 @@ public class Api {
     public Observable<BaseData> ShareCommon(List<MultipartBody.Part> parts){
         return service.ShareCommon(parts);
     }
+
+    public Observable<BaseData> ShareDiary(List<MultipartBody.Part> parts){
+        return service.ShareDiary(parts);
+    }
 }

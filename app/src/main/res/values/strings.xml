@@ -54,4 +54,5 @@
     <string name="diary_title_tip">请输入日记标题</string>
     <string name="time">时间</string>
     <string name="auth">作者</string>
+    <string name="change_back">点击此处更改背景</string>
 </resources>

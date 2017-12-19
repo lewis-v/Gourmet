@@ -2,6 +2,12 @@ package com.yw.gourmet.ui.personal;
 
 import com.yw.gourmet.base.BasePresenter;
 import com.yw.gourmet.base.BaseView;
+import com.yw.gourmet.data.BaseData;
+import com.yw.gourmet.data.UserData;
+
+import java.util.List;
+
+import okhttp3.MultipartBody;
 
 /**
  * Created by LYW on 2017/11/29.
@@ -9,9 +15,11 @@ import com.yw.gourmet.base.BaseView;
 
 public interface PersonalContract {
     interface View extends BaseView{
-
+        void onUpImgSuccess(BaseData<String> model);
+        void onChangeSuccess(BaseData<UserData> model);
     }
     abstract class Presenter extends BasePresenter<View>{
-
+        abstract void upImg(List<MultipartBody.Part> parts);
+        abstract void changeBack(List<MultipartBody.Part> parts);
     }
 }

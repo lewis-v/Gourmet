@@ -22,6 +22,7 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.yw.gourmet.Constant;
 import com.yw.gourmet.GlideApp;
 import com.yw.gourmet.R;
 import com.yw.gourmet.data.ShareListData;
@@ -98,43 +99,52 @@ public class ShareListAdapter extends RecyclerView.Adapter<ShareListAdapter.MyVi
         }else {
             holder.tv_bad.setText(R.string.bad);
         }
-        if (listData.get(position).getImg() == null
-                || listData.get(position).getImg().size() == 0){//无图片
-            holder.recycler_share.setVisibility(View.GONE);
-            holder.ll_img.setVisibility(View.GONE);
-        }else if (listData.get(position).getImg().size() == 1){//单张图片
-            holder.ll_img.setVisibility(View.VISIBLE);
-            holder.recycler_share.setVisibility(View.GONE);
-            GlideApp.with(context).load(listData.get(position).getImg().get(0)).error(R.mipmap.load_fail).into(holder.img_share);
-            holder.img_share.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    new MyDialogPhotoShowFragment().setImgString(listData.get(holder.getLayoutPosition())
-                            .getImg()).show(fragmentManager,"imgShow");
-                }
-            });
-        }else if (listData.size() > 1){//多张图片
-            ImgAdapter adapter = new ImgAdapter(context,listData.get(position).getImg());
-            holder.ll_img.setVisibility(View.GONE);
-            holder.recycler_share.setVisibility(View.VISIBLE);
-            holder.recycler_share.setLayoutManager(new StaggeredGridLayoutManager(3
-                    ,StaggeredGridLayoutManager.VERTICAL));
-            holder.recycler_share.setItemAnimator(new DefaultItemAnimator());
-            holder.recycler_share.setAdapter(adapter);
-            adapter.setOnItemClickListener(new OnItemClickListener() {
-                @Override
-                public void OnClick(View v, int position) {
-                    new MyDialogPhotoShowFragment().setImgString(listData.get(holder.getLayoutPosition()).getImg())
-                            .setPosition(position).show(fragmentManager,"imgShow");
-                }
+        if (listData.get(position).getType() == Constant.TypeFlag.SHARE) {//普通分享
+            holder.ll_other.setVisibility(View.GONE);
+            holder.ll_content.setVisibility(View.VISIBLE);
+            if (listData.get(position).getImg() == null
+                    || listData.get(position).getImg().size() == 0) {//无图片
+                holder.recycler_share.setVisibility(View.GONE);
+                holder.ll_img.setVisibility(View.GONE);
+            } else if (listData.get(position).getImg().size() == 1) {//单张图片
+                holder.ll_img.setVisibility(View.VISIBLE);
+                holder.recycler_share.setVisibility(View.GONE);
+                GlideApp.with(context).load(listData.get(position).getImg().get(0)).error(R.mipmap.load_fail).into(holder.img_share);
+                holder.img_share.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        new MyDialogPhotoShowFragment().setImgString(listData.get(holder.getLayoutPosition())
+                                .getImg()).show(fragmentManager, "imgShow");
+                    }
+                });
+            } else if (listData.size() > 1) {//多张图片
+                ImgAdapter adapter = new ImgAdapter(context, listData.get(position).getImg());
+                holder.ll_img.setVisibility(View.GONE);
+                holder.recycler_share.setVisibility(View.VISIBLE);
+                holder.recycler_share.setLayoutManager(new StaggeredGridLayoutManager(3
+                        , StaggeredGridLayoutManager.VERTICAL));
+                holder.recycler_share.setItemAnimator(new DefaultItemAnimator());
+                holder.recycler_share.setAdapter(adapter);
+                adapter.setOnItemClickListener(new OnItemClickListener() {
+                    @Override
+                    public void OnClick(View v, int position) {
+                        new MyDialogPhotoShowFragment().setImgString(listData.get(holder.getLayoutPosition()).getImg())
+                                .setPosition(position).show(fragmentManager, "imgShow");
+                    }
 
-                @Override
-                public boolean OnLongClick(View v, int position) {
-                    return false;
-                }
-            });
+                    @Override
+                    public boolean OnLongClick(View v, int position) {
+                        return false;
+                    }
+                });
+            }
+        }else {//非普通类型
+            holder.ll_other.setVisibility(View.VISIBLE);
+            holder.ll_content.setVisibility(View.GONE);
+            holder.tv_title.setText(listData.get(position).getTitle());
+            GlideApp.with(context).load(listData.get(position).getCover()).error(R.mipmap.load_fail)
+                    .into(holder.img_cover);
         }
-
 
         if (listener != null){
             holder.constraint_item.setOnClickListener(new View.OnClickListener() {
@@ -187,9 +197,9 @@ public class ShareListAdapter extends RecyclerView.Adapter<ShareListAdapter.MyVi
 
     class MyViewHolder extends RecyclerView.ViewHolder{
         ConstraintLayout constraint_item;
-        ImageView img_header,img_share,img_more;
-        TextView tv_nickname,tv_time,tv_content,tv_comment,tv_good,tv_bad;
-        LinearLayout ll_img,ll_comment,ll_good,ll_bad;
+        ImageView img_header,img_share,img_more,img_cover;
+        TextView tv_nickname,tv_time,tv_content,tv_comment,tv_good,tv_bad,tv_title;
+        LinearLayout ll_img,ll_comment,ll_good,ll_bad,ll_content,ll_other;
         RecyclerView recycler_share;
         MyViewHolder(View itemView) {
             super(itemView);
@@ -197,7 +207,10 @@ public class ShareListAdapter extends RecyclerView.Adapter<ShareListAdapter.MyVi
             img_header = (ImageView)itemView.findViewById(R.id.img_header);
             img_share = (ImageView)itemView.findViewById(R.id.img_share);
             img_more = (ImageView)itemView.findViewById(R.id.img_more);
+            img_cover = (ImageView)itemView.findViewById(R.id.img_cover);
             recycler_share = (RecyclerView)itemView.findViewById(R.id.recycler_share);
+            ll_content = (LinearLayout)itemView.findViewById(R.id.ll_content);
+            ll_other = (LinearLayout)itemView.findViewById(R.id.ll_other);
             ll_img = (LinearLayout)itemView.findViewById(R.id.ll_img);
             ll_comment = (LinearLayout)itemView.findViewById(R.id.ll_comment);
             ll_good = (LinearLayout) itemView.findViewById(R.id.ll_good);
@@ -208,6 +221,7 @@ public class ShareListAdapter extends RecyclerView.Adapter<ShareListAdapter.MyVi
             tv_comment = (TextView)itemView.findViewById(R.id.tv_comment);
             tv_good = (TextView) itemView.findViewById(R.id.tv_good);
             tv_bad = (TextView)itemView.findViewById(R.id.tv_bad);
+            tv_title = (TextView)itemView.findViewById(R.id.tv_title);
         }
     }
 }

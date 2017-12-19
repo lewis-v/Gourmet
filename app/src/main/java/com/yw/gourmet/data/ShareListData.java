@@ -22,6 +22,7 @@ public class ShareListData<T> {
     private int comment_num;//评论数量
     private int good_num;//点赞数量
     private int bad_num;//踩数量
+    private String cover;//封面
 
     public String getId() {
         return id;
@@ -176,6 +177,15 @@ public class ShareListData<T> {
         return this;
     }
 
+    public String getCover() {
+        return cover;
+    }
+
+    public ShareListData setCover(String cover) {
+        this.cover = cover;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "ShareListData{" +
@@ -196,6 +206,7 @@ public class ShareListData<T> {
                 ", comment_num=" + comment_num +
                 ", good_num=" + good_num +
                 ", bad_num=" + bad_num +
+                ", cover='" + cover + '\'' +
                 '}';
     }
 }

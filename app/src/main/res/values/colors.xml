@@ -17,6 +17,7 @@
     <color name="list_more">#c4c4c4</color>
     <color name="close_back">#7f939393</color>
     <color name="img_back">#8f000000</color>
+    <color name="change_back">#8f939393</color>
 
     <color name="theme_orange_primary">#FF5722</color>
     <color name="theme_orange_dark">#E64A19</color>

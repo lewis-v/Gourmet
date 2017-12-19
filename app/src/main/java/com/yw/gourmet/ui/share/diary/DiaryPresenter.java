@@ -35,6 +35,20 @@ public class DiaryPresenter extends DiaryContract.Presenter {
 
     @Override
     void putDiary(List<MultipartBody.Part> parts) {
+        mRxManager.add(Api.getInstance().ShareDiary(parts),new RxSubscriberCallBack<BaseData>(new RxApiCallback<BaseData>() {
+            @Override
+            public void onSuccess(BaseData model) {
+                if (model.getStatus() == 0){
+                    mView.onPutSuccess(model);
+                }else if (model.getStatus() == 1){
+                    mView.onFail(model.getMessage());
+                }
+            }
 
+            @Override
+            public void onFailure(int code, String msg) {
+                mView.onFail(msg);
+            }
+        }));
     }
 }
