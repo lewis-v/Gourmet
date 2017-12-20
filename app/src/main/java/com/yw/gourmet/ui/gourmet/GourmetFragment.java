@@ -3,6 +3,7 @@ package com.yw.gourmet.ui.gourmet;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 
@@ -41,6 +42,8 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
      */
     @Override
     protected void initView() {
+        toolbar = (Toolbar)view.findViewById(R.id.toolbar);
+
         swipeToLoadLayout = (SwipeToLoadLayout)view.findViewById(R.id.swipeToLoadLayout);
         swipe_target = (RecyclerView)view.findViewById(R.id.swipe_target);
         swipe_target.setLayoutManager(new LinearLayoutManager(getContext()));

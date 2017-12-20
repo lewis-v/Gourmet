@@ -8,10 +8,10 @@
     android:layout_height="match_parent"
     tools:context="com.yw.gourmet.ui.share.common.CommonShareActivity">
     <android.support.v7.widget.Toolbar
-        android:paddingTop="25dp"
+        android:id="@+id/toolbar"
         app:contentInsetStart="0dp"
         android:layout_width="match_parent"
-        android:layout_height="65dp">
+        android:layout_height="40dp">
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"

@@ -1,5 +1,6 @@
 package com.yw.gourmet.ui.set;
 
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -18,6 +19,9 @@ public class SetActivity extends BaseActivity implements View.OnClickListener{
      */
     @Override
     protected void initView() {
+        toolbar = (Toolbar)findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         ll_back = (LinearLayout)findViewById(R.id.ll_back);
         ll_back.setOnClickListener(this);
 

@@ -1,6 +1,7 @@
 package com.yw.gourmet.ui.changeDetail;
 
 
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -38,6 +39,9 @@ public class ChangeDetailActivity extends BaseActivity<ChangeDetailPresenter> im
 
     @Override
     protected void initView() {
+        toolbar = (Toolbar)findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         ll_nickname = (LinearLayout)findViewById(R.id.ll_nickname);
         ll_sex = (LinearLayout)findViewById(R.id.ll_sex);
         ll_address = (LinearLayout)findViewById(R.id.ll_address);

@@ -1,5 +1,7 @@
 package com.yw.gourmet.ui.search;
 
+import android.support.v7.widget.Toolbar;
+
 import com.yw.gourmet.R;
 import com.yw.gourmet.base.BaseFragment;
 
@@ -14,7 +16,7 @@ public class SearchFragment extends BaseFragment
      */
     @Override
     protected void initView() {
-
+        toolbar = (Toolbar)view.findViewById(R.id.toolbar);
     }
 
     /**

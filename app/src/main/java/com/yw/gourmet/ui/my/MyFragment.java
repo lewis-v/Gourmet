@@ -48,6 +48,8 @@ public class MyFragment extends BaseFragment implements View.OnClickListener{
      */
     @Override
     protected void initView() {
+        toolbar = (Toolbar)view.findViewById(R.id.toolbar);
+
         ll_set = (LinearLayout)view.findViewById(R.id.ll_set);
         ll_set.setOnClickListener(this);
 

@@ -9,7 +9,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -37,6 +41,7 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
     protected P mPresenter;
     private MyDialogLoadFragment myDialogLoadFragment;
     protected List<Thread> threadList = new ArrayList<>();
+    protected Toolbar toolbar;
     private boolean isReLogining = false;
 
     @Override
@@ -64,19 +69,45 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
         changeWindow();
         setContentView(getLayoutId());
         initView();
+        setToolbarTop();
     }
-
-    /**
-     * 初始化UI
-     */
-    protected abstract void initView();
 
     /**
      * 设置布局文件
      */
     protected abstract int getLayoutId();
 
-    //改变通知栏颜色
+    /**
+     * 初始化UI
+     */
+    protected abstract void initView();
+
+
+    /**
+     * 设置在全屏下toolbar与顶部的距离
+     * 4.4以上可全屏,将会设置padding,以下的版本不设置
+     */
+    public void setToolbarTop(){
+        if (toolbar != null){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                toolbar.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        toolbar.setPadding(toolbar.getPaddingLeft(), toolbar.getHeight() * 25 / 40
+                                , toolbar.getPaddingRight(), toolbar.getPaddingBottom());
+                        ViewGroup.LayoutParams layoutParams = toolbar.getLayoutParams();
+                        layoutParams.height = toolbar.getHeight() * 65 / 40;
+                        toolbar.setLayoutParams(layoutParams);
+                    }
+                });
+            }
+        }
+    }
+
+    /**
+     * 仅支持4.4以上的版本
+     * 改变通知栏颜色
+     */
     public void changeWindow() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             if (isWhile()) {

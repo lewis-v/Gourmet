@@ -5,6 +5,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -56,6 +57,8 @@ public class MessageFragment extends BaseFragment<MessagePresenter> implements M
      */
     @Override
     protected void initView() {
+        toolbar = (Toolbar)view.findViewById(R.id.toolbar);
+
         swipe_target = (RecyclerView)view.findViewById(R.id.swipe_target);
         swipe_target.setItemAnimator(new DefaultItemAnimator());
         swipe_target.setLayoutManager(new LinearLayoutManager(getContext()));

@@ -6,6 +6,7 @@ import android.animation.ObjectAnimator;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.Toolbar;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.DatePicker;
@@ -55,6 +56,9 @@ public class DiaryActivity extends BaseActivity<DiaryPresenter> implements View.
 
     @Override
     protected void initView() {
+        toolbar = (Toolbar)findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         create_time = System.currentTimeMillis()/1000;
         et_title = (EditText)findViewById(R.id.et_title);
 

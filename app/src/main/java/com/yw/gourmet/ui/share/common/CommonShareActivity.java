@@ -3,6 +3,7 @@ package com.yw.gourmet.ui.share.common;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -55,6 +56,9 @@ public class CommonShareActivity extends BaseActivity<CommonSharePresenter> impl
 
     @Override
     protected void initView() {
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         tv_cancel = (TextView)findViewById(R.id.tv_cancel);
         tv_send = (TextView)findViewById(R.id.tv_send);
         tv_count = (TextView)findViewById(R.id.tv_count);
