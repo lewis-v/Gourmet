@@ -41,7 +41,6 @@ import okhttp3.RequestBody;
 
 public class PersonalActivity extends BaseActivity<PersonalPresenter> implements PersonalContract.View
         ,View.OnClickListener, MyDialogPhotoChooseFragment.OnCropListener {
-    private Toolbar toolbar;
     private CollapsingToolbarLayout toolbar_layout;
     private AppBarLayout app_bar;
     private LinearLayout ll_tool,ll_change_detail,ll_change_bottom,ll_change_top;
