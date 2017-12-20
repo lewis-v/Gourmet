@@ -51,6 +51,7 @@ public class DiaryActivity extends BaseActivity<DiaryPresenter> implements View.
     private boolean isTouch = false;//是否触发一个点击功能
     private long create_time;//创建时间
     private int status = 1;//权限,公开或私有,1公开,0私有,默认公开
+    private boolean toolShowing = false;//工具栏动画是否在展示中
 
     @Override
     protected void initView() {
@@ -159,7 +160,12 @@ public class DiaryActivity extends BaseActivity<DiaryPresenter> implements View.
                 "})()");
     }
 
-    public synchronized void addFragmentFunction(final boolean isShow, final MyAction action){
+    public void addFragmentFunction(final boolean isShow, final MyAction action){
+        if (toolShowing){
+            return;
+        }
+        toolShowing = true;
+        fl_tool.setVisibility(View.VISIBLE);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         ObjectAnimator objectAnimator = null;
         if (isShow){
@@ -177,10 +183,10 @@ public class DiaryActivity extends BaseActivity<DiaryPresenter> implements View.
         fragmentTransaction.runOnCommit(new Runnable() {
             @Override
             public void run() {
-
                 if (action != null) {
                     action.Action1();
                 }
+                toolShowing = false;
             }
         });
         fragmentTransaction.commit();

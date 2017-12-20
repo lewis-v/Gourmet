@@ -77,31 +77,38 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
     protected abstract int getLayoutId();
 
     //改变通知栏颜色
-    public void changeWindow(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+    public void changeWindow() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             if (isWhile()) {
                 Window window = getWindow();
                 window.requestFeature(Window.FEATURE_NO_TITLE);
                 window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
                         | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-                window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        |View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                window.setStatusBarColor(ContextCompat.getColor(this, android.R.color.white));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                } else {
+                    window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+                }
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                    window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                }
+                else{
+                    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                    window.setStatusBarColor(ContextCompat.getColor(this, android.R.color.white));
 
-                window.setStatusBarColor(Color.TRANSPARENT);
-                window.setNavigationBarColor(Color.TRANSPARENT);
-            } else {
-                Window window = getWindow();
-                window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimary));
-
+                    window.setStatusBarColor(Color.TRANSPARENT);
+                    window.setNavigationBarColor(Color.TRANSPARENT);
+                }
             }
         }
-        if (isWhile()){
-            setMiuiStatusBarDarkMode(this,true);
-            setMeizuStatusBarDarkIcon(this,true);
+        if (isWhile()) {
+            setMiuiStatusBarDarkMode(this, true);
+            setMeizuStatusBarDarkIcon(this, true);
         }
     }
 

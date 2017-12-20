@@ -33,6 +33,8 @@ public class ToolFragment extends BaseFragment implements View.OnClickListener{
 
     @Override
     protected void initView() {
+        ll_tool = (LinearLayout)view.findViewById(R.id.ll_tool);
+
         img_choose = (ImageView) view.findViewById(R.id.img_choose);
         img_bold = (ImageView) view.findViewById(R.id.img_bold);
         img_italic = (ImageView) view.findViewById(R.id.img_italic);
@@ -71,6 +73,7 @@ public class ToolFragment extends BaseFragment implements View.OnClickListener{
         }else {
             anim = loadAnimation(getActivity(), R.anim.anim_view_exit_right);
         }
+        ll_tool.setVisibility(View.VISIBLE);
         return anim;
     }
 
