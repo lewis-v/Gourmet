@@ -87,9 +87,9 @@ public class FunctionFragment extends BaseFragment implements View.OnClickListen
     @Override
     public Animation onCreateAnimation(int transit, final boolean enter, int nextAnim) {
         Animation anim ;
-        if (enter) {
+        if (enter) {//启动动画，先让其渐变显示
             anim = AnimationUtils.loadAnimation(getActivity(), R.anim.anim_view_enter_alpha);
-        }else {
+        }else {//关闭动画
             anim = AnimationUtils.loadAnimation(getActivity(), R.anim.anim_view_exit_alpha);
             Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.anim_view_exit_right);
             ll_diary.startAnimation(animation);
@@ -108,7 +108,7 @@ public class FunctionFragment extends BaseFragment implements View.OnClickListen
             @Override
             public void onAnimationStart(Animation animation) {
                 ll_choose.setVisibility(View.VISIBLE);
-                if (enter) {
+                if (enter) {//启动动画，各控件执行不同的动画
                     Animation anim = AnimationUtils.loadAnimation(getActivity(), R.anim.anim_view_enter_right);
                     ll_diary.startAnimation(anim);
                     ll_menu.startAnimation(anim);

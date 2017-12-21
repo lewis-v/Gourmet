@@ -40,13 +40,15 @@ import okhttp3.RequestBody;
 public class MenuActivity extends BaseActivity<MenuPresenter> implements View.OnClickListener
         , MyDialogPhotoChooseFragment.OnCropListener,MenuContract.View,MyDialogIngredientFragment.OnEnterListener {
     private ImageView img_cover;
-    private TextView tv_power;
+    private TextView tv_power,tv_difficult,tv_cancel;
     private EditText et_introduction,et_tip,et_title,et_time_hour,et_time_min;
     private RecyclerView recycler_ingredient,recycler_practice;
     private int status = 1;//权限,公开或私有,1公开,0私有,默认公开
     private IngredientAdapter adapterIngredient;//用料适配器
     private List<String> listIngredient = new ArrayList<>();
     private List<ImageView> difficultList = new ArrayList<>();//难度条
+    private int difficultLevel = 1;//困难等级,默认为1
+    private final String[] levelText = {"非常简单","简单","一般","较困难","非常困难"};//难度等级的文字
 
     @Override
     protected int getLayoutId() {
@@ -57,14 +59,28 @@ public class MenuActivity extends BaseActivity<MenuPresenter> implements View.On
     protected void initView() {
         toolbar = (Toolbar)findViewById(R.id.toolbar);
 
+        tv_difficult = (TextView)findViewById(R.id.tv_difficult);
         tv_power = (TextView)findViewById(R.id.tv_power);
+        tv_cancel = (TextView)findViewById(R.id.tv_cancel);
+        tv_cancel.setOnClickListener(this);
         tv_power.setOnClickListener(this);
 
-        difficultList.add((ImageView)findViewById(R.id.img_difficult1));
-        difficultList.add((ImageView)findViewById(R.id.img_difficult2));
-        difficultList.add((ImageView)findViewById(R.id.img_difficult3));
-        difficultList.add((ImageView)findViewById(R.id.img_difficult4));
-        difficultList.add((ImageView)findViewById(R.id.img_difficult5));
+        ImageView imageView = (ImageView)findViewById(R.id.img_difficult1);
+        imageView.setOnClickListener(this);
+        difficultList.add(imageView);
+        imageView = (ImageView)findViewById(R.id.img_difficult2);
+        imageView.setOnClickListener(this);
+        difficultList.add(imageView);
+        imageView = (ImageView)findViewById(R.id.img_difficult3);
+        imageView.setOnClickListener(this);
+        difficultList.add(imageView);
+        imageView = (ImageView)findViewById(R.id.img_difficult4);
+        imageView.setOnClickListener(this);
+        difficultList.add(imageView);
+        imageView = (ImageView)findViewById(R.id.img_difficult5);
+        imageView.setOnClickListener(this);
+        difficultList.add(imageView);
+
         img_cover = (ImageView)findViewById(R.id.img_cover);
         img_cover.setOnClickListener(this);
 
@@ -134,6 +150,24 @@ public class MenuActivity extends BaseActivity<MenuPresenter> implements View.On
                     tv_power.setText("公开");
                 }
                 break;
+            case R.id.tv_cancel:
+                finish();
+                break;
+            case R.id.img_difficult1:
+                setDifficultLevel(0);
+                break;
+            case R.id.img_difficult2:
+                setDifficultLevel(1);
+                break;
+            case R.id.img_difficult3:
+                setDifficultLevel(2);
+                break;
+            case R.id.img_difficult4:
+                setDifficultLevel(3);
+                break;
+            case R.id.img_difficult5:
+                setDifficultLevel(4);
+                break;
         }
     }
 
@@ -177,5 +211,23 @@ public class MenuActivity extends BaseActivity<MenuPresenter> implements View.On
             listIngredient.set(position,edit);
             adapterIngredient.notifyItemChanged(position);
         }
+    }
+
+    /**
+     * 设置难度等级的显示
+     * @param level
+     */
+    public synchronized void setDifficultLevel(int level) {
+        if (level >= 0 && level <= 4){
+            tv_difficult.setText(levelText[level]);
+        }
+        for (int i = 0 ,len = difficultList.size(); i<len ; i++ ){
+            if (i <= level) {
+                difficultList.get(i).setImageResource(R.drawable.difficult_back_accent);
+            }else {
+                difficultList.get(i).setImageResource(R.drawable.ingredient_back);
+            }
+        }
+        difficultLevel = level;
     }
 }

@@ -124,7 +124,7 @@
                 android:id="@+id/ll_difficult"
                 android:orientation="horizontal"
                 android:gravity="center"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/et_title"
                 app:layout_constraintRight_toRightOf="@+id/tv_difficult"
@@ -132,34 +132,38 @@
                 app:layout_constraintBottom_toBottomOf="@+id/ll_time">
                 <ImageView
                     android:id="@+id/img_difficult1"
-                    android:src="@drawable/ingredient_back"
-                    android:tint="@color/colorAccent"
-                    android:layout_margin="5dp"
-                    android:layout_width="10dp"
+                    android:src="@drawable/difficult_back_accent"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:layout_width="20dp"
                     android:layout_height="30dp" />
                 <ImageView
                     android:id="@+id/img_difficult2"
                     android:src="@drawable/ingredient_back"
-                    android:layout_margin="5dp"
-                    android:layout_width="10dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:layout_width="20dp"
                     android:layout_height="30dp" />
                 <ImageView
                     android:id="@+id/img_difficult3"
                     android:src="@drawable/ingredient_back"
-                    android:layout_margin="5dp"
-                    android:layout_width="10dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:layout_width="20dp"
                     android:layout_height="30dp" />
                 <ImageView
                     android:id="@+id/img_difficult4"
                     android:src="@drawable/ingredient_back"
-                    android:layout_margin="5dp"
-                    android:layout_width="10dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:layout_width="20dp"
                     android:layout_height="30dp" />
                 <ImageView
                     android:id="@+id/img_difficult5"
                     android:src="@drawable/ingredient_back"
-                    android:layout_margin="5dp"
-                    android:layout_width="10dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:layout_width="20dp"
                     android:layout_height="30dp" />
             </LinearLayout>
             <TextView

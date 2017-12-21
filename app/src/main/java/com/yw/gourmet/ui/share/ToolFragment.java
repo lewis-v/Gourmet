@@ -68,9 +68,9 @@ public class ToolFragment extends BaseFragment implements View.OnClickListener{
     @Override
     public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
         Animation anim;
-        if (enter){
+        if (enter){//进入动画
             anim = loadAnimation(getActivity(), R.anim.anim_view_enter_right);
-        }else {
+        }else {//退出动画
             anim = loadAnimation(getActivity(), R.anim.anim_view_exit_right);
         }
         ll_tool.setVisibility(View.VISIBLE);

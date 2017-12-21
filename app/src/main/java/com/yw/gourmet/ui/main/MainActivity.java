@@ -208,7 +208,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         fragmentTransaction.runOnCommit(new Runnable() {
             @Override
             public void run() {
-                funtionShowing = false;
+                funtionShowing = false;//fragment是否显示的标记
                 isFunction = isShow;
             }
         }).commit();

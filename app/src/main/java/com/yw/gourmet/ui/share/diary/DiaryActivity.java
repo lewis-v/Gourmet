@@ -177,11 +177,11 @@ public class DiaryActivity extends BaseActivity<DiaryPresenter> implements View.
                 toolFragment = new ToolFragment().setOnToolClickListener(this).setType(type);
             }
             fragmentTransaction.add(R.id.fl_tool,toolFragment);
-            objectAnimator = ObjectAnimator.ofFloat(img_tool,"rotation",0,-45);
+            objectAnimator = ObjectAnimator.ofFloat(img_tool,"rotation",0,-45);//加号的旋转动画
         }else {
             if (toolFragment != null) {
                 fragmentTransaction.remove(toolFragment);
-                objectAnimator = ObjectAnimator.ofFloat(img_tool,"rotation",-45,0);
+                objectAnimator = ObjectAnimator.ofFloat(img_tool,"rotation",-45,0);//加号的旋转动画
             }
         }
         fragmentTransaction.runOnCommit(new Runnable() {
