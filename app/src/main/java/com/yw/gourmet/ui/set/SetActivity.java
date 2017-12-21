@@ -1,5 +1,6 @@
 package com.yw.gourmet.ui.set;
 
+import android.os.Environment;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -9,10 +10,15 @@ import com.yw.gourmet.R;
 import com.yw.gourmet.base.BaseActivity;
 import com.yw.gourmet.rxbus.EventSticky;
 import com.yw.gourmet.rxbus.RxBus;
+import com.yw.gourmet.utils.SizeChangeUtils;
+import com.yw.gourmet.utils.ToastUtils;
 
-public class SetActivity extends BaseActivity implements View.OnClickListener{
-    private LinearLayout ll_back;
+import java.io.File;
+
+public class SetActivity extends BaseActivity<SetPresenter> implements View.OnClickListener,SetContract.View{
+    private LinearLayout ll_back,ll_clear;
     private TextView tv_out;
+    private final static String path = Environment.getExternalStorageDirectory().getPath() + "/data/gourmet/";//存储目录
 
     /**
      * 初始化UI
@@ -23,6 +29,8 @@ public class SetActivity extends BaseActivity implements View.OnClickListener{
         setSupportActionBar(toolbar);
 
         ll_back = (LinearLayout)findViewById(R.id.ll_back);
+        ll_clear = (LinearLayout)findViewById(R.id.ll_clear);
+        ll_clear.setOnClickListener(this);
         ll_back.setOnClickListener(this);
 
         tv_out = (TextView)findViewById(R.id.tv_out);
@@ -51,6 +59,20 @@ public class SetActivity extends BaseActivity implements View.OnClickListener{
             case R.id.tv_out:
                 onReLoginFail("退出账号");
                 break;
+            case R.id.ll_clear:
+                setLoadDialog(true);
+                mPresenter.clearFile(new File(path));
+                break;
+        }
+    }
+
+    @Override
+    public void onClearSuccess(Long clearSize) {
+        setLoadDialog(false);
+        ToastUtils.showLongToast("清理成功:"+ SizeChangeUtils.getSizeByBytes(clearSize));
+        File file = new File(path);
+        if (!file.exists()){//不存在目录则创建目录
+            file.mkdirs();
         }
     }
 }

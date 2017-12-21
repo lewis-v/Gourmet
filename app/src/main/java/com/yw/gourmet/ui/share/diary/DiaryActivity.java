@@ -190,11 +190,11 @@ public class DiaryActivity extends BaseActivity<DiaryPresenter> implements View.
                 if (action != null) {
                     action.Action1();
                 }
+                isShowTool = isShow;
                 toolShowing = false;
             }
         });
         fragmentTransaction.commit();
-        isShowTool = isShow;
         if (objectAnimator != null) {
             AnimatorSet animatorSet = new AnimatorSet();
             animatorSet.play(objectAnimator);

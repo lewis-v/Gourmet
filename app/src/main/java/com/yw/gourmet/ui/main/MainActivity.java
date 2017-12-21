@@ -47,6 +47,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
     private int position = 0;//目前选择的功能位置
     private boolean isFunction = false;//是否打开功能fragment
     private FunctionFragment functionFragment;
+    private boolean funtionShowing = false;//功能fragment动画是否在展示中
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -187,24 +188,11 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
      * @param isShow 是否显示
      */
     @Override
-    public void addFragmentFunction(boolean isShow){
-        fl_function.setVisibility(View.VISIBLE);
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        if (isShow){
-            if (functionFragment == null){
-                functionFragment = new FunctionFragment();
-            }
-            fragmentTransaction.add(R.id.fl_function,functionFragment);
-        }else {
-            if (functionFragment != null) {
-                fragmentTransaction.remove(functionFragment);
-            }
+    public void addFragmentFunction(final boolean isShow){
+        if (funtionShowing){
+            return;
         }
-        fragmentTransaction.commit();
-        isFunction = isShow;
-    }
-
-    public void addFragmentFunction(final boolean isShow, final MyAction action){
+        funtionShowing = true;
         fl_function.setVisibility(View.VISIBLE);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         if (isShow){
@@ -220,11 +208,39 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         fragmentTransaction.runOnCommit(new Runnable() {
             @Override
             public void run() {
+                funtionShowing = false;
                 isFunction = isShow;
-                action.Action1();
             }
-        });
-        fragmentTransaction.commit();
+        }).commit();
+    }
+
+    public void addFragmentFunction(final boolean isShow, final MyAction action){
+        if (funtionShowing){
+            return;
+        }
+        funtionShowing = true;
+        fl_function.setVisibility(View.VISIBLE);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        if (isShow){
+            if (functionFragment == null){
+                functionFragment = new FunctionFragment();
+            }
+            fragmentTransaction.add(R.id.fl_function,functionFragment);
+        }else {
+            if (functionFragment != null) {
+                fragmentTransaction.remove(functionFragment);
+            }
+        }
+        fragmentTransaction.runOnCommit(new Runnable() {
+            @Override
+            public void run() {
+                if (action != null) {
+                    action.Action1();
+                }
+                isFunction = isShow;
+                funtionShowing = false;
+            }
+        }).commit();
 
     }
 

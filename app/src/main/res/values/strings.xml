@@ -55,4 +55,18 @@
     <string name="time">时间</string>
     <string name="auth">作者</string>
     <string name="change_back">点击此处更改背景</string>
+    <string name="menu_title_tip">请输入食谱名</string>
+    <string name="menu_introduction_tip">请输入食谱简介</string>
+    <string name="ingredient">食材</string>
+    <string name="practice">做法</string>
+    <string name="tips">小贴士</string>
+    <string name="menu_tips">请输入本食谱的温馨提示(不填则不显示)</string>
+    <string name="touch_to_set_cover">点击设置封面</string>
+    <string name="clear">清理缓存</string>
+    <string name="difficult_tip">难度:</string>
+    <string name="elapse_time">耗时:</string>
+    <string name="so_easy">非常简单</string>
+    <string name="minute">分钟</string>
+    <string name="hour">小时</string>
+    <string name="zero">0</string>
 </resources>
