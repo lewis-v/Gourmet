@@ -169,12 +169,13 @@
             <TextView
                 android:id="@+id/tv_difficult"
                 android:text="@string/so_easy"
+                android:gravity="center"
                 android:layout_marginRight="5dp"
                 app:layout_constraintLeft_toRightOf="@+id/ll_difficult"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="@id/tv_difficult_tip"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_difficult_tip"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content" />
             <TextView
                 android:id="@+id/tv_time"

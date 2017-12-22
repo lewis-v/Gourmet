@@ -25,6 +25,7 @@ import com.yw.gourmet.listener.OnAddListener;
 import com.yw.gourmet.listener.OnDeleteListener;
 import com.yw.gourmet.listener.OnEditDialogEnterClickListener;
 import com.yw.gourmet.listener.OnItemClickListener;
+import com.yw.gourmet.utils.ToastUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -95,6 +96,7 @@ public class MenuActivity extends BaseActivity<MenuPresenter> implements View.On
         recycler_ingredient.setLayoutManager(new GridLayoutManager(this,2));
         adapterIngredient = new IngredientAdapter(this,listIngredient);
         recycler_ingredient.setAdapter(adapterIngredient);
+        recycler_ingredient.setNestedScrollingEnabled(false);//禁止滑动
         adapterIngredient.notifyDataSetChanged();
         adapterIngredient.setOnItemClickListener(new OnItemClickListener() {
             @Override
@@ -138,8 +140,12 @@ public class MenuActivity extends BaseActivity<MenuPresenter> implements View.On
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.img_cover:
-                new MyDialogPhotoChooseFragment().setChooseNum(1).setRatio(1).setCrop(true)
-                        .setOnCropListener(this).show(getSupportFragmentManager(),"cover");
+                if (Constant.userData != null) {
+                    new MyDialogPhotoChooseFragment().setChooseNum(1).setRatio(1).setCrop(true)
+                            .setOnCropListener(this).show(getSupportFragmentManager(), "cover");
+                }else {
+                    ToastUtils.showLongToast("请登录后在进行操作");
+                }
                 break;
             case R.id.tv_power:
                 if (status == 1){

@@ -17,6 +17,7 @@ import com.yw.gourmet.base.BaseActivity;
 import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.dialog.MyDialogPhotoChooseFragment;
 import com.yw.gourmet.dialog.MyDialogPhotoChooseFragment.OnChooseLister;
+import com.yw.gourmet.listener.OnAddListener;
 import com.yw.gourmet.listener.OnDeleteListener;
 import com.yw.gourmet.listener.OnItemClickListener;
 import com.yw.gourmet.utils.ThreadUtils;
@@ -53,6 +54,7 @@ public class CommonShareActivity extends BaseActivity<CommonSharePresenter> impl
     private boolean isCompress = false;//是否正在压缩
     private ExecutorService executorService,executorServiceCompress;
     private List<Future<Integer>> future = new ArrayList<>();
+    private int status = 1;//权限,1为公开,0为私有,默认公开
 
     @Override
     protected void initView() {
@@ -97,10 +99,7 @@ public class CommonShareActivity extends BaseActivity<CommonSharePresenter> impl
         addAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void OnClick(View v, int position) {
-                if (imgs.get(position).equals(addAdapter.getAddPath())){//添加照片
-                    new MyDialogPhotoChooseFragment().setChooseNum(maxSize - imgs.size()+1)
-                            .setOnPhotoChooseListener(CommonShareActivity.this).show(getSupportFragmentManager(),"");
-                }
+
             }
 
             @Override
@@ -108,6 +107,14 @@ public class CommonShareActivity extends BaseActivity<CommonSharePresenter> impl
                 return false;
             }
         });
+        addAdapter.setOnAddListener(new OnAddListener() {
+            @Override
+            public void OnAdd(View view, int position) {
+                new MyDialogPhotoChooseFragment().setChooseNum(maxSize - imgs.size())
+                        .setOnPhotoChooseListener(CommonShareActivity.this).show(getSupportFragmentManager(), "");
+            }
+        });
+
         String type = getIntent().getStringExtra("type");
         if (type != null){
             if (type.equals("photo")){//照片选择
@@ -143,13 +150,8 @@ public class CommonShareActivity extends BaseActivity<CommonSharePresenter> impl
                     ToastUtils.showSingleToast("分享内容为空");
                 }else {
                     setLoadDialog(true);
-                    for (int i = 0;i < imgs.size();i++){
-                        String path = imgs.get(i);
-                        if (path.equals(addAdapter.getAddPath())){
-                            imgs.remove(i);
-                        }else {
-                            setUpImg(path,upPosition++);
-                        }
+                    for (int i = 0,len = imgs.size();i < len;i++) {
+                        setUpImg(imgs.get(i), upPosition++);
                     }
                     if (executorService == null){
                         executorService = ThreadUtils.newCachedThreadPool();
@@ -165,7 +167,8 @@ public class CommonShareActivity extends BaseActivity<CommonSharePresenter> impl
                                 }
                             }
                             MultipartBody.Builder builder = new MultipartBody.Builder()
-                                    .addFormDataPart("id",Constant.userData.getId());
+                                    .addFormDataPart("id",Constant.userData.getId())
+                                    .addFormDataPart("status",String.valueOf(status));
                             if (et_content.getText().toString().trim().length() != 0){
                                 builder.addFormDataPart("content",et_content.getText().toString());
                             }
@@ -202,7 +205,7 @@ public class CommonShareActivity extends BaseActivity<CommonSharePresenter> impl
             public void run() {
                 while (isCompress) {
                     try {
-                        Thread.sleep(100);
+                        Thread.sleep(1);
                     } catch (InterruptedException e) {
                         return;
                     }
@@ -220,6 +223,7 @@ public class CommonShareActivity extends BaseActivity<CommonSharePresenter> impl
                                 }
                                 isUpLoad = true;
                                 mPresenter.upImg(new MultipartBody.Builder()
+                                        .setType(MultipartBody.FORM)
                                         .addFormDataPart("id", Constant.userData.getId())
                                         .addFormDataPart("path", file.getName(), RequestBody.create(MediaType.parse("multipart/form-data"), file))
                                         .build().parts(), position);
@@ -276,15 +280,6 @@ public class CommonShareActivity extends BaseActivity<CommonSharePresenter> impl
         failNum = 0;
         upPosition = 0;
         loopPosition = 0;
-        if (imgs.size() != maxSize){
-            if (imgs.size() > 0){
-                addAdapter.addImg(addAdapter.getAddPath());
-            }else {
-                imgs.add(addAdapter.getAddPath());
-                addAdapter.notifyDataSetChanged();
-            }
-
-        }
         setLoadDialog(false);
     }
 

@@ -52,7 +52,7 @@ public interface ApiService {
 
     //普通分享
     @Multipart
-    @POST("/Share/Common")
+    @POST("/Share/Common/Put")
     Observable<BaseData> ShareCommon(@Part List<MultipartBody.Part> parts);
 
     //日记分享

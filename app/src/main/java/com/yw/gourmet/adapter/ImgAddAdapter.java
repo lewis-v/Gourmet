@@ -9,9 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.yw.gourmet.R;
+import com.yw.gourmet.listener.OnAddListener;
 import com.yw.gourmet.listener.OnDeleteListener;
 import com.yw.gourmet.listener.OnItemClickListener;
 import com.yw.gourmet.utils.ToastUtils;
@@ -26,17 +28,23 @@ import java.util.List;
 public class ImgAddAdapter extends RecyclerView.Adapter<ImgAddAdapter.MyViewHolder>{
     private List<String> imgs;
     private Context context;
-    private int MaxSize = 9;//最多显示数量,默认9
+    private int MaxSize = Integer.MAX_VALUE;//最多显示数量,默认无限大
     private OnDeleteListener onDeleteListener;
     private OnItemClickListener onItemClickListener;
-    private String addPath;
+    private OnAddListener onAddListener;
+    private String addPath ;
+    private boolean isChange = true;//是否可以修改,默认可以
 
     public ImgAddAdapter(List<String> imgs, Context context) {
         this.imgs = imgs;
         this.context = context;
         addPath = "android.resource://"+context.getPackageName()+"/"+R.drawable.add;
-        imgs.add(addPath);
-        notifyDataSetChanged();
+    }
+
+    public ImgAddAdapter(List<String> imgs, Context context, int maxSize, boolean isChange) {
+        this(imgs, context);
+        MaxSize = maxSize;
+        this.isChange = isChange;
     }
 
     public ImgAddAdapter(List<String> imgs, Context context, int maxSize) {
@@ -51,6 +59,11 @@ public class ImgAddAdapter extends RecyclerView.Adapter<ImgAddAdapter.MyViewHold
 
     public ImgAddAdapter setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
+        return this;
+    }
+
+    public ImgAddAdapter setOnAddListener(OnAddListener onAddListener) {
+        this.onAddListener = onAddListener;
         return this;
     }
 
@@ -69,12 +82,12 @@ public class ImgAddAdapter extends RecyclerView.Adapter<ImgAddAdapter.MyViewHold
      */
     public synchronized void addImg(String img){
         if (imgs.size() < MaxSize) {
-            imgs.add(imgs.size() - 1,img);
-            notifyItemInserted(imgs.size() - 2);
+            imgs.add(img);
+            notifyItemInserted(imgs.size() - 1);
+            if (imgs.size() == MaxSize){
+                notifyDataSetChanged();
+            }
         }else if (imgs.size() == MaxSize){
-            imgs.set(MaxSize-1,img);
-            notifyItemChanged(MaxSize-1);
-        }else {
             ToastUtils.showSingleToast("添加数量最多为"+MaxSize+"张");
         }
     }
@@ -86,12 +99,42 @@ public class ImgAddAdapter extends RecyclerView.Adapter<ImgAddAdapter.MyViewHold
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-        if (imgs.get(position).equals(addPath)){
-            holder.img_delete.setVisibility(View.GONE);
-            Glide.with(context).load(Uri.parse(addPath)).into(holder.img);
+        if (imgs.size() <= position && isChange){
+            if (position == MaxSize){
+                holder.img_delete.setVisibility(View.GONE);
+                holder.img.setVisibility(View.GONE);
+                holder.rl_item.setVerticalGravity(View.GONE);
+            }else {
+                holder.img_delete.setVisibility(View.GONE);
+                holder.img.setVisibility(View.VISIBLE);
+                Glide.with(context).load(Uri.parse(addPath)).into(holder.img);
+                if (onAddListener != null){
+                    holder.img.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            onAddListener.OnAdd(v,holder.getLayoutPosition());
+                        }
+                    });
+                }
+            }
         }else {
             holder.img_delete.setVisibility(View.VISIBLE);
+            holder.img.setVisibility(View.VISIBLE);
             Glide.with(context).load(imgs.get(position)).into(holder.img);
+            if (onItemClickListener != null){
+                holder.img.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onItemClickListener.OnClick(v,holder.getLayoutPosition());
+                    }
+                });
+                holder.img.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        return onItemClickListener.OnLongClick(v,holder.getLayoutPosition());
+                    }
+                });
+            }
         }
         if (onDeleteListener != null){
             holder.img_delete.setOnClickListener(new View.OnClickListener() {
@@ -100,23 +143,9 @@ public class ImgAddAdapter extends RecyclerView.Adapter<ImgAddAdapter.MyViewHold
                     onDeleteListener.OnDelete(v,holder.getLayoutPosition());
                     imgs.remove(holder.getLayoutPosition());
                     notifyItemRemoved(holder.getLayoutPosition());
-                    if (imgs.size() == MaxSize - 1 && !imgs.get(imgs.size() - 1).equals(addPath)){
-                        imgs.add(addPath);
+                    if (imgs.size() == MaxSize - 1){
+                        notifyDataSetChanged();
                     }
-                }
-            });
-        }
-        if (onItemClickListener != null){
-            holder.img.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onItemClickListener.OnClick(v,holder.getLayoutPosition());
-                }
-            });
-            holder.img.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    return onItemClickListener.OnLongClick(v,holder.getLayoutPosition());
                 }
             });
         }
@@ -124,15 +153,21 @@ public class ImgAddAdapter extends RecyclerView.Adapter<ImgAddAdapter.MyViewHold
 
     @Override
     public int getItemCount() {
-        return imgs.size();
+        if (isChange) {
+            return imgs.size() + 1;
+        }else {
+            return imgs.size();
+        }
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder{
         ImageView img,img_delete;
+        RelativeLayout rl_item;
         public MyViewHolder(View itemView) {
             super(itemView);
             img = itemView.findViewById(R.id.img);
             img_delete = itemView.findViewById(R.id.img_delete);
+            rl_item = itemView.findViewById(R.id.rl_item);
         }
     }
 }
