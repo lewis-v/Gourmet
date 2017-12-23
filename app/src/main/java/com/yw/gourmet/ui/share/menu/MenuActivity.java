@@ -17,8 +17,10 @@ import com.yw.gourmet.Constant;
 import com.yw.gourmet.GlideApp;
 import com.yw.gourmet.R;
 import com.yw.gourmet.adapter.IngredientAdapter;
+import com.yw.gourmet.adapter.PracticeAdapter;
 import com.yw.gourmet.base.BaseActivity;
 import com.yw.gourmet.data.BaseData;
+import com.yw.gourmet.data.MenuPracticeData;
 import com.yw.gourmet.dialog.MyDialogIngredientFragment;
 import com.yw.gourmet.dialog.MyDialogPhotoChooseFragment;
 import com.yw.gourmet.listener.OnAddListener;
@@ -46,7 +48,9 @@ public class MenuActivity extends BaseActivity<MenuPresenter> implements View.On
     private RecyclerView recycler_ingredient,recycler_practice;
     private int status = 1;//权限,公开或私有,1公开,0私有,默认公开
     private IngredientAdapter adapterIngredient;//用料适配器
-    private List<String> listIngredient = new ArrayList<>();
+    private PracticeAdapter adapterPractice;//步骤适配器
+    private List<String> listIngredient = new ArrayList<>();//用料列表
+    private List<MenuPracticeData<List<String>>> listPractice = new ArrayList<>();//步骤列表
     private List<ImageView> difficultList = new ArrayList<>();//难度条
     private int difficultLevel = 1;//困难等级,默认为1
     private final String[] levelText = {"非常简单","简单","一般","较困难","非常困难"};//难度等级的文字
@@ -134,6 +138,39 @@ public class MenuActivity extends BaseActivity<MenuPresenter> implements View.On
         recycler_practice = (RecyclerView)findViewById(R.id.recycler_practice);
         recycler_practice.setItemAnimator(new DefaultItemAnimator());
         recycler_practice.setLayoutManager(new LinearLayoutManager(this));
+        recycler_practice.setNestedScrollingEnabled(false);
+        adapterPractice = new PracticeAdapter(this,listPractice,getSupportFragmentManager(),true,5);
+        recycler_practice.setAdapter(adapterPractice);
+        adapterPractice.setOnDeleteListener(new OnDeleteListener() {
+            @Override
+            public void OnDelete(View v, int position) {
+
+            }
+        });
+        adapterPractice.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void OnClick(View v, int position) {
+
+            }
+
+            @Override
+            public boolean OnLongClick(View v, int position) {
+                return false;
+            }
+        });
+        adapterPractice.setOnAddListener(new OnAddListener() {
+            @Override
+            public void OnAdd(View view, int position) {
+                View view1;
+                if ((view1 = MenuActivity.this.getCurrentFocus()) != null){
+                    view1.clearFocus();
+                }
+                MenuPracticeData<List<String>> menuPracticeData = new MenuPracticeData<>();
+                menuPracticeData.setImg_practiceData(new ArrayList<String>());
+                listPractice.add(menuPracticeData);
+                adapterPractice.notifyItemInserted(listPractice.size() - 1);
+            }
+        });
     }
 
     @Override

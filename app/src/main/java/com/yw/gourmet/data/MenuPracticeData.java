@@ -8,6 +8,9 @@ public class MenuPracticeData<T> {
     private String content;//操作内容
     private T img_practiceData;//操作对应的图片
 
+    public MenuPracticeData() {
+    }
+
     public String getContent() {
         return content;
     }
