@@ -59,4 +59,9 @@ public interface ApiService {
     @Multipart
     @POST("Share/Diary/Put")
     Observable<BaseData> ShareDiary(@Part List<MultipartBody.Part> parts);
+
+    //食谱分享
+    @Multipart
+    @POST("/Share/Menu/Put")
+    Observable<BaseData> ShareMenu(@Part List<MultipartBody.Part> parts);
 }

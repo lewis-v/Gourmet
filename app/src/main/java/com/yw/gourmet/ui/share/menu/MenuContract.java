@@ -15,9 +15,13 @@ import okhttp3.MultipartBody;
 public interface MenuContract {
     interface View extends BaseView{
         void onUpImgSuccess(BaseData<String> model);
+        void onUpImgSuccess(BaseData<String> model,int position);
+        void onPutMenuSuccess(BaseData model);
     }
 
     abstract class Presenter extends BasePresenter<View>{
         abstract void upImg(List<MultipartBody.Part> parts);
+        abstract void upImg(List<MultipartBody.Part> parts,int position);
+        abstract void putMenu(List<MultipartBody.Part> parts);
     }
 }

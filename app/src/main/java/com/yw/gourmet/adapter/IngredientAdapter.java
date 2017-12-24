@@ -141,6 +141,15 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.My
         return isChange;
     }
 
+    public boolean isEmpty(){
+        for (String string : list){
+            if (string.trim().isEmpty()){
+                return true;
+            }
+        }
+        return true;
+    }
+
     class MyViewHolder extends RecyclerView.ViewHolder{
         LinearLayout ll_item;
         TextView tv_name;

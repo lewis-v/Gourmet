@@ -106,4 +106,8 @@ public class Api {
     public Observable<BaseData> ShareDiary(List<MultipartBody.Part> parts){
         return service.ShareDiary(parts);
     }
+
+    public Observable<BaseData> ShareMenu(List<MultipartBody.Part> parts){
+        return service.ShareMenu(parts);
+    }
 }

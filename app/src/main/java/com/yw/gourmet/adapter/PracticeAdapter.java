@@ -24,6 +24,7 @@ import com.yw.gourmet.listener.OnDeleteListener;
 import com.yw.gourmet.listener.OnItemClickListener;
 import com.yw.gourmet.utils.ToastUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,11 +34,13 @@ import java.util.List;
 public class PracticeAdapter extends RecyclerView.Adapter<PracticeAdapter.MyViewHolder>{
     private Context context;
     private List<MenuPracticeData<List<String>>> list;
+    private List<ImgAddAdapter> addAdapterList = new ArrayList<>();//各item的图片添加适配器
     private FragmentManager fragmentManager;
     private boolean isChange = true;//是否可改变,默认可改变
     private OnAddListener onAddListener;
     private OnDeleteListener onDeleteListener;
     private OnItemClickListener onItemClickListener;
+    private OnAddListener onImgAddListener;//图片添加监听器
     private int imgMaxNum = 5;//每个步骤的图片最大数量,默认5
 
     public PracticeAdapter(Context context, List<MenuPracticeData<List<String>>> list, FragmentManager fragmentManager) {
@@ -114,22 +117,19 @@ public class PracticeAdapter extends RecyclerView.Adapter<PracticeAdapter.MyView
                         new LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false));
                 final ImgAddAdapter adapter = new ImgAddAdapter(list.get(position).getImg_practiceData(),context);
                 holder.recycler_practice.setAdapter(adapter);
-                adapter.setOnAddListener(new OnAddListener() {
-                    @Override
-                    public void OnAdd(View view, int position) {
-                        if (imgMaxNum > list.get(holder.getLayoutPosition()).getImg_practiceData().size()) {
-                            new MyDialogPhotoChooseFragment().setCrop(true)
-                                    .setOnCropListener(new MyDialogPhotoChooseFragment.OnCropListener() {
-                                        @Override
-                                        public void OnCrop(String path, String tag) {
-                                            adapter.addImg(path);
-                                        }
-                                    }).show(fragmentManager,"crop");
-                        }else {
-                            ToastUtils.showLongToast("最多添加"+imgMaxNum+"张图片");
+                addAdapterList.add(adapter);
+                if (onImgAddListener != null) {
+                    adapter.setOnAddListener(new OnAddListener() {
+                        @Override
+                        public void OnAdd(View view, int position) {
+                            if (imgMaxNum > list.get(holder.getLayoutPosition()).getImg_practiceData().size()) {
+                                onImgAddListener.OnAdd(view,holder.getLayoutPosition());
+                            } else {
+                                ToastUtils.showLongToast("最多添加" + imgMaxNum + "张图片");
+                            }
                         }
-                    }
-                });
+                    });
+                }
                 adapter.setOnDeleteListener(new OnDeleteListener() {
                     @Override
                     public void OnDelete(View v, int position) {
@@ -142,6 +142,7 @@ public class PracticeAdapter extends RecyclerView.Adapter<PracticeAdapter.MyView
                         public void onClick(View v) {
                             onDeleteListener.OnDelete(v,holder.getLayoutPosition());
                             list.remove(holder.getLayoutPosition());
+                            addAdapterList.remove(holder.getLayoutPosition());
                             notifyItemRemoved(holder.getLayoutPosition());
                             notifyItemRangeChanged(holder.getLayoutPosition(),list.size() - holder.getLayoutPosition());
                             Log.i("---list---",list.toString());
@@ -208,9 +209,37 @@ public class PracticeAdapter extends RecyclerView.Adapter<PracticeAdapter.MyView
         return this;
     }
 
+    public PracticeAdapter setOnImgAddListener(OnAddListener onImgAddListener) {
+        this.onImgAddListener = onImgAddListener;
+        return this;
+    }
+
     public PracticeAdapter setImgMaxNum(int imgMaxNum) {
         this.imgMaxNum = imgMaxNum;
         return this;
+    }
+
+    public List<ImgAddAdapter> getAddAdapterList() {
+        return addAdapterList;
+    }
+
+    public PracticeAdapter setAddAdapterList(List<ImgAddAdapter> addAdapterList) {
+        this.addAdapterList = addAdapterList;
+        return this;
+    }
+
+    /**
+     * 判断列表是否为空,或全为空数据
+     * @return
+     */
+    public boolean isEmpty(){
+        for (MenuPracticeData<List<String>> listMenuPracticeData : list){
+            if (listMenuPracticeData.getContent() != null && !listMenuPracticeData.getContent().trim().isEmpty()
+                    || listMenuPracticeData.getImg_practiceData() != null && listMenuPracticeData.getImg_practiceData().size() > 0){
+                return false;
+            }
+        }
+        return true;
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder{

@@ -7,6 +7,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -29,6 +30,10 @@ import com.yw.gourmet.listener.OnEditDialogEnterClickListener;
 import com.yw.gourmet.listener.OnItemClickListener;
 import com.yw.gourmet.utils.ToastUtils;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +48,7 @@ import okhttp3.RequestBody;
 public class MenuActivity extends BaseActivity<MenuPresenter> implements View.OnClickListener
         , MyDialogPhotoChooseFragment.OnCropListener,MenuContract.View,MyDialogIngredientFragment.OnEnterListener {
     private ImageView img_cover;
-    private TextView tv_power,tv_difficult,tv_cancel;
+    private TextView tv_power,tv_difficult,tv_cancel,tv_send;
     private EditText et_introduction,et_tip,et_title,et_time_hour,et_time_min;
     private RecyclerView recycler_ingredient,recycler_practice;
     private int status = 1;//权限,公开或私有,1公开,0私有,默认公开
@@ -54,6 +59,8 @@ public class MenuActivity extends BaseActivity<MenuPresenter> implements View.On
     private List<ImageView> difficultList = new ArrayList<>();//难度条
     private int difficultLevel = 1;//困难等级,默认为1
     private final String[] levelText = {"非常简单","简单","一般","较困难","非常困难"};//难度等级的文字
+    private String coverPath;//封面地址
+    private long create_time;//创建时间
 
     @Override
     protected int getLayoutId() {
@@ -62,11 +69,14 @@ public class MenuActivity extends BaseActivity<MenuPresenter> implements View.On
 
     @Override
     protected void initView() {
+        create_time = System.currentTimeMillis()/1000;
         toolbar = (Toolbar)findViewById(R.id.toolbar);
 
         tv_difficult = (TextView)findViewById(R.id.tv_difficult);
         tv_power = (TextView)findViewById(R.id.tv_power);
         tv_cancel = (TextView)findViewById(R.id.tv_cancel);
+        tv_send = (TextView)findViewById(R.id.tv_send);
+        tv_send.setOnClickListener(this);
         tv_cancel.setOnClickListener(this);
         tv_power.setOnClickListener(this);
 
@@ -171,6 +181,32 @@ public class MenuActivity extends BaseActivity<MenuPresenter> implements View.On
                 adapterPractice.notifyItemInserted(listPractice.size() - 1);
             }
         });
+        adapterPractice.setOnImgAddListener(new OnAddListener() {
+            @Override
+            public void OnAdd(View view, final int position) {
+                new MyDialogPhotoChooseFragment().setCrop(true)
+                        .setOnCropListener(new MyDialogPhotoChooseFragment.OnCropListener() {
+                            @Override
+                            public void OnCrop(String path, String tag) {
+                                setLoadDialog(true);
+                                new Compressor(MenuActivity.this)
+                                        .compressToFileAsFlowable(new File(path))
+                                        .observeOn(Schedulers.io())
+                                        .subscribeOn(Schedulers.io())
+                                        .subscribe(new Consumer<File>() {
+                                            @Override
+                                            public void accept(File file) throws Exception {
+                                                MultipartBody.Builder builder = new MultipartBody.Builder()
+                                                        .setType(MultipartBody.FORM)
+                                                        .addFormDataPart("id",Constant.userData.getId())
+                                                        .addFormDataPart("path",file.getName(),RequestBody.create(MediaType.parse("multipart/form-data"),file));
+                                                mPresenter.upImg(builder.build().parts(),position);
+                                            }
+                                        });
+                            }
+                        }).show(getSupportFragmentManager(), "crop");
+            }
+        });
     }
 
     @Override
@@ -211,6 +247,29 @@ public class MenuActivity extends BaseActivity<MenuPresenter> implements View.On
             case R.id.img_difficult5:
                 setDifficultLevel(4);
                 break;
+            case R.id.tv_send:
+                if (isEmpty()){
+                    break;
+                }
+                MultipartBody.Builder builder = new MultipartBody.Builder()
+                        .setType(MultipartBody.FORM)
+                        .addFormDataPart("id",Constant.userData.getId())
+                        .addFormDataPart("status",String.valueOf(status))
+                        .addFormDataPart("title",et_title.getText().toString())
+                        .addFormDataPart("cover",coverPath)
+                        .addFormDataPart("difficult_level",String.valueOf(difficultLevel))
+                        .addFormDataPart("play_time",et_time_hour.getText().toString()+","+et_time_min.getText().toString())
+                        .addFormDataPart("introduction",et_introduction.getText().toString())
+                        .addFormDataPart("practice",listPractice.toString())
+                        .addFormDataPart("create_time",String.valueOf(create_time));
+                if (!adapterIngredient.isEmpty()){
+                    builder.addFormDataPart("ingredient",new JSONArray(listIngredient).toString());
+                }
+                if (!et_tip.getText().toString().trim().isEmpty()){
+                    builder.addFormDataPart("tip",et_tip.getText().toString());
+                }
+                mPresenter.putMenu(builder.build().parts());
+                break;
         }
     }
 
@@ -243,6 +302,19 @@ public class MenuActivity extends BaseActivity<MenuPresenter> implements View.On
     public void onUpImgSuccess(BaseData<String> model) {
         setLoadDialog(false);
         GlideApp.with(MenuActivity.this).load(model.getData()).error(R.mipmap.load_fail).into(img_cover);
+        coverPath = model.getData();
+    }
+
+    @Override
+    public void onUpImgSuccess(BaseData<String> model, int position) {
+        setLoadDialog(false);
+        adapterPractice.getAddAdapterList().get(position).addImg(model.getData());
+    }
+
+    @Override
+    public void onPutMenuSuccess(BaseData model) {
+        super.onSuccess(model.getMessage());
+        finish();
     }
 
     @Override
@@ -272,5 +344,41 @@ public class MenuActivity extends BaseActivity<MenuPresenter> implements View.On
             }
         }
         difficultLevel = level;
+    }
+
+    /**
+     * 发布前判断是否有必填数据为空
+     * @return
+     */
+    public boolean isEmpty(){
+        if (et_title.getText().toString().trim().isEmpty()){
+            et_title.requestFocus();
+            ToastUtils.showLongToast("请输入标题");
+            return true;
+        }
+        if (coverPath == null){
+            ToastUtils.showLongToast("请选择食谱的封面");
+            return true;
+        }
+        if (et_time_hour.getText().toString().trim().isEmpty()){//耗时为空时补0
+            et_time_hour.setText("0");
+        }
+        if (et_time_min.getText().toString().trim().isEmpty()){
+            et_time_min.setText("0");
+        }
+        if (et_time_min.getText().toString().equals("0") && et_time_hour.getText().toString().equals("0")){//耗时两个都为0
+            ToastUtils.showLongToast("请输入制作耗时");
+            return true;
+        }
+        if (et_introduction.getText().toString().trim().isEmpty()){
+            et_introduction.requestFocus();
+            ToastUtils.showLongToast("请输入食谱简介");
+            return true;
+        }
+        if (adapterPractice.isEmpty()){
+            ToastUtils.showLongToast("请输入食谱步骤");
+            return true;
+        }
+        return false;
     }
 }
