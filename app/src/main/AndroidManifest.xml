@@ -68,11 +68,15 @@
             android:name=".ui.share.diary.DiaryActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
-        <!--食谱分享-->
-        <activity android:name=".ui.share.menu.MenuActivity"
+        <!-- 食谱分享 -->
+        <activity
+            android:name=".ui.share.menu.MenuActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"
-            />
+            android:windowSoftInputMode="adjustResize" />
+        <!--聊天-->
+        <activity android:name=".ui.chat.ChatActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"/>
     </application>
 
 </manifest>

@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fitsSystemWindows="true"
     android:id="@+id/ll_share_diary"
     android:orientation="vertical"
     android:background="@android:color/white"
@@ -115,6 +116,7 @@
             android:layout_height="match_parent"/>
         <ImageView
             android:id="@+id/img_tool"
+            android:visibility="visible"
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"

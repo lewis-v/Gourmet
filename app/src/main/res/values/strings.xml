@@ -69,4 +69,5 @@
     <string name="minute">分钟</string>
     <string name="hour">小时</string>
     <string name="zero">0</string>
+    <string name="touch_say">按住说话</string>
 </resources>

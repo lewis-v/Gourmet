@@ -20,11 +20,13 @@ import com.yw.gourmet.adapter.MessageListAdapter;
 import com.yw.gourmet.base.BaseFragment;
 import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.data.MessageListData;
+import com.yw.gourmet.listener.OnItemClickListener;
 import com.yw.gourmet.rxbus.EventSticky;
 import com.yw.gourmet.rxbus.RxBus;
 import com.yw.gourmet.rxbus.RxBusSubscriber;
 import com.yw.gourmet.rxbus.RxSubscriptions;
 import com.yw.gourmet.swipAnim.LoadMoreFooterView;
+import com.yw.gourmet.ui.chat.ChatActivity;
 import com.yw.gourmet.ui.login.LoginActivity;
 
 import java.text.SimpleDateFormat;
@@ -64,6 +66,19 @@ public class MessageFragment extends BaseFragment<MessagePresenter> implements M
         swipe_target.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new MessageListAdapter(getContext(),listData);
         swipe_target.setAdapter(adapter);
+        adapter.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void OnClick(View v, int position) {
+                Intent intent = new Intent(getContext(), ChatActivity.class);
+                intent.putExtra("id",listData.get(position).getId());
+                startActivity(intent);
+            }
+
+            @Override
+            public boolean OnLongClick(View v, int position) {
+                return false;
+            }
+        });
 
         swipeToLoadLayout = (SwipeToLoadLayout)view.findViewById(R.id.swipeToLoadLayout);
         swipeToLoadLayout.setOnRefreshListener(this);
