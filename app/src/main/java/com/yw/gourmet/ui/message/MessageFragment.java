@@ -71,6 +71,7 @@ public class MessageFragment extends BaseFragment<MessagePresenter> implements M
             public void OnClick(View v, int position) {
                 Intent intent = new Intent(getContext(), ChatActivity.class);
                 intent.putExtra("id",listData.get(position).getId());
+                intent.putExtra("nickname",listData.get(position).getNickname());
                 startActivity(intent);
             }
 

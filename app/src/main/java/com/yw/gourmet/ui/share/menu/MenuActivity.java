@@ -69,6 +69,8 @@ public class MenuActivity extends BaseActivity<MenuPresenter> implements View.On
 
     @Override
     protected void initView() {
+        view_parent = findViewById(R.id.view_parent);
+
         create_time = System.currentTimeMillis()/1000;
         toolbar = (Toolbar)findViewById(R.id.toolbar);
 

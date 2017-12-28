@@ -42,6 +42,7 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
     private MyDialogLoadFragment myDialogLoadFragment;
     protected List<Thread> threadList = new ArrayList<>();
     protected Toolbar toolbar;
+    protected View view_parent;
     private boolean isReLogining = false;
 
     @Override
@@ -100,6 +101,13 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
                         toolbar.setLayoutParams(layoutParams);
                     }
                 });
+            }
+            if (view_parent != null){
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP){
+                    view_parent.setFitsSystemWindows(false);
+                }else {
+                    view_parent.setFitsSystemWindows(true);
+                }
             }
         }
     }

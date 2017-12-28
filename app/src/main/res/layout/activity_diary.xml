@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:fitsSystemWindows="true"
-    android:id="@+id/ll_share_diary"
+    android:id="@+id/view_parent"
     android:orientation="vertical"
     android:background="@android:color/white"
     android:layout_width="match_parent"

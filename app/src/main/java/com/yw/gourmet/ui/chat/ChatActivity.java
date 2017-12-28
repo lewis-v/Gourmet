@@ -3,19 +3,29 @@ package com.yw.gourmet.ui.chat;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.yw.gourmet.Constant;
 import com.yw.gourmet.R;
+import com.yw.gourmet.adapter.ChatAdapter;
 import com.yw.gourmet.base.BaseActivity;
+import com.yw.gourmet.data.MessageListData;
 
-public class ChatActivity extends BaseActivity implements ChatContract.View,View.OnClickListener{
+import java.util.ArrayList;
+import java.util.List;
+
+public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatContract.View,View.OnClickListener{
     private final static int TEXT = 0;//发送文本模式
     private final static int VOICE = 1;//发送语音模式
 
@@ -24,6 +34,8 @@ public class ChatActivity extends BaseActivity implements ChatContract.View,View
     private EditText et_chat;
     private TextView tv_voice,tv_tool;
     private int sendMode = 0;//发送的模式,默认为文本
+    private ChatAdapter adapter;
+    private List<MessageListData> listData = new ArrayList<>();
 
     @Override
     protected int getLayoutId() {
@@ -32,7 +44,9 @@ public class ChatActivity extends BaseActivity implements ChatContract.View,View
 
     @Override
     protected void initView() {
-        toolbar = findViewById(R.id.toolbar);
+        view_parent = findViewById(R.id.view_parent);
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         img_back = (ImageView)findViewById(R.id.img_back);
         img_type = (ImageView)findViewById(R.id.img_type);
@@ -45,6 +59,10 @@ public class ChatActivity extends BaseActivity implements ChatContract.View,View
         img_type.setOnClickListener(this);
 
         recycler_chat = (RecyclerView)findViewById(R.id.recycler_chat);
+        recycler_chat.setItemAnimator(new DefaultItemAnimator());
+        recycler_chat.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new ChatAdapter(this,listData);
+        recycler_chat.setAdapter(adapter);
 
         et_chat = (EditText)findViewById(R.id.et_chat);
         et_chat.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -56,6 +74,14 @@ public class ChatActivity extends BaseActivity implements ChatContract.View,View
                         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                     }catch (Exception e){}
                     //发送文本信息
+                    MessageListData data = new MessageListData();
+                    data.setContent(v.getText().toString());
+                    data.setType(TEXT);
+                    data.setId(Constant.userData.getId()+1);
+                    data.setImg_header(Constant.userData.getImg_header());
+                    listData.add(data);
+                    adapter.notifyItemChanged(listData.size()-1);
+                    et_chat.setText("");
                     return true;
                 }
                 return false;
@@ -66,6 +92,7 @@ public class ChatActivity extends BaseActivity implements ChatContract.View,View
         tv_tool = (TextView)findViewById(R.id.tv_tool);
 
         tv_voice.setOnClickListener(this);
+        tv_tool.setText(getIntent().getStringExtra("nickname"));
     }
 
     @Override

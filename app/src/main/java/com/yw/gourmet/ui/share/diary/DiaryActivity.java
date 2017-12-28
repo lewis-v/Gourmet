@@ -56,6 +56,8 @@ public class DiaryActivity extends BaseActivity<DiaryPresenter> implements View.
 
     @Override
     protected void initView() {
+        view_parent = findViewById(R.id.view_parent);
+
         toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
