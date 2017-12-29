@@ -64,4 +64,14 @@ public interface ApiService {
     @Multipart
     @POST("/Share/Menu/Put")
     Observable<BaseData> ShareMenu(@Part List<MultipartBody.Part> parts);
+
+    //获取聊天信息的详情
+    @Multipart
+    @POST("/Message/Get/Detail")
+    Observable<BaseData<List<MessageListData>>> GetMessageDetail(@Part List<MultipartBody.Part> parts);
+
+    //发送聊天信息
+    @Multipart
+    @POST("/Message/Put")
+    Observable<BaseData> SendMessage(@Part List<MultipartBody.Part> parts);
 }

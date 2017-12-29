@@ -69,8 +69,17 @@ public class MessageFragment extends BaseFragment<MessagePresenter> implements M
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void OnClick(View v, int position) {
+                String put_id,get_id;
+                if (Constant.userData.getId().equals(listData.get(position).getPut_id())){
+                    put_id = Constant.userData.getId();
+                    get_id = listData.get(position).getGet_id();
+                }else {
+                    put_id = listData.get(position).getGet_id();
+                    get_id = Constant.userData.getId();
+                }
                 Intent intent = new Intent(getContext(), ChatActivity.class);
-                intent.putExtra("id",listData.get(position).getId());
+                intent.putExtra("put_id",put_id);
+                intent.putExtra("get_id",get_id);
                 intent.putExtra("nickname",listData.get(position).getNickname());
                 startActivity(intent);
             }

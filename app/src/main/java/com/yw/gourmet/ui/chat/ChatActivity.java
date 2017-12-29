@@ -20,12 +20,16 @@ import com.yw.gourmet.Constant;
 import com.yw.gourmet.R;
 import com.yw.gourmet.adapter.ChatAdapter;
 import com.yw.gourmet.base.BaseActivity;
+import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.data.MessageListData;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatContract.View,View.OnClickListener{
+import okhttp3.MultipartBody;
+
+public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatContract.View
+        ,View.OnClickListener{
     private final static int TEXT = 0;//发送文本模式
     private final static int VOICE = 1;//发送语音模式
 
@@ -36,6 +40,7 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
     private int sendMode = 0;//发送的模式,默认为文本
     private ChatAdapter adapter;
     private List<MessageListData> listData = new ArrayList<>();
+    private String get_id,put_id;//接收者id与发送者id
 
     @Override
     protected int getLayoutId() {
@@ -48,56 +53,91 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        img_back = (ImageView)findViewById(R.id.img_back);
-        img_type = (ImageView)findViewById(R.id.img_type);
-        img_add = (ImageView)findViewById(R.id.img_add);
-        img_emoticon = (ImageView)findViewById(R.id.img_emoticon);
+        img_back = (ImageView) findViewById(R.id.img_back);
+        img_type = (ImageView) findViewById(R.id.img_type);
+        img_add = (ImageView) findViewById(R.id.img_add);
+        img_emoticon = (ImageView) findViewById(R.id.img_emoticon);
 
         img_emoticon.setOnClickListener(this);
         img_add.setOnClickListener(this);
         img_back.setOnClickListener(this);
         img_type.setOnClickListener(this);
 
-        recycler_chat = (RecyclerView)findViewById(R.id.recycler_chat);
+        recycler_chat = (RecyclerView) findViewById(R.id.recycler_chat);
         recycler_chat.setItemAnimator(new DefaultItemAnimator());
         recycler_chat.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new ChatAdapter(this,listData);
+        adapter = new ChatAdapter(this, listData);
         recycler_chat.setAdapter(adapter);
 
-        et_chat = (EditText)findViewById(R.id.et_chat);
+        et_chat = (EditText) findViewById(R.id.et_chat);
         et_chat.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    InputMethodManager imm = (InputMethodManager)v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                     try {
                         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                    }catch (Exception e){}
+                    } catch (Exception e) {
+                    }
                     //发送文本信息
                     MessageListData data = new MessageListData();
                     data.setContent(v.getText().toString());
                     data.setType(TEXT);
-                    data.setId(Constant.userData.getId()+1);
+                    data.setPut_id(put_id);
                     data.setImg_header(Constant.userData.getImg_header());
+                    data.setSendStatus(MessageListData.SENDING);
                     listData.add(data);
-                    adapter.notifyItemChanged(listData.size()-1);
+                    adapter.notifyItemChanged(listData.size() - 1);
                     et_chat.setText("");
+                    MultipartBody.Builder builder = new MultipartBody.Builder()
+                            .setType(MultipartBody.FORM)
+                            .addFormDataPart("token",Constant.userData.getToken())
+                            .addFormDataPart("put_id",put_id)
+                            .addFormDataPart("get_id",get_id)
+                            .addFormDataPart("type",String.valueOf(TEXT))
+                            .addFormDataPart("content",data.getContent());
+                    mPresenter.sendMessage(builder.build().parts(),listData.size()-1);
                     return true;
                 }
                 return false;
             }
         });
 
-        tv_voice = (TextView)findViewById(R.id.tv_voice);
-        tv_tool = (TextView)findViewById(R.id.tv_tool);
+        tv_voice = (TextView) findViewById(R.id.tv_voice);
+        tv_tool = (TextView) findViewById(R.id.tv_tool);
 
         tv_voice.setOnClickListener(this);
         tv_tool.setText(getIntent().getStringExtra("nickname"));
+
+        put_id = getIntent().getStringExtra("put_id");
+        get_id = getIntent().getStringExtra("get_id");
+
+        MultipartBody.Builder builder = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("token", Constant.userData.getToken())
+                .addFormDataPart("put_id", put_id)
+                .addFormDataPart("get_id", get_id);
+        mPresenter.getMessageDetail(builder.build().parts());
+
     }
 
     @Override
-    public void onSendSuccess() {
+    public void onSendSuccess(int position) {
+        listData.get(position).setSendStatus(MessageListData.SEND_SUCCESS);
+        adapter.notifyItemChanged(position);
+    }
 
+    @Override
+    public void onSendFail(String msg, int position) {
+        listData.get(position).setSendStatus(MessageListData.SEND_FAIL);
+        adapter.notifyItemChanged(position);
+    }
+
+    @Override
+    public void onGetDetailSuccess(BaseData<List<MessageListData>> model) {
+        listData.clear();
+        listData.addAll(model.getData());
+        adapter.notifyDataSetChanged();
     }
 
     @Override

@@ -38,7 +38,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         if (Constant.userData != null){
-            if (Constant.userData.getId().equals(list.get(position).getId())){//自己发送的
+            if (Constant.userData.getId().equals(list.get(position).getPut_id())){//自己发送的
                 holder.constraint_other.setVisibility(View.GONE);
                 holder.constraint_myself.setVisibility(View.VISIBLE);
                 GlideApp.with(context).load(list.get(position).getImg_header()).error(R.mipmap.load_fail)
@@ -104,7 +104,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
             constraint_other = itemView.findViewById(R.id.constraint_other);
             img_header_myself = itemView.findViewById(R.id.img_header_myself);
             img_header_other = itemView.findViewById(R.id.img_header_other);
-            img_other = itemView.findViewById(R.id.img_other);
+            img_other = itemView.findViewById(R.id.img_other);//发送的图像
             img_myself = itemView.findViewById(R.id.img_myself);
             tv_myself = itemView.findViewById(R.id.tv_myself);
             tv_nickname = itemView.findViewById(R.id.tv_nickname);

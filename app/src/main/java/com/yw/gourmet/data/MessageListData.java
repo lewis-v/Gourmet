@@ -9,8 +9,14 @@ public class MessageListData {
     public final static int TEXT = 0;//文本
     public final static int VOICE = 1;//语音
     public final static int IMG = 2;//图片
+    //消息发送状态
+    public final static int SENDING = 3;//发送中
+    public final static int SEND_SUCCESS = 4;//发送成功
+    public final static int SEND_FAIL = 5;//发送失败
 
     private String id;
+    private String put_id;
+    private String get_id;
     private String nickname;
     private String content;
     private String put_time;
@@ -19,6 +25,7 @@ public class MessageListData {
     private String title;//特殊分享类型标题
     private String cover;//特殊分享类型封面
     private String img;
+    private int sendStatus = SEND_SUCCESS;//消息发送状态,默认为成功
 
     public MessageListData() {
     }
@@ -113,10 +120,39 @@ public class MessageListData {
         return this;
     }
 
+    public String getPut_id() {
+        return put_id;
+    }
+
+    public MessageListData setPut_id(String put_id) {
+        this.put_id = put_id;
+        return this;
+    }
+
+    public String getGet_id() {
+        return get_id;
+    }
+
+    public MessageListData setGet_id(String get_id) {
+        this.get_id = get_id;
+        return this;
+    }
+
+    public int getSendStatus() {
+        return sendStatus;
+    }
+
+    public MessageListData setSendStatus(int sendStatus) {
+        this.sendStatus = sendStatus;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "MessageListData{" +
                 "id='" + id + '\'' +
+                ", put_id='" + put_id + '\'' +
+                ", get_id='" + get_id + '\'' +
                 ", nickname='" + nickname + '\'' +
                 ", content='" + content + '\'' +
                 ", put_time='" + put_time + '\'' +
@@ -125,6 +161,7 @@ public class MessageListData {
                 ", title='" + title + '\'' +
                 ", cover='" + cover + '\'' +
                 ", img='" + img + '\'' +
+                ", sendStatus=" + sendStatus +
                 '}';
     }
 }
