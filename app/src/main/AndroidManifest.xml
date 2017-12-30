@@ -78,7 +78,11 @@
             android:name=".ui.chat.ChatActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".ui.detail.common.CommonDetailActivity"></activity>
+        <!--普通分享详情-->
+        <activity android:name=".ui.detail.common.CommonDetailActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"
+            />
     </application>
 
 </manifest>

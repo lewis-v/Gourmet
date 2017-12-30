@@ -55,20 +55,20 @@ public class CommonDetailPresenter extends CommonDetailContract.Presenter{
     }
 
     @Override
-    void sendComment(List<MultipartBody.Part> parts, final int position) {
-        mRxManager.add(Api.getInstance().PutComment(parts),new RxSubscriberCallBack<BaseData>(new RxApiCallback<BaseData>() {
+    void sendComment(List<MultipartBody.Part> parts) {
+        mRxManager.add(Api.getInstance().PutComment(parts),new RxSubscriberCallBack<BaseData<List<CommentData>>>(new RxApiCallback<BaseData<List<CommentData>>>() {
             @Override
-            public void onSuccess(BaseData model) {
+            public void onSuccess(BaseData<List<CommentData>> model) {
                 if (model.getStatus() == 0){
-                    mView.onSendCommentSuccess(model,position);
+                    mView.onSendCommentSuccess(model);
                 }else {
-                    mView.onSendCommentFail(model.getMessage(),position);
+                    mView.onSendCommentFail(model.getMessage());
                 }
             }
 
             @Override
             public void onFailure(int code, String msg) {
-                mView.onSendCommentFail(msg,position);
+                mView.onSendCommentFail(msg);
             }
         }));
     }

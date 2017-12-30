@@ -35,21 +35,36 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.MyViewHo
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        GlideApp.with(context).load(list.get(position).getImg_header()).error(R.mipmap.load_fail).into(holder.img_header);
-        holder.tv_nickname.setText(list.get(position).getNickname());
-        holder.tv_time.setText(list.get(position).getCreate_time());
-        holder.tv_content.setText(list.get(position).getContent());
+        if (position >= list.size()){
+            holder.tv_end.setVisibility(View.VISIBLE);
+            holder.tv_dev.setVisibility(View.GONE);
+            holder.tv_content.setVisibility(View.GONE);
+            holder.tv_time.setVisibility(View.GONE);
+            holder.tv_nickname.setVisibility(View.GONE);
+            holder.img_header.setVisibility(View.GONE);
+        }else {
+            holder.tv_end.setVisibility(View.GONE);
+            holder.tv_dev.setVisibility(View.VISIBLE);
+            holder.tv_content.setVisibility(View.VISIBLE);
+            holder.tv_time.setVisibility(View.VISIBLE);
+            holder.tv_nickname.setVisibility(View.VISIBLE);
+            holder.img_header.setVisibility(View.VISIBLE);
+            GlideApp.with(context).load(list.get(position).getImg_header()).error(R.mipmap.load_fail).into(holder.img_header);
+            holder.tv_nickname.setText(list.get(position).getNickname());
+            holder.tv_time.setText(list.get(position).getCreate_time());
+            holder.tv_content.setText(list.get(position).getContent());
+        }
     }
 
     @Override
     public int getItemCount() {
-        return list.size();
+        return list.size()+1;
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder{
         ConstraintLayout constraint_item;
         ImageView img_header;
-        TextView tv_nickname,tv_time,tv_content;
+        TextView tv_nickname,tv_time,tv_content,tv_end,tv_dev;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -58,6 +73,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.MyViewHo
             tv_content = itemView.findViewById(R.id.tv_content);
             tv_time = itemView.findViewById(R.id.tv_time);
             tv_nickname = itemView.findViewById(R.id.tv_nickname);
+            tv_end = itemView.findViewById(R.id.tv_end);
+            tv_dev = itemView.findViewById(R.id.tv_dev);
         }
     }
 }

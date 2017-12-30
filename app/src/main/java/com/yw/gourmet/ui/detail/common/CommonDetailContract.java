@@ -20,14 +20,14 @@ public interface CommonDetailContract {
         void onGetDetailFail(String msg);
         void onGetCommentSuccess(BaseData<List<CommentData>> model);
         void onGetCommentFail(String msg);
-        void onSendCommentSuccess(BaseData model,int position);
-        void onSendCommentFail(String msg,int position);
+        void onSendCommentSuccess(BaseData<List<CommentData>> model);
+        void onSendCommentFail(String msg);
         void onRemarkSuccess(BaseData<ShareListData<List<String>>> model);
     }
     abstract class Presenter extends BasePresenter<View>{
         abstract void getDetail(List<MultipartBody.Part> parts);
         abstract void getComment(List<MultipartBody.Part> parts);
-        abstract void sendComment(List<MultipartBody.Part> parts,int position);
+        abstract void sendComment(List<MultipartBody.Part> parts);
         abstract void reMark(List<MultipartBody.Part> parts);
     }
 }

@@ -124,7 +124,7 @@ public class Api {
         return service.GetComment(parts);
     }
 
-    public Observable<BaseData> PutComment(List<MultipartBody.Part> parts){
+    public Observable<BaseData<List<CommentData>>> PutComment(List<MultipartBody.Part> parts){
         return service.PutComment(parts);
     }
 

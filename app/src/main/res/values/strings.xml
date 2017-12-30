@@ -72,4 +72,6 @@
     <string name="touch_say">按住说话</string>
     <string name="gourmet_share">美食分享</string>
     <string name="comment_user">用户评论</string>
+    <string name="is_end">- - - - - 到底啦 - - - - -</string>
+    <string name="write_comment">写评论___</string>
 </resources>

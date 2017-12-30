@@ -181,7 +181,7 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
                 .getContext().getApplicationContext().getSystemService(
                         Context.INPUT_METHOD_SERVICE);
         try {
-            imm.hideSoftInputFromWindow(et_chat.getApplicationWindowToken(), 0);
+            imm.hideSoftInputFromWindow(view.getApplicationWindowToken(), 0);
         }catch (Exception e){}
     }
 }

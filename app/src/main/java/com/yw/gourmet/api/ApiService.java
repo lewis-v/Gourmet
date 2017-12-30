@@ -84,7 +84,7 @@ public interface ApiService {
     //发送评论信息
     @Multipart
     @POST("/Comment/Put")
-    Observable<BaseData> PutComment(@Part List<MultipartBody.Part> parts);
+    Observable<BaseData<List<CommentData>>> PutComment(@Part List<MultipartBody.Part> parts);
 
     //获取普通分享详情
     @Multipart
