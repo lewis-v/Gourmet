@@ -70,4 +70,6 @@
     <string name="hour">小时</string>
     <string name="zero">0</string>
     <string name="touch_say">按住说话</string>
+    <string name="gourmet_share">美食分享</string>
+    <string name="comment_user">用户评论</string>
 </resources>

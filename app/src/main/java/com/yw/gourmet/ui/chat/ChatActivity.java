@@ -74,11 +74,7 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    try {
-                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                    } catch (Exception e) {
-                    }
+                    hideSoftInput(et_chat);
                     //发送文本信息
                     MessageListData data = new MessageListData();
                     data.setContent(v.getText().toString());
@@ -88,6 +84,7 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
                     data.setSendStatus(MessageListData.SENDING);
                     listData.add(data);
                     adapter.notifyItemChanged(listData.size() - 1);
+                    recycler_chat.smoothScrollToPosition(listData.size() - 1);
                     et_chat.setText("");
                     MultipartBody.Builder builder = new MultipartBody.Builder()
                             .setType(MultipartBody.FORM)
@@ -138,10 +135,12 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
         listData.clear();
         listData.addAll(model.getData());
         adapter.notifyDataSetChanged();
+        recycler_chat.scrollToPosition(listData.size() - 1);
     }
 
     @Override
     public void onClick(View v) {
+        hideSoftInput(et_chat);
         switch (v.getId()){
             case R.id.img_back:
                 finish();
@@ -153,12 +152,6 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
                     et_chat.setVisibility(View.GONE);
                     tv_voice.setVisibility(View.VISIBLE);
                     sendMode = VOICE;
-                    InputMethodManager imm = (InputMethodManager) et_chat
-                            .getContext().getApplicationContext().getSystemService(
-                                    Context.INPUT_METHOD_SERVICE);
-                    try {
-                        imm.hideSoftInputFromWindow(et_chat.getApplicationWindowToken(), 0);
-                    }catch (Exception e){}
                 }else if (sendMode == VOICE){
                     img_type.setImageResource(R.drawable.keyboard);
                     img_emoticon.setVisibility(View.VISIBLE);
@@ -177,5 +170,18 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
 
                 break;
         }
+    }
+
+    /**
+     * 隐藏对应控件的软键盘
+     * @param view
+     */
+    public void hideSoftInput(View view){
+        InputMethodManager imm = (InputMethodManager) view
+                .getContext().getApplicationContext().getSystemService(
+                        Context.INPUT_METHOD_SERVICE);
+        try {
+            imm.hideSoftInputFromWindow(et_chat.getApplicationWindowToken(), 0);
+        }catch (Exception e){}
     }
 }

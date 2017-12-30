@@ -20,7 +20,7 @@ public class ChatPresenter extends ChatContract.Presenter {
         mRxManager.add(Api.getInstance().SendMessage(parts),new RxSubscriberCallBack<BaseData>(new RxApiCallback<BaseData>() {
             @Override
             public void onSuccess(BaseData model) {
-                if (model.getStatus() == 1){
+                if (model.getStatus() == 0){
                     mView.onSendSuccess(position);
                 }else {
                     mView.onSendFail(model.getMessage(),position);

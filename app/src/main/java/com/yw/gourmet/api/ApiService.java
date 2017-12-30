@@ -2,6 +2,7 @@ package com.yw.gourmet.api;
 
 
 import com.yw.gourmet.data.BaseData;
+import com.yw.gourmet.data.CommentData;
 import com.yw.gourmet.data.MessageListData;
 import com.yw.gourmet.data.ShareListData;
 import com.yw.gourmet.data.UserData;
@@ -74,4 +75,19 @@ public interface ApiService {
     @Multipart
     @POST("/Message/Put")
     Observable<BaseData> SendMessage(@Part List<MultipartBody.Part> parts);
+
+    //获取评论信息
+    @Multipart
+    @POST("/Comment/Get")
+    Observable<BaseData<List<CommentData>>> GetComment(@Part List<MultipartBody.Part> parts);
+
+    //发送评论信息
+    @Multipart
+    @POST("/Comment/Put")
+    Observable<BaseData> PutComment(@Part List<MultipartBody.Part> parts);
+
+    //获取普通分享详情
+    @Multipart
+    @POST("/Share/Common/Get")
+    Observable<BaseData<ShareListData<List<String>>>> GetCommonDetail(@Part List<MultipartBody.Part> parts);
 }

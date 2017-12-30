@@ -2,6 +2,7 @@ package com.yw.gourmet.api;
 
 
 import com.yw.gourmet.data.BaseData;
+import com.yw.gourmet.data.CommentData;
 import com.yw.gourmet.data.MessageListData;
 import com.yw.gourmet.data.ShareListData;
 import com.yw.gourmet.data.UserData;
@@ -117,5 +118,17 @@ public class Api {
 
     public Observable<BaseData> SendMessage(List<MultipartBody.Part> parts){
         return service.SendMessage(parts);
+    }
+
+    public Observable<BaseData<List<CommentData>>> GetComment(List<MultipartBody.Part> parts){
+        return service.GetComment(parts);
+    }
+
+    public Observable<BaseData> PutComment(List<MultipartBody.Part> parts){
+        return service.PutComment(parts);
+    }
+
+    public Observable<BaseData<ShareListData<List<String>>>> GetCommonDetail(List<MultipartBody.Part> parts){
+        return service.GetCommonDetail(parts);
     }
 }

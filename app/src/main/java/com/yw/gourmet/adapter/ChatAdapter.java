@@ -6,14 +6,17 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.yw.gourmet.Constant;
 import com.yw.gourmet.GlideApp;
 import com.yw.gourmet.R;
 import com.yw.gourmet.data.MessageListData;
+import com.yw.gourmet.listener.OnRefreshListener;
 
 import java.util.List;
 
@@ -24,6 +27,7 @@ import java.util.List;
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
     private Context context;
     private List<MessageListData> list;
+    private OnRefreshListener onRefreshListener;
 
     public ChatAdapter(Context context, List<MessageListData> list) {
         this.context = context;
@@ -36,11 +40,11 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(final MyViewHolder holder, int position) {
         if (Constant.userData != null){
             if (Constant.userData.getId().equals(list.get(position).getPut_id())){//自己发送的
-                holder.constraint_other.setVisibility(View.GONE);
-                holder.constraint_myself.setVisibility(View.VISIBLE);
+                holder.ll_other.setVisibility(View.GONE);
+                holder.ll_myself.setVisibility(View.VISIBLE);
                 GlideApp.with(context).load(list.get(position).getImg_header()).error(R.mipmap.load_fail)
                         .into(holder.img_header_myself);
                 switch (list.get(position).getType()) {
@@ -59,10 +63,36 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
                                 .into(holder.img_myself);
                         break;
                 }
+                holder.fl_sending_myself.removeAllViews();
+                switch (list.get(position).getSendStatus()) {
+                    case MessageListData.SENDING:
+                        holder.fl_sending_myself.setVisibility(View.VISIBLE);
+                        holder.fl_sending_myself.setOnClickListener(null);
+                        holder.fl_sending_myself.addView(new ProgressBar(context));
+                        break;
+                    case MessageListData.SEND_SUCCESS:
+                        holder.fl_sending_myself.setVisibility(View.INVISIBLE);
+                        holder.fl_sending_myself.setOnClickListener(null);
+                        break;
+                    case MessageListData.SEND_FAIL:
+                        holder.fl_sending_myself.setVisibility(View.VISIBLE);
+                        ImageView imageViewMyself = new ImageView(context);
+                        imageViewMyself.setImageResource(R.drawable.refresh);
+                        holder.fl_sending_myself.addView(imageViewMyself);
+                        if (onRefreshListener != null){
+                            holder.fl_sending_myself.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    onRefreshListener.OnRefresh(v,holder.getLayoutPosition());
+                                }
+                            });
+                        }
+                        break;
+                }
 
             }else {//别人发送的
-                holder.constraint_other.setVisibility(View.VISIBLE);
-                holder.constraint_myself.setVisibility(View.GONE);
+                holder.ll_other.setVisibility(View.VISIBLE);
+                holder.ll_myself.setVisibility(View.GONE);
                 GlideApp.with(context).load(list.get(position).getImg_header()).error(R.mipmap.load_fail)
                         .into(holder.img_header_other);
                 switch (list.get(position).getType()) {
@@ -81,7 +111,32 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
                                 .into(holder.img_other);
                         break;
                 }
-
+                holder.fl_sending_other.removeAllViews();
+                switch (list.get(position).getSendStatus()) {
+                    case MessageListData.SENDING:
+                        holder.fl_sending_other.setVisibility(View.VISIBLE);
+                        holder.fl_sending_other.setOnClickListener(null);
+                        holder.fl_sending_other.addView(new ProgressBar(context));
+                        break;
+                    case MessageListData.SEND_SUCCESS:
+                        holder.fl_sending_other.setVisibility(View.INVISIBLE);
+                        holder.fl_sending_other.setOnClickListener(null);
+                        break;
+                    case MessageListData.SEND_FAIL:
+                        holder.fl_sending_other.setVisibility(View.VISIBLE);
+                        ImageView imageViewMyself = new ImageView(context);
+                        imageViewMyself.setImageResource(R.drawable.refresh);
+                        holder.fl_sending_other.addView(imageViewMyself);
+                        if (onRefreshListener != null){
+                            holder.fl_sending_other.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    onRefreshListener.OnRefresh(v,holder.getLayoutPosition());
+                                }
+                            });
+                        }
+                        break;
+                }
             }
         }
     }
@@ -91,17 +146,23 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
         return list.size();
     }
 
+    public ChatAdapter setOnRefreshListener(OnRefreshListener onRefreshListener) {
+        this.onRefreshListener = onRefreshListener;
+        return this;
+    }
+
     class MyViewHolder extends RecyclerView.ViewHolder {
         LinearLayout ll_item;
-        ConstraintLayout constraint_other,constraint_myself;
+        LinearLayout ll_other,ll_myself;
         ImageView img_header_other,img_header_myself,img_other,img_myself;
         TextView tv_nickname,tv_other,tv_myself;
+        FrameLayout fl_sending_other,fl_sending_myself;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             ll_item = itemView.findViewById(R.id.ll_item);
-            constraint_myself = itemView.findViewById(R.id.constraint_myself);
-            constraint_other = itemView.findViewById(R.id.constraint_other);
+            ll_myself = itemView.findViewById(R.id.ll_myself);
+            ll_other = itemView.findViewById(R.id.ll_other);
             img_header_myself = itemView.findViewById(R.id.img_header_myself);
             img_header_other = itemView.findViewById(R.id.img_header_other);
             img_other = itemView.findViewById(R.id.img_other);//发送的图像
@@ -109,6 +170,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
             tv_myself = itemView.findViewById(R.id.tv_myself);
             tv_nickname = itemView.findViewById(R.id.tv_nickname);
             tv_other = itemView.findViewById(R.id.tv_other);
+            fl_sending_other = itemView.findViewById(R.id.fl_sending_other);
+            fl_sending_myself = itemView.findViewById(R.id.fl_sending_myself);
         }
     }
 }

@@ -76,6 +76,15 @@ public class ImgAddAdapter extends RecyclerView.Adapter<ImgAddAdapter.MyViewHold
         return this;
     }
 
+    public boolean isChange() {
+        return isChange;
+    }
+
+    public ImgAddAdapter setChange(boolean change) {
+        isChange = change;
+        return this;
+    }
+
     /**
      * 添加照片
      * @param img
@@ -118,7 +127,12 @@ public class ImgAddAdapter extends RecyclerView.Adapter<ImgAddAdapter.MyViewHold
                 }
             }
         }else {
-            holder.img_delete.setVisibility(View.VISIBLE);
+            if (isChange) {
+                holder.img_delete.setVisibility(View.VISIBLE);
+            }else {
+                holder.img_delete.setVisibility(View.GONE);
+            }
+
             holder.img.setVisibility(View.VISIBLE);
             Glide.with(context).load(imgs.get(position)).into(holder.img);
             if (onItemClickListener != null){

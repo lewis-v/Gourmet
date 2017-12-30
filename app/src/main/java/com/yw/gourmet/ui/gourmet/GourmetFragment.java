@@ -1,5 +1,6 @@
 package com.yw.gourmet.ui.gourmet;
 
+import android.content.Intent;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,6 +20,7 @@ import com.yw.gourmet.data.ShareListData;
 import com.yw.gourmet.listener.OnItemClickListener;
 import com.yw.gourmet.listener.OnReMarkListener;
 import com.yw.gourmet.myenum.LoadEnum;
+import com.yw.gourmet.ui.detail.common.CommonDetailActivity;
 import com.yw.gourmet.utils.ToastUtils;
 
 import java.util.ArrayList;
@@ -55,6 +57,23 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
         adapter.setListener(new OnItemClickListener() {
             @Override
             public void OnClick(View v, int position) {
+                Intent intent = null;
+                switch (listData.get(position).getType()) {
+                    case Constant.TypeFlag.SHARE:
+                        intent = new Intent(getContext(), CommonDetailActivity.class);
+                        break;
+                    case Constant.TypeFlag.DIARY:
+                        break;
+                    case Constant.TypeFlag.MENU:
+                        break;
+                    case Constant.TypeFlag.RAIDERS:
+                        break;
+                }
+                if (intent != null){
+                    intent.putExtra("id",listData.get(position).getId());
+                    intent.putExtra("type",String.valueOf(listData.get(position).getType()));
+                    startActivity(intent);
+                }
 
             }
 
