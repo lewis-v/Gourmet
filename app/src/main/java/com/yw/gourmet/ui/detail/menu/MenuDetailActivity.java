@@ -272,10 +272,10 @@ public class MenuDetailActivity extends BaseActivity<MenuDetailPresenter> implem
             tv_time_min.setText(time[1]);
         }
         tv_introduction.setText(shareListData.getIntroduction());
-        if (shareListData.getTip() == null && shareListData.getTip().length() == 0){
-            constraint_tip.setVisibility(View.GONE);
-        }else {
+        if (shareListData.getTip() != null && shareListData.getTip().length() > 0){
             tv_tip.setText(shareListData.getTip());
+        }else {
+            constraint_tip.setVisibility(View.GONE);
         }
         if (shareListData.getIngredient() != null && shareListData.getIngredient().size()>0) {
             adapterIngredient = new IngredientAdapter(this, shareListData.getIngredient(), false);

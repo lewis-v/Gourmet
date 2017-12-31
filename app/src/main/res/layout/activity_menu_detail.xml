@@ -245,11 +245,8 @@
                 android:layout_height="2dp" />
             <TextView
                 android:id="@+id/tv_introduction"
-                android:hint="@string/menu_introduction_tip"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLines="5"
-                android:minLines="2"
                 android:layout_margin="10dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
@@ -388,9 +385,6 @@
                     android:layout_height="2dp" />
                 <TextView
                     android:id="@+id/tv_tip"
-                    android:hint="@string/menu_tips"
-                    android:maxLines="5"
-                    android:minLines="2"
                     android:layout_margin="10dp"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
