@@ -264,10 +264,8 @@ public class MenuActivity extends BaseActivity<MenuPresenter> implements View.On
                         .addFormDataPart("play_time",et_time_hour.getText().toString()+","+et_time_min.getText().toString())
                         .addFormDataPart("introduction",et_introduction.getText().toString())
                         .addFormDataPart("practice",listPractice.toString())
-                        .addFormDataPart("create_time",String.valueOf(create_time));
-                if (!adapterIngredient.isEmpty()){
-                    builder.addFormDataPart("ingredient",new JSONArray(listIngredient).toString());
-                }
+                        .addFormDataPart("create_time",String.valueOf(create_time))
+                        .addFormDataPart("ingredient",new JSONArray(listIngredient).toString());
                 if (!et_tip.getText().toString().trim().isEmpty()){
                     builder.addFormDataPart("tip",et_tip.getText().toString());
                 }
@@ -380,6 +378,10 @@ public class MenuActivity extends BaseActivity<MenuPresenter> implements View.On
         }
         if (adapterPractice.isEmpty()){
             ToastUtils.showLongToast("请输入食谱步骤");
+            return true;
+        }
+        if (adapterIngredient.isEmpty()){
+            ToastUtils.showLongToast("请输入食谱用料");
             return true;
         }
         return false;
