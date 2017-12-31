@@ -21,6 +21,8 @@ import com.yw.gourmet.listener.OnItemClickListener;
 import com.yw.gourmet.listener.OnReMarkListener;
 import com.yw.gourmet.myenum.LoadEnum;
 import com.yw.gourmet.ui.detail.common.CommonDetailActivity;
+import com.yw.gourmet.ui.detail.diary.DiaryDetailActivity;
+import com.yw.gourmet.ui.detail.menu.MenuDetailActivity;
 import com.yw.gourmet.utils.ToastUtils;
 
 import java.util.ArrayList;
@@ -63,8 +65,10 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
                         intent = new Intent(getContext(), CommonDetailActivity.class);
                         break;
                     case Constant.TypeFlag.DIARY:
+                        intent = new Intent(getContext(), DiaryDetailActivity.class);
                         break;
                     case Constant.TypeFlag.MENU:
+                        intent = new Intent(getContext(), MenuDetailActivity.class);
                         break;
                     case Constant.TypeFlag.RAIDERS:
                         break;
@@ -115,7 +119,26 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
 
             @Override
             public void OnCommentClick(View view, int position) {
-
+                Intent intent = null;
+                switch (listData.get(position).getType()) {
+                    case Constant.TypeFlag.SHARE:
+                        intent = new Intent(getContext(), CommonDetailActivity.class);
+                        break;
+                    case Constant.TypeFlag.DIARY:
+                        intent = new Intent(getContext(), DiaryDetailActivity.class);
+                        break;
+                    case Constant.TypeFlag.MENU:
+                        intent = new Intent(getContext(), MenuDetailActivity.class);
+                        break;
+                    case Constant.TypeFlag.RAIDERS:
+                        break;
+                }
+                if (intent != null){
+                    intent.putExtra("id",listData.get(position).getId());
+                    intent.putExtra("type",String.valueOf(listData.get(position).getType()));
+                    intent.putExtra("isComment",true);
+                    startActivity(intent);
+                }
             }
         });
         MultipartBody.Builder builder = new MultipartBody.Builder()

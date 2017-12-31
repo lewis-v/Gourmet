@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.yw.gourmet.R;
 import com.yw.gourmet.data.MenuPracticeData;
 import com.yw.gourmet.dialog.MyDialogPhotoChooseFragment;
+import com.yw.gourmet.dialog.MyDialogPhotoShowFragment;
 import com.yw.gourmet.listener.OnAddListener;
 import com.yw.gourmet.listener.OnDeleteListener;
 import com.yw.gourmet.listener.OnItemClickListener;
@@ -42,6 +43,7 @@ public class PracticeAdapter extends RecyclerView.Adapter<PracticeAdapter.MyView
     private OnItemClickListener onItemClickListener;
     private OnAddListener onImgAddListener;//图片添加监听器
     private int imgMaxNum = 5;//每个步骤的图片最大数量,默认5
+    private boolean isShowImg = false;//是否点击显示图片
 
     public PracticeAdapter(Context context, List<MenuPracticeData<List<String>>> list, FragmentManager fragmentManager) {
         this.context = context;
@@ -177,6 +179,20 @@ public class PracticeAdapter extends RecyclerView.Adapter<PracticeAdapter.MyView
                     }
                 });
             }
+            if (isShowImg){
+                adapter.setOnItemClickListener(new OnItemClickListener() {
+                    @Override
+                    public void OnClick(View v, int position) {
+                        new MyDialogPhotoShowFragment().setImgString(list.get(holder.getLayoutPosition())
+                                .getImg_practiceData()).setPosition(position).show(fragmentManager,"img");
+                    }
+
+                    @Override
+                    public boolean OnLongClick(View v, int position) {
+                        return false;
+                    }
+                });
+            }
         }
     }
 
@@ -240,6 +256,11 @@ public class PracticeAdapter extends RecyclerView.Adapter<PracticeAdapter.MyView
             }
         }
         return true;
+    }
+
+    public PracticeAdapter setShowImg(boolean showImg) {
+        isShowImg = showImg;
+        return this;
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder{

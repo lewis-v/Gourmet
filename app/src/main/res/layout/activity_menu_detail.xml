@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/view_parent"
@@ -16,13 +16,10 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <TextView
-                android:id="@+id/tv_cancel"
+            <ImageView
+                android:id="@+id/img_back"
+                android:src="@drawable/back"
                 android:text="@string/cancel"
-                android:gravity="center"
-                android:textSize="16sp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent" />
             <TextView
@@ -34,33 +31,33 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"/>
-            <TextView
-                android:id="@+id/tv_send"
-                android:textColor="@color/colorAccent"
-                android:textSize="16sp"
-                android:gravity="center"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:text="@string/put"
-                android:layout_width="wrap_content"
+            <ImageView
+                android:id="@+id/img_other"
+                android:src="@drawable/other"
+                android:padding="5dp"
+                android:layout_width="40dp"
                 android:layout_height="match_parent" />
         </LinearLayout>
     </android.support.v7.widget.Toolbar>
     <TextView
+        android:id="@+id/tv_dev_toolbar"
+        android:layout_below="@+id/toolbar"
         android:background="@mipmap/dev"
         android:layout_width="match_parent"
         android:layout_height="1dp" />
     <android.support.v4.widget.NestedScrollView
+        android:id="@+id/scroll_menu"
+        android:layout_below="@+id/tv_dev_toolbar"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <android.support.constraint.ConstraintLayout
-            android:id="@+id/coordinator"
+            android:id="@+id/coordinator_menu"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context="com.yw.gourmet.ui.share.menu.MenuActivity">
-            <EditText
-                android:id="@+id/et_title"
+            <TextView
+                android:id="@+id/tv_title"
                 android:hint="@string/menu_title_tip"
                 android:gravity="center"
                 android:layout_margin="5dp"
@@ -71,40 +68,15 @@
                 android:textStyle="bold"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toLeftOf="@+id/tv_power"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintHorizontal_chainStyle="spread_inside"
                 app:layout_constraintHorizontal_weight="1"
                 android:background="@null"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content" />
-            <TextView
-                android:id="@+id/tv_power"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintLeft_toRightOf="@+id/et_title"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintBottom_toBottomOf="@+id/et_title"
-                android:layout_marginRight="10dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:gravity="center"
-                android:textColor="@color/colorAccent"
-                android:text="@string/public_type"
-                android:background="@drawable/circle_back"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <TextView
-                android:id="@+id/tv_cover_tip"
-                app:layout_constraintTop_toTopOf="@+id/img_cover"
-                app:layout_constraintLeft_toLeftOf="@id/img_cover"
-                app:layout_constraintBottom_toBottomOf="@+id/img_cover"
-                app:layout_constraintRight_toRightOf="@+id/img_cover"
-                android:gravity="center"
-                android:text="@string/touch_to_set_cover"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
             <ImageView
                 android:id="@+id/img_cover"
-                app:layout_constraintTop_toBottomOf="@+id/et_title"
+                app:layout_constraintTop_toBottomOf="@+id/tv_title"
                 app:layout_constraintLeft_toLeftOf="parent"
                 android:scaleType="fitCenter"
                 android:layout_margin="10dp"
@@ -128,7 +100,7 @@
                 android:gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@+id/et_title"
+                app:layout_constraintTop_toBottomOf="@+id/tv_title"
                 app:layout_constraintRight_toRightOf="@+id/tv_difficult"
                 app:layout_constraintLeft_toRightOf="@+id/tv_difficult_tip"
                 app:layout_constraintBottom_toBottomOf="@+id/ll_time">
@@ -202,35 +174,35 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintLeft_toRightOf="@+id/tv_time"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_time">
-                <EditText
-                    android:id="@+id/et_time_hour"
+                <TextView
+                    android:id="@+id/tv_time_hour"
                     android:text="@string/zero"
                     android:background="@null"
                     android:gravity="center"
-                    android:inputType="number"
                     android:lines="1"
                     android:maxLines="1"
+                    android:ellipsize="end"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content" />
                 <TextView
-                    android:id="@+id/tv_time_hour"
+                    android:id="@+id/tv_time_hour_text"
                     android:text="@string/hour"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
-                <EditText
-                    android:id="@+id/et_time_min"
+                <TextView
+                    android:id="@+id/tv_time_min"
                     android:text="@string/zero"
                     android:background="@null"
                     android:gravity="center"
-                    android:inputType="number"
+                    android:ellipsize="end"
                     android:lines="1"
                     android:maxLines="1"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"/>
                 <TextView
-                    android:id="@+id/tv_time_min"
+                    android:id="@+id/tv_time_min_text"
                     android:text="@string/minute"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
@@ -271,8 +243,8 @@
                 android:background="@mipmap/menu_dev"
                 android:layout_width="0dp"
                 android:layout_height="2dp" />
-            <EditText
-                android:id="@+id/et_introduction"
+            <TextView
+                android:id="@+id/tv_introduction"
                 android:hint="@string/menu_introduction_tip"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -308,7 +280,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_introduction"
+                app:layout_constraintTop_toBottomOf="@+id/tv_introduction"
                 app:layout_constraintRight_toRightOf="parent"/>
             <TextView
                 app:layout_constraintTop_toTopOf="@id/tv_ingredient_tip"
@@ -373,60 +345,159 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/tv_practice_tip"/>
-
-            <TextView
-                app:layout_constraintTop_toTopOf="@id/tv_tip"
-                app:layout_constraintBottom_toBottomOf="@id/tv_tip"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toLeftOf="@id/tv_tip"
-                app:layout_constraintHorizontal_chainStyle="spread_inside"
-                app:layout_constraintHorizontal_weight="1"
-                android:layout_margin="10dp"
-                android:background="@mipmap/menu_dev"
-                android:layout_width="0dp"
-                android:layout_height="2dp" />
-            <TextView
-                android:id="@+id/tv_tip"
-                android:text="@string/tips"
-                android:textColor="@color/close"
-                android:textStyle="bold"
-                android:textSize="16sp"
-                android:layout_marginTop="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/recycler_practice"
-                app:layout_constraintRight_toRightOf="parent"/>
-            <TextView
-                app:layout_constraintTop_toTopOf="@id/tv_tip"
-                app:layout_constraintBottom_toBottomOf="@id/tv_tip"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintLeft_toRightOf="@id/tv_tip"
-                app:layout_constraintHorizontal_chainStyle="spread_inside"
-                app:layout_constraintHorizontal_weight="1"
-                android:layout_margin="10dp"
-                android:background="@mipmap/menu_dev"
-                android:layout_width="0dp"
-                android:layout_height="2dp" />
-            <EditText
-                android:id="@+id/et_tip"
-                android:hint="@string/menu_tips"
-                android:maxLines="5"
-                android:minLines="2"
-                android:layout_margin="10dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:background="@null"
-                android:textSize="14sp"
-                android:textColor="@color/more_color"
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/constraint_tip"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@+id/tv_tip"
+                android:layout_marginTop="10dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/recycler_practice"
+                app:layout_constraintRight_toRightOf="parent">
+                <TextView
+                    app:layout_constraintTop_toTopOf="@id/tv_tip_text"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_tip_text"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toLeftOf="@id/tv_tip_text"
+                    app:layout_constraintHorizontal_chainStyle="spread_inside"
+                    app:layout_constraintHorizontal_weight="1"
+                    android:layout_margin="10dp"
+                    android:background="@mipmap/menu_dev"
+                    android:layout_width="0dp"
+                    android:layout_height="2dp" />
+                <TextView
+                    android:id="@+id/tv_tip_text"
+                    android:text="@string/tips"
+                    android:textColor="@color/close"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"/>
+                <TextView
+                    app:layout_constraintTop_toTopOf="@id/tv_tip_text"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_tip_text"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintLeft_toRightOf="@id/tv_tip_text"
+                    app:layout_constraintHorizontal_chainStyle="spread_inside"
+                    app:layout_constraintHorizontal_weight="1"
+                    android:layout_margin="10dp"
+                    android:background="@mipmap/menu_dev"
+                    android:layout_width="0dp"
+                    android:layout_height="2dp" />
+                <TextView
+                    android:id="@+id/tv_tip"
+                    android:hint="@string/menu_tips"
+                    android:maxLines="5"
+                    android:minLines="2"
+                    android:layout_margin="10dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:background="@null"
+                    android:textSize="14sp"
+                    android:textColor="@color/more_color"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_tip_text"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+            </android.support.constraint.ConstraintLayout>
+            <LinearLayout
+                android:id="@+id/ll_dev_tip_top"
+                app:layout_constraintTop_toBottomOf="@+id/constraint_tip"
+                android:background="@color/dev"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="1px"/>
+            <LinearLayout
+                android:id="@+id/ll_position"
+                app:layout_constraintTop_toBottomOf="@+id/ll_dev_tip_top"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="30dp">
+                <LinearLayout
+                    android:id="@+id/ll_comment"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:gravity="center"
+                    android:layout_height="match_parent">
+                    <ImageView
+                        android:id="@+id/img_comment"
+                        android:src="@drawable/comment"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:id="@+id/tv_comment"
+                        android:layout_marginLeft="10dp"
+                        android:text="@string/comment"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
 
+                <LinearLayout
+                    android:id="@+id/ll_good"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:gravity="center"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/img_good"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/good" />
+                    <TextView
+                        android:id="@+id/tv_good"
+                        android:layout_marginLeft="10dp"
+                        android:text="@string/good"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_bad"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:gravity="center"
+                    android:layout_height="match_parent">
+                    <ImageView
+                        android:id="@+id/img_bad"
+                        android:src="@drawable/bad"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:id="@+id/tv_bad"
+                        android:layout_marginLeft="10dp"
+                        android:text="@string/bad"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/ll_dev_tip_bottom"
+                app:layout_constraintTop_toBottomOf="@+id/ll_position"
+                android:background="@color/dev"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="1px"/>
+            <include
+                app:layout_constraintTop_toBottomOf="@+id/ll_dev_tip_bottom"
+                layout="@layout/layout_comment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
         </android.support.constraint.ConstraintLayout>
     </android.support.v4.widget.NestedScrollView>
-</LinearLayout>
+    <include
+        android:id="@+id/layout_input"
+        layout="@layout/layout_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/scroll_menu"
+        />
+</RelativeLayout>
 

@@ -310,4 +310,10 @@ public class DiaryActivity extends BaseActivity<DiaryPresenter> implements View.
         }
         return false;
     }
+
+    @Override
+    protected void onDestroy() {
+        richeditor_diary.destroy();
+        super.onDestroy();
+    }
 }

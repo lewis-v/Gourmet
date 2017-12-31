@@ -1,6 +1,5 @@
-package com.yw.gourmet.ui.detail.common;
+package com.yw.gourmet.ui.detail.diary;
 
-import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.widget.NestedScrollView;
@@ -10,7 +9,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +24,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.yw.gourmet.Constant;
-import com.yw.gourmet.GlideApp;
 import com.yw.gourmet.R;
 import com.yw.gourmet.adapter.CommentAdapter;
 import com.yw.gourmet.adapter.ImgAddAdapter;
@@ -35,35 +32,35 @@ import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.data.CommentData;
 import com.yw.gourmet.data.ShareListData;
 import com.yw.gourmet.dialog.MyDialogPhotoShowFragment;
-import com.yw.gourmet.listener.OnItemClickListener;
 import com.yw.gourmet.utils.ToastUtils;
 import com.yw.gourmet.utils.WindowUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import jp.wasabeef.richeditor.RichEditor;
 import okhttp3.MultipartBody;
 
-public class CommonDetailActivity extends BaseActivity<CommonDetailPresenter> implements
-        CommonDetailContract.View,View.OnClickListener{
-    private ImageView img_header,img_back,img_other,img_share,img_no_comment,img_up;
-    private TextView tv_nickname,tv_time,tv_content,tv_comment,tv_good,tv_bad,tv_dev_input;
-    private LinearLayout ll_img,ll_comment,ll_bad,ll_good,ll_input,ll_position,ll_title;
+public class DiaryDetailActivity extends BaseActivity<DiaryDetailPresenter> implements
+        DiaryDetailContract.View,View.OnClickListener {
+    private ImageView img_back,img_other,img_no_comment,img_up;
+    private TextView tv_auth,tv_time,tv_address,tv_title,tv_comment,tv_good,tv_bad,tv_dev_input;
+    private LinearLayout ll_comment,ll_bad,ll_good,ll_input,ll_position,ll_title;
     private RelativeLayout rl_layout;
-    private RecyclerView recycler_share,recycler_comment;
+    private RecyclerView recycler_comment;
     private EditText et_input;
     private Button bt_send;
-    private ConstraintLayout constraint_comment;
-    private NestedScrollView scroll_comment;
-    private ImgAddAdapter imgAdapter;
-    private ShareListData<List<String>> listShareListData;
+    private RichEditor richeditor_diary;
+    private LinearLayout ll_diary;
+    private NestedScrollView scroll_diary;
+    private ShareListData shareListData;
     private CommentAdapter commentAdapter;
     private List<CommentData> commentDataList = new ArrayList<>();
     private boolean isAnimShowing = false;//动画是否在显示
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_common_detail;
+        return R.layout.activity_diary_detail;
     }
 
     @Override
@@ -72,14 +69,14 @@ public class CommonDetailActivity extends BaseActivity<CommonDetailPresenter> im
         toolbar = findViewById(R.id.toolbar);
         view_parent = findViewById(R.id.view_parent);
 
-        constraint_comment = findViewById(R.id.constraint_comment);
+        ll_diary = findViewById(R.id.ll_diary);
 
-        scroll_comment = findViewById(R.id.scroll_comment);
+        scroll_diary = findViewById(R.id.scroll_diary);
 
-        scroll_comment.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+        scroll_diary.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                if (scrollY + scroll_comment.getHeight() == constraint_comment.getHeight()){
+                if (scrollY + scroll_diary.getHeight() == ll_diary.getHeight()){
                     recycler_comment.setNestedScrollingEnabled(true);
                 }else {
                     recycler_comment.setNestedScrollingEnabled(false);
@@ -104,27 +101,24 @@ public class CommonDetailActivity extends BaseActivity<CommonDetailPresenter> im
 
         bt_send.setOnClickListener(this);
 
-        img_header = findViewById(R.id.img_header);
         img_back = findViewById(R.id.img_back);
         img_other = findViewById(R.id.img_other);
-        img_share = findViewById(R.id.img_share);
         img_no_comment = findViewById(R.id.img_no_comment);
         img_up = findViewById(R.id.img_up);
 
         img_back.setOnClickListener(this);
         img_other.setOnClickListener(this);
-        img_share.setOnClickListener(this);
         img_up.setOnClickListener(this);
 
-        tv_nickname = findViewById(R.id.tv_nickname);
         tv_time = findViewById(R.id.tv_time);
-        tv_content = findViewById(R.id.tv_content);
         tv_comment = findViewById(R.id.tv_comment);
         tv_good = findViewById(R.id.tv_good);
         tv_bad = findViewById(R.id.tv_bad);
         tv_dev_input = findViewById(R.id.tv_dev_input);
+        tv_title = findViewById(R.id.tv_title);
+        tv_address = findViewById(R.id.tv_address);
+        tv_auth = findViewById(R.id.tv_auth);
 
-        ll_img = findViewById(R.id.ll_img);
         ll_comment = findViewById(R.id.ll_comment);
         ll_good = findViewById(R.id.ll_good);
         ll_bad = findViewById(R.id.ll_bad);
@@ -138,11 +132,8 @@ public class CommonDetailActivity extends BaseActivity<CommonDetailPresenter> im
 
         rl_layout = findViewById(R.id.rl_layout);
 
-        recycler_share = findViewById(R.id.recycler_share);
-        recycler_share.setNestedScrollingEnabled(false);
-        recycler_share.setItemAnimator(new DefaultItemAnimator());
-        recycler_share.setLayoutManager(new StaggeredGridLayoutManager(3
-                , StaggeredGridLayoutManager.VERTICAL));
+        richeditor_diary = findViewById(R.id.richeditor_diary);
+        richeditor_diary.setInputEnabled(false);
 
         MultipartBody.Builder builder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
@@ -174,58 +165,27 @@ public class CommonDetailActivity extends BaseActivity<CommonDetailPresenter> im
     }
 
     @Override
-    public void onBackPressed() {
-        if (ll_input.getVisibility() == View.VISIBLE){
-            setInput(false);
-            return;
-        }
-        super.onBackPressed();
-        finish();
-    }
-
-    @Override
-    public void onGetDetailSuccess(BaseData<ShareListData<List<String>>> model) {
+    public void onGetDetailSuccess(BaseData<ShareListData> model) {
         setLoadDialog(false);
-        listShareListData = model.getData();
-        GlideApp.with(this).load(listShareListData.getImg_header()).error(R.mipmap.load_fail).into(img_header);
-        tv_nickname.setText(listShareListData.getNickname());
-        tv_time.setText(listShareListData.getPut_time());
-        if (listShareListData.getContent() != null && listShareListData.getContent().length() > 0){
-            shoViewTop(tv_content,true);
-            tv_content.setText(listShareListData.getContent());
+        shareListData = model.getData();
+        tv_title.setText(shareListData.getTitle());
+        tv_address.setText(shareListData.getAddress());
+        tv_time.setText(shareListData.getTime());
+        tv_auth.setText("作者:"+shareListData.getNickname());
+        richeditor_diary.setHtml(shareListData.getContent());
+        shoViewTop(tv_title,true);
+        shoViewTop(tv_address,true);
+        shoViewTop(tv_time,true);
+        shoViewTop(tv_auth,true);
+        shoViewTop(richeditor_diary,true);
+        if (shareListData.getBad_num() > 0){
+            tv_bad.setText(String.valueOf(shareListData.getBad_num()));
         }
-        if (listShareListData.getImg() != null ){
-            if (listShareListData.getImg().size() > 1) {//大于1张照片
-                shoViewTop(recycler_share,true);
-                imgAdapter = new ImgAddAdapter(listShareListData.getImg(), this);
-                imgAdapter.setChange(false);
-                recycler_share.setAdapter(imgAdapter);
-                imgAdapter.setOnItemClickListener(new OnItemClickListener() {
-                    @Override
-                    public void OnClick(View v, int position) {
-                        new MyDialogPhotoShowFragment().setImgString(listShareListData.getImg()).setPosition(position).show(getSupportFragmentManager(),"imgs");
-                    }
-
-                    @Override
-                    public boolean OnLongClick(View v, int position) {
-                        return false;
-                    }
-                });
-            }else if (listShareListData.getImg().size() == 1){//1张照片
-                shoViewTop(ll_img,true);
-                GlideApp.with(this).load(listShareListData.getImg().get(0))
-                        .error(R.mipmap.load_fail).into(img_share);
-            }
+        if (shareListData.getGood_num() > 0){
+            tv_good.setText(String.valueOf(shareListData.getGood_num()));
         }
-
-        if (listShareListData.getBad_num() > 0){
-            tv_bad.setText(String.valueOf(listShareListData.getBad_num()));
-        }
-        if (listShareListData.getGood_num() > 0){
-            tv_good.setText(String.valueOf(listShareListData.getGood_num()));
-        }
-        if (listShareListData.getComment_num() > 0){
-            tv_comment.setText(String.valueOf(listShareListData.getComment_num()));
+        if (shareListData.getComment_num() > 0){
+            tv_comment.setText(String.valueOf(shareListData.getComment_num()));
         }
     }
 
@@ -237,14 +197,15 @@ public class CommonDetailActivity extends BaseActivity<CommonDetailPresenter> im
 
     @Override
     public void onGetCommentSuccess(BaseData<List<CommentData>> model) {
+        setLoadDialog(false);
         commentDataList.clear();
         commentDataList.addAll(model.getData());
         commentAdapter.notifyDataSetChanged();
-        scroll_comment.post(new Runnable() {
+        scroll_diary.post(new Runnable() {
             @Override
             public void run() {
                 if (getIntent().getBooleanExtra("isComment",false)){
-                    scroll_comment.fullScroll(View.FOCUS_DOWN);
+                    scroll_diary.fullScroll(View.FOCUS_DOWN);
                 }
             }
         });
@@ -253,18 +214,19 @@ public class CommonDetailActivity extends BaseActivity<CommonDetailPresenter> im
 
     @Override
     public void onGetCommentFail(String msg) {
+
     }
 
     @Override
     public void onSendCommentSuccess(BaseData<List<CommentData>> model) {
         setLoadDialog(false);
-        et_input.setText("");
         commentDataList.clear();
         commentDataList.addAll(model.getData());
         commentAdapter.notifyDataSetChanged();
         tv_comment.setText(String.valueOf(commentDataList.size()));
-        scroll_comment.fullScroll(View.FOCUS_DOWN);
+        scroll_diary.fullScroll(View.FOCUS_DOWN);
         recycler_comment.smoothScrollToPosition(commentDataList.size());
+        et_input.setText("");
     }
 
     @Override
@@ -273,18 +235,18 @@ public class CommonDetailActivity extends BaseActivity<CommonDetailPresenter> im
     }
 
     @Override
-    public void onRemarkSuccess(BaseData<ShareListData<List<String>>> model) {
-        listShareListData.setGood_num(model.getData().getGood_num());
-        listShareListData.setBad_num(model.getData().getBad_num());
-        listShareListData.setComment_num(model.getData().getComment_num());
-        if (listShareListData.getBad_num() > 0){
-            tv_bad.setText(String.valueOf(listShareListData.getBad_num()));
+    public void onRemarkSuccess(BaseData<ShareListData> model) {
+        shareListData.setGood_num(model.getData().getGood_num());
+        shareListData.setBad_num(model.getData().getBad_num());
+        shareListData.setComment_num(model.getData().getComment_num());
+        if (shareListData.getBad_num() > 0){
+            tv_bad.setText(String.valueOf(shareListData.getBad_num()));
         }
-        if (listShareListData.getGood_num() > 0){
-            tv_good.setText(String.valueOf(listShareListData.getGood_num()));
+        if (shareListData.getGood_num() > 0){
+            tv_good.setText(String.valueOf(shareListData.getGood_num()));
         }
-        if (listShareListData.getComment_num() > 0){
-            tv_comment.setText(String.valueOf(listShareListData.getComment_num()));
+        if (shareListData.getComment_num() > 0){
+            tv_comment.setText(String.valueOf(shareListData.getComment_num()));
         }
     }
 
@@ -297,10 +259,6 @@ public class CommonDetailActivity extends BaseActivity<CommonDetailPresenter> im
                 break;
             case R.id.img_other:
 
-                break;
-
-            case R.id.img_share:
-                new MyDialogPhotoShowFragment().setImgString(listShareListData.getImg()).show(getSupportFragmentManager(),"img");
                 break;
             case R.id.img_up:
 
@@ -320,8 +278,8 @@ public class CommonDetailActivity extends BaseActivity<CommonDetailPresenter> im
                     MultipartBody.Builder builderGood = new MultipartBody.Builder()
                             .setType(MultipartBody.FORM)
                             .addFormDataPart("id", Constant.userData.getId())
-                            .addFormDataPart("type",String.valueOf(listShareListData.getType()))
-                            .addFormDataPart("act_id",listShareListData.getId())
+                            .addFormDataPart("type",String.valueOf(shareListData.getType()))
+                            .addFormDataPart("act_id",shareListData.getId())
                             .addFormDataPart("act","1");
                     mPresenter.reMark(builderGood.build().parts());
                 }else {
@@ -333,8 +291,8 @@ public class CommonDetailActivity extends BaseActivity<CommonDetailPresenter> im
                     MultipartBody.Builder builderGood = new MultipartBody.Builder()
                             .setType(MultipartBody.FORM)
                             .addFormDataPart("id", Constant.userData.getId())
-                            .addFormDataPart("type",String.valueOf(listShareListData.getType()))
-                            .addFormDataPart("act_id",listShareListData.getId())
+                            .addFormDataPart("type",String.valueOf(shareListData.getType()))
+                            .addFormDataPart("act_id",shareListData.getId())
                             .addFormDataPart("act","0");
                     mPresenter.reMark(builderGood.build().parts());
                 }else {
@@ -401,7 +359,7 @@ public class CommonDetailActivity extends BaseActivity<CommonDetailPresenter> im
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("token",Constant.userData.getToken())
                 .addFormDataPart("user_id",Constant.userData.getId())
-                .addFormDataPart("act_id",listShareListData.getId())
+                .addFormDataPart("act_id",shareListData.getId())
                 .addFormDataPart("type",getIntent().getStringExtra("type"))
                 .addFormDataPart("content",et_input.getText().toString());
         mPresenter.sendComment(builder.build().parts());
@@ -427,7 +385,6 @@ public class CommonDetailActivity extends BaseActivity<CommonDetailPresenter> im
      * @param isShow
      */
     public void shoViewTop(final View view, final boolean isShow){
-        isAnimShowing = true;
         Animation animationBottom ;
         if (isShow){
             animationBottom = AnimationUtils.loadAnimation(this, R.anim.anim_view_enter_bottom);
@@ -454,5 +411,11 @@ public class CommonDetailActivity extends BaseActivity<CommonDetailPresenter> im
 
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        richeditor_diary.destroy();
+        super.onDestroy();
     }
 }

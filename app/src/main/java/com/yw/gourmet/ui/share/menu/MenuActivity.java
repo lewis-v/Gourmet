@@ -47,6 +47,8 @@ import okhttp3.RequestBody;
 
 public class MenuActivity extends BaseActivity<MenuPresenter> implements View.OnClickListener
         , MyDialogPhotoChooseFragment.OnCropListener,MenuContract.View,MyDialogIngredientFragment.OnEnterListener {
+    public static final String[] levelText = {"非常简单","简单","一般","较困难","非常困难"};//难度等级的文字
+
     private ImageView img_cover;
     private TextView tv_power,tv_difficult,tv_cancel,tv_send;
     private EditText et_introduction,et_tip,et_title,et_time_hour,et_time_min;
@@ -58,7 +60,6 @@ public class MenuActivity extends BaseActivity<MenuPresenter> implements View.On
     private List<MenuPracticeData<List<String>>> listPractice = new ArrayList<>();//步骤列表
     private List<ImageView> difficultList = new ArrayList<>();//难度条
     private int difficultLevel = 1;//困难等级,默认为1
-    private final String[] levelText = {"非常简单","简单","一般","较困难","非常困难"};//难度等级的文字
     private String coverPath;//封面地址
     private long create_time;//创建时间
 

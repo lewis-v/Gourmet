@@ -4,7 +4,7 @@ package com.yw.gourmet.data;
  * Created by Lewis-v on 2017/12/22.
  */
 
-public class MenuDetailData<T> {
+public class MenuDetailData<T,V> {
     private String id;
     private String put_time;//发布时间
     private String create_time;//创建时间
@@ -13,8 +13,6 @@ public class MenuDetailData<T> {
     private String address;//地址
     private String content;//内容
     private String status;//发布的可见状态
-    private String lat;//坐标
-    private String lng;//坐标
     private int type;//分享类型
     private String nickname;//分享者姓名
     private String img_header;//分享者头像
@@ -22,7 +20,12 @@ public class MenuDetailData<T> {
     private int good_num;//点赞数量
     private int bad_num;//踩数量
     private String cover;//封面
+    private String play_time;//耗时
+    private String introduction;//简介
     private T practice;//步骤
+    private V ingredient;//用料
+    private String tip;//小贴士
+    private int difficult_level;//困难程度
 
     public String getId() {
         return id;
@@ -96,24 +99,6 @@ public class MenuDetailData<T> {
         return this;
     }
 
-    public String getLat() {
-        return lat;
-    }
-
-    public MenuDetailData setLat(String lat) {
-        this.lat = lat;
-        return this;
-    }
-
-    public String getLng() {
-        return lng;
-    }
-
-    public MenuDetailData setLng(String lng) {
-        this.lng = lng;
-        return this;
-    }
-
     public int getType() {
         return type;
     }
@@ -177,12 +162,57 @@ public class MenuDetailData<T> {
         return this;
     }
 
+    public String getPlay_time() {
+        return play_time;
+    }
+
+    public MenuDetailData setPlay_time(String play_time) {
+        this.play_time = play_time;
+        return this;
+    }
+
+    public String getIntroduction() {
+        return introduction;
+    }
+
+    public MenuDetailData setIntroduction(String introduction) {
+        this.introduction = introduction;
+        return this;
+    }
+
     public T getPractice() {
         return practice;
     }
 
     public MenuDetailData setPractice(T practice) {
         this.practice = practice;
+        return this;
+    }
+
+    public V getIngredient() {
+        return ingredient;
+    }
+
+    public MenuDetailData setIngredient(V ingredient) {
+        this.ingredient = ingredient;
+        return this;
+    }
+
+    public String getTip() {
+        return tip;
+    }
+
+    public MenuDetailData setTip(String tip) {
+        this.tip = tip;
+        return this;
+    }
+
+    public int getDifficult_level() {
+        return difficult_level;
+    }
+
+    public MenuDetailData setDifficult_level(int difficult_level) {
+        this.difficult_level = difficult_level;
         return this;
     }
 
@@ -197,8 +227,6 @@ public class MenuDetailData<T> {
                 ", address='" + address + '\'' +
                 ", content='" + content + '\'' +
                 ", status='" + status + '\'' +
-                ", lat='" + lat + '\'' +
-                ", lng='" + lng + '\'' +
                 ", type=" + type +
                 ", nickname='" + nickname + '\'' +
                 ", img_header='" + img_header + '\'' +
@@ -206,7 +234,12 @@ public class MenuDetailData<T> {
                 ", good_num=" + good_num +
                 ", bad_num=" + bad_num +
                 ", cover='" + cover + '\'' +
+                ", play_time='" + play_time + '\'' +
+                ", introduction='" + introduction + '\'' +
                 ", practice=" + practice +
+                ", ingredient=" + ingredient +
+                ", tip='" + tip + '\'' +
+                ", difficult_level=" + difficult_level +
                 '}';
     }
 }
