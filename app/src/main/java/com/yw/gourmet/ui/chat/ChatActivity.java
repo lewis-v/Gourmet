@@ -80,6 +80,7 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
                     data.setContent(v.getText().toString());
                     data.setType(TEXT);
                     data.setPut_id(put_id);
+                    data.setGet_id(get_id);
                     data.setImg_header(Constant.userData.getImg_header());
                     data.setSendStatus(MessageListData.SENDING);
                     listData.add(data);

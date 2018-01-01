@@ -27,6 +27,7 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment {
     protected P mPresenter;
     protected View view;
     protected Toolbar toolbar;
+    protected View view_parent;
     private MyDialogLoadFragment myDialogLoadFragment;
     protected List<Thread> threadList = new ArrayList<>();
     private boolean isReLogining = false;
@@ -74,16 +75,24 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment {
     public void setToolbarTop(){
         if (toolbar != null){
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                toolbar.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        toolbar.setPadding(toolbar.getPaddingLeft(), toolbar.getHeight() * 25 / 40
-                                , toolbar.getPaddingRight(), toolbar.getPaddingBottom());
-                        ViewGroup.LayoutParams layoutParams = toolbar.getLayoutParams();
-                        layoutParams.height = toolbar.getHeight() * 65 / 40;
-                        toolbar.setLayoutParams(layoutParams);
+                if (view_parent != null){
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP){
+                        view_parent.setFitsSystemWindows(false);
+                    }else {
+                        view_parent.setFitsSystemWindows(true);
                     }
-                });
+                }else {
+                    toolbar.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            toolbar.setPadding(toolbar.getPaddingLeft(), toolbar.getHeight() * 25 / 40
+                                    , toolbar.getPaddingRight(), toolbar.getPaddingBottom());
+                            ViewGroup.LayoutParams layoutParams = toolbar.getLayoutParams();
+                            layoutParams.height = toolbar.getHeight() * 65 / 40;
+                            toolbar.setLayoutParams(layoutParams);
+                        }
+                    });
+                }
             }
         }
     }

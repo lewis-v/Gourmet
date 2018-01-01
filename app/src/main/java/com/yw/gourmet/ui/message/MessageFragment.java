@@ -60,6 +60,7 @@ public class MessageFragment extends BaseFragment<MessagePresenter> implements M
     @Override
     protected void initView() {
         toolbar = (Toolbar)view.findViewById(R.id.toolbar);
+        view_parent = view.findViewById(R.id.view_parent);
 
         swipe_target = (RecyclerView)view.findViewById(R.id.swipe_target);
         swipe_target.setItemAnimator(new DefaultItemAnimator());
@@ -71,12 +72,11 @@ public class MessageFragment extends BaseFragment<MessagePresenter> implements M
             public void OnClick(View v, int position) {
                 String put_id,get_id;
                 if (Constant.userData.getId().equals(listData.get(position).getPut_id())){
-                    put_id = Constant.userData.getId();
                     get_id = listData.get(position).getGet_id();
                 }else {
-                    put_id = listData.get(position).getGet_id();
-                    get_id = Constant.userData.getId();
+                    get_id = listData.get(position).getPut_id();
                 }
+                put_id = Constant.userData.getId();
                 Intent intent = new Intent(getContext(), ChatActivity.class);
                 intent.putExtra("put_id",put_id);
                 intent.putExtra("get_id",get_id);
