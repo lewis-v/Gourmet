@@ -74,4 +74,8 @@
     <string name="comment_user">用户评论</string>
     <string name="is_end">- - - - - 到底啦 - - - - -</string>
     <string name="write_comment">写评论___</string>
+    <string name="share_other">分享到其他平台</string>
+    <string name="share_wx_people">微信好友</string>
+    <string name="share_to">分享至</string>
+    <string name="share_friend">朋友圈</string>
 </resources>

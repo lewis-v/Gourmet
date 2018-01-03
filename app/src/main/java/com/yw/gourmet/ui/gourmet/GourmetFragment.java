@@ -14,10 +14,13 @@ import com.aspsine.swipetoloadlayout.SwipeToLoadLayout;
 import com.yw.gourmet.Constant;
 import com.yw.gourmet.R;
 import com.yw.gourmet.adapter.ShareListAdapter;
+import com.yw.gourmet.api.Api;
 import com.yw.gourmet.base.BaseFragment;
 import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.data.ShareListData;
+import com.yw.gourmet.dialog.MyDialogMoreFragment;
 import com.yw.gourmet.listener.OnItemClickListener;
+import com.yw.gourmet.listener.OnMoreListener;
 import com.yw.gourmet.listener.OnReMarkListener;
 import com.yw.gourmet.myenum.LoadEnum;
 import com.yw.gourmet.ui.detail.common.CommonDetailActivity;
@@ -84,6 +87,31 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
             @Override
             public boolean OnLongClick(View v, int position) {
                 return false;
+            }
+        });
+        adapter.setOnMoreListener(new OnMoreListener() {
+            @Override
+            public void OnMoreClick(View view, int position) {
+                MyDialogMoreFragment myDialogMoreFragment = new MyDialogMoreFragment();
+                switch (listData.get(position).getType()){
+                    case Constant.TypeFlag.SHARE://普通分享
+
+                        break;
+                    case Constant.TypeFlag.DIARY://日记分享
+                        myDialogMoreFragment.setShareCoverUrl(listData.get(position).getCover())
+                        .setShareDescription(listData.get(position).getContent())
+                                .setShareTitle(listData.get(position).getTitle())
+                        .setShareUrl(Api.API_BASE_URL+"/Share/Other?id="
+                                +listData.get(position).getId()+ "&type="+listData.get(position).getType())
+                                .show(getFragmentManager(),"share");
+                        break;
+                    case Constant.TypeFlag.MENU://食谱分享
+
+                        break;
+                    case Constant.TypeFlag.RAIDERS://攻略分享
+
+                        break;
+                }
             }
         });
         adapter.setOnReMarkListener(new OnReMarkListener() {

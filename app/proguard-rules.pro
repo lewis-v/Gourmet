@@ -16,3 +16,13 @@
 #   public *;
 #}
 #1.support-v7-appcompat
+
+-keep class com.tencent.mm.opensdk.** {
+   *;
+}
+-keep class com.tencent.wxop.** {
+   *;
+}
+-keep class com.tencent.mm.sdk.** {
+   *;
+}
