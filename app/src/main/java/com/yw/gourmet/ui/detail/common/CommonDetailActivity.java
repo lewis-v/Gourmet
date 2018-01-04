@@ -11,7 +11,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -22,6 +24,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -60,6 +63,7 @@ public class CommonDetailActivity extends BaseActivity<CommonDetailPresenter> im
     private CommentAdapter commentAdapter;
     private List<CommentData> commentDataList = new ArrayList<>();
     private boolean isAnimShowing = false;//动画是否在显示
+    private PopupWindow mPopWindow;
 
     @Override
     protected int getLayoutId() {
@@ -296,9 +300,8 @@ public class CommonDetailActivity extends BaseActivity<CommonDetailPresenter> im
                 finish();
                 break;
             case R.id.img_other:
-
+                showMoreMenu();
                 break;
-
             case R.id.img_share:
                 new MyDialogPhotoShowFragment().setImgString(listShareListData.getImg()).show(getSupportFragmentManager(),"img");
                 break;
@@ -340,6 +343,12 @@ public class CommonDetailActivity extends BaseActivity<CommonDetailPresenter> im
                 }else {
                     ToastUtils.showSingleToast("请登陆后再进行操作");
                 }
+                break;
+            case R.id.tv_collect:
+
+                break;
+            case R.id.tv_share:
+
                 break;
         }
     }
@@ -454,5 +463,20 @@ public class CommonDetailActivity extends BaseActivity<CommonDetailPresenter> im
 
             }
         });
+    }
+
+    public void showMoreMenu(){
+        //设置contentView
+        View contentView = LayoutInflater.from(this).inflate(R.layout.layout_more_menu, null);
+        mPopWindow = new PopupWindow(contentView,
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+        mPopWindow.setContentView(contentView);
+        //设置各个控件的点击响应
+        TextView tv_collect = (TextView)contentView.findViewById(R.id.tv_collect);
+        TextView tv_share = (TextView)contentView.findViewById(R.id.tv_share);
+        tv_share.setVisibility(View.GONE);
+        tv_collect.setOnClickListener(this);
+        tv_share.setOnClickListener(this);
+        mPopWindow.showAsDropDown(img_other,-100,0);
     }
 }

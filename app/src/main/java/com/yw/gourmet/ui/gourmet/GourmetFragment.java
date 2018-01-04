@@ -93,23 +93,21 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
             @Override
             public void OnMoreClick(View view, int position) {
                 MyDialogMoreFragment myDialogMoreFragment = new MyDialogMoreFragment();
-                switch (listData.get(position).getType()){
+                switch (listData.get(position).getType()) {
                     case Constant.TypeFlag.SHARE://普通分享
-
+                        myDialogMoreFragment.setShare(false).setType(listData.get(position).getType())
+                                .show(getFragmentManager(), "share");
                         break;
                     case Constant.TypeFlag.DIARY://日记分享
-                        myDialogMoreFragment.setShareCoverUrl(listData.get(position).getCover())
-                        .setShareDescription(listData.get(position).getContent())
-                                .setShareTitle(listData.get(position).getTitle())
-                        .setShareUrl(Api.API_BASE_URL+"/Share/Other?id="
-                                +listData.get(position).getId()+ "&type="+listData.get(position).getType())
-                                .show(getFragmentManager(),"share");
-                        break;
                     case Constant.TypeFlag.MENU://食谱分享
-
-                        break;
                     case Constant.TypeFlag.RAIDERS://攻略分享
-
+                        myDialogMoreFragment.setShareCoverUrl(listData.get(position).getCover())
+                                .setType(listData.get(position).getType())
+                                .setShareDescription(listData.get(position).getContent())
+                                .setShareTitle(listData.get(position).getTitle())
+                                .setShareUrl(Api.API_BASE_URL + "/Share/Other?id="
+                                        + listData.get(position).getId() + "&type=" + listData.get(position).getType())
+                                .show(getFragmentManager(), "share");
                         break;
                 }
             }
