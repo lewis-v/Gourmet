@@ -91,12 +91,8 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
     public void setToolbarTop(){
         if (toolbar != null){
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                if (view_parent != null){
-                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP){
-                        view_parent.setFitsSystemWindows(false);
-                    }else {
-                        view_parent.setFitsSystemWindows(true);
-                    }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && view_parent != null){
+                    view_parent.setFitsSystemWindows(true);
                 }else {
                     toolbar.post(new Runnable() {
                         @Override
@@ -108,6 +104,9 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
                             toolbar.setLayoutParams(layoutParams);
                         }
                     });
+                    if (view_parent != null){
+                        view_parent.setFitsSystemWindows(false);
+                    }
                 }
             }
         }

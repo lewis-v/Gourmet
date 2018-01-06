@@ -2,6 +2,7 @@ package com.yw.gourmet.ui.detail.common;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
@@ -465,18 +466,24 @@ public class CommonDetailActivity extends BaseActivity<CommonDetailPresenter> im
         });
     }
 
+    /**
+     * 更多弹窗
+     */
     public void showMoreMenu(){
         //设置contentView
         View contentView = LayoutInflater.from(this).inflate(R.layout.layout_more_menu, null);
         mPopWindow = new PopupWindow(contentView,
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
         mPopWindow.setContentView(contentView);
+        mPopWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
+        mPopWindow.setOutsideTouchable(true);
+        mPopWindow.setFocusable(true);
         //设置各个控件的点击响应
         TextView tv_collect = (TextView)contentView.findViewById(R.id.tv_collect);
         TextView tv_share = (TextView)contentView.findViewById(R.id.tv_share);
         tv_share.setVisibility(View.GONE);
         tv_collect.setOnClickListener(this);
         tv_share.setOnClickListener(this);
-        mPopWindow.showAsDropDown(img_other,-100,0);
+        mPopWindow.showAsDropDown(img_other,-55,0);
     }
 }

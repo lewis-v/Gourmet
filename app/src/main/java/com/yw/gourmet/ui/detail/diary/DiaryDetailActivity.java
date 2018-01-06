@@ -1,6 +1,7 @@
 package com.yw.gourmet.ui.detail.diary;
 
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -20,6 +22,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -27,10 +30,12 @@ import com.yw.gourmet.Constant;
 import com.yw.gourmet.R;
 import com.yw.gourmet.adapter.CommentAdapter;
 import com.yw.gourmet.adapter.ImgAddAdapter;
+import com.yw.gourmet.api.Api;
 import com.yw.gourmet.base.BaseActivity;
 import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.data.CommentData;
 import com.yw.gourmet.data.ShareListData;
+import com.yw.gourmet.dialog.MyDialogMoreFragment;
 import com.yw.gourmet.dialog.MyDialogPhotoShowFragment;
 import com.yw.gourmet.utils.ToastUtils;
 import com.yw.gourmet.utils.WindowUtil;
@@ -57,6 +62,7 @@ public class DiaryDetailActivity extends BaseActivity<DiaryDetailPresenter> impl
     private CommentAdapter commentAdapter;
     private List<CommentData> commentDataList = new ArrayList<>();
     private boolean isAnimShowing = false;//动画是否在显示
+    private PopupWindow mPopWindow;
 
     @Override
     protected int getLayoutId() {
@@ -258,7 +264,7 @@ public class DiaryDetailActivity extends BaseActivity<DiaryDetailPresenter> impl
                 finish();
                 break;
             case R.id.img_other:
-
+                showMoreMenu();
                 break;
             case R.id.img_up:
 
@@ -298,6 +304,16 @@ public class DiaryDetailActivity extends BaseActivity<DiaryDetailPresenter> impl
                 }else {
                     ToastUtils.showSingleToast("请登陆后再进行操作");
                 }
+                break;
+            case R.id.tv_collect:
+
+                break;
+            case R.id.tv_share:
+                new MyDialogMoreFragment().setCollect(false).setType(shareListData.getType())
+                        .setShareTitle(shareListData.getTitle()).setShareCoverUrl(shareListData.getCover())
+                        .setShareDescription(shareListData.getContent()).setShareUrl(Api.API_BASE_URL + "/Share/Other?id="
+                        + shareListData.getId() + "&type=" + shareListData.getType())
+                        .show(getSupportFragmentManager(),"share");
                 break;
         }
     }
@@ -411,6 +427,26 @@ public class DiaryDetailActivity extends BaseActivity<DiaryDetailPresenter> impl
 
             }
         });
+    }
+
+    /**
+     * 更多弹窗
+     */
+    public void showMoreMenu(){
+        //设置contentView
+        View contentView = LayoutInflater.from(this).inflate(R.layout.layout_more_menu, null);
+        mPopWindow = new PopupWindow(contentView,
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+        mPopWindow.setContentView(contentView);
+        mPopWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
+        mPopWindow.setOutsideTouchable(true);
+        mPopWindow.setFocusable(true);
+        //设置各个控件的点击响应
+        TextView tv_collect = (TextView)contentView.findViewById(R.id.tv_collect);
+        TextView tv_share = (TextView)contentView.findViewById(R.id.tv_share);
+        tv_collect.setOnClickListener(this);
+        tv_share.setOnClickListener(this);
+        mPopWindow.showAsDropDown(img_other,-55,0);
     }
 
     @Override
