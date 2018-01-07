@@ -3,7 +3,6 @@ package com.yw.gourmet.ui.share.raiders;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -44,14 +43,15 @@ public class RaidersActivity extends BaseActivity<RaidersPresenter> {
         recycler_tag = findViewById(R.id.recycler_tag);
         recycler_tag.setLayoutManager(new CustomLayoutManager());
         recycler_tag.setItemAnimator(new DefaultItemAnimator());
+//        recycler_tag.setNestedScrollingEnabled(false);
         tagAdapter = new IngredientAdapter(this,tagList,true);
         recycler_tag.setAdapter(tagAdapter);
         tagList.add("11,111");
-        tagList.add("11,111");
-        tagList.add("11,111");
-        tagList.add("11,111");
-        tagList.add("11,111");
-        tagList.add("11,111");
+        tagList.add("11,11111");
+        tagList.add("11,1111");
+        tagList.add("11,111111");
+        tagList.add("1111");
+        tagList.add("11,111111111");
         tagList.add("11,111");
         tagAdapter.notifyDataSetChanged();
 

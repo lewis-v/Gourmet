@@ -89,6 +89,12 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
      * 4.4以上可全屏,将会设置padding,以下的版本不设置
      */
     public void setToolbarTop(){
+        try {
+            view_parent = findViewById(R.id.view_parent);
+            toolbar = findViewById(R.id.toolbar);
+        }catch (Exception e){
+            return;
+        }
         if (toolbar != null){
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && view_parent != null){
