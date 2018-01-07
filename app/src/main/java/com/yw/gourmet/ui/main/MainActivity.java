@@ -26,6 +26,7 @@ import com.yw.gourmet.ui.message.MessageFragment;
 import com.yw.gourmet.ui.my.MyFragment;
 import com.yw.gourmet.ui.search.SearchFragment;
 import com.yw.gourmet.ui.share.common.CommonShareActivity;
+import com.yw.gourmet.utils.DisplayUtils;
 import com.yw.gourmet.utils.WindowUtil;
 import com.yw.gourmet.widget.DepthPageTransformer;
 import com.yw.gourmet.widget.MyViewPager;
@@ -53,6 +54,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         WindowUtil.initWindowUtil(getWindowManager());
+        DisplayUtils.init(this);
     }
 
     @Override

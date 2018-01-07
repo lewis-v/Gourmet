@@ -56,11 +56,12 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.My
                 holder.img_delete.setVisibility(View.VISIBLE);
                 holder.img_add.setVisibility(View.GONE);
                 String[] content = list.get(position).split(",");
-                if (content.length > 1) {
+                if (content.length == 2) {
                     holder.tv_name.setText(content[0] + "\t\t" + content[1]);
                 }else {
-                    list.remove(position);
-                    notifyDataSetChanged();
+                    holder.tv_name.setText(list.get(position));
+//                    list.remove(position);
+//                    notifyDataSetChanged();
                 }
             }
         }else {//不可修改时
@@ -68,11 +69,12 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.My
             holder.img_delete.setVisibility(View.GONE);
             holder.img_add.setVisibility(View.GONE);
             String[] content = list.get(position).split(",");
-            if (content.length > 1) {
+            if (content.length == 2) {
                 holder.tv_name.setText(content[0] + "\t\t" + content[1]);
             }else {
-                list.remove(position);
-                notifyDataSetChanged();
+                holder.tv_name.setText(list.get(position));
+//                list.remove(position);
+//                notifyDataSetChanged();
             }
         }
         holder.ll_item.setOnClickListener(new View.OnClickListener() {

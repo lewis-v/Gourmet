@@ -78,4 +78,7 @@
     <string name="share_wx_people">微信好友</string>
     <string name="share_to">分享至</string>
     <string name="share_friend">朋友圈</string>
+    <string name="gourmet_raiders">美食攻略</string>
+    <string name="raiders_title_tip">请输入攻略标题</string>
+    <string name="tag_type">标签、类型</string>
 </resources>

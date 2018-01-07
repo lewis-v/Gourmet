@@ -12,6 +12,7 @@ import com.yw.gourmet.base.BaseFragment;
 import com.yw.gourmet.ui.share.common.CommonShareActivity;
 import com.yw.gourmet.ui.share.diary.DiaryActivity;
 import com.yw.gourmet.ui.share.menu.MenuActivity;
+import com.yw.gourmet.ui.share.raiders.RaidersActivity;
 import com.yw.gourmet.utils.WindowUtil;
 
 /**
@@ -76,7 +77,7 @@ public class FunctionFragment extends BaseFragment implements View.OnClickListen
                 startActivity(new Intent(getContext(), MenuActivity.class));
                 break;
             case R.id.ll_raiders:
-
+                startActivity(new Intent(getContext(), RaidersActivity.class));
                 break;
             case R.id.ll_close:
                 ((MainContract.View) getActivity()).addFragmentFunction(false);
