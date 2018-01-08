@@ -119,7 +119,7 @@
                 android:id="@+id/recycler_tag"
                 android:layout_margin="10dp"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"/>
+                android:layout_height="wrap_content"/>
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -148,6 +148,7 @@
                 android:textSize="14sp"
                 android:maxLength="5"
                 android:minLines="2"
+                android:hint="@string/raiders_introduction_tip"
                 android:layout_margin="10dp"
                 android:background="@null"
                 android:layout_width="match_parent"

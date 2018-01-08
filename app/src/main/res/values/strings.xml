@@ -81,4 +81,5 @@
     <string name="gourmet_raiders">美食攻略</string>
     <string name="raiders_title_tip">请输入攻略标题</string>
     <string name="tag_type">标签、类型</string>
+    <string name="raiders_introduction_tip">请输入攻略简介</string>
 </resources>
