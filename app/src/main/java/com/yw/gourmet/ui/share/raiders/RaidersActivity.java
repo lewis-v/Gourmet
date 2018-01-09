@@ -1,7 +1,7 @@
 package com.yw.gourmet.ui.share.raiders;
 
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
@@ -10,13 +10,13 @@ import android.widget.TextView;
 
 import com.yw.gourmet.R;
 import com.yw.gourmet.adapter.IngredientAdapter;
-import com.yw.gourmet.adapter.MyFragmentAdapter;
+import com.yw.gourmet.adapter.RaidersListAdapter;
 import com.yw.gourmet.base.BaseActivity;
+import com.yw.gourmet.data.RaidersListData;
 import com.yw.gourmet.dialog.MyDialogEditFragment;
 import com.yw.gourmet.listener.OnAddListener;
 import com.yw.gourmet.listener.OnDeleteListener;
 import com.yw.gourmet.listener.OnEditDialogEnterClickListener;
-import com.yw.gourmet.widget.MyViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,11 +24,10 @@ import java.util.List;
 public class RaidersActivity extends BaseActivity<RaidersPresenter> implements View.OnClickListener{
     private EditText et_title,et_introduction;
     private TextView tv_cancel,tv_send,tv_power;
-    private RecyclerView recycler_tag;
-    private MyViewPager viewpager_raiders;
-    private MyFragmentAdapter fragmentAdapter;
-    private List<Fragment> fragmentList = new ArrayList<>();
+    private RecyclerView recycler_tag,recycler_raiders_list;
     private IngredientAdapter tagAdapter;
+    private RaidersListAdapter raidersListAdapter;
+    private List<RaidersListData<List<String>>> raidersListData = new ArrayList<>();
     private List<String> tagList = new ArrayList<>();
     private int status = 1;//权限,公开或私有,1公开,0私有,默认公开
 
@@ -76,10 +75,28 @@ public class RaidersActivity extends BaseActivity<RaidersPresenter> implements V
         recycler_tag.setAdapter(tagAdapter);
         tagAdapter.notifyDataSetChanged();
 
-        viewpager_raiders = findViewById(R.id.viewpager_raiders);
-        fragmentAdapter = new MyFragmentAdapter(getSupportFragmentManager(),fragmentList);
-        viewpager_raiders.setAdapter(fragmentAdapter);
-        fragmentAdapter.notifyDataSetChanged();
+        recycler_raiders_list = findViewById(R.id.recycler_raiders_list);
+        recycler_raiders_list.setNestedScrollingEnabled(false);
+        recycler_raiders_list.setItemAnimator(new DefaultItemAnimator());
+        recycler_raiders_list.setLayoutManager(new LinearLayoutManager(this));
+        raidersListAdapter = new RaidersListAdapter(this,raidersListData,true);
+        recycler_raiders_list.setAdapter(raidersListAdapter);
+        raidersListData.add(new RaidersListData<List<String>>());
+        raidersListData.add(new RaidersListData<List<String>>());
+        raidersListData.add(new RaidersListData<List<String>>());
+        raidersListData.add(new RaidersListData<List<String>>());
+        raidersListData.add(new RaidersListData<List<String>>());
+        raidersListData.add(new RaidersListData<List<String>>());
+        raidersListAdapter.notifyDataSetChanged();
+
+        raidersListAdapter.setOnAddListener(new OnAddListener() {
+            @Override
+            public void OnAdd(View view, int position) {
+                raidersListData.add(new RaidersListData<List<String>>());
+                raidersListAdapter.notifyItemInserted(position);
+                raidersListAdapter.notifyItemChanged(position - 1);
+            }
+        });
     }
 
     @Override
