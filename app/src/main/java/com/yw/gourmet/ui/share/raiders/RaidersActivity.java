@@ -14,9 +14,11 @@ import com.yw.gourmet.adapter.RaidersListAdapter;
 import com.yw.gourmet.base.BaseActivity;
 import com.yw.gourmet.data.RaidersListData;
 import com.yw.gourmet.dialog.MyDialogEditFragment;
+import com.yw.gourmet.dialog.MyDialogRaidersListFragment;
 import com.yw.gourmet.listener.OnAddListener;
 import com.yw.gourmet.listener.OnDeleteListener;
 import com.yw.gourmet.listener.OnEditDialogEnterClickListener;
+import com.yw.gourmet.listener.OnItemClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,20 +83,23 @@ public class RaidersActivity extends BaseActivity<RaidersPresenter> implements V
         recycler_raiders_list.setLayoutManager(new LinearLayoutManager(this));
         raidersListAdapter = new RaidersListAdapter(this,raidersListData,true);
         recycler_raiders_list.setAdapter(raidersListAdapter);
-        raidersListData.add(new RaidersListData<List<String>>());
-        raidersListData.add(new RaidersListData<List<String>>());
-        raidersListData.add(new RaidersListData<List<String>>());
-        raidersListData.add(new RaidersListData<List<String>>());
-        raidersListData.add(new RaidersListData<List<String>>());
-        raidersListData.add(new RaidersListData<List<String>>());
         raidersListAdapter.notifyDataSetChanged();
 
         raidersListAdapter.setOnAddListener(new OnAddListener() {
             @Override
             public void OnAdd(View view, int position) {
-                raidersListData.add(new RaidersListData<List<String>>());
-                raidersListAdapter.notifyItemInserted(position);
-                raidersListAdapter.notifyItemChanged(position - 1);
+                new MyDialogRaidersListFragment().show(getSupportFragmentManager(),"add");
+            }
+        });
+        raidersListAdapter.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void OnClick(View v, int position) {
+
+            }
+
+            @Override
+            public boolean OnLongClick(View v, int position) {
+                return false;
             }
         });
     }

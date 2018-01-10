@@ -85,24 +85,44 @@
     </android.support.constraint.ConstraintLayout>
 
     <LinearLayout
+        android:id="@+id/ll_change"
+        android:background="@color/menu_back"
         android:orientation="horizontal"
+        android:clickable="true"
+        android:paddingRight="60dp"
+        android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <ImageView
             android:id="@+id/img_up"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:src="@mipmap/up_move"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="50dp" />
+        <ImageView
+            android:id="@+id/img_delete"
+            android:src="@mipmap/delete"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="50dp" />
+        <ImageView
+            android:id="@+id/img_down"
+            android:src="@mipmap/down_move"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="50dp" />
     </LinearLayout>
     <ImageView
         android:id="@+id/img_change"
         android:src="@drawable/circle_back"
         android:tint="@color/colorAccent"
+        android:padding="10dp"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginRight="20dp"
-        android:layout_width="30dp"
-        android:layout_height="30dp" />
+        android:layout_width="50dp"
+        android:layout_height="50dp" />
 
     <LinearLayout
         android:id="@+id/ll_add"

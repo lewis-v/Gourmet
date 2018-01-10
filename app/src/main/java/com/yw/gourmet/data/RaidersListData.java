@@ -9,7 +9,7 @@ public class RaidersListData<T> {
     private String title;
     private String img_cover;
     private T type;
-    private String address;
+    private String address = String.valueOf(System.nanoTime());
     private double lng;
     private double lat;
 
