@@ -3,6 +3,7 @@ package com.yw.gourmet;
 import android.app.Application;
 import android.content.Context;
 
+import com.baidu.mapapi.SDKInitializer;
 import com.bumptech.glide.Glide;
 
 /**
@@ -17,6 +18,7 @@ public class App extends Application{
     public void onCreate() {
         super.onCreate();
         context = this;
+        SDKInitializer.initialize(getApplicationContext());
     }
 
     public static App getApp(){

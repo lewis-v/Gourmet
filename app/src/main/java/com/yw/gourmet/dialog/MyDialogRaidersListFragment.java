@@ -10,6 +10,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.MapView;
 import com.yw.gourmet.GlideApp;
 import com.yw.gourmet.R;
 import com.yw.gourmet.adapter.IngredientAdapter;
@@ -36,6 +38,8 @@ public class MyDialogRaidersListFragment extends BaseDialogFragment implements V
     private ImageView img_cover;
     private ImageView img_address_search;
     private RaidersListData<List<String>> raidersData;
+    private MapView mapview;
+    private BaiduMap baiduMap;
 
     @Override
     public void onStart() {
@@ -90,6 +94,31 @@ public class MyDialogRaidersListFragment extends BaseDialogFragment implements V
                 }).show(getFragmentManager(), "type");
             }
         });
+
+        mapview = view.findViewById(R.id.mapview);
+        initMap(mapview);
+    }
+
+    public void initMap(MapView mapview){
+        baiduMap = mapview.getMap();
+    }
+
+    @Override
+    public void onResume() {
+        mapview.onResume();
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        mapview.onPause();
+        super.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        mapview.onDestroy();
+        super.onDestroy();
     }
 
     @Override
