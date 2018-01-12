@@ -3,6 +3,7 @@ package com.yw.gourmet.dialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -10,8 +11,11 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.baidu.location.BDLocation;
 import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.MapPoi;
 import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.model.LatLng;
 import com.yw.gourmet.GlideApp;
 import com.yw.gourmet.R;
 import com.yw.gourmet.adapter.IngredientAdapter;
@@ -20,6 +24,7 @@ import com.yw.gourmet.data.RaidersListData;
 import com.yw.gourmet.listener.OnAddListener;
 import com.yw.gourmet.listener.OnDeleteListener;
 import com.yw.gourmet.listener.OnEditDialogEnterClickListener;
+import com.yw.gourmet.utils.BDUtil;
 import com.yw.gourmet.utils.WindowUtil;
 
 import java.util.ArrayList;
@@ -40,6 +45,8 @@ public class MyDialogRaidersListFragment extends BaseDialogFragment implements V
     private RaidersListData<List<String>> raidersData;
     private MapView mapview;
     private BaiduMap baiduMap;
+    private BDUtil bdUtil;
+    private LatLng latLng;//选择的位置
 
     @Override
     public void onStart() {
@@ -99,8 +106,33 @@ public class MyDialogRaidersListFragment extends BaseDialogFragment implements V
         initMap(mapview);
     }
 
-    public void initMap(MapView mapview){
+    public void initMap(final MapView mapview){
         baiduMap = mapview.getMap();
+        bdUtil = new BDUtil().initBDMap(mapview).initLocation(getActivity()).starBDLocation(new BDUtil.OnLocalListener() {
+                    @Override
+                    public void OnLocalSuccess(BDLocation location) {
+                        latLng = new LatLng(location.getLatitude(),location.getLongitude());
+                        bdUtil.setCenter(latLng)
+                                .setZoom(10);
+                    }
+
+                    @Override
+                    public void OnLocalFail(BDLocation location) {
+
+                    }
+                },true);
+        baiduMap.setOnMapClickListener(new BaiduMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                MyDialogRaidersListFragment.this.latLng = latLng;
+                bdUtil.setCenter(latLng).setMarkerByRes(latLng,R.mipmap.icon_gcoding);
+            }
+
+            @Override
+            public boolean onMapPoiClick(MapPoi mapPoi) {
+                return false;
+            }
+        });
     }
 
     @Override
@@ -117,7 +149,7 @@ public class MyDialogRaidersListFragment extends BaseDialogFragment implements V
 
     @Override
     public void onDestroy() {
-        mapview.onDestroy();
+        bdUtil.onDestroy();
         super.onDestroy();
     }
 
