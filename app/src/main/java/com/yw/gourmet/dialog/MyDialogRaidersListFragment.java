@@ -1,5 +1,7 @@
 package com.yw.gourmet.dialog;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.baidu.location.BDLocation;
@@ -16,6 +19,8 @@ import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.MapPoi;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.search.sug.OnGetSuggestionResultListener;
+import com.baidu.mapapi.search.sug.SuggestionResult;
 import com.yw.gourmet.GlideApp;
 import com.yw.gourmet.R;
 import com.yw.gourmet.adapter.IngredientAdapter;
@@ -25,6 +30,7 @@ import com.yw.gourmet.listener.OnAddListener;
 import com.yw.gourmet.listener.OnDeleteListener;
 import com.yw.gourmet.listener.OnEditDialogEnterClickListener;
 import com.yw.gourmet.utils.BDUtil;
+import com.yw.gourmet.utils.ToastUtils;
 import com.yw.gourmet.utils.WindowUtil;
 
 import java.util.ArrayList;
@@ -36,11 +42,12 @@ import java.util.List;
  */
 
 public class MyDialogRaidersListFragment extends BaseDialogFragment implements View.OnClickListener{
-    private EditText et_title,et_address;
+    private EditText et_title,et_address,et_introduction;
     private TextView tv_img_tip,tv_enter,tv_cancel;
     private RecyclerView recycler_type;
+    private LinearLayout ll_introduction;
     private IngredientAdapter adapter;
-    private ImageView img_cover;
+    private ImageView img_cover,img_introduction;
     private ImageView img_address_search;
     private RaidersListData<List<String>> raidersData;
     private MapView mapview;
@@ -59,6 +66,9 @@ public class MyDialogRaidersListFragment extends BaseDialogFragment implements V
         getDialog().setCanceledOnTouchOutside(false);
         et_title = view.findViewById(R.id.et_title);
         et_address = view.findViewById(R.id.et_address);
+        et_introduction = view.findViewById(R.id.et_introduction);
+
+        ll_introduction = view.findViewById(R.id.ll_introduction);
 
         tv_img_tip = view.findViewById(R.id.tv_img_tip);
         tv_enter = view.findViewById(R.id.tv_enter);
@@ -68,7 +78,8 @@ public class MyDialogRaidersListFragment extends BaseDialogFragment implements V
 
         img_address_search = view.findViewById(R.id.img_address_search);
         img_address_search.setOnClickListener(this);
-
+        img_introduction = view.findViewById(R.id.img_introduction);
+        img_introduction.setOnClickListener(this);
         img_cover = view.findViewById(R.id.img_cover);
         img_cover.setOnClickListener(this);
 
@@ -186,8 +197,38 @@ public class MyDialogRaidersListFragment extends BaseDialogFragment implements V
 
                 break;
             case R.id.img_address_search:
-
+                bdUtil.initSearch(new OnGetSuggestionResultListener() {
+                    @Override
+                    public void onGetSuggestionResult(SuggestionResult suggestionResult) {
+                        if (suggestionResult != null && suggestionResult.getAllSuggestions()!=null
+                                &&suggestionResult.getAllSuggestions().size()>0) {
+                            latLng = suggestionResult.getAllSuggestions().get(0).pt;
+                            baiduMap.clear();
+                            bdUtil.setCenter(latLng);
+                            bdUtil.setMarkerByRes(latLng,R.mipmap.icon_gcoding);
+                        }else {
+                            ToastUtils.showSingleToast("无搜索结果");
+                        }
+                    }
+                }).search("广东",et_address.getText().toString());
+                break;
+            case R.id.img_introduction:
+                showIntroduction();
                 break;
         }
+    }
+
+    public void showIntroduction(){
+        ObjectAnimator objectAnimatorImg;
+        if (et_introduction.getVisibility() == View.VISIBLE){
+            objectAnimatorImg = ObjectAnimator.ofFloat(img_introduction,"rotation",0,180);
+            et_introduction.setVisibility(View.GONE);
+        }else {
+            objectAnimatorImg = ObjectAnimator.ofFloat(img_introduction,"rotation",180,360);
+            et_introduction.setVisibility(View.VISIBLE);
+        }
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(objectAnimatorImg);
+        animatorSet.start();
     }
 }
