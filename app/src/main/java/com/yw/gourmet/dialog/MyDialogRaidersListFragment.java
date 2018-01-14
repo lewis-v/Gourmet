@@ -264,7 +264,7 @@ public class MyDialogRaidersListFragment extends BaseDialogFragment implements V
                             ToastUtils.showSingleToast("无搜索结果");
                         }
                     }
-                }).search("广东",et_address.getText().toString());
+                }).search(spinner_address.getSelectedItem().toString(),et_address.getText().toString());
                 break;
             case R.id.img_introduction:
                 showIntroduction();
