@@ -65,7 +65,6 @@ public class BDUtil {
      * 初始化百度定位
      */
     public BDUtil initLocation(final Activity activity){
-        Log.e(Tag,"init");
         mLocationClient = new LocationClient(activity.getApplicationContext());
         LocationClientOption option = new LocationClientOption();
         //获取定位的频率
@@ -131,7 +130,6 @@ public class BDUtil {
      * 开启百度定位
      */
     public BDUtil starBDLocation(OnLocalListener localListener,boolean isAutoStopLocal){
-        Log.e(Tag,"start");
         this.localListener = localListener;
         this.isAutoStopLocal = isAutoStopLocal;
         mLocationClient.start();

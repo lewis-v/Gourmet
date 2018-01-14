@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -54,6 +53,8 @@ public class MyDialogRaidersListFragment extends BaseDialogFragment implements V
     private BaiduMap baiduMap;
     private BDUtil bdUtil;
     private LatLng latLng;//选择的位置
+    private boolean isVisi = true;
+    private OnEnterListener onEnterListener;
 
     @Override
     public void onStart() {
@@ -184,6 +185,7 @@ public class MyDialogRaidersListFragment extends BaseDialogFragment implements V
                     public void OnCrop(String path, String tag) {
                         GlideApp.with(getContext()).load(path).error(R.mipmap.load_fail)
                                 .into(img_cover);
+                        raidersData.setImg_cover(path);
                         if (tv_img_tip.getVisibility() == View.VISIBLE) {
                             tv_img_tip.setVisibility(View.GONE);
                         }
@@ -194,7 +196,14 @@ public class MyDialogRaidersListFragment extends BaseDialogFragment implements V
                 dismiss();
                 break;
             case R.id.tv_enter:
-
+                raidersData.setAddress(et_address.getText().toString());
+                raidersData.setTitle(et_title.getText().toString());
+                raidersData.setLat(latLng.latitude);
+                raidersData.setLng(latLng.longitude);
+                if (onEnterListener != null){
+                    onEnterListener.onEnter(raidersData,getTag());
+                }
+                dismiss();
                 break;
             case R.id.img_address_search:
                 bdUtil.initSearch(new OnGetSuggestionResultListener() {
@@ -218,17 +227,42 @@ public class MyDialogRaidersListFragment extends BaseDialogFragment implements V
         }
     }
 
+    /**
+     * 控制简介栏的显示与隐藏(带动画)
+     */
     public void showIntroduction(){
         ObjectAnimator objectAnimatorImg;
-        if (et_introduction.getVisibility() == View.VISIBLE){
+        ObjectAnimator objectAnimatorET;
+        ObjectAnimator objectAnimatorLL;
+        if (isVisi){
+            isVisi = false;
             objectAnimatorImg = ObjectAnimator.ofFloat(img_introduction,"rotation",0,180);
-            et_introduction.setVisibility(View.GONE);
+            objectAnimatorET = ObjectAnimator.ofFloat(et_introduction,"alpha",1f,0.1f);
+            objectAnimatorLL = ObjectAnimator.ofFloat(ll_introduction,"translationY"
+                    ,0,et_introduction.getHeight());
+            Log.e("visi",ll_introduction.getTranslationY()+";"+et_introduction.getHeight());
         }else {
-            objectAnimatorImg = ObjectAnimator.ofFloat(img_introduction,"rotation",180,360);
             et_introduction.setVisibility(View.VISIBLE);
+            isVisi = true;
+            objectAnimatorImg = ObjectAnimator.ofFloat(img_introduction,"rotation",180,360);
+            objectAnimatorET = ObjectAnimator.ofFloat(et_introduction,"alpha",0.1f,1f);
+            objectAnimatorLL = ObjectAnimator.ofFloat(ll_introduction,"translationY"
+                    ,et_introduction.getHeight(),0);
+            Log.e("visi",ll_introduction.getPivotY()+";"+img_introduction.getHeight()+";"+et_introduction.getHeight());
         }
         AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.playTogether(objectAnimatorImg);
+        animatorSet.playTogether(objectAnimatorImg,objectAnimatorET,objectAnimatorLL);
         animatorSet.start();
     }
+
+    public interface OnEnterListener{
+        void onEnter(RaidersListData<List<String>> raidersListData,String Tag);
+    }
+
+    public MyDialogRaidersListFragment setOnEnterListener(OnEnterListener onEnterListener) {
+        this.onEnterListener = onEnterListener;
+        return this;
+    }
+
+
 }

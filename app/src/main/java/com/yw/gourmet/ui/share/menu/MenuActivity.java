@@ -1,19 +1,15 @@
 package com.yw.gourmet.ui.share.menu;
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.yw.gourmet.Constant;
 import com.yw.gourmet.GlideApp;
 import com.yw.gourmet.R;
@@ -26,13 +22,10 @@ import com.yw.gourmet.dialog.MyDialogIngredientFragment;
 import com.yw.gourmet.dialog.MyDialogPhotoChooseFragment;
 import com.yw.gourmet.listener.OnAddListener;
 import com.yw.gourmet.listener.OnDeleteListener;
-import com.yw.gourmet.listener.OnEditDialogEnterClickListener;
 import com.yw.gourmet.listener.OnItemClickListener;
 import com.yw.gourmet.utils.ToastUtils;
 
 import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;

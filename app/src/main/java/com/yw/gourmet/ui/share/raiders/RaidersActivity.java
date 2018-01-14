@@ -88,13 +88,26 @@ public class RaidersActivity extends BaseActivity<RaidersPresenter> implements V
         raidersListAdapter.setOnAddListener(new OnAddListener() {
             @Override
             public void OnAdd(View view, int position) {
-                new MyDialogRaidersListFragment().show(getSupportFragmentManager(),"add");
+                new MyDialogRaidersListFragment().setOnEnterListener(new MyDialogRaidersListFragment.OnEnterListener() {
+                    @Override
+                    public void onEnter(RaidersListData<List<String>> raidersListData, String Tag) {
+                        RaidersActivity.this.raidersListData.add(raidersListData);
+                        raidersListAdapter.notifyItemInserted(RaidersActivity.this.raidersListData.size()-1);
+                    }
+                }).show(getSupportFragmentManager(),"add");
             }
         });
         raidersListAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void OnClick(View v, int position) {
-
+            public void OnClick(View v, final int position) {
+                new MyDialogRaidersListFragment().setRaidersData(raidersListData.get(position))
+                        .setOnEnterListener(new MyDialogRaidersListFragment.OnEnterListener() {
+                    @Override
+                    public void onEnter(RaidersListData<List<String>> raidersListData, String Tag) {
+//                        RaidersActivity.this.raidersListData
+                        raidersListAdapter.notifyItemChanged(position);
+                    }
+                }).show(getSupportFragmentManager(),"add");
             }
 
             @Override

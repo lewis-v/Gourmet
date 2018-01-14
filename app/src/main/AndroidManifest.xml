@@ -23,7 +23,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <!-- 百度地图服务 -->
-        <service android:name="com.baidu.location.f" android:process=":remote" android:enabled="true"/>
+        <service android:name="com.baidu.location.f"
+            android:process=":remote"
+            android:enabled="true"/>
         <!--百度地图秘钥-->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
@@ -96,9 +98,11 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <!-- 日记详情 -->
-        <activity android:name=".ui.detail.diary.DiaryDetailActivity" />
+        <activity android:name=".ui.detail.diary.DiaryDetailActivity"
+            android:screenOrientation="portrait"/>
         <!-- 食谱详情 -->
-        <activity android:name=".ui.detail.menu.MenuDetailActivity" />
+        <activity android:name=".ui.detail.menu.MenuDetailActivity"
+            android:screenOrientation="portrait"/>
         <!-- 微信分享 -->
         <activity
             android:name=".ui.wxapi.WXEntryActivity"
@@ -113,7 +117,10 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.share.raiders.RaidersActivity"></activity>
+        <activity android:name=".ui.share.raiders.RaidersActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"
+            />
     </application>
 
 </manifest>
