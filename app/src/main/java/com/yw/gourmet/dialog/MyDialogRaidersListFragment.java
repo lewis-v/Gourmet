@@ -2,15 +2,18 @@ package com.yw.gourmet.dialog;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.baidu.location.BDLocation;
@@ -18,8 +21,12 @@ import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.MapPoi;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.search.geocode.GeoCodeResult;
+import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.baidu.mapapi.search.sug.OnGetSuggestionResultListener;
 import com.baidu.mapapi.search.sug.SuggestionResult;
+import com.yw.gourmet.Constant;
 import com.yw.gourmet.GlideApp;
 import com.yw.gourmet.R;
 import com.yw.gourmet.adapter.IngredientAdapter;
@@ -44,6 +51,7 @@ public class MyDialogRaidersListFragment extends BaseDialogFragment implements V
     private EditText et_title,et_address,et_introduction;
     private TextView tv_img_tip,tv_enter,tv_cancel;
     private RecyclerView recycler_type;
+    private AppCompatSpinner spinner_address;
     private LinearLayout ll_introduction;
     private IngredientAdapter adapter;
     private ImageView img_cover,img_introduction;
@@ -55,6 +63,8 @@ public class MyDialogRaidersListFragment extends BaseDialogFragment implements V
     private LatLng latLng;//选择的位置
     private boolean isVisi = true;
     private OnEnterListener onEnterListener;
+    private String POICache = "";//POI搜索地名的缓存
+    private List<String> list = new ArrayList<>();
 
     @Override
     public void onStart() {
@@ -68,6 +78,10 @@ public class MyDialogRaidersListFragment extends BaseDialogFragment implements V
         et_title = view.findViewById(R.id.et_title);
         et_address = view.findViewById(R.id.et_address);
         et_introduction = view.findViewById(R.id.et_introduction);
+
+        list = Constant.areaList;
+        spinner_address = view.findViewById(R.id.spinner_address);
+        spinner_address.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,list));
 
         ll_introduction = view.findViewById(R.id.ll_introduction);
 
@@ -87,6 +101,13 @@ public class MyDialogRaidersListFragment extends BaseDialogFragment implements V
         if (raidersData == null){
             raidersData = new RaidersListData<List<String>>();
             raidersData.setType(new ArrayList<String>());
+        }else {
+            et_title.setText(raidersData.getTitle());
+            et_address.setText(raidersData.getAddress());
+            et_introduction.setText(raidersData.getIntroduction());
+            GlideApp.with(this).load(raidersData.getImg_cover()).error(R.mipmap.load_fail)
+                    .into(img_cover);
+            latLng = new LatLng(raidersData.getLat(),raidersData.getLng());
         }
         recycler_type = view.findViewById(R.id.recycler_type);
         recycler_type.setItemAnimator(new DefaultItemAnimator());
@@ -120,29 +141,49 @@ public class MyDialogRaidersListFragment extends BaseDialogFragment implements V
 
     public void initMap(final MapView mapview){
         baiduMap = mapview.getMap();
-        bdUtil = new BDUtil().initBDMap(mapview).initLocation(getActivity()).starBDLocation(new BDUtil.OnLocalListener() {
-                    @Override
-                    public void OnLocalSuccess(BDLocation location) {
-                        latLng = new LatLng(location.getLatitude(),location.getLongitude());
-                        bdUtil.setCenter(latLng)
-                                .setZoom(10);
-                    }
+        bdUtil = new BDUtil().initBDMap(mapview);
+        if (latLng == null) {
+            bdUtil.initLocation(getActivity()).starBDLocation(new BDUtil.OnLocalListener() {
+                @Override
+                public void OnLocalSuccess(BDLocation location) {
+                    latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                    bdUtil.setCenter(latLng)
+                            .setZoom(10);
+                }
 
-                    @Override
-                    public void OnLocalFail(BDLocation location) {
+                @Override
+                public void OnLocalFail(BDLocation location) {
 
-                    }
-                },true);
+                }
+            }, true);
+        }else {
+            bdUtil.setCenter(latLng).setZoom(10).setMarkerByRes(latLng,R.mipmap.icon_gcoding);
+        }
+        bdUtil.initGeoCode(new OnGetGeoCoderResultListener() {
+            @Override
+            public void onGetGeoCodeResult(GeoCodeResult geoCodeResult) {
+            }
+
+            @Override
+            public void onGetReverseGeoCodeResult(ReverseGeoCodeResult reverseGeoCodeResult) {
+                et_address.setText(reverseGeoCodeResult.getAddress()+POICache);
+            }
+        });
         baiduMap.setOnMapClickListener(new BaiduMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
                 MyDialogRaidersListFragment.this.latLng = latLng;
-                bdUtil.setCenter(latLng).setMarkerByRes(latLng,R.mipmap.icon_gcoding);
+                POICache = "";
+                bdUtil.GeoCode(latLng).setCenter(latLng).setMarkerByRes(latLng,R.mipmap.icon_gcoding);
             }
 
             @Override
             public boolean onMapPoiClick(MapPoi mapPoi) {
-                return false;
+                MyDialogRaidersListFragment.this.latLng = mapPoi.getPosition();
+                POICache = mapPoi.getName();
+                bdUtil.GeoCode(mapPoi.getPosition()).setCenter(mapPoi.getPosition())
+                        .setMarkerByRes(mapPoi.getPosition(),R.mipmap.icon_gcoding);
+                return true;
             }
         });
     }
@@ -196,8 +237,12 @@ public class MyDialogRaidersListFragment extends BaseDialogFragment implements V
                 dismiss();
                 break;
             case R.id.tv_enter:
+                if (isEmpty()){
+                    break;
+                }
                 raidersData.setAddress(et_address.getText().toString());
                 raidersData.setTitle(et_title.getText().toString());
+                raidersData.setIntroduction(et_introduction.getText().toString());
                 raidersData.setLat(latLng.latitude);
                 raidersData.setLng(latLng.longitude);
                 if (onEnterListener != null){
@@ -264,5 +309,31 @@ public class MyDialogRaidersListFragment extends BaseDialogFragment implements V
         return this;
     }
 
-
+    /**
+     * 必须输入的是否为空
+     * @return
+     */
+    public boolean isEmpty(){
+        if (et_title.getText().toString().trim().isEmpty()){
+            ToastUtils.showSingleToast("请输入攻略标题");
+            return true;
+        }
+        if (raidersData.getType().size() == 0){
+            ToastUtils.showSingleToast("请输入攻略类型");
+            return true;
+        }
+        if (raidersData.getImg_cover() == null || raidersData.getImg_cover().isEmpty()){
+            ToastUtils.showSingleToast("请选择封面");
+            return true;
+        }
+        if (et_address.getText().toString().trim().isEmpty() || latLng == null){
+            ToastUtils.showSingleToast("请输入地址并定位具体地点");
+            return true;
+        }
+        if (et_introduction.getText().toString().trim().isEmpty()){
+            ToastUtils.showSingleToast("请输入攻略简介");
+            return true;
+        }
+        return false;
+    }
 }

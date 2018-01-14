@@ -3,6 +3,7 @@ package com.yw.gourmet.api;
 
 import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.data.CommentData;
+import com.yw.gourmet.data.InitData;
 import com.yw.gourmet.data.MenuDetailData;
 import com.yw.gourmet.data.MenuPracticeData;
 import com.yw.gourmet.data.MessageListData;
@@ -12,6 +13,7 @@ import com.yw.gourmet.data.UserData;
 import java.util.List;
 
 import okhttp3.MultipartBody;
+import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
@@ -23,6 +25,14 @@ import rx.Observable;
  */
 
 public interface ApiService {
+    //初始化
+    @GET("/Init")
+    Observable<BaseData<InitData>> Init();
+
+    //获取省级信息
+    @GET("/Area/Get")
+    Observable<BaseData<List<String>>> GetAreaDetail();
+
     //登录
     @Multipart
     @POST("/Login")

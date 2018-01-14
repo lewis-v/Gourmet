@@ -9,7 +9,8 @@ public class RaidersListData<T> {
     private String title;
     private String img_cover;
     private T type;
-    private String address = String.valueOf(System.nanoTime());
+    private String address;
+    private String introduction;
     private double lng;
     private double lat;
 
@@ -67,6 +68,15 @@ public class RaidersListData<T> {
         return this;
     }
 
+    public String getIntroduction() {
+        return introduction;
+    }
+
+    public RaidersListData setIntroduction(String introduction) {
+        this.introduction = introduction;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "RaidersListData{" +
@@ -74,6 +84,7 @@ public class RaidersListData<T> {
                 ", img_cover='" + img_cover + '\'' +
                 ", type=" + type +
                 ", address='" + address + '\'' +
+                ", introduction='" + introduction + '\'' +
                 ", lng=" + lng +
                 ", lat=" + lat +
                 '}';

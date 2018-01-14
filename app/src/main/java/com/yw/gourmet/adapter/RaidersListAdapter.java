@@ -65,7 +65,10 @@ public class RaidersListAdapter extends RecyclerView.Adapter<RaidersListAdapter.
                     });
                 }
             }else {
-                if (position == 0){
+                if (listData.size() == 1){
+                    holder.tv_top.setVisibility(View.INVISIBLE);
+                    holder.tv_bottom.setVisibility(View.INVISIBLE);
+                }else if (position == 0){
                     holder.tv_top.setVisibility(View.INVISIBLE);
                     holder.tv_bottom.setVisibility(View.VISIBLE);
                 }else if (position == listData.size() - 1){
@@ -78,8 +81,8 @@ public class RaidersListAdapter extends RecyclerView.Adapter<RaidersListAdapter.
                 holder.ll_add.setVisibility(View.GONE);
                 holder.ll_left.setVisibility(View.VISIBLE);
                 holder.constraint_item.setVisibility(View.VISIBLE);
-                holder.tv_title.setText(listData.get(position).getTitle()+position);
-//                holder.tv_type.setText(listData.get(position).getType().toString());
+                holder.tv_title.setText(listData.get(position).getTitle());
+                holder.tv_type.setText(listData.get(position).getType().toString());
                 holder.tv_address.setText(listData.get(position).getAddress());
                 GlideApp.with(context).load(listData.get(position).getImg_cover())
                         .error(R.mipmap.load_fail).into(holder.img_cover);
@@ -100,8 +103,11 @@ public class RaidersListAdapter extends RecyclerView.Adapter<RaidersListAdapter.
                 });
                 if (changePosition == position) {
                     holder.ll_change.setVisibility(View.VISIBLE);
-                    if (listData.size() > 1) {
-                        if (position == listData.size() - 1) {
+                    if (listData.size() > 0) {
+                        if (listData.size() == 1){
+                            holder.img_down.setVisibility(View.GONE);
+                            holder.img_up.setVisibility(View.GONE);
+                        }else if (position == listData.size() - 1) {
                             holder.img_down.setVisibility(View.GONE);
                             holder.img_up.setVisibility(View.VISIBLE);
                         }else if (position == 0){
@@ -148,7 +154,10 @@ public class RaidersListAdapter extends RecyclerView.Adapter<RaidersListAdapter.
                 }
             }
         }else {
-            if (position == 0){
+            if (listData.size() == 1){
+                holder.tv_top.setVisibility(View.INVISIBLE);
+                holder.tv_bottom.setVisibility(View.INVISIBLE);
+            }else if (position == 0){
                 holder.tv_top.setVisibility(View.INVISIBLE);
                 holder.tv_bottom.setVisibility(View.VISIBLE);
             }else if (position == listData.size() - 1){

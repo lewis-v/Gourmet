@@ -2,6 +2,8 @@ package com.yw.gourmet;
 
 import com.yw.gourmet.data.UserData;
 
+import java.util.List;
+
 /**
  * Created by LYW on 2017/11/13.
  */
@@ -18,5 +20,9 @@ public class Constant {
         public static final int MENU = 2;//食谱
         public static final int SHARE = 3;//普通分享
     }
+    //省份信息
+    public static List<String> areaList;
+
+    public static long serviceTime = 0;
 
 }

@@ -93,6 +93,9 @@ public class RaidersActivity extends BaseActivity<RaidersPresenter> implements V
                     public void onEnter(RaidersListData<List<String>> raidersListData, String Tag) {
                         RaidersActivity.this.raidersListData.add(raidersListData);
                         raidersListAdapter.notifyItemInserted(RaidersActivity.this.raidersListData.size()-1);
+                        if (RaidersActivity.this.raidersListData.size() == 2){
+                            raidersListAdapter.notifyItemChanged(RaidersActivity.this.raidersListData.size()-2);
+                        }
                     }
                 }).show(getSupportFragmentManager(),"add");
             }

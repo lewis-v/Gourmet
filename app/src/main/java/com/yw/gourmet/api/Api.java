@@ -1,8 +1,10 @@
 package com.yw.gourmet.api;
 
 
+import com.yw.gourmet.Constant;
 import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.data.CommentData;
+import com.yw.gourmet.data.InitData;
 import com.yw.gourmet.data.MenuDetailData;
 import com.yw.gourmet.data.MenuPracticeData;
 import com.yw.gourmet.data.MessageListData;
@@ -43,7 +45,8 @@ public class Api {
             String head = "head";//头部
             //这里添加头部,这里可以用addHeader来添加多个头部,如果使用header方法就只能添加一个头部
             Request.Builder requestBuilder = original.newBuilder()//添加头部信息
-                    .addHeader("head", head);
+                    .addHeader("head", head)
+                    .addHeader("time",String.valueOf(System.currentTimeMillis()/1000+ Constant.serviceTime));
             Request request = requestBuilder.build();//用设置好的requestBuilder建立一个新的request
             return chain.proceed(request);
         }
@@ -76,6 +79,14 @@ public class Api {
         if (instance == null)
             instance = new Api();
         return instance;
+    }
+
+    public Observable<BaseData<InitData>> Init(){
+        return service.Init();
+    }
+
+    public Observable<BaseData<List<String>>> GetAreaDetail(){
+        return service.GetAreaDetail();
     }
 
     public Observable<BaseData<UserData>> Login(List<MultipartBody.Part> parts){
