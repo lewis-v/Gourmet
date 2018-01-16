@@ -7,6 +7,8 @@ import com.yw.gourmet.data.InitData;
 import com.yw.gourmet.data.MenuDetailData;
 import com.yw.gourmet.data.MenuPracticeData;
 import com.yw.gourmet.data.MessageListData;
+import com.yw.gourmet.data.RaidersDetailData;
+import com.yw.gourmet.data.RaidersListData;
 import com.yw.gourmet.data.ShareListData;
 import com.yw.gourmet.data.UserData;
 
@@ -78,6 +80,11 @@ public interface ApiService {
     @POST("/Share/Menu/Put")
     Observable<BaseData> ShareMenu(@Part List<MultipartBody.Part> parts);
 
+    //攻略分享
+    @Multipart
+    @POST("/Share/Raiders/Put")
+    Observable<BaseData<RaidersDetailData<List<RaidersListData<List<String>>>,List<String>>>> ShareRaiders(@Part List<MultipartBody.Part> parts);
+
     //获取聊天信息的详情
     @Multipart
     @POST("/Message/Get/Detail")
@@ -112,4 +119,9 @@ public interface ApiService {
     @Multipart
     @POST("/Share/Menu/Get")
     Observable<BaseData<MenuDetailData<List<MenuPracticeData<List<String>>>,List<String>>>> GetMenuDetail(@Part List<MultipartBody.Part> parts);
+
+    //获取攻略详情
+    @Multipart
+    @POST("/Share/Raiders/Get")
+    Observable<BaseData<RaidersDetailData<List<RaidersListData<List<String>>>,List<String>>>> GetRaidersDetail(@Part List<MultipartBody.Part> parts);
 }

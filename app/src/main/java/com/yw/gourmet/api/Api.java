@@ -8,6 +8,8 @@ import com.yw.gourmet.data.InitData;
 import com.yw.gourmet.data.MenuDetailData;
 import com.yw.gourmet.data.MenuPracticeData;
 import com.yw.gourmet.data.MessageListData;
+import com.yw.gourmet.data.RaidersDetailData;
+import com.yw.gourmet.data.RaidersListData;
 import com.yw.gourmet.data.ShareListData;
 import com.yw.gourmet.data.UserData;
 
@@ -125,6 +127,10 @@ public class Api {
         return service.ShareMenu(parts);
     }
 
+    public Observable<BaseData<RaidersDetailData<List<RaidersListData<List<String>>>,List<String>>>> ShareRaiders(List<MultipartBody.Part> parts){
+        return service.ShareRaiders(parts);
+    }
+
     public Observable<BaseData<List<MessageListData>>> GetMessageDetail(List<MultipartBody.Part> parts){
         return service.GetMessageDetail(parts);
     }
@@ -151,5 +157,9 @@ public class Api {
 
     public  Observable<BaseData<MenuDetailData<List<MenuPracticeData<List<String>>>,List<String>>>> GetMenuDetail(List<MultipartBody.Part> parts){
         return service.GetMenuDetail(parts);
+    }
+
+    public Observable<BaseData<RaidersDetailData<List<RaidersListData<List<String>>>,List<String>>>> GetRaidersDetail(List<MultipartBody.Part> parts){
+        return service.GetRaidersDetail(parts);
     }
 }

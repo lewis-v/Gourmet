@@ -60,7 +60,6 @@ public class MessageFragment extends BaseFragment<MessagePresenter> implements M
     @Override
     protected void initView() {
         toolbar = (Toolbar)view.findViewById(R.id.toolbar);
-        view_parent = view.findViewById(R.id.view_parent);
 
         swipe_target = (RecyclerView)view.findViewById(R.id.swipe_target);
         swipe_target.setItemAnimator(new DefaultItemAnimator());
