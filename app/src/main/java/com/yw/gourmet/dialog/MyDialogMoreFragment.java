@@ -7,25 +7,20 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
 import com.tencent.mm.opensdk.modelmsg.WXWebpageObject;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.yw.gourmet.Constant;
-import com.yw.gourmet.GlideApp;
 import com.yw.gourmet.R;
 import com.yw.gourmet.base.BaseActivity;
 import com.yw.gourmet.base.BaseDialogFragment;
 import com.yw.gourmet.listener.OnCancelClickListener;
 import com.yw.gourmet.ui.wxapi.WXUtils;
-import com.yw.gourmet.utils.ThreadUtils;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.concurrent.ExecutorService;
 
 /**
  * Created by Lewis-v on 2018/1/3.
@@ -79,7 +74,7 @@ public class MyDialogMoreFragment extends BaseDialogFragment implements View.OnC
         switch (v.getId()) {
             case R.id.tv_cancel:
                 if (onCancelClickListener != null) {
-                    onCancelClickListener.OnClick(getTag());
+                    onCancelClickListener.OnCancel(getTag());
                 }
                 dismiss();
                 break;

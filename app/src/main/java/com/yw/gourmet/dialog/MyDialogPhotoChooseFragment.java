@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -88,7 +87,7 @@ public class MyDialogPhotoChooseFragment extends BaseDialogFragment implements V
         switch (v.getId()){
             case R.id.tv_cancel:
                 if (onCancelClickListener != null){
-                    onCancelClickListener.OnClick(getTag());
+                    onCancelClickListener.OnCancel(getTag());
                 }
                 dismiss();
                 break;

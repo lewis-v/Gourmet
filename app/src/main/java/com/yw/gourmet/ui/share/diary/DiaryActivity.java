@@ -20,6 +20,7 @@ import com.yw.gourmet.R;
 import com.yw.gourmet.base.BaseActivity;
 import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.dialog.MyDialogPhotoChooseFragment;
+import com.yw.gourmet.dialog.MyDialogTipFragment;
 import com.yw.gourmet.listener.MyAction;
 import com.yw.gourmet.listener.OnToolClickListener;
 import com.yw.gourmet.ui.share.ToolFragment;
@@ -139,15 +140,21 @@ public class DiaryActivity extends BaseActivity<DiaryPresenter> implements View.
                 if (isEmpty()){
                     break;
                 }
-                MultipartBody.Builder builder = new MultipartBody.Builder()
-                        .setType(MultipartBody.FORM)
-                        .addFormDataPart("id",Constant.userData.getId())
-                        .addFormDataPart("time",tv_time.getText().toString())
-                        .addFormDataPart("title",et_title.getText().toString())
-                        .addFormDataPart("content",content)
-                        .addFormDataPart("create_time",Long.toString(create_time))
-                        .addFormDataPart("status",Integer.toString(status));
-                mPresenter.putDiary(builder.build().parts());
+                new MyDialogTipFragment().setShowText("是否分享您的日记")
+                        .setOnEnterListener(new MyDialogTipFragment.OnEnterListener() {
+                    @Override
+                    public void OnEnter(String Tag) {
+                        MultipartBody.Builder builder = new MultipartBody.Builder()
+                                .setType(MultipartBody.FORM)
+                                .addFormDataPart("id",Constant.userData.getId())
+                                .addFormDataPart("time",tv_time.getText().toString())
+                                .addFormDataPart("title",et_title.getText().toString())
+                                .addFormDataPart("content",content)
+                                .addFormDataPart("create_time",Long.toString(create_time))
+                                .addFormDataPart("status",Integer.toString(status));
+                        mPresenter.putDiary(builder.build().parts());
+                    }
+                }).show(getSupportFragmentManager(),"share");
                 break;
         }
     }

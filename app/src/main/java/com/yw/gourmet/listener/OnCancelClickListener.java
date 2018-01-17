@@ -5,5 +5,5 @@ package com.yw.gourmet.listener;
  */
 
 public interface OnCancelClickListener {
-    void OnClick(String tag);
+    void OnCancel(String tag);
 }

@@ -44,7 +44,7 @@ public class MyDialogEditFragment extends BaseDialogFragment implements View.OnC
         switch (v.getId()){
             case R.id.tv_cancel:
                 if (onCancelListener != null){
-                    onCancelListener.OnClick(getTag());
+                    onCancelListener.OnCancel(getTag());
                 }
                 dismiss();
                 break;

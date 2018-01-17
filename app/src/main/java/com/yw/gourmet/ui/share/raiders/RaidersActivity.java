@@ -20,6 +20,7 @@ import com.yw.gourmet.data.RaidersListData;
 import com.yw.gourmet.dialog.MyDialogEditFragment;
 import com.yw.gourmet.dialog.MyDialogPhotoChooseFragment;
 import com.yw.gourmet.dialog.MyDialogRaidersListFragment;
+import com.yw.gourmet.dialog.MyDialogTipFragment;
 import com.yw.gourmet.listener.OnAddListener;
 import com.yw.gourmet.listener.OnDeleteListener;
 import com.yw.gourmet.listener.OnEditDialogEnterClickListener;
@@ -41,7 +42,7 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
 public class RaidersActivity extends BaseActivity<RaidersPresenter> implements View.OnClickListener
-,RaidersContract.View{
+        ,RaidersContract.View{
     private EditText et_title,et_introduction;
     private TextView tv_cancel,tv_send,tv_power;
     private RecyclerView recycler_tag,recycler_raiders_list;
@@ -126,14 +127,14 @@ public class RaidersActivity extends BaseActivity<RaidersPresenter> implements V
             public void OnClick(View v, final int position) {
                 new MyDialogRaidersListFragment().setRaidersData(raidersListData.get(position))
                         .setOnEnterListener(new MyDialogRaidersListFragment.OnEnterListener() {
-                    @Override
-                    public void onEnter(RaidersListData<List<String>> raidersListData, String Tag) {
-                        raidersListAdapter.notifyItemChanged(position);
-                        if (!raidersListData.getImg_cover().startsWith("http")) {
-                            upImg(raidersListData.getImg_cover(), position);
-                        }
-                    }
-                }).show(getSupportFragmentManager(),"add");
+                            @Override
+                            public void onEnter(RaidersListData<List<String>> raidersListData, String Tag) {
+                                raidersListAdapter.notifyItemChanged(position);
+                                if (!raidersListData.getImg_cover().startsWith("http")) {
+                                    upImg(raidersListData.getImg_cover(), position);
+                                }
+                            }
+                        }).show(getSupportFragmentManager(),"add");
             }
 
             @Override
@@ -153,17 +154,23 @@ public class RaidersActivity extends BaseActivity<RaidersPresenter> implements V
                 if (isEmtry()){
                     break;
                 }
-                setLoadDialog(true);
-                MultipartBody.Builder builder = new MultipartBody.Builder()
-                        .setType(MultipartBody.FORM)
-                        .addFormDataPart("id",Constant.userData.getId())
-                        .addFormDataPart("status",String.valueOf(status))
-                        .addFormDataPart("title",et_title.getText().toString())
-                        .addFormDataPart("cover",raidersListData.get(0).getImg_cover())
-                        .addFormDataPart("raiders_type",new JSONArray(tagList).toString())
-                        .addFormDataPart("introduction",et_introduction.getText().toString())
-                        .addFormDataPart("raiders_content", new Gson().toJson(raidersListData));
-                mPresenter.shareRaiders(builder.build().parts());
+                new MyDialogTipFragment().setShowText("是否分享您的日记")
+                        .setOnEnterListener(new MyDialogTipFragment.OnEnterListener() {
+                            @Override
+                            public void OnEnter(String Tag) {
+                                setLoadDialog(true);
+                                MultipartBody.Builder builder = new MultipartBody.Builder()
+                                        .setType(MultipartBody.FORM)
+                                        .addFormDataPart("id",Constant.userData.getId())
+                                        .addFormDataPart("status",String.valueOf(status))
+                                        .addFormDataPart("title",et_title.getText().toString())
+                                        .addFormDataPart("cover",raidersListData.get(0).getImg_cover())
+                                        .addFormDataPart("raiders_type",new JSONArray(tagList).toString())
+                                        .addFormDataPart("introduction",et_introduction.getText().toString())
+                                        .addFormDataPart("raiders_content", new Gson().toJson(raidersListData));
+                                mPresenter.shareRaiders(builder.build().parts());
+                            }
+                        }).show(getSupportFragmentManager(),"share");
                 break;
             case R.id.tv_power:
                 if (status == 1){

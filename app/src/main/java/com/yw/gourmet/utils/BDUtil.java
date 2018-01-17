@@ -51,8 +51,6 @@ public class BDUtil {
     private SuggestionSearch suggestionSearch;//地址搜索的实例
     private GeoCoder geoCoder;//坐标传地址
     private PoiSearch mPoiSearch;//POI搜索实例
-    private BaiduMap mBaiduMap;
-    private MapView mapView;
     private ExecutorService executorService;
 
     public BDUtil(){
@@ -153,8 +151,7 @@ public class BDUtil {
         executorService.execute(new Runnable() {
             @Override
             public void run() {
-                BDUtil.this.mapView = mapView;
-                mBaiduMap = mapView.getMap();
+                BaiduMap mBaiduMap = mapView.getMap();
                 // 隐藏百度的LOGO
 //        View child = mapView.getChildAt(1);
 //        if (child != null && (child instanceof ImageView || child instanceof ZoomControls)) {
@@ -192,7 +189,7 @@ public class BDUtil {
      * 设置地图中心点(带动画)
      * @param latLng 中心坐标
      */
-    public BDUtil setCenter(final LatLng latLng){
+    public BDUtil setCenter(final BaiduMap mBaiduMap, final LatLng latLng){
         executorService.execute(new Runnable() {
             @Override
             public void run() {
@@ -219,7 +216,7 @@ public class BDUtil {
      * 设置地图缩放大小(带动画)
      * @param zoom 放大倍数
      */
-    public BDUtil setZoom(final int zoom){
+    public BDUtil setZoom(final BaiduMap mBaiduMap,final int zoom){
         executorService.execute(new Runnable() {
             @Override
             public void run() {
@@ -292,8 +289,7 @@ public class BDUtil {
      * @param resourse 自定义图片
      * @return 返回Overlay供用户存储,并在对其进行操作
      */
-    public Overlay setMarkerByRes(LatLng latLng, int resourse){
-        mBaiduMap.clear();
+    public Overlay setMarkerByRes(final BaiduMap mBaiduMap,LatLng latLng, int resourse){
         //构建Marker图标
         BitmapDescriptor bitmap = BitmapDescriptorFactory
                 .fromResource(resourse);
@@ -313,8 +309,7 @@ public class BDUtil {
      * @param view 自定义布局
      * @return 返回Overlay供用户存储,并在对其进行操作
      */
-    public Overlay setMarkerByView( LatLng latLng, View view){
-        mBaiduMap.clear();
+    public Overlay setMarkerByView(final BaiduMap mBaiduMap, LatLng latLng, View view){
         //构建Marker图标
         BitmapDescriptor bitmap = BitmapDescriptorFactory
                 .fromView(view);
@@ -370,9 +365,6 @@ public class BDUtil {
         }
         if (suggestionSearch != null){
             suggestionSearch.destroy();
-        }
-        if (mapView != null){
-            mapView.onDestroy();
         }
         if (executorService != null){
             executorService.shutdownNow();

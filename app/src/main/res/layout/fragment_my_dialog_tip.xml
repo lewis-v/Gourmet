@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:background="@drawable/dialog_back"
+        android:layout_below="@+id/img_back"
+        android:layout_marginTop="-40dp"
+        android:paddingBottom="10dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/tv"
+            android:maxLines="6"
+            android:layout_marginTop="60dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@null"
+            android:textColor="@color/word_black"
+            android:textSize="16sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_gravity="end"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/tv_cancel"
+                android:background="@drawable/ll_back_change"
+                android:textSize="16sp"
+                android:text="@string/cancel"
+                android:padding="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/tv_enter"
+                android:background="@drawable/ll_back_change"
+                android:layout_marginLeft="20dp"
+                android:textSize="16sp"
+                android:textColor="@color/colorAccent"
+                android:text="@string/enter"
+                android:padding="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </LinearLayout>
+    <ImageView
+        android:id="@+id/img_back"
+        android:background="@android:color/transparent"
+        android:layout_centerHorizontal="true"
+        android:src="@mipmap/dialog_back"
+        android:layout_width="78dp"
+        android:layout_height="100dp" />
+</RelativeLayout>

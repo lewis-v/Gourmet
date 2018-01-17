@@ -17,6 +17,7 @@ import com.yw.gourmet.base.BaseActivity;
 import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.dialog.MyDialogPhotoChooseFragment;
 import com.yw.gourmet.dialog.MyDialogPhotoChooseFragment.OnChooseLister;
+import com.yw.gourmet.dialog.MyDialogTipFragment;
 import com.yw.gourmet.listener.OnAddListener;
 import com.yw.gourmet.listener.OnDeleteListener;
 import com.yw.gourmet.listener.OnItemClickListener;
@@ -149,35 +150,41 @@ public class CommonShareActivity extends BaseActivity<CommonSharePresenter> impl
                 if (et_content.getText().toString().trim().length() == 0 && imgs.size() == 0){
                     ToastUtils.showSingleToast("分享内容为空");
                 }else {
-                    setLoadDialog(true);
-                    for (int i = 0,len = imgs.size();i < len;i++) {
-                        setUpImg(imgs.get(i), upPosition++);
-                    }
-                    if (executorService == null){
-                        executorService = ThreadUtils.newCachedThreadPool();
-                    }
-                    executorService.submit(new Runnable() {
+                    new MyDialogTipFragment().setShowText("是否分享")
+                            .setOnEnterListener(new MyDialogTipFragment.OnEnterListener() {
                         @Override
-                        public void run() {
-                            while (upImg.size() != imgs.size()){
-                                try {
-                                    Thread.sleep(100);
-                                } catch (InterruptedException e) {
-                                    return;
+                        public void OnEnter(String Tag) {
+                            setLoadDialog(true);
+                            for (int i = 0,len = imgs.size();i < len;i++) {
+                                setUpImg(imgs.get(i), upPosition++);
+                            }
+                            if (executorService == null){
+                                executorService = ThreadUtils.newCachedThreadPool();
+                            }
+                            executorService.submit(new Runnable() {
+                                @Override
+                                public void run() {
+                                    while (upImg.size() != imgs.size()){
+                                        try {
+                                            Thread.sleep(100);
+                                        } catch (InterruptedException e) {
+                                            return;
+                                        }
+                                    }
+                                    MultipartBody.Builder builder = new MultipartBody.Builder()
+                                            .addFormDataPart("id",Constant.userData.getId())
+                                            .addFormDataPart("status",String.valueOf(status));
+                                    if (et_content.getText().toString().trim().length() != 0){
+                                        builder.addFormDataPart("content",et_content.getText().toString());
+                                    }
+                                    if (upImg.size() > 0){
+                                        builder.addFormDataPart("img",new JSONArray(upImg).toString());
+                                    }
+                                    mPresenter.shareCommon(builder.build().parts());
                                 }
-                            }
-                            MultipartBody.Builder builder = new MultipartBody.Builder()
-                                    .addFormDataPart("id",Constant.userData.getId())
-                                    .addFormDataPart("status",String.valueOf(status));
-                            if (et_content.getText().toString().trim().length() != 0){
-                                builder.addFormDataPart("content",et_content.getText().toString());
-                            }
-                            if (upImg.size() > 0){
-                                builder.addFormDataPart("img",new JSONArray(upImg).toString());
-                            }
-                            mPresenter.shareCommon(builder.build().parts());
+                            });
                         }
-                    });
+                    }).show(getSupportFragmentManager(),"share");
                 }
                 break;
         }

@@ -151,6 +151,7 @@ public class MyDialogRaidersListFragment extends BaseDialogFragment implements V
             recycler_type.setAdapter(adapter);
             spinner_address.setVisibility(View.GONE);
             img_address_search.setVisibility(View.GONE);
+            tv_img_tip.setVisibility(View.GONE);
         }
 
         mapview = view.findViewById(R.id.mapview);
@@ -165,8 +166,8 @@ public class MyDialogRaidersListFragment extends BaseDialogFragment implements V
                 @Override
                 public void OnLocalSuccess(BDLocation location) {
                     latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                    bdUtil.setCenter(latLng)
-                            .setZoom(10);
+                    bdUtil.setCenter(baiduMap,latLng)
+                            .setZoom(baiduMap,10);
                 }
 
                 @Override
@@ -175,7 +176,7 @@ public class MyDialogRaidersListFragment extends BaseDialogFragment implements V
                 }
             }, true);
         }else {
-            bdUtil.setCenter(latLng).setZoom(10).setMarkerByRes(latLng,R.mipmap.icon_gcoding);
+            bdUtil.setCenter(baiduMap,latLng).setZoom(baiduMap,10).setMarkerByRes(baiduMap,latLng,R.mipmap.icon_gcoding);
         }
         bdUtil.initGeoCode(new OnGetGeoCoderResultListener() {
             @Override
@@ -190,17 +191,23 @@ public class MyDialogRaidersListFragment extends BaseDialogFragment implements V
         baiduMap.setOnMapClickListener(new BaiduMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                MyDialogRaidersListFragment.this.latLng = latLng;
-                POICache = "";
-                bdUtil.GeoCode(latLng).setCenter(latLng).setMarkerByRes(latLng,R.mipmap.icon_gcoding);
+                if (isChange) {
+                    MyDialogRaidersListFragment.this.latLng = latLng;
+                    POICache = "";
+                    baiduMap.clear();
+                    bdUtil.GeoCode(latLng).setCenter(baiduMap, latLng).setMarkerByRes(baiduMap, latLng, R.mipmap.icon_gcoding);
+                }
             }
 
             @Override
             public boolean onMapPoiClick(MapPoi mapPoi) {
-                MyDialogRaidersListFragment.this.latLng = mapPoi.getPosition();
-                POICache = mapPoi.getName();
-                bdUtil.GeoCode(mapPoi.getPosition()).setCenter(mapPoi.getPosition())
-                        .setMarkerByRes(mapPoi.getPosition(),R.mipmap.icon_gcoding);
+                if (isChange) {
+                    MyDialogRaidersListFragment.this.latLng = mapPoi.getPosition();
+                    POICache = mapPoi.getName();
+                    baiduMap.clear();
+                    bdUtil.GeoCode(mapPoi.getPosition()).setCenter(baiduMap, mapPoi.getPosition())
+                            .setMarkerByRes(baiduMap, mapPoi.getPosition(), R.mipmap.icon_gcoding);
+                }
                 return true;
             }
         });
@@ -221,6 +228,7 @@ public class MyDialogRaidersListFragment extends BaseDialogFragment implements V
     @Override
     public void onDestroy() {
         bdUtil.onDestroy();
+        mapview.onDestroy();
         super.onDestroy();
     }
 
@@ -281,8 +289,8 @@ public class MyDialogRaidersListFragment extends BaseDialogFragment implements V
                                 &&suggestionResult.getAllSuggestions().size()>0) {
                             latLng = suggestionResult.getAllSuggestions().get(0).pt;
                             baiduMap.clear();
-                            bdUtil.setCenter(latLng);
-                            bdUtil.setMarkerByRes(latLng,R.mipmap.icon_gcoding);
+                            bdUtil.setCenter(baiduMap,latLng);
+                            bdUtil.setMarkerByRes(baiduMap,latLng,R.mipmap.icon_gcoding);
                         }else {
                             ToastUtils.showSingleToast("无搜索结果");
                         }

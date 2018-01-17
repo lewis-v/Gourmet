@@ -20,6 +20,7 @@ import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.data.MenuPracticeData;
 import com.yw.gourmet.dialog.MyDialogIngredientFragment;
 import com.yw.gourmet.dialog.MyDialogPhotoChooseFragment;
+import com.yw.gourmet.dialog.MyDialogTipFragment;
 import com.yw.gourmet.listener.OnAddListener;
 import com.yw.gourmet.listener.OnDeleteListener;
 import com.yw.gourmet.listener.OnItemClickListener;
@@ -247,22 +248,29 @@ public class MenuActivity extends BaseActivity<MenuPresenter> implements View.On
                 if (isEmpty()){
                     break;
                 }
-                MultipartBody.Builder builder = new MultipartBody.Builder()
-                        .setType(MultipartBody.FORM)
-                        .addFormDataPart("id",Constant.userData.getId())
-                        .addFormDataPart("status",String.valueOf(status))
-                        .addFormDataPart("title",et_title.getText().toString())
-                        .addFormDataPart("cover",coverPath)
-                        .addFormDataPart("difficult_level",String.valueOf(difficultLevel))
-                        .addFormDataPart("play_time",et_time_hour.getText().toString()+","+et_time_min.getText().toString())
-                        .addFormDataPart("introduction",et_introduction.getText().toString())
-                        .addFormDataPart("practice",listPractice.toString())
-                        .addFormDataPart("create_time",String.valueOf(create_time))
-                        .addFormDataPart("ingredient",new JSONArray(listIngredient).toString());
-                if (!et_tip.getText().toString().trim().isEmpty()){
-                    builder.addFormDataPart("tip",et_tip.getText().toString());
-                }
-                mPresenter.putMenu(builder.build().parts());
+                new MyDialogTipFragment().setShowText("是否分享您的食谱")
+                        .setOnEnterListener(new MyDialogTipFragment.OnEnterListener() {
+                            @Override
+                            public void OnEnter(String Tag) {
+                                MultipartBody.Builder builder = new MultipartBody.Builder()
+                                        .setType(MultipartBody.FORM)
+                                        .addFormDataPart("id",Constant.userData.getId())
+                                        .addFormDataPart("status",String.valueOf(status))
+                                        .addFormDataPart("title",et_title.getText().toString())
+                                        .addFormDataPart("cover",coverPath)
+                                        .addFormDataPart("difficult_level",String.valueOf(difficultLevel))
+                                        .addFormDataPart("play_time",et_time_hour.getText().toString()+","+et_time_min.getText().toString())
+                                        .addFormDataPart("introduction",et_introduction.getText().toString())
+                                        .addFormDataPart("practice",listPractice.toString())
+                                        .addFormDataPart("create_time",String.valueOf(create_time))
+                                        .addFormDataPart("ingredient",new JSONArray(listIngredient).toString());
+                                if (!et_tip.getText().toString().trim().isEmpty()){
+                                    builder.addFormDataPart("tip",et_tip.getText().toString());
+                                }
+                                mPresenter.putMenu(builder.build().parts());
+                            }
+                        }).show(getSupportFragmentManager(),"share");
+
                 break;
         }
     }

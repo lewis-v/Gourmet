@@ -34,10 +34,10 @@ import rx.functions.Func1;
  * Created by Administrator on 2017/10/22.
  */
 
-public class MyFragment extends BaseFragment implements View.OnClickListener{
+public class MyFragment extends BaseFragment implements View.OnClickListener,MyContract.View{
     private LinearLayout ll_set;
     private ScrollView scroll_my;
-    private TextView tv_nickname,tv_set,tv_diary,tv_menu,tv_raiders;
+    private TextView tv_nickname,tv_set,tv_diary,tv_menu,tv_raiders,tv_share;
     private Button bt_login,bt_register;
     private ConstraintLayout constraint_my;
     private Subscription mRxSubSticky;
@@ -62,6 +62,7 @@ public class MyFragment extends BaseFragment implements View.OnClickListener{
         tv_menu = (TextView)view.findViewById(R.id.tv_menu);
         tv_raiders = (TextView)view.findViewById(R.id.tv_raiders);
         tv_set = (TextView)view.findViewById(R.id.tv_set);
+        tv_share = view.findViewById(R.id.tv_share);
         tv_set.setOnClickListener(this);
 
         bt_login = (Button)view.findViewById(R.id.bt_login);
@@ -87,9 +88,10 @@ public class MyFragment extends BaseFragment implements View.OnClickListener{
     public void setData(){
         tv_nickname.setText(Constant.userData.getNickname());
         Glide.with(this).load(Constant.userData.getImg_header()).into(img_header);
-        tv_raiders.setText(Constant.userData.getRaiders_num()+"");
-        tv_menu.setText(Constant.userData.getMenu_num()+"");
-        tv_diary.setText(Constant.userData.getDiary_num()+"");
+        tv_raiders.setText(String.valueOf(Constant.userData.getRaiders_num()));
+        tv_menu.setText(String.valueOf(Constant.userData.getMenu_num()));
+        tv_diary.setText(String.valueOf(Constant.userData.getDiary_num()));
+        tv_share.setText(String.valueOf(Constant.userData.getCommon_num()));
     }
 
     /**

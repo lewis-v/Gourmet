@@ -7,7 +7,6 @@ import android.widget.TextView;
 import com.yw.gourmet.R;
 import com.yw.gourmet.base.BaseDialogFragment;
 import com.yw.gourmet.listener.OnCancelClickListener;
-import com.yw.gourmet.listener.OnEditDialogEnterClickListener;
 import com.yw.gourmet.utils.ToastUtils;
 
 /**
@@ -99,7 +98,7 @@ public class MyDialogIngredientFragment extends BaseDialogFragment implements Vi
         switch (v.getId()){
             case R.id.tv_cancel:
                 if (onCancelClickListener != null){
-                    onCancelClickListener.OnClick(getTag());
+                    onCancelClickListener.OnCancel(getTag());
                 }
                 dismiss();
                 break;
