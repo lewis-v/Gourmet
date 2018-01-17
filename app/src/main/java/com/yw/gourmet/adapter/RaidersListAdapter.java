@@ -154,6 +154,7 @@ public class RaidersListAdapter extends RecyclerView.Adapter<RaidersListAdapter.
                 }
             }
         }else {
+            holder.ll_change.setVisibility(View.GONE);
             if (listData.size() == 1){
                 holder.tv_top.setVisibility(View.INVISIBLE);
                 holder.tv_bottom.setVisibility(View.INVISIBLE);

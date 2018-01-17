@@ -61,10 +61,11 @@ public class MyDialogRaidersListFragment extends BaseDialogFragment implements V
     private BaiduMap baiduMap;
     private BDUtil bdUtil;
     private LatLng latLng;//选择的位置
-    private boolean isVisi = true;
+    private boolean isVisi = true;//简介是否显示
     private OnEnterListener onEnterListener;
     private String POICache = "";//POI搜索地名的缓存
     private List<String> list = new ArrayList<>();
+    private boolean isChange = true;//是否可以编辑,默认可以
 
     @Override
     public void onStart() {
@@ -74,16 +75,13 @@ public class MyDialogRaidersListFragment extends BaseDialogFragment implements V
 
     @Override
     protected void initView() {
-        getDialog().setCanceledOnTouchOutside(false);
         et_title = view.findViewById(R.id.et_title);
         et_address = view.findViewById(R.id.et_address);
         et_introduction = view.findViewById(R.id.et_introduction);
 
-        list = Constant.areaList;
-        spinner_address = view.findViewById(R.id.spinner_address);
-        spinner_address.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,list));
-
         ll_introduction = view.findViewById(R.id.ll_introduction);
+
+        spinner_address = view.findViewById(R.id.spinner_address);
 
         tv_img_tip = view.findViewById(R.id.tv_img_tip);
         tv_enter = view.findViewById(R.id.tv_enter);
@@ -113,27 +111,47 @@ public class MyDialogRaidersListFragment extends BaseDialogFragment implements V
         recycler_type.setItemAnimator(new DefaultItemAnimator());
         recycler_type.setLayoutManager(new LinearLayoutManager(getContext()
                 , LinearLayoutManager.HORIZONTAL, false));
-        adapter = new IngredientAdapter(getContext(), raidersData.getType(), true);
-        recycler_type.setAdapter(adapter);
-        adapter.setOnDeleteListener(new OnDeleteListener() {
-            @Override
-            public void OnDelete(View v, int position) {
-                raidersData.getType().remove(position);
-                adapter.notifyItemRemoved(position);
-            }
-        });
-        adapter.setOnAddListener(new OnAddListener() {
-            @Override
-            public void OnAdd(View view, final int position) {
-                new MyDialogEditFragment().setEtHint("请输入标签、类型").setOnEditDialogEnterClickListener(new OnEditDialogEnterClickListener() {
-                    @Override
-                    public void OnClick(String edit, String tag) {
-                        raidersData.getType().add(edit);
-                        adapter.notifyItemInserted(position);
-                    }
-                }).show(getFragmentManager(), "type");
-            }
-        });
+
+
+        if (isChange) {
+            getDialog().setCanceledOnTouchOutside(false);
+            adapter = new IngredientAdapter(getContext(), raidersData.getType(), true);
+            recycler_type.setAdapter(adapter);
+            adapter.setOnDeleteListener(new OnDeleteListener() {
+                @Override
+                public void OnDelete(View v, int position) {
+                    raidersData.getType().remove(position);
+                    adapter.notifyItemRemoved(position);
+                }
+            });
+            adapter.setOnAddListener(new OnAddListener() {
+                @Override
+                public void OnAdd(View view, final int position) {
+                    new MyDialogEditFragment().setEtHint("请输入标签、类型").setOnEditDialogEnterClickListener(new OnEditDialogEnterClickListener() {
+                        @Override
+                        public void OnClick(String edit, String tag) {
+                            raidersData.getType().add(edit);
+                            adapter.notifyItemInserted(position);
+                        }
+                    }).show(getFragmentManager(), "type");
+                }
+            });
+            list = Constant.areaList;
+            spinner_address.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,list));
+        }else {
+            tv_cancel.setVisibility(View.GONE);
+            tv_enter.setVisibility(View.GONE);
+            et_title.setEnabled(false);
+            et_title.setFocusable(false);
+            et_introduction.setEnabled(false);
+            et_introduction.setFocusable(false);
+            et_address.setEnabled(false);
+            et_address.setFocusable(false);
+            adapter = new IngredientAdapter(getContext(), raidersData.getType(), false);
+            recycler_type.setAdapter(adapter);
+            spinner_address.setVisibility(View.GONE);
+            img_address_search.setVisibility(View.GONE);
+        }
 
         mapview = view.findViewById(R.id.mapview);
         initMap(mapview);
@@ -220,18 +238,23 @@ public class MyDialogRaidersListFragment extends BaseDialogFragment implements V
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.img_cover:
-                new MyDialogPhotoChooseFragment().setRatio(1).setCrop(true).setChooseNum(1)
-                        .setOnCropListener(new MyDialogPhotoChooseFragment.OnCropListener() {
-                    @Override
-                    public void OnCrop(String path, String tag) {
-                        GlideApp.with(getContext()).load(path).error(R.mipmap.load_fail)
-                                .into(img_cover);
-                        raidersData.setImg_cover(path);
-                        if (tv_img_tip.getVisibility() == View.VISIBLE) {
-                            tv_img_tip.setVisibility(View.GONE);
-                        }
-                    }
-                }).show(getFragmentManager(),"cover");
+                if (isChange) {
+                    new MyDialogPhotoChooseFragment().setRatio(1).setCrop(true).setChooseNum(1)
+                            .setOnCropListener(new MyDialogPhotoChooseFragment.OnCropListener() {
+                                @Override
+                                public void OnCrop(String path, String tag) {
+                                    GlideApp.with(getContext()).load(path).error(R.mipmap.load_fail)
+                                            .into(img_cover);
+                                    raidersData.setImg_cover(path);
+                                    if (tv_img_tip.getVisibility() == View.VISIBLE) {
+                                        tv_img_tip.setVisibility(View.GONE);
+                                    }
+                                }
+                            }).show(getFragmentManager(), "cover");
+                }else {
+                    new MyDialogPhotoShowFragment().addImgString(raidersData.getImg_cover())
+                            .show(getFragmentManager(),"cover");
+                }
                 break;
             case R.id.tv_cancel:
                 dismiss();
@@ -306,6 +329,11 @@ public class MyDialogRaidersListFragment extends BaseDialogFragment implements V
 
     public MyDialogRaidersListFragment setOnEnterListener(OnEnterListener onEnterListener) {
         this.onEnterListener = onEnterListener;
+        return this;
+    }
+
+    public MyDialogRaidersListFragment setChange(boolean change) {
+        isChange = change;
         return this;
     }
 

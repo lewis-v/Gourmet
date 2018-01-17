@@ -1,9 +1,242 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/view_parent"
+    android:background="@android:color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.yw.gourmet.ui.detail.raiders.RaidersDetailActivity">
+    tools:context="com.yw.gourmet.ui.share.raiders.RaidersActivity">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        app:contentInsetStart="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/img_back"
+                android:src="@drawable/back"
+                android:text="@string/cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+            <TextView
+                android:gravity="center"
+                android:text="@string/gourmet_raiders"
+                android:textColor="@color/word_black"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
+            <ImageView
+                android:id="@+id/img_other"
+                android:src="@drawable/other"
+                android:padding="5dp"
+                android:layout_width="40dp"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+    </android.support.v7.widget.Toolbar>
+    <TextView
+        android:id="@+id/tv_dev"
+        android:layout_below="@+id/toolbar"
+        android:background="@mipmap/dev"
+        android:layout_width="match_parent"
+        android:layout_height="1dp" />
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/scroll_raiders"
+        android:layout_below="@+id/tv_dev"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/tv_title"
+                    android:gravity="center"
+                    android:textSize="16sp"
+                    android:maxLines="2"
+                    android:layout_margin="10dp"
+                    android:textColor="@color/word_black"
+                    android:background="@null"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            <LinearLayout
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:background="@mipmap/menu_dev"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="2dp" />
+                <TextView
+                    android:layout_margin="5dp"
+                    android:textSize="16sp"
+                    android:text="@string/tag_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:background="@mipmap/menu_dev"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="2dp" />
+            </LinearLayout>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_tag"
+                android:layout_margin="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
-</android.support.constraint.ConstraintLayout>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:background="@mipmap/menu_dev"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="2dp" />
+                <TextView
+                    android:layout_margin="5dp"
+                    android:textSize="16sp"
+                    android:text="@string/introduction"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:background="@mipmap/menu_dev"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="2dp" />
+            </LinearLayout>
+            <TextView
+                android:id="@+id/tv_introduction"
+                android:textSize="14sp"
+                android:maxLength="5"
+                android:minLines="2"
+                android:layout_margin="10dp"
+                android:background="@null"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <LinearLayout
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:background="@mipmap/menu_dev"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="2dp" />
+                <TextView
+                    android:layout_margin="5dp"
+                    android:textSize="16sp"
+                    android:text="@string/raiders"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:background="@mipmap/menu_dev"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="2dp" />
+            </LinearLayout>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_raiders_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <LinearLayout
+                android:id="@+id/ll_dev_tip_top"
+                android:background="@color/dev"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="1px"/>
+            <LinearLayout
+                android:id="@+id/ll_position"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="30dp">
+                <LinearLayout
+                    android:id="@+id/ll_comment"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:gravity="center"
+                    android:layout_height="match_parent">
+                    <ImageView
+                        android:id="@+id/img_comment"
+                        android:src="@drawable/comment"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:id="@+id/tv_comment"
+                        android:layout_marginLeft="10dp"
+                        android:text="@string/comment"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_good"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:gravity="center"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/img_good"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/good" />
+                    <TextView
+                        android:id="@+id/tv_good"
+                        android:layout_marginLeft="10dp"
+                        android:text="@string/good"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_bad"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:gravity="center"
+                    android:layout_height="match_parent">
+                    <ImageView
+                        android:id="@+id/img_bad"
+                        android:src="@drawable/bad"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:id="@+id/tv_bad"
+                        android:layout_marginLeft="10dp"
+                        android:text="@string/bad"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/ll_dev_tip_bottom"
+                android:background="@color/dev"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="1px"/>
+            <include
+                app:layout_constraintTop_toBottomOf="@+id/ll_dev_tip_bottom"
+                layout="@layout/layout_comment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+    <include
+        android:id="@+id/layout_input"
+        layout="@layout/layout_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/scroll_raiders"
+        />
+</RelativeLayout>

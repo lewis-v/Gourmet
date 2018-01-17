@@ -10,6 +10,7 @@
         android:background="@null"
         android:imeOptions="actionDone"
         android:lines="1"
+        android:textColor="@color/word_black"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/img_cover"
         app:layout_constraintTop_toTopOf="parent"

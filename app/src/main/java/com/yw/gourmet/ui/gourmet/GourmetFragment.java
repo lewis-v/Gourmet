@@ -26,6 +26,8 @@ import com.yw.gourmet.myenum.LoadEnum;
 import com.yw.gourmet.ui.detail.common.CommonDetailActivity;
 import com.yw.gourmet.ui.detail.diary.DiaryDetailActivity;
 import com.yw.gourmet.ui.detail.menu.MenuDetailActivity;
+import com.yw.gourmet.ui.detail.raiders.RaidersDetailActivity;
+import com.yw.gourmet.ui.share.raiders.RaidersActivity;
 import com.yw.gourmet.utils.ToastUtils;
 
 import java.util.ArrayList;
@@ -74,6 +76,7 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
                         intent = new Intent(getContext(), MenuDetailActivity.class);
                         break;
                     case Constant.TypeFlag.RAIDERS:
+                        intent = new Intent(getContext(), RaidersDetailActivity.class);
                         break;
                 }
                 if (intent != null){
@@ -157,6 +160,7 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
                         intent = new Intent(getContext(), MenuDetailActivity.class);
                         break;
                     case Constant.TypeFlag.RAIDERS:
+                        intent = new Intent(getContext(), RaidersDetailActivity.class);
                         break;
                 }
                 if (intent != null){
