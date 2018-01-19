@@ -12,7 +12,6 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-    <uses-permission android:name="android.permission.GET_TASKS" />
 
     <application
         android:name=".App"
@@ -124,7 +123,8 @@
             android:name=".ui.share.raiders.RaidersActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".ui.detail.raiders.RaidersDetailActivity"></activity>
+        <activity android:name=".ui.detail.raiders.RaidersDetailActivity" />
+        <activity android:name=".ui.myShare.MyShareActivity"></activity>
     </application>
 
 </manifest>

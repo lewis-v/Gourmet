@@ -1,9 +1,11 @@
 package com.yw.gourmet.base;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -12,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 
+import com.yw.gourmet.R;
 import com.yw.gourmet.utils.WindowUtil;
 
 import java.lang.reflect.ParameterizedType;
@@ -28,6 +31,16 @@ public abstract class BaseDialogFragment<P extends BasePresenter> extends Dialog
     public void onStart() {
         super.onStart();
         getDialog().getWindow().setLayout((int) (WindowUtil.width * 0.75), ViewGroup.LayoutParams.WRAP_CONTENT);
+
+//        getDialog().setContentView(view);
+    }
+
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Dialog dialog = new Dialog(getActivity());
+        dialog.getWindow().getAttributes().windowAnimations = R.style.CustomDialog;
+        return dialog;
     }
 
     @Override

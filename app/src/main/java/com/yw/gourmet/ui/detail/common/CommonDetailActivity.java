@@ -457,6 +457,7 @@ public class CommonDetailActivity extends BaseActivity<CommonDetailPresenter> im
                 if (!isShow){
                     view.setVisibility(View.GONE);
                 }
+                isAnimShowing = false;
             }
 
             @Override

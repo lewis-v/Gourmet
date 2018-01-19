@@ -1,11 +1,9 @@
-package com.yw.gourmet.ui.gourmet;
+package com.yw.gourmet.ui.myShare;
 
 import android.content.Intent;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 
 import com.aspsine.swipetoloadlayout.OnLoadMoreListener;
@@ -27,7 +25,6 @@ import com.yw.gourmet.ui.detail.common.CommonDetailActivity;
 import com.yw.gourmet.ui.detail.diary.DiaryDetailActivity;
 import com.yw.gourmet.ui.detail.menu.MenuDetailActivity;
 import com.yw.gourmet.ui.detail.raiders.RaidersDetailActivity;
-import com.yw.gourmet.ui.share.raiders.RaidersActivity;
 import com.yw.gourmet.utils.ToastUtils;
 
 import java.util.ArrayList;
@@ -36,23 +33,26 @@ import java.util.List;
 import okhttp3.MultipartBody;
 
 /**
- * Created by Administrator on 2017/10/22.
+ * auth: lewis-v
+ * time: 2018/1/19.
  */
 
-public class GourmetFragment extends BaseFragment<GourmetPresenter> implements GourmetContract.View
-        ,OnRefreshListener,OnLoadMoreListener{
+public class MyShareFragment extends BaseFragment<MySharePresenter> implements MyShareConstract.View
+        ,OnRefreshListener,OnLoadMoreListener {
     private RecyclerView swipe_target;
     private SwipeToLoadLayout swipeToLoadLayout;
     private List<ShareListData<List<String>>> listData = new ArrayList<>();
     private ShareListAdapter adapter;
+    private int type = -1;//显示类型,默认为全部-1
+    private int page = 1;//页数
 
-    /**
-     * 初始化UI
-     */
+    @Override
+    protected int getLayoutId() {
+        return R.layout.fragment_my_share;
+    }
+
     @Override
     protected void initView() {
-        toolbar = (Toolbar)view.findViewById(R.id.toolbar);
-
         swipeToLoadLayout = (SwipeToLoadLayout)view.findViewById(R.id.swipeToLoadLayout);
         swipe_target = (RecyclerView)view.findViewById(R.id.swipe_target);
         swipe_target.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -172,27 +172,25 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
             }
         });
         MultipartBody.Builder builder = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM);
-        builder.addFormDataPart("token", Constant.userData == null ? "0" :  Constant.userData.getToken());
-        mPresenter.load(builder.build().parts(), LoadEnum.REFRESH);
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("page",String.valueOf(page))
+                .addFormDataPart("token", Constant.userData == null ? "0" :  Constant.userData.getToken());
+        if (type != -1){
+            builder.addFormDataPart("type",String.valueOf(type));
+        }
+        if (Constant.userData != null){
+            builder.addFormDataPart("id",Constant.userData.getId());
+        }else {
+            ToastUtils.showSingleToast("请登陆后再进行操作");
+        }
+        mPresenter.getShareList(builder.build().parts(), LoadEnum.REFRESH);
     }
 
-    /**
-     * 设置布局文件
-     */
-    @Override
-    protected int getLayoutId() {
-        return R.layout.fragment_home;
-    }
 
     @Override
-    public void onSuccess(String msg) {
-
-    }
-
-    @Override
-    public void onLoadSuccess(BaseData<List<ShareListData<List<String>>>> model, LoadEnum flag) {
+    public void onGetListSuccess(BaseData<List<ShareListData<List<String>>>> model, LoadEnum flag) {
         if (flag == LoadEnum.REFRESH) {
+            page = 1;
             listData.clear();
             listData.addAll(model.getData());
             adapter.notifyDataSetChanged();
@@ -206,7 +204,7 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
     }
 
     @Override
-    public void onLoadFail(String msg, LoadEnum flag) {
+    public void onGetListFail(String msg, LoadEnum flag) {
         onFail(msg);
         if (flag == LoadEnum.REFRESH) {
             swipeToLoadLayout.setRefreshing(false);
@@ -228,13 +226,23 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
 
     @Override
     public void onRefresh() {
-        if (Constant.userData != null) {
-            MultipartBody.Builder builder = new MultipartBody.Builder()
-                    .setType(MultipartBody.FORM)
-                    .addFormDataPart("token", Constant.userData.getToken());
-            mPresenter.load(builder.build().parts(), LoadEnum.REFRESH);
-        }else {
-            swipeToLoadLayout.setRefreshing(false);
+        MultipartBody.Builder builder = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("page",String.valueOf(page))
+                .addFormDataPart("token", Constant.userData == null ? "0" :  Constant.userData.getToken());
+        if (type != -1){
+            builder.addFormDataPart("type",String.valueOf(type));
         }
+        if (Constant.userData != null){
+            builder.addFormDataPart("id",Constant.userData.getId());
+        }else {
+            ToastUtils.showSingleToast("请登陆后再进行操作");
+        }
+        mPresenter.getShareList(builder.build().parts(), LoadEnum.REFRESH);
+    }
+
+    public MyShareFragment setType(int type) {
+        this.type = type;
+        return this;
     }
 }

@@ -22,6 +22,7 @@ import com.yw.gourmet.rxbus.RxBus;
 import com.yw.gourmet.rxbus.RxBusSubscriber;
 import com.yw.gourmet.rxbus.RxSubscriptions;
 import com.yw.gourmet.ui.login.LoginActivity;
+import com.yw.gourmet.ui.myShare.MyShareActivity;
 import com.yw.gourmet.ui.personal.PersonalActivity;
 import com.yw.gourmet.ui.set.SetActivity;
 
@@ -35,7 +36,7 @@ import rx.functions.Func1;
  */
 
 public class MyFragment extends BaseFragment implements View.OnClickListener,MyContract.View{
-    private LinearLayout ll_set;
+    private LinearLayout ll_set,ll_share,ll_menu,ll_diary,ll_raiders;
     private ScrollView scroll_my;
     private TextView tv_nickname,tv_set,tv_diary,tv_menu,tv_raiders,tv_share;
     private Button bt_login,bt_register;
@@ -50,8 +51,16 @@ public class MyFragment extends BaseFragment implements View.OnClickListener,MyC
     protected void initView() {
         toolbar = (Toolbar)view.findViewById(R.id.toolbar);
 
+        ll_share = view.findViewById(R.id.ll_share);
+        ll_menu = view.findViewById(R.id.ll_menu);
+        ll_diary = view.findViewById(R.id.ll_diary);
+        ll_raiders = view.findViewById(R.id.ll_raiders);
         ll_set = (LinearLayout)view.findViewById(R.id.ll_set);
         ll_set.setOnClickListener(this);
+        ll_menu.setOnClickListener(this);
+        ll_diary.setOnClickListener(this);
+        ll_raiders.setOnClickListener(this);
+        ll_share.setOnClickListener(this);
 
         img_header = (ImageView) view.findViewById(R.id.img_header);
 
@@ -104,6 +113,7 @@ public class MyFragment extends BaseFragment implements View.OnClickListener,MyC
 
     @Override
     public void onClick(View view) {
+        Intent intent = null;
         switch (view.getId()){
             case R.id.ll_set:
                 startActivity(new Intent(getContext(), PersonalActivity.class));
@@ -117,6 +127,25 @@ public class MyFragment extends BaseFragment implements View.OnClickListener,MyC
             case R.id.tv_set:
                 startActivity(new Intent(getContext(), SetActivity.class));
                 break;
+            case R.id.ll_raiders:
+                intent = new Intent(getContext(), MyShareActivity.class);
+                intent.putExtra("type",Constant.TypeFlag.RAIDERS);
+                break;
+            case R.id.ll_share:
+                intent = new Intent(getContext(), MyShareActivity.class);
+                intent.putExtra("type",Constant.TypeFlag.SHARE);
+                break;
+            case R.id.ll_diary:
+                intent = new Intent(getContext(), MyShareActivity.class);
+                intent.putExtra("type",Constant.TypeFlag.DIARY);
+                break;
+            case R.id.ll_menu:
+                intent = new Intent(getContext(), MyShareActivity.class);
+                intent.putExtra("type",Constant.TypeFlag.MENU);
+                break;
+        }
+        if (intent != null){
+            startActivity(intent);
         }
     }
 

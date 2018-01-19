@@ -19,4 +19,11 @@
         <item name="colorPrimaryDark">@color/theme_orange_dark</item>
         <item name="colorAccent">@color/theme_light_blue_accent</item>
     </style>
+
+    <style name="CustomDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:windowEnterAnimation">@anim/anim_view_enter_top</item>
+        <item name="android:windowExitAnimation">@anim/anim_view_exit_bottom</item>
+    </style>
 </resources>

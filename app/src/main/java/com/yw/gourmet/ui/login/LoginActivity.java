@@ -1,5 +1,6 @@
 package com.yw.gourmet.ui.login;
 
+import android.content.SharedPreferences;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,6 +25,9 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
         et_password = (EditText)findViewById(R.id.et_password);
         bt_login = (Button)findViewById(R.id.bt_login);
         bt_login.setOnClickListener(this);
+
+        SharedPreferences sharedPreferences = getSharedPreferences(getPackageName(),MODE_PRIVATE);
+        et_id.setText(SPUtils.getSharedStringData(getApplicationContext(),"id"));
     }
 
     @Override
@@ -57,6 +61,7 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
         onSuccess(model.getMessage());
         Constant.userData = model.getData();
         SPUtils.setSharedStringData(getApplicationContext(),"token",model.getData().getToken());
+        SPUtils.setSharedStringData(getApplicationContext(),"id",et_id.getText().toString());
         finish();
     }
 
