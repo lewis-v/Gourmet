@@ -24,6 +24,9 @@ public class ShareListData<T> {
     private int bad_num;//踩数量
     private String cover;//封面
     private String time_flag;//时间戳标记
+    private String is_collection;//是否收藏,长度大于0则收藏
+    private String good_act;//点赞情况,1/0,空则没有
+    private String is_comment;//是否评论,长度大于0则评论
 
     public String getId() {
         return id;
@@ -196,6 +199,33 @@ public class ShareListData<T> {
         return this;
     }
 
+    public String getIs_collection() {
+        return is_collection;
+    }
+
+    public ShareListData setIs_collection(String is_collection) {
+        this.is_collection = is_collection;
+        return this;
+    }
+
+    public String getGood_act() {
+        return good_act;
+    }
+
+    public ShareListData setGood_act(String good_act) {
+        this.good_act = good_act;
+        return this;
+    }
+
+    public String getIs_comment() {
+        return is_comment;
+    }
+
+    public ShareListData setIs_comment(String is_comment) {
+        this.is_comment = is_comment;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "ShareListData{" +
@@ -218,6 +248,9 @@ public class ShareListData<T> {
                 ", bad_num=" + bad_num +
                 ", cover='" + cover + '\'' +
                 ", time_flag='" + time_flag + '\'' +
+                ", is_collection='" + is_collection + '\'' +
+                ", good_act='" + good_act + '\'' +
+                ", is_comment='" + is_comment + '\'' +
                 '}';
     }
 }

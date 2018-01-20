@@ -38,7 +38,7 @@ import okhttp3.MultipartBody;
  */
 
 public class CommentMyFragment extends BaseFragment<CommentMyPresenter> implements CommentMyContract.View
-        ,OnRefreshListener,OnLoadMoreListener {
+            ,OnRefreshListener,OnLoadMoreListener {
     private RecyclerView swipe_target;
     private SwipeToLoadLayout swipeToLoadLayout;
     private List<ShareListData<List<String>>> listData = new ArrayList<>();
@@ -94,7 +94,8 @@ public class CommentMyFragment extends BaseFragment<CommentMyPresenter> implemen
         adapter.setOnMoreListener(new OnMoreListener() {
             @Override
             public void OnMoreClick(View view, int position) {
-                MyDialogMoreFragment myDialogMoreFragment = new MyDialogMoreFragment();
+                MyDialogMoreFragment myDialogMoreFragment = new MyDialogMoreFragment()
+                        .setId(listData.get(position).getId());
                 switch (listData.get(position).getType()) {
                     case Constant.TypeFlag.SHARE://普通分享
                         myDialogMoreFragment.setShare(false).setType(listData.get(position).getType())

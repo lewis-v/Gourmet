@@ -27,7 +27,6 @@ import com.yw.gourmet.ui.detail.common.CommonDetailActivity;
 import com.yw.gourmet.ui.detail.diary.DiaryDetailActivity;
 import com.yw.gourmet.ui.detail.menu.MenuDetailActivity;
 import com.yw.gourmet.ui.detail.raiders.RaidersDetailActivity;
-import com.yw.gourmet.ui.share.raiders.RaidersActivity;
 import com.yw.gourmet.utils.ToastUtils;
 
 import java.util.ArrayList;
@@ -95,7 +94,13 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
         adapter.setOnMoreListener(new OnMoreListener() {
             @Override
             public void OnMoreClick(View view, int position) {
-                MyDialogMoreFragment myDialogMoreFragment = new MyDialogMoreFragment();
+                MyDialogMoreFragment myDialogMoreFragment = new MyDialogMoreFragment()
+                        .setId(listData.get(position).getId())
+                        .setOnCollectionListener(new MyDialogMoreFragment.OnCollectionListener() {
+                            @Override
+                            public void OnCollection(String id,int type, String tag) {
+                            }
+                        });
                 switch (listData.get(position).getType()) {
                     case Constant.TypeFlag.SHARE://普通分享
                         myDialogMoreFragment.setShare(false).setType(listData.get(position).getType())
@@ -105,6 +110,7 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
                     case Constant.TypeFlag.MENU://食谱分享
                     case Constant.TypeFlag.RAIDERS://攻略分享
                         myDialogMoreFragment.setShareCoverUrl(listData.get(position).getCover())
+                                .setId(listData.get(position).getId())
                                 .setType(listData.get(position).getType())
                                 .setShareDescription(listData.get(position).getContent())
                                 .setShareTitle(listData.get(position).getTitle())
@@ -174,6 +180,9 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
         MultipartBody.Builder builder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM);
         builder.addFormDataPart("token", Constant.userData == null ? "0" :  Constant.userData.getToken());
+        if (Constant.userData != null){
+            builder.addFormDataPart("user_id",Constant.userData.getId());
+        }
         mPresenter.load(builder.build().parts(), LoadEnum.REFRESH);
     }
 
@@ -187,7 +196,7 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
 
     @Override
     public void onSuccess(String msg) {
-
+        super.onSuccess(msg);
     }
 
     @Override
@@ -225,7 +234,7 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
 
     @Override
     public void onLoadFail(String msg, LoadEnum flag) {
-        onFail(msg);
+        super.onFail(msg);
         if (flag == LoadEnum.REFRESH) {
             swipeToLoadLayout.setRefreshing(false);
         }else {
@@ -248,6 +257,10 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
             builder.addFormDataPart("time_flag",listData.get(listData.size()-1).getTime_flag())
                     .addFormDataPart("act","-1");
         }
+
+        if (Constant.userData != null){
+            builder.addFormDataPart("user_id",Constant.userData.getId());
+        }
         mPresenter.load(builder.build().parts(),LoadEnum.LOADMORE);
     }
 
@@ -259,6 +272,9 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
         if (listData.size() > 0){
             builder.addFormDataPart("time_flag",listData.get(0).getTime_flag())
                     .addFormDataPart("act","1");
+        }
+        if (Constant.userData != null){
+            builder.addFormDataPart("user_id",Constant.userData.getId());
         }
         mPresenter.load(builder.build().parts(), LoadEnum.REFRESH);
 

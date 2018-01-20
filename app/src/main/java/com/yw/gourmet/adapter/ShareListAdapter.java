@@ -99,6 +99,24 @@ public class ShareListAdapter extends RecyclerView.Adapter<ShareListAdapter.MyVi
         }else {
             holder.tv_bad.setText(R.string.bad);
         }
+        String goodAct = listData.get(position).getGood_act();
+        if (goodAct!=null){
+            if (goodAct.equals("0")){//踩了
+                holder.img_bad.setImageResource(R.drawable.bad_ic);
+                holder.img_good.setImageResource(R.drawable.good);
+            }else if (goodAct.equals("1")){//点赞了
+                holder.img_bad.setImageResource(R.drawable.bad);
+                holder.img_good.setImageResource(R.drawable.good_ic);
+            }
+        }
+        String is_comment = listData.get(position).getIs_comment();
+        if (is_comment != null && is_comment.length()>0){//评论了
+            holder.img_comment.setImageResource(R.drawable.comment_ic);
+        }else {
+            holder.img_comment.setImageResource(R.drawable.comment);
+        }
+
+
         if (listData.get(position).getType() == Constant.TypeFlag.SHARE) {//普通分享
             holder.ll_other.setVisibility(View.GONE);
             holder.ll_content.setVisibility(View.VISIBLE);
@@ -208,7 +226,7 @@ public class ShareListAdapter extends RecyclerView.Adapter<ShareListAdapter.MyVi
 
     class MyViewHolder extends RecyclerView.ViewHolder{
         ConstraintLayout constraint_item;
-        ImageView img_header,img_share,img_more,img_cover;
+        ImageView img_header,img_share,img_more,img_cover,img_comment,img_good,img_bad;
         TextView tv_nickname,tv_time,tv_content,tv_comment,tv_good,tv_bad,tv_title;
         LinearLayout ll_img,ll_comment,ll_good,ll_bad,ll_content,ll_other;
         RecyclerView recycler_share;
@@ -219,6 +237,9 @@ public class ShareListAdapter extends RecyclerView.Adapter<ShareListAdapter.MyVi
             img_share = (ImageView)itemView.findViewById(R.id.img_share);
             img_more = (ImageView)itemView.findViewById(R.id.img_more);
             img_cover = (ImageView)itemView.findViewById(R.id.img_cover);
+            img_comment = itemView.findViewById(R.id.img_comment);
+            img_good = itemView.findViewById(R.id.img_good);
+            img_bad = itemView.findViewById(R.id.img_bad);
             recycler_share = (RecyclerView)itemView.findViewById(R.id.recycler_share);
             ll_content = (LinearLayout)itemView.findViewById(R.id.ll_content);
             ll_other = (LinearLayout)itemView.findViewById(R.id.ll_other);

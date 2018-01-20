@@ -309,6 +309,7 @@ public class RaidersDetailActivity extends BaseActivity<RaidersDetailPresenter> 
                 break;
             case R.id.tv_share:
                 new MyDialogMoreFragment().setCollect(false).setType(data.getType())
+                        .setId(data.getId())
                         .setShareTitle(data.getTitle()).setShareCoverUrl(data.getCover())
                         .setShareDescription(data.getRaiders_content().toString()).setShareUrl(Api.API_BASE_URL + "/Share/Other?id="
                         + data.getId() + "&type=" + data.getType())

@@ -1,4 +1,4 @@
-package com.yw.gourmet.ui.myShare;
+package com.yw.gourmet.ui.collection;
 
 import android.content.Intent;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -13,7 +13,7 @@ import com.yw.gourmet.Constant;
 import com.yw.gourmet.R;
 import com.yw.gourmet.adapter.ShareListAdapter;
 import com.yw.gourmet.api.Api;
-import com.yw.gourmet.base.BaseFragment;
+import com.yw.gourmet.base.BaseActivity;
 import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.data.ShareListData;
 import com.yw.gourmet.dialog.MyDialogMoreFragment;
@@ -32,31 +32,26 @@ import java.util.List;
 
 import okhttp3.MultipartBody;
 
-/**
- * auth: lewis-v
- * time: 2018/1/19.
- */
-
-public class MyShareFragment extends BaseFragment<MySharePresenter> implements MyShareConstract.View
+public class CollectionActivity extends BaseActivity<CollectionPresenter> implements CollectionContract.View
         ,OnRefreshListener,OnLoadMoreListener {
     private RecyclerView swipe_target;
     private SwipeToLoadLayout swipeToLoadLayout;
     private List<ShareListData<List<String>>> listData = new ArrayList<>();
     private ShareListAdapter adapter;
-    private int type = -1;//显示类型,默认为全部-1
+    private int type = Constant.CommentType.COMMENT;//显示类型,0,全部,1评论,2赞,3踩
 
     @Override
     protected int getLayoutId() {
-        return R.layout.fragment_my_share;
+        return R.layout.activity_collection;
     }
 
     @Override
     protected void initView() {
-        swipeToLoadLayout = (SwipeToLoadLayout)view.findViewById(R.id.swipeToLoadLayout);
-        swipe_target = (RecyclerView)view.findViewById(R.id.swipe_target);
-        swipe_target.setLayoutManager(new LinearLayoutManager(getContext()));
+        swipeToLoadLayout = (SwipeToLoadLayout)findViewById(R.id.swipeToLoadLayout);
+        swipe_target = (RecyclerView)findViewById(R.id.swipe_target);
+        swipe_target.setLayoutManager(new LinearLayoutManager(this));
         swipe_target.setItemAnimator(new DefaultItemAnimator());
-        adapter = new ShareListAdapter(getContext(),listData,getFragmentManager());
+        adapter = new ShareListAdapter(this,listData,getSupportFragmentManager());
         swipe_target.setAdapter(adapter);
         swipeToLoadLayout.setOnRefreshListener(this);
         swipeToLoadLayout.setOnLoadMoreListener(this);
@@ -66,16 +61,16 @@ public class MyShareFragment extends BaseFragment<MySharePresenter> implements M
                 Intent intent = null;
                 switch (listData.get(position).getType()) {
                     case Constant.TypeFlag.SHARE:
-                        intent = new Intent(getContext(), CommonDetailActivity.class);
+                        intent = new Intent(CollectionActivity.this, CommonDetailActivity.class);
                         break;
                     case Constant.TypeFlag.DIARY:
-                        intent = new Intent(getContext(), DiaryDetailActivity.class);
+                        intent = new Intent(CollectionActivity.this, DiaryDetailActivity.class);
                         break;
                     case Constant.TypeFlag.MENU:
-                        intent = new Intent(getContext(), MenuDetailActivity.class);
+                        intent = new Intent(CollectionActivity.this, MenuDetailActivity.class);
                         break;
                     case Constant.TypeFlag.RAIDERS:
-                        intent = new Intent(getContext(), RaidersDetailActivity.class);
+                        intent = new Intent(CollectionActivity.this, RaidersDetailActivity.class);
                         break;
                 }
                 if (intent != null){
@@ -99,7 +94,7 @@ public class MyShareFragment extends BaseFragment<MySharePresenter> implements M
                 switch (listData.get(position).getType()) {
                     case Constant.TypeFlag.SHARE://普通分享
                         myDialogMoreFragment.setShare(false).setType(listData.get(position).getType())
-                                .show(getFragmentManager(), "share");
+                                .show(getSupportFragmentManager(), "share");
                         break;
                     case Constant.TypeFlag.DIARY://日记分享
                     case Constant.TypeFlag.MENU://食谱分享
@@ -110,7 +105,7 @@ public class MyShareFragment extends BaseFragment<MySharePresenter> implements M
                                 .setShareTitle(listData.get(position).getTitle())
                                 .setShareUrl(Api.API_BASE_URL + "/Share/Other?id="
                                         + listData.get(position).getId() + "&type=" + listData.get(position).getType())
-                                .show(getFragmentManager(), "share");
+                                .show(getSupportFragmentManager(), "share");
                         break;
                 }
             }
@@ -151,16 +146,16 @@ public class MyShareFragment extends BaseFragment<MySharePresenter> implements M
                 Intent intent = null;
                 switch (listData.get(position).getType()) {
                     case Constant.TypeFlag.SHARE:
-                        intent = new Intent(getContext(), CommonDetailActivity.class);
+                        intent = new Intent(CollectionActivity.this, CommonDetailActivity.class);
                         break;
                     case Constant.TypeFlag.DIARY:
-                        intent = new Intent(getContext(), DiaryDetailActivity.class);
+                        intent = new Intent(CollectionActivity.this, DiaryDetailActivity.class);
                         break;
                     case Constant.TypeFlag.MENU:
-                        intent = new Intent(getContext(), MenuDetailActivity.class);
+                        intent = new Intent(CollectionActivity.this, MenuDetailActivity.class);
                         break;
                     case Constant.TypeFlag.RAIDERS:
-                        intent = new Intent(getContext(), RaidersDetailActivity.class);
+                        intent = new Intent(CollectionActivity.this, RaidersDetailActivity.class);
                         break;
                 }
                 if (intent != null){
@@ -176,7 +171,7 @@ public class MyShareFragment extends BaseFragment<MySharePresenter> implements M
 
 
     @Override
-    public void onGetListSuccess(BaseData<List<ShareListData<List<String>>>> model, LoadEnum flag) {
+    public void onGetCollectionSuccess(BaseData<List<ShareListData<List<String>>>> model, LoadEnum flag) {
         if (flag == LoadEnum.REFRESH) {
 //            listData.clear();
 //            listData.addAll(model.getData());
@@ -209,7 +204,7 @@ public class MyShareFragment extends BaseFragment<MySharePresenter> implements M
     }
 
     @Override
-    public void onGetListFail(String msg, LoadEnum flag) {
+    public void onGetCollectionFail(String msg, LoadEnum flag) {
         onFail(msg);
         if (flag == LoadEnum.REFRESH) {
             swipeToLoadLayout.setRefreshing(false);
@@ -219,7 +214,7 @@ public class MyShareFragment extends BaseFragment<MySharePresenter> implements M
     }
 
     @Override
-    public void onReMarkSuccess(BaseData<ShareListData<List<String>>> model,int position) {
+    public void onReMarkSuccess(BaseData<ShareListData<List<String>>> model, int position) {
         listData.set(position,model.getData());
         adapter.notifyDataSetChanged();
     }
@@ -229,9 +224,8 @@ public class MyShareFragment extends BaseFragment<MySharePresenter> implements M
         MultipartBody.Builder builder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("token", Constant.userData == null?"0":Constant.userData.getToken());
-        if (type != -1){
-            builder.addFormDataPart("type",String.valueOf(type));
-        }
+        builder.addFormDataPart("type",String.valueOf(type));
+
         if (Constant.userData != null){
             builder.addFormDataPart("id",Constant.userData.getId());
         }else {
@@ -241,12 +235,12 @@ public class MyShareFragment extends BaseFragment<MySharePresenter> implements M
             builder.addFormDataPart("time_flag",listData.get(listData.size()-1).getTime_flag())
                     .addFormDataPart("act","-1");
         }
-        mPresenter.getShareList(builder.build().parts(),LoadEnum.LOADMORE);
+        mPresenter.getCollection(builder.build().parts(), LoadEnum.LOADMORE);
     }
 
     @Override
     public void onRefresh() {
-       refresh();
+        refresh();
     }
 
     /**
@@ -256,9 +250,7 @@ public class MyShareFragment extends BaseFragment<MySharePresenter> implements M
         MultipartBody.Builder builder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("token", Constant.userData == null ? "0" :  Constant.userData.getToken());
-        if (type != -1){
-            builder.addFormDataPart("type",String.valueOf(type));
-        }
+        builder.addFormDataPart("type",String.valueOf(type));
         if (Constant.userData != null){
             builder.addFormDataPart("id",Constant.userData.getId());
         }else {
@@ -268,11 +260,6 @@ public class MyShareFragment extends BaseFragment<MySharePresenter> implements M
             builder.addFormDataPart("time_flag",listData.get(0).getTime_flag())
                     .addFormDataPart("act","1");
         }
-        mPresenter.getShareList(builder.build().parts(), LoadEnum.REFRESH);
-    }
-
-    public MyShareFragment setType(int type) {
-        this.type = type;
-        return this;
+        mPresenter.getCollection(builder.build().parts(), LoadEnum.REFRESH);
     }
 }

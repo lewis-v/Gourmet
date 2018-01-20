@@ -268,6 +268,7 @@ public class MenuDetailActivity extends BaseActivity<MenuDetailPresenter> implem
                 break;
             case R.id.tv_share:
                 new MyDialogMoreFragment().setCollect(false).setType(shareListData.getType())
+                        .setId(shareListData.getId())
                         .setShareTitle(shareListData.getTitle()).setShareCoverUrl(shareListData.getCover())
                         .setShareDescription(shareListData.getContent()).setShareUrl(Api.API_BASE_URL + "/Share/Other?id="
                         + shareListData.getId() + "&type=" + shareListData.getType())

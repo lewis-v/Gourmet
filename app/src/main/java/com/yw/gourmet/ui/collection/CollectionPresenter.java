@@ -1,4 +1,4 @@
-package com.yw.gourmet.ui.gourmet;
+package com.yw.gourmet.ui.collection;
 
 import com.yw.gourmet.api.Api;
 import com.yw.gourmet.base.rx.RxApiCallback;
@@ -12,25 +12,26 @@ import java.util.List;
 import okhttp3.MultipartBody;
 
 /**
- * Created by LYW on 2017/11/17.
+ * auth: lewis-v
+ * time: 2018/1/20.
  */
 
-public class GourmetPresenter extends GourmetContract.Presenter {
+public class CollectionPresenter extends CollectionContract.Presenter {
     @Override
-    void load(List<MultipartBody.Part> parts, final LoadEnum flag) {
-        mRxManager.add(Api.getInstance().LoadShareList(parts),new RxSubscriberCallBack<BaseData<List<ShareListData<List<String>>>>>(new RxApiCallback<BaseData<List<ShareListData<List<String>>>>>() {
+    void getCollection(List<MultipartBody.Part> parts, final LoadEnum flag) {
+        mRxManager.add(Api.getInstance().GetCollection(parts),new RxSubscriberCallBack<BaseData<List<ShareListData<List<String>>>>>(new RxApiCallback<BaseData<List<ShareListData<List<String>>>>>() {
             @Override
             public void onSuccess(BaseData<List<ShareListData<List<String>>>> model) {
                 if (model.getStatus() == 0){
-                    mView.onLoadSuccess(model,flag);
-                }else if (model.getStatus() == 1){
-                    mView.onLoadFail(model.getMessage(),flag);
+                    mView.onGetCollectionSuccess(model,flag);
+                }else{
+                    mView.onGetCollectionFail(model.getMessage(),flag);
                 }
             }
 
             @Override
             public void onFailure(int code, String msg) {
-                mView.onLoadFail(msg,flag);
+                mView.onGetCollectionFail(msg,flag);
             }
         }));
     }
@@ -53,5 +54,4 @@ public class GourmetPresenter extends GourmetContract.Presenter {
             }
         }));
     }
-
 }

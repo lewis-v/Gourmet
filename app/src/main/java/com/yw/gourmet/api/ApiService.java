@@ -129,4 +129,14 @@ public interface ApiService {
     @Multipart
     @POST("/Share/Raiders/Get")
     Observable<BaseData<RaidersDetailData<List<RaidersListData<List<String>>>,List<String>>>> GetRaidersDetail(@Part List<MultipartBody.Part> parts);
+
+    //收藏操作
+    @Multipart
+    @POST("/Collection/Put")
+    Observable<BaseData> Collection(@Part List<MultipartBody.Part> parts);
+
+    //获取收藏列表
+    @Multipart
+    @POST("/Collection/Get")
+    Observable<BaseData<List<ShareListData<List<String>>>>> GetCollection(@Part List<MultipartBody.Part> parts);
 }

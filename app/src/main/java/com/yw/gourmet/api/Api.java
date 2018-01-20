@@ -34,7 +34,7 @@ import rx.Observable;
  */
 
 public class Api {
-    public final static String API_BASE_URL = "http://39.108.236.30:47423";//这里是服务器连接的接口的固定部分 39.108.236.30
+    public final static String API_BASE_URL = "http://192.168.1.109:47423";//这里是服务器连接的接口的固定部分 39.108.236.30
     public static Api instance;//单例
     private ApiService service;//声明apiservier,下面要通过这个调用与服务器交互的方法
     private OkHttpClient okHttpClient;
@@ -165,5 +165,13 @@ public class Api {
 
     public Observable<BaseData<RaidersDetailData<List<RaidersListData<List<String>>>,List<String>>>> GetRaidersDetail(List<MultipartBody.Part> parts){
         return service.GetRaidersDetail(parts);
+    }
+
+    public Observable<BaseData> Collection(List<MultipartBody.Part> parts){
+        return service.Collection(parts);
+    }
+
+    public Observable<BaseData<List<ShareListData<List<String>>>>> GetCollection(List<MultipartBody.Part> parts){
+        return service.GetCollection(parts);
     }
 }

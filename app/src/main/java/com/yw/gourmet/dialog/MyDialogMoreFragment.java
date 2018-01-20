@@ -18,15 +18,19 @@ import com.yw.gourmet.base.BaseActivity;
 import com.yw.gourmet.base.BaseDialogFragment;
 import com.yw.gourmet.listener.OnCancelClickListener;
 import com.yw.gourmet.ui.wxapi.WXUtils;
+import com.yw.gourmet.utils.ToastUtils;
 
 import java.io.IOException;
 import java.net.URL;
+
+import okhttp3.MultipartBody;
 
 /**
  * Created by Lewis-v on 2018/1/3.
  */
 
-public class MyDialogMoreFragment extends BaseDialogFragment implements View.OnClickListener{
+public class MyDialogMoreFragment extends BaseDialogFragment<MyDIalogPresenter>
+        implements MyDialogContract.View,View.OnClickListener{
     private TextView tv_cancel,share_text;
     private LinearLayout ll_collection,ll_share_people,ll_share_friend;
     private OnCancelClickListener onCancelClickListener;
@@ -79,9 +83,21 @@ public class MyDialogMoreFragment extends BaseDialogFragment implements View.OnC
                 dismiss();
                 break;
             case R.id.ll_collection://收藏
-                if (onCollectionListener != null) {
-                    onCollectionListener.OnCollection(id, getTag());
+                if (Constant.userData == null){
+                    ToastUtils.showSingleToast("请登录后在进行操作");
+                    break;
                 }
+                MultipartBody.Builder builder = new MultipartBody.Builder()
+                        .setType(MultipartBody.FORM)
+                        .addFormDataPart("act","1")
+                        .addFormDataPart("act_id",id)
+                        .addFormDataPart("type",String.valueOf(type))
+                        .addFormDataPart("id",Constant.userData.getId());
+                mPresenter.collection(builder.build().parts());
+                if (onCollectionListener != null) {
+                    onCollectionListener.OnCollection(id,type, getTag());
+                }
+                dismiss();
                 break;
             case R.id.ll_share_people://分享微信好友
                 ((BaseActivity)getActivity()).setLoadDialog(true);
@@ -136,8 +152,28 @@ public class MyDialogMoreFragment extends BaseDialogFragment implements View.OnC
         }).start();
     }
 
+    @Override
+    public void onFail(String msg) {
+        ToastUtils.showSingleToast(msg);
+    }
+
+    @Override
+    public void onSuccess(String msg) {
+        ToastUtils.showSingleToast(msg);
+    }
+
+    @Override
+    public void onReLoginFail(String msg) {
+
+    }
+
+    @Override
+    public void setLoadDialog(boolean isLoadDialog) {
+
+    }
+
     public interface OnCollectionListener{
-        void OnCollection(String id,String tag);
+        void OnCollection(String id,int type,String tag);
     }
 
     public MyDialogMoreFragment setOnCancelClickListener(OnCancelClickListener onCancelClickListener) {
