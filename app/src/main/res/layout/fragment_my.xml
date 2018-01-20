@@ -13,15 +13,14 @@
         android:layout_width="match_parent"
         android:layout_height="40dp">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
-
             <TextView
-                android:layout_width="0dp"
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/my"
                 android:textColor="@color/word_black"
@@ -30,13 +29,14 @@
                 android:id="@+id/tv_set"
                 android:text="@string/setting"
                 android:gravity="center"
+                android:layout_alignParentRight="true"
                 android:paddingRight="10dp"
                 android:paddingLeft="10dp"
                 android:textColor="@color/word_black"
                 android:textSize="16sp"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent" />
-        </LinearLayout>
+        </RelativeLayout>
     </android.support.v7.widget.Toolbar>
     <LinearLayout
         android:background="@mipmap/dev"
@@ -234,6 +234,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1px"/>
             <LinearLayout
+                android:id="@+id/ll_comment"
                 android:background="@drawable/ll_back_change"
                 android:padding="8dp"
                 android:gravity="center_vertical"
@@ -246,7 +247,7 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp" />
                 <TextView
-                    android:text="@string/my_good"
+                    android:text="@string/my_comment"
                     android:textSize="16sp"
                     android:textColor="@color/word_black"
                     android:layout_width="0dp"

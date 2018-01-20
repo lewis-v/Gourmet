@@ -124,7 +124,8 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".ui.detail.raiders.RaidersDetailActivity" />
-        <activity android:name=".ui.myShare.MyShareActivity"></activity>
+        <activity android:name=".ui.myShare.MyShareActivity" />
+        <activity android:name=".ui.commentMy.CommentMyActivity"></activity>
     </application>
 
 </manifest>

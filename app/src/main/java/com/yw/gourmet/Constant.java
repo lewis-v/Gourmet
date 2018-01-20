@@ -20,6 +20,13 @@ public class Constant {
         public static final int MENU = 2;//食谱
         public static final int SHARE = 3;//普通分享
     }
+
+    public class CommentType{
+        public static final int ALL = 0;//全部
+        public static final int COMMENT = 1;//评论
+        public static final int GOOD = 2;//赞
+        public static final int BAD = 3;//踩
+    }
     //省份信息
     public static List<String> areaList;
 

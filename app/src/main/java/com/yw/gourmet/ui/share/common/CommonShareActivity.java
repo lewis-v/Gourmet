@@ -179,6 +179,8 @@ public class CommonShareActivity extends BaseActivity<CommonSharePresenter> impl
                                     }
                                     if (upImg.size() > 0){
                                         builder.addFormDataPart("img",new JSONArray(upImg).toString());
+                                    }else {
+                                        builder.addFormDataPart("img","[]");
                                     }
                                     mPresenter.shareCommon(builder.build().parts());
                                 }

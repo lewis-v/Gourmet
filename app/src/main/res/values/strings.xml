@@ -85,4 +85,5 @@
     <string name="title_or_name">标题或名称</string>
     <string name="gourmet_address">美食地址</string>
     <string name="my_share">我的分享</string>
+    <string name="my_comment">我的评论</string>
 </resources>

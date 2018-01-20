@@ -105,6 +105,11 @@ public interface ApiService {
     @POST("/Comment/Put")
     Observable<BaseData<List<CommentData>>> PutComment(@Part List<MultipartBody.Part> parts);
 
+    //获取个人评论信息
+    @Multipart
+    @POST("/Comment/My/Get")
+    Observable<BaseData<List<ShareListData<List<String>>>>> GetCommentMy(@Part List<MultipartBody.Part> parts);
+
     //获取普通分享详情
     @Multipart
     @POST("/Share/Common/Get")

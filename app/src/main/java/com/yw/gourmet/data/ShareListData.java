@@ -23,6 +23,7 @@ public class ShareListData<T> {
     private int good_num;//点赞数量
     private int bad_num;//踩数量
     private String cover;//封面
+    private String time_flag;//时间戳标记
 
     public String getId() {
         return id;
@@ -186,6 +187,15 @@ public class ShareListData<T> {
         return this;
     }
 
+    public String getTime_flag() {
+        return time_flag;
+    }
+
+    public ShareListData setTime_flag(String time_flag) {
+        this.time_flag = time_flag;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "ShareListData{" +
@@ -207,6 +217,7 @@ public class ShareListData<T> {
                 ", good_num=" + good_num +
                 ", bad_num=" + bad_num +
                 ", cover='" + cover + '\'' +
+                ", time_flag='" + time_flag + '\'' +
                 '}';
     }
 }

@@ -44,7 +44,6 @@ public class MyShareFragment extends BaseFragment<MySharePresenter> implements M
     private List<ShareListData<List<String>>> listData = new ArrayList<>();
     private ShareListAdapter adapter;
     private int type = -1;//显示类型,默认为全部-1
-    private int page = 1;//页数
 
     @Override
     protected int getLayoutId() {
@@ -171,34 +170,39 @@ public class MyShareFragment extends BaseFragment<MySharePresenter> implements M
                 }
             }
         });
-        MultipartBody.Builder builder = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart("page",String.valueOf(page))
-                .addFormDataPart("token", Constant.userData == null ? "0" :  Constant.userData.getToken());
-        if (type != -1){
-            builder.addFormDataPart("type",String.valueOf(type));
-        }
-        if (Constant.userData != null){
-            builder.addFormDataPart("id",Constant.userData.getId());
-        }else {
-            ToastUtils.showSingleToast("请登陆后再进行操作");
-        }
-        mPresenter.getShareList(builder.build().parts(), LoadEnum.REFRESH);
+        refresh();
     }
 
 
     @Override
     public void onGetListSuccess(BaseData<List<ShareListData<List<String>>>> model, LoadEnum flag) {
         if (flag == LoadEnum.REFRESH) {
-            page = 1;
-            listData.clear();
-            listData.addAll(model.getData());
-            adapter.notifyDataSetChanged();
+//            listData.clear();
+//            listData.addAll(model.getData());
+            if ((model.getData() == null || model.getData().size() == 0) && listData.size()>0){
+                ToastUtils.showSingleToast("已经是最新的啦");
+            }else {
+                for (int len = model.getData().size()-1;len >=0;len--){
+                    listData.add(0,model.getData().get(len));
+                    adapter.notifyItemInserted(0);
+                }
+            }
             swipeToLoadLayout.setRefreshing(false);
             if (listData.size()>0) {
                 swipe_target.smoothScrollToPosition(0);
             }
         }else {
+            if (model.getData() == null || model.getData().size() == 0){
+                ToastUtils.showSingleToast("没有更多啦");
+            }else {
+                for (int i = 0,len = model.getData().size();i<len;i++){
+                    listData.add(model.getData().get(i));
+                    adapter.notifyItemChanged(listData.size() -1);
+                    if (listData.size()>=2){
+                        adapter.notifyItemChanged(listData.size() -2);
+                    }
+                }
+            }
             swipeToLoadLayout.setLoadingMore(false);
         }
     }
@@ -221,14 +225,35 @@ public class MyShareFragment extends BaseFragment<MySharePresenter> implements M
 
     @Override
     public void onLoadMore() {
-        swipeToLoadLayout.setLoadingMore(false);
+        MultipartBody.Builder builder = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("token", Constant.userData == null?"0":Constant.userData.getToken());
+        if (type != -1){
+            builder.addFormDataPart("type",String.valueOf(type));
+        }
+        if (Constant.userData != null){
+            builder.addFormDataPart("id",Constant.userData.getId());
+        }else {
+            ToastUtils.showSingleToast("请登陆后再进行操作");
+        }
+        if (listData.size()>0){
+            builder.addFormDataPart("time_flag",listData.get(listData.size()-1).getTime_flag())
+                    .addFormDataPart("act","-1");
+        }
+        mPresenter.getShareList(builder.build().parts(),LoadEnum.LOADMORE);
     }
 
     @Override
     public void onRefresh() {
+       refresh();
+    }
+
+    /**
+     * 刷新列表
+     */
+    public void refresh(){
         MultipartBody.Builder builder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                .addFormDataPart("page",String.valueOf(page))
                 .addFormDataPart("token", Constant.userData == null ? "0" :  Constant.userData.getToken());
         if (type != -1){
             builder.addFormDataPart("type",String.valueOf(type));
@@ -237,6 +262,10 @@ public class MyShareFragment extends BaseFragment<MySharePresenter> implements M
             builder.addFormDataPart("id",Constant.userData.getId());
         }else {
             ToastUtils.showSingleToast("请登陆后再进行操作");
+        }
+        if (listData.size() > 0){
+            builder.addFormDataPart("time_flag",listData.get(0).getTime_flag())
+                    .addFormDataPart("act","1");
         }
         mPresenter.getShareList(builder.build().parts(), LoadEnum.REFRESH);
     }

@@ -64,6 +64,7 @@ public class CommonDetailActivity extends BaseActivity<CommonDetailPresenter> im
     private CommentAdapter commentAdapter;
     private List<CommentData> commentDataList = new ArrayList<>();
     private boolean isAnimShowing = false;//动画是否在显示
+    private boolean isAnimShowingInput = false;//输入框动画是否在显示
     private PopupWindow mPopWindow;
 
     @Override
@@ -359,10 +360,10 @@ public class CommonDetailActivity extends BaseActivity<CommonDetailPresenter> im
      * @param isInput
      */
     public void setInput(final boolean isInput){
-        if (isAnimShowing){
+        if (isAnimShowingInput){
             return;
         }
-        isAnimShowing = true;
+        isAnimShowingInput = true;
         Animation animationBottom ;
         if (isInput){
             animationBottom = AnimationUtils.loadAnimation(this, R.anim.anim_view_enter_bottom);
@@ -384,7 +385,7 @@ public class CommonDetailActivity extends BaseActivity<CommonDetailPresenter> im
                     tv_dev_input.setVisibility(View.GONE);
                     ll_input.setVisibility(View.GONE);
                 }
-                isAnimShowing = false;
+                isAnimShowingInput = false;
             }
 
             @Override

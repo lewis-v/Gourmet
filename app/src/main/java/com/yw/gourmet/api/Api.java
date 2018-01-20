@@ -147,6 +147,10 @@ public class Api {
         return service.PutComment(parts);
     }
 
+    public Observable<BaseData<List<ShareListData<List<String>>>>> GetCommentMy(List<MultipartBody.Part> parts){
+        return service.GetCommentMy(parts);
+    }
+
     public Observable<BaseData<ShareListData<List<String>>>> GetCommonDetail(List<MultipartBody.Part> parts){
         return service.GetCommonDetail(parts);
     }
