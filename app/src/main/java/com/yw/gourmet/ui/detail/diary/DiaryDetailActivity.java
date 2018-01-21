@@ -300,7 +300,9 @@ public class DiaryDetailActivity extends BaseActivity<DiaryDetailPresenter> impl
                 }
                 break;
             case R.id.tv_collect:
-
+                new MyDialogMoreFragment()
+                        .setId(shareListData.getId()).setType(shareListData.getType()).setShare(false)
+                        .show(getSupportFragmentManager(),"collect");
                 break;
             case R.id.tv_share:
                 new MyDialogMoreFragment().setShowCollect(false).setType(shareListData.getType())

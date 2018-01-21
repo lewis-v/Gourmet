@@ -111,6 +111,15 @@ public class CollectionActivity extends BaseActivity<CollectionPresenter> implem
                                     if (listData.get(position).getId().equals(id) && listData.get(position).getType() == type){
                                         listData.remove(position);
                                         adapter.notifyItemRemoved(position);
+                                    }else{
+                                        for (int num = 0; num < listData.size();num++){
+                                            if (listData.get(num).getId().equals(id)
+                                                    && listData.get(num).getType() == type){
+                                                listData.remove(num);
+                                                adapter.notifyItemRemoved(num);
+                                                return;
+                                            }
+                                        }
                                     }
                                 }
                             }

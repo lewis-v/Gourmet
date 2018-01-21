@@ -1,5 +1,6 @@
 package com.yw.gourmet.ui.set;
 
+import android.content.Intent;
 import android.os.Environment;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -8,15 +9,17 @@ import android.widget.TextView;
 
 import com.yw.gourmet.R;
 import com.yw.gourmet.base.BaseActivity;
+import com.yw.gourmet.dialog.MyDialogTipFragment;
 import com.yw.gourmet.rxbus.EventSticky;
 import com.yw.gourmet.rxbus.RxBus;
+import com.yw.gourmet.ui.about.AboutActivity;
 import com.yw.gourmet.utils.SizeChangeUtils;
 import com.yw.gourmet.utils.ToastUtils;
 
 import java.io.File;
 
 public class SetActivity extends BaseActivity<SetPresenter> implements View.OnClickListener,SetContract.View{
-    private LinearLayout ll_back,ll_clear;
+    private LinearLayout ll_back,ll_clear,ll_about;
     private TextView tv_out;
     private final static String path = Environment.getExternalStorageDirectory().getPath() + "/data/gourmet/";//存储目录
 
@@ -28,10 +31,12 @@ public class SetActivity extends BaseActivity<SetPresenter> implements View.OnCl
         toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        ll_about = findViewById(R.id.ll_about);
         ll_back = (LinearLayout)findViewById(R.id.ll_back);
         ll_clear = (LinearLayout)findViewById(R.id.ll_clear);
         ll_clear.setOnClickListener(this);
         ll_back.setOnClickListener(this);
+        ll_about.setOnClickListener(this);
 
         tv_out = (TextView)findViewById(R.id.tv_out);
         tv_out.setOnClickListener(this);
@@ -57,11 +62,19 @@ public class SetActivity extends BaseActivity<SetPresenter> implements View.OnCl
                 finish();
                 break;
             case R.id.tv_out:
-                onReLoginFail("退出账号");
+                new MyDialogTipFragment().setShowText("是否退出当前账号").setOnEnterListener(new MyDialogTipFragment.OnEnterListener() {
+                    @Override
+                    public void OnEnter(String Tag) {
+                        onReLoginFail("退出账号");
+                    }
+                }).show(getSupportFragmentManager(),"out");
                 break;
             case R.id.ll_clear:
                 setLoadDialog(true);
                 mPresenter.clearFile(new File(path));
+                break;
+            case R.id.ll_about:
+                startActivity(new Intent(this, AboutActivity.class));
                 break;
         }
     }

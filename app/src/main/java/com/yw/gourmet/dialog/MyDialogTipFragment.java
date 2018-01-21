@@ -92,4 +92,14 @@ public class MyDialogTipFragment extends BaseDialogFragment implements View.OnCl
         this.showText = showText;
         return this;
     }
+
+    public MyDialogTipFragment setShowEnter(boolean showEnter) {
+        isShowEnter = showEnter;
+        return this;
+    }
+
+    public MyDialogTipFragment setShowCancel(boolean showCancel) {
+        isShowCancel = showCancel;
+        return this;
+    }
 }

@@ -303,7 +303,9 @@ public class RaidersDetailActivity extends BaseActivity<RaidersDetailPresenter> 
                 break;
 
             case R.id.tv_collect:
-
+                new MyDialogMoreFragment()
+                        .setId(data.getId()).setType(data.getType()).setShare(false)
+                        .show(getSupportFragmentManager(),"collect");
                 break;
             case R.id.tv_share:
                 new MyDialogMoreFragment().setShowCollect(false).setType(data.getType())

@@ -38,6 +38,7 @@ import com.yw.gourmet.base.BaseActivity;
 import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.data.CommentData;
 import com.yw.gourmet.data.ShareListData;
+import com.yw.gourmet.dialog.MyDialogMoreFragment;
 import com.yw.gourmet.dialog.MyDialogPhotoShowFragment;
 import com.yw.gourmet.listener.OnItemClickListener;
 import com.yw.gourmet.utils.ToastUtils;
@@ -347,7 +348,10 @@ public class CommonDetailActivity extends BaseActivity<CommonDetailPresenter> im
                 }
                 break;
             case R.id.tv_collect:
-
+                new MyDialogMoreFragment()
+                        .setId(listShareListData.getId()).setType(listShareListData.getType())
+                        .setShare(false)
+                        .show(getSupportFragmentManager(),"collect");
                 break;
             case R.id.tv_share:
 

@@ -126,7 +126,8 @@
         <activity android:name=".ui.detail.raiders.RaidersDetailActivity" />
         <activity android:name=".ui.myShare.MyShareActivity" />
         <activity android:name=".ui.commentMy.CommentMyActivity" />
-        <activity android:name=".ui.collection.CollectionActivity"></activity>
+        <activity android:name=".ui.collection.CollectionActivity" />
+        <activity android:name=".ui.about.AboutActivity"></activity>
     </application>
 
 </manifest>

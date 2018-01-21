@@ -25,7 +25,10 @@
                 android:layout_height="wrap_content" />
         </LinearLayout>
     </android.support.v7.widget.Toolbar>
-
+    <TextView
+        android:background="@mipmap/dev"
+        android:layout_width="match_parent"
+        android:layout_height="1dp" />
     <com.aspsine.swipetoloadlayout.SwipeToLoadLayout
         android:id="@+id/swipeToLoadLayout"
         android:layout_width="match_parent"
