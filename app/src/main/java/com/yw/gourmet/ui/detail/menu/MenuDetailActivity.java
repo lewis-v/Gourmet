@@ -4,8 +4,6 @@ import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.widget.NestedScrollView;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -41,14 +39,12 @@ import com.yw.gourmet.data.MenuPracticeData;
 import com.yw.gourmet.data.ShareListData;
 import com.yw.gourmet.dialog.MyDialogMoreFragment;
 import com.yw.gourmet.dialog.MyDialogPhotoShowFragment;
-import com.yw.gourmet.listener.OnItemClickListener;
 import com.yw.gourmet.utils.ToastUtils;
 import com.yw.gourmet.utils.WindowUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import jp.wasabeef.richeditor.RichEditor;
 import okhttp3.MultipartBody;
 
 import static com.yw.gourmet.ui.share.menu.MenuActivity.levelText;
@@ -267,7 +263,7 @@ public class MenuDetailActivity extends BaseActivity<MenuDetailPresenter> implem
 
                 break;
             case R.id.tv_share:
-                new MyDialogMoreFragment().setCollect(false).setType(shareListData.getType())
+                new MyDialogMoreFragment().setShowCollect(false).setType(shareListData.getType())
                         .setId(shareListData.getId())
                         .setShareTitle(shareListData.getTitle()).setShareCoverUrl(shareListData.getCover())
                         .setShareDescription(shareListData.getContent()).setShareUrl(Api.API_BASE_URL + "/Share/Other?id="

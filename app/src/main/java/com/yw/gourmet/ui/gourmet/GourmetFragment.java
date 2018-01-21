@@ -95,12 +95,7 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
             @Override
             public void OnMoreClick(View view, int position) {
                 MyDialogMoreFragment myDialogMoreFragment = new MyDialogMoreFragment()
-                        .setId(listData.get(position).getId())
-                        .setOnCollectionListener(new MyDialogMoreFragment.OnCollectionListener() {
-                            @Override
-                            public void OnCollection(String id,int type, String tag) {
-                            }
-                        });
+                        .setId(listData.get(position).getId());
                 switch (listData.get(position).getType()) {
                     case Constant.TypeFlag.SHARE://普通分享
                         myDialogMoreFragment.setShare(false).setType(listData.get(position).getType())
@@ -202,15 +197,12 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
     @Override
     public void onLoadSuccess(BaseData<List<ShareListData<List<String>>>> model, LoadEnum flag) {
         if (flag == LoadEnum.REFRESH) {
-//            listData.clear();
-//            listData.addAll(model.getData());
             if ((model.getData() == null || model.getData().size() == 0) && listData.size()>0){
                 ToastUtils.showSingleToast("已经是最新的啦");
             }else {
-                for (int len = model.getData().size()-1;len >=0;len--){
-                    listData.add(0,model.getData().get(len));
-                    adapter.notifyItemInserted(0);
-                }
+                listData.clear();
+                listData.addAll(model.getData());
+                adapter.notifyDataSetChanged();
             }
             swipeToLoadLayout.setRefreshing(false);
             if (listData.size()>0) {
@@ -220,7 +212,7 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
             if (model.getData() == null || model.getData().size() == 0){
                 ToastUtils.showSingleToast("没有更多啦");
             }else {
-                for (int i = 0,len = model.getData().size()-1;i<len;i++){
+                for (int i = 0,len = model.getData().size();i<len;i++){
                     listData.add(model.getData().get(i));
                     adapter.notifyItemChanged(listData.size() -1);
                     if (listData.size()>=2){
@@ -269,10 +261,6 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
         MultipartBody.Builder builder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("token", Constant.userData == null?"0":Constant.userData.getToken());
-        if (listData.size() > 0){
-            builder.addFormDataPart("time_flag",listData.get(0).getTime_flag())
-                    .addFormDataPart("act","1");
-        }
         if (Constant.userData != null){
             builder.addFormDataPart("user_id",Constant.userData.getId());
         }

@@ -34,7 +34,7 @@ import rx.Observable;
  */
 
 public class Api {
-    public final static String API_BASE_URL = "http://192.168.1.109:47423";//这里是服务器连接的接口的固定部分 39.108.236.30
+    public final static String API_BASE_URL = "http://192.168.1.103:47423";//这里是服务器连接的接口的固定部分 39.108.236.30
     public static Api instance;//单例
     private ApiService service;//声明apiservier,下面要通过这个调用与服务器交互的方法
     private OkHttpClient okHttpClient;

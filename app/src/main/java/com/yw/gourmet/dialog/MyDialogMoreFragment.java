@@ -31,7 +31,7 @@ import okhttp3.MultipartBody;
 
 public class MyDialogMoreFragment extends BaseDialogFragment<MyDIalogPresenter>
         implements MyDialogContract.View,View.OnClickListener{
-    private TextView tv_cancel,share_text;
+    private TextView tv_cancel,share_text,tv_collect;
     private LinearLayout ll_collection,ll_share_people,ll_share_friend;
     private OnCancelClickListener onCancelClickListener;
     private OnCollectionListener onCollectionListener;
@@ -42,12 +42,15 @@ public class MyDialogMoreFragment extends BaseDialogFragment<MyDIalogPresenter>
     private String id;//操作的id
     private int type;//类型
     private boolean isShare = true;//是否显示分享
-    private boolean isCollect = true;//是否显示收藏
+    private boolean isShowCollect = true;//是否显示收藏
+    private boolean isCollected = false;//是否已经收藏,默认无
+    private int position = 0;//操作信息的位置
 
     @Override
     protected void initView() {
         share_text = view.findViewById(R.id.share_text);
         tv_cancel = view.findViewById(R.id.tv_cancel);
+        tv_collect = view.findViewById(R.id.tv_collect);
         tv_cancel.setOnClickListener(this);
 
         ll_collection = view.findViewById(R.id.ll_collection);
@@ -58,13 +61,18 @@ public class MyDialogMoreFragment extends BaseDialogFragment<MyDIalogPresenter>
         ll_share_friend.setOnClickListener(this);
         ll_share_people.setOnClickListener(this);
 
-        if (!isCollect){
+        if (!isShowCollect){
             ll_collection.setVisibility(View.GONE);
         }
         if (!isShare){
             ll_share_people.setVisibility(View.GONE);
             ll_share_friend.setVisibility(View.GONE);
             share_text.setVisibility(View.GONE);
+        }
+        if (isCollected){
+            tv_collect.setText("取消收藏");
+        }else {
+            tv_collect.setText("收藏");
         }
     }
 
@@ -89,15 +97,11 @@ public class MyDialogMoreFragment extends BaseDialogFragment<MyDIalogPresenter>
                 }
                 MultipartBody.Builder builder = new MultipartBody.Builder()
                         .setType(MultipartBody.FORM)
-                        .addFormDataPart("act","1")
+                        .addFormDataPart("act",isCollected?"-1":"1")
                         .addFormDataPart("act_id",id)
                         .addFormDataPart("type",String.valueOf(type))
                         .addFormDataPart("id",Constant.userData.getId());
                 mPresenter.collection(builder.build().parts());
-                if (onCollectionListener != null) {
-                    onCollectionListener.OnCollection(id,type, getTag());
-                }
-                dismiss();
                 break;
             case R.id.ll_share_people://分享微信好友
                 ((BaseActivity)getActivity()).setLoadDialog(true);
@@ -155,11 +159,19 @@ public class MyDialogMoreFragment extends BaseDialogFragment<MyDIalogPresenter>
     @Override
     public void onFail(String msg) {
         ToastUtils.showSingleToast(msg);
+        if (onCollectionListener != null) {
+            onCollectionListener.OnCollection(null,type,position, getTag());
+        }
+        dismiss();
     }
 
     @Override
     public void onSuccess(String msg) {
         ToastUtils.showSingleToast(msg);
+        if (onCollectionListener != null) {
+            onCollectionListener.OnCollection(id,type,position, getTag());
+        }
+        dismiss();
     }
 
     @Override
@@ -173,7 +185,7 @@ public class MyDialogMoreFragment extends BaseDialogFragment<MyDIalogPresenter>
     }
 
     public interface OnCollectionListener{
-        void OnCollection(String id,int type,String tag);
+        void OnCollection(String id,int type,int position,String tag);
     }
 
     public MyDialogMoreFragment setOnCancelClickListener(OnCancelClickListener onCancelClickListener) {
@@ -216,13 +228,23 @@ public class MyDialogMoreFragment extends BaseDialogFragment<MyDIalogPresenter>
         return this;
     }
 
-    public MyDialogMoreFragment setCollect(boolean collect) {
-        isCollect = collect;
+    public MyDialogMoreFragment setShowCollect(boolean showCollect) {
+        isShowCollect = showCollect;
         return this;
     }
 
     public MyDialogMoreFragment setType(int type) {
         this.type = type;
+        return this;
+    }
+
+    public MyDialogMoreFragment setCollected(boolean collected) {
+        isCollected = collected;
+        return this;
+    }
+
+    public MyDialogMoreFragment setPosition(int position) {
+        this.position = position;
         return this;
     }
 }

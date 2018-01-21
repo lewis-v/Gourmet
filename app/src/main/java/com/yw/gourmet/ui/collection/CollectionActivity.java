@@ -5,6 +5,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.aspsine.swipetoloadlayout.OnLoadMoreListener;
 import com.aspsine.swipetoloadlayout.OnRefreshListener;
@@ -36,6 +37,7 @@ public class CollectionActivity extends BaseActivity<CollectionPresenter> implem
         ,OnRefreshListener,OnLoadMoreListener {
     private RecyclerView swipe_target;
     private SwipeToLoadLayout swipeToLoadLayout;
+    private LinearLayout ll_back;
     private List<ShareListData<List<String>>> listData = new ArrayList<>();
     private ShareListAdapter adapter;
     private int type = Constant.CommentType.COMMENT;//显示类型,0,全部,1评论,2赞,3踩
@@ -47,6 +49,14 @@ public class CollectionActivity extends BaseActivity<CollectionPresenter> implem
 
     @Override
     protected void initView() {
+        ll_back = findViewById(R.id.ll_back);
+        ll_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
         swipeToLoadLayout = (SwipeToLoadLayout)findViewById(R.id.swipeToLoadLayout);
         swipe_target = (RecyclerView)findViewById(R.id.swipe_target);
         swipe_target.setLayoutManager(new LinearLayoutManager(this));
@@ -90,7 +100,21 @@ public class CollectionActivity extends BaseActivity<CollectionPresenter> implem
             @Override
             public void OnMoreClick(View view, int position) {
                 MyDialogMoreFragment myDialogMoreFragment = new MyDialogMoreFragment()
-                        .setId(listData.get(position).getId());
+                        .setCollected(listData.get(position).getIs_collection() != null
+                                &&  listData.get(position).getIs_collection().length() > 0)
+                        .setId(listData.get(position).getId())
+                        .setPosition(position)
+                        .setOnCollectionListener(new MyDialogMoreFragment.OnCollectionListener() {
+                            @Override
+                            public void OnCollection(String id, int type, int position, String tag) {
+                                if (id != null){
+                                    if (listData.get(position).getId().equals(id) && listData.get(position).getType() == type){
+                                        listData.remove(position);
+                                        adapter.notifyItemRemoved(position);
+                                    }
+                                }
+                            }
+                        });
                 switch (listData.get(position).getType()) {
                     case Constant.TypeFlag.SHARE://普通分享
                         myDialogMoreFragment.setShare(false).setType(listData.get(position).getType())
@@ -173,15 +197,12 @@ public class CollectionActivity extends BaseActivity<CollectionPresenter> implem
     @Override
     public void onGetCollectionSuccess(BaseData<List<ShareListData<List<String>>>> model, LoadEnum flag) {
         if (flag == LoadEnum.REFRESH) {
-//            listData.clear();
-//            listData.addAll(model.getData());
             if ((model.getData() == null || model.getData().size() == 0) && listData.size()>0){
                 ToastUtils.showSingleToast("已经是最新的啦");
             }else {
-                for (int len = model.getData().size()-1;len >=0;len--){
-                    listData.add(0,model.getData().get(len));
-                    adapter.notifyItemInserted(0);
-                }
+                listData.clear();
+                listData.addAll(model.getData());
+                adapter.notifyDataSetChanged();
             }
             swipeToLoadLayout.setRefreshing(false);
             if (listData.size()>0) {
@@ -256,9 +277,8 @@ public class CollectionActivity extends BaseActivity<CollectionPresenter> implem
         }else {
             ToastUtils.showSingleToast("请登陆后再进行操作");
         }
-        if (listData.size() > 0){
-            builder.addFormDataPart("time_flag",listData.get(0).getTime_flag())
-                    .addFormDataPart("act","1");
+        if (Constant.userData != null){
+            builder.addFormDataPart("user_id",Constant.userData.getId());
         }
         mPresenter.getCollection(builder.build().parts(), LoadEnum.REFRESH);
     }

@@ -178,15 +178,12 @@ public class CommentMyFragment extends BaseFragment<CommentMyPresenter> implemen
     @Override
     public void onGetListSuccess(BaseData<List<ShareListData<List<String>>>> model, LoadEnum flag) {
         if (flag == LoadEnum.REFRESH) {
-//            listData.clear();
-//            listData.addAll(model.getData());
             if ((model.getData() == null || model.getData().size() == 0) && listData.size()>0){
                 ToastUtils.showSingleToast("已经是最新的啦");
             }else {
-                for (int len = model.getData().size()-1;len >=0;len--){
-                    listData.add(0,model.getData().get(len));
-                    adapter.notifyItemInserted(0);
-                }
+                listData.clear();
+                listData.addAll(model.getData());
+                adapter.notifyDataSetChanged();
             }
             swipeToLoadLayout.setRefreshing(false);
             if (listData.size()>0) {
@@ -258,12 +255,9 @@ public class CommentMyFragment extends BaseFragment<CommentMyPresenter> implemen
         builder.addFormDataPart("type",String.valueOf(type));
         if (Constant.userData != null){
             builder.addFormDataPart("id",Constant.userData.getId());
+            builder.addFormDataPart("user_id",Constant.userData.getId());
         }else {
             ToastUtils.showSingleToast("请登陆后再进行操作");
-        }
-        if (listData.size() > 0){
-            builder.addFormDataPart("time_flag",listData.get(0).getTime_flag())
-                    .addFormDataPart("act","1");
         }
         mPresenter.getShareList(builder.build().parts(), LoadEnum.REFRESH);
     }

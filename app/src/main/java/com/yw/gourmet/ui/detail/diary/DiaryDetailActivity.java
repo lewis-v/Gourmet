@@ -2,14 +2,10 @@ package com.yw.gourmet.ui.detail.diary;
 
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.widget.NestedScrollView;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,14 +25,12 @@ import android.widget.TextView;
 import com.yw.gourmet.Constant;
 import com.yw.gourmet.R;
 import com.yw.gourmet.adapter.CommentAdapter;
-import com.yw.gourmet.adapter.ImgAddAdapter;
 import com.yw.gourmet.api.Api;
 import com.yw.gourmet.base.BaseActivity;
 import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.data.CommentData;
 import com.yw.gourmet.data.ShareListData;
 import com.yw.gourmet.dialog.MyDialogMoreFragment;
-import com.yw.gourmet.dialog.MyDialogPhotoShowFragment;
 import com.yw.gourmet.utils.ToastUtils;
 import com.yw.gourmet.utils.WindowUtil;
 
@@ -309,7 +303,7 @@ public class DiaryDetailActivity extends BaseActivity<DiaryDetailPresenter> impl
 
                 break;
             case R.id.tv_share:
-                new MyDialogMoreFragment().setCollect(false).setType(shareListData.getType())
+                new MyDialogMoreFragment().setShowCollect(false).setType(shareListData.getType())
                         .setShareTitle(shareListData.getTitle()).setShareCoverUrl(shareListData.getCover())
                         .setShareDescription(shareListData.getContent()).setShareUrl(Api.API_BASE_URL + "/Share/Other?id="
                         + shareListData.getId() + "&type=" + shareListData.getType())

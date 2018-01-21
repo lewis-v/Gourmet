@@ -107,7 +107,13 @@ public class ShareListAdapter extends RecyclerView.Adapter<ShareListAdapter.MyVi
             }else if (goodAct.equals("1")){//点赞了
                 holder.img_bad.setImageResource(R.drawable.bad);
                 holder.img_good.setImageResource(R.drawable.good_ic);
+            }else  {
+                holder.img_bad.setImageResource(R.drawable.bad);
+                holder.img_good.setImageResource(R.drawable.good);
             }
+        }else  {
+            holder.img_bad.setImageResource(R.drawable.bad);
+            holder.img_good.setImageResource(R.drawable.good);
         }
         String is_comment = listData.get(position).getIs_comment();
         if (is_comment != null && is_comment.length()>0){//评论了

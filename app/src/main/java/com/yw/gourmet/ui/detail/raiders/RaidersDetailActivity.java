@@ -35,9 +35,7 @@ import com.yw.gourmet.data.RaidersDetailData;
 import com.yw.gourmet.data.RaidersListData;
 import com.yw.gourmet.data.ShareListData;
 import com.yw.gourmet.dialog.MyDialogMoreFragment;
-import com.yw.gourmet.dialog.MyDialogPhotoShowFragment;
 import com.yw.gourmet.dialog.MyDialogRaidersListFragment;
-import com.yw.gourmet.listener.OnDeleteListener;
 import com.yw.gourmet.listener.OnItemClickListener;
 import com.yw.gourmet.utils.ToastUtils;
 import com.yw.gourmet.utils.WindowUtil;
@@ -308,7 +306,7 @@ public class RaidersDetailActivity extends BaseActivity<RaidersDetailPresenter> 
 
                 break;
             case R.id.tv_share:
-                new MyDialogMoreFragment().setCollect(false).setType(data.getType())
+                new MyDialogMoreFragment().setShowCollect(false).setType(data.getType())
                         .setId(data.getId())
                         .setShareTitle(data.getTitle()).setShareCoverUrl(data.getCover())
                         .setShareDescription(data.getRaiders_content().toString()).setShareUrl(Api.API_BASE_URL + "/Share/Other?id="
