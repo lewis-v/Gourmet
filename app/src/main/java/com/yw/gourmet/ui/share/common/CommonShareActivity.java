@@ -41,7 +41,7 @@ import okhttp3.RequestBody;
 
 public class CommonShareActivity extends BaseActivity<CommonSharePresenter> implements CommonShareContract.View
         ,View.OnClickListener,OnChooseLister{
-    private TextView tv_cancel,tv_send,tv_count;
+    private TextView tv_cancel,tv_send,tv_count,tv_type;
     private EditText et_content;
     private RecyclerView recycler_share;
     private ImgAddAdapter addAdapter;
@@ -65,6 +65,8 @@ public class CommonShareActivity extends BaseActivity<CommonSharePresenter> impl
         tv_cancel = (TextView)findViewById(R.id.tv_cancel);
         tv_send = (TextView)findViewById(R.id.tv_send);
         tv_count = (TextView)findViewById(R.id.tv_count);
+        tv_type = findViewById(R.id.tv_type);
+        tv_type.setOnClickListener(this);
         tv_cancel.setOnClickListener(this);
         tv_send.setOnClickListener(this);
 
@@ -187,6 +189,15 @@ public class CommonShareActivity extends BaseActivity<CommonSharePresenter> impl
                             });
                         }
                     }).show(getSupportFragmentManager(),"share");
+                }
+                break;
+            case R.id.tv_type:
+                if (status == 1){
+                    status = 0;
+                    tv_type.setText("私有");
+                }else {
+                    status = 1;
+                    tv_type.setText("公开");
                 }
                 break;
         }

@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'org.greenrobot.greendao'
 
 android {
     signingConfigs {
@@ -39,6 +40,11 @@ android {
         main {
             jniLibs.srcDir 'libs'
         }
+    }
+    greendao {
+        schemaVersion 1
+        daoPackage 'com.anye.greendao.gen'
+        targetGenDir 'src/main/java/dao/gen'
     }
 }
 
@@ -87,4 +93,6 @@ dependencies {
     compile 'jp.wasabeef:richeditor-android:1.2.2'
     //微信SDK
     compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
+    //greenDao数据库
+    compile 'org.greenrobot:greendao:3.2.2'
 }
