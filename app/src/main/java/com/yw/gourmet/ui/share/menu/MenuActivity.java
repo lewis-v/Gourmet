@@ -58,7 +58,7 @@ public class MenuActivity extends BaseActivity<MenuPresenter> implements View.On
     private List<String> listIngredient = new ArrayList<>();//用料列表
     private List<MenuPracticeData<List<String>>> listPractice = new ArrayList<>();//步骤列表
     private List<ImageView> difficultList = new ArrayList<>();//难度条
-    private int difficultLevel = 1;//困难等级,默认为1
+    private int difficultLevel = 0;//困难等级,默认为0
     private String coverPath;//封面地址
     private long create_time;//创建时间
     private SaveData saveData;//本地数据库中的数据
@@ -218,9 +218,17 @@ public class MenuActivity extends BaseActivity<MenuPresenter> implements View.On
                 case "new"://打开新的
                     data = SaveDataUtil
                             .querydataById(SaveDataDao.Properties.Type.eq(Constant.TypeFlag.MENU)
-                            ,SaveDataDao.Properties.User_id.eq(Constant.userData.getId()));
-                    if (data != null && data.size()>0){
+                                    ,SaveDataDao.Properties.User_id.eq(Constant.userData.getId()));
+                    if (data != null && data.size()>0) {
                         saveData = data.get(0);
+                        new MyDialogTipFragment().setTextEnter("是").setTextCancel("否")
+                                .setShowText("草稿箱中存在未完成食谱,是否继续上次的编辑?")
+                                .setOnEnterListener(new MyDialogTipFragment.OnEnterListener() {
+                                    @Override
+                                    public void OnEnter(String Tag) {
+                                        initSaveData(saveData);
+                                    }
+                                }).show(getSupportFragmentManager(), "tip");
                     }
                     break;
                 case "change"://更改之前的
@@ -231,37 +239,46 @@ public class MenuActivity extends BaseActivity<MenuPresenter> implements View.On
                     if (data != null && data.size()>0){
                         saveData = data.get(0);
                     }
+                    initSaveData(saveData);
                     break;
             }
-            if (saveData != null){
-                et_title.setText(saveData.getTitle());
-                status = saveData.getStatus();
-                if (status == 1){
-                    tv_power.setText("公开");
-                }else if (status == 0){
-                    tv_power.setText("私有");
-                }
-                GlideApp.with(this).load(saveData.getCover()).into(img_cover);
-                difficultLevel = saveData.getDifficult_level();
-                setDifficultLevel(difficultLevel);
-                String play = saveData.getPlay_time();
-                if (play != null && play.length() > 0) {
-                    String[] playTime = play.split("&&");
-                    if (playTime.length == 2) {
-                        et_time_hour.setText(playTime[0]);
-                        et_time_min.setText(playTime[1]);
-                    }
-                }
-                et_introduction.setText(saveData.getIntroduction());
-                et_tip.setText(saveData.getTip());
-                listIngredient.clear();
-                listIngredient.addAll(saveData.getIngredient());
-                Log.e("---ingre---",saveData.getIngredient().toString());
-                adapterIngredient.notifyDataSetChanged();
-                listPractice.clear();
-                listPractice.addAll(saveData.getPractice());
-                adapterPractice.notifyDataSetChanged();
+
+        }
+    }
+
+    /**
+     * 配置已存储的数据
+     * @param saveData
+     */
+    public void initSaveData(SaveData saveData){
+        if (saveData != null){
+            et_title.setText(saveData.getTitle());
+            status = saveData.getStatus();
+            if (status == 1){
+                tv_power.setText("公开");
+            }else if (status == 0){
+                tv_power.setText("私有");
             }
+            GlideApp.with(this).load(saveData.getCover()).into(img_cover);
+            difficultLevel = saveData.getDifficult_level();
+            setDifficultLevel(difficultLevel);
+            String play = saveData.getPlay_time();
+            if (play != null && play.length() > 0) {
+                String[] playTime = play.split("&&");
+                if (playTime.length == 2) {
+                    et_time_hour.setText(playTime[0]);
+                    et_time_min.setText(playTime[1]);
+                }
+            }
+            et_introduction.setText(saveData.getIntroduction());
+            et_tip.setText(saveData.getTip());
+            listIngredient.clear();
+            listIngredient.addAll(saveData.getIngredient());
+            Log.e("---ingre---",saveData.getIngredient().toString());
+            adapterIngredient.notifyDataSetChanged();
+            listPractice.clear();
+            listPractice.addAll(saveData.getPractice());
+            adapterPractice.notifyDataSetChanged();
         }
     }
 
@@ -380,6 +397,11 @@ public class MenuActivity extends BaseActivity<MenuPresenter> implements View.On
     @Override
     public void onPutMenuSuccess(BaseData model) {
         super.onSuccess(model.getMessage());
+        try {
+            if (saveData != null) {
+                SaveDataUtil.delete(saveData.get_id());
+            }
+        }catch (Exception e){}
         finish();
     }
 
@@ -467,7 +489,7 @@ public class MenuActivity extends BaseActivity<MenuPresenter> implements View.On
             return true;
         }else if (listPractice != null && listPractice.size()>0){
             return true;
-        }else if (et_tip.getText().toString().trim().isEmpty()){
+        }else if (!et_tip.getText().toString().trim().isEmpty()){
             return true;
         }
         return false;
@@ -502,11 +524,9 @@ public class MenuActivity extends BaseActivity<MenuPresenter> implements View.On
                             if (MenuActivity.this.saveData == null) {
                                 saveData.set_id(System.currentTimeMillis());
                                 SaveDataUtil.insert(saveData);
-                                Log.e("---getinsert---",SaveDataUtil.querydataBy().toString());
                             }else {
                                 saveData.set_id(MenuActivity.this.saveData.get_id());
                                 SaveDataUtil.updata(saveData);
-                                Log.e("---getupdata---",SaveDataUtil.querydataBy().toString());
                             }
                             finish();
                         }

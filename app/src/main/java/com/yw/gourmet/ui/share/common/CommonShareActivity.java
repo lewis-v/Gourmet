@@ -14,13 +14,18 @@ import com.yw.gourmet.Constant;
 import com.yw.gourmet.R;
 import com.yw.gourmet.adapter.ImgAddAdapter;
 import com.yw.gourmet.base.BaseActivity;
+import com.yw.gourmet.dao.data.SaveData;
+import com.yw.gourmet.dao.data.SaveDataUtil;
+import com.yw.gourmet.dao.gen.SaveDataDao;
 import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.dialog.MyDialogPhotoChooseFragment;
 import com.yw.gourmet.dialog.MyDialogPhotoChooseFragment.OnChooseLister;
 import com.yw.gourmet.dialog.MyDialogTipFragment;
 import com.yw.gourmet.listener.OnAddListener;
+import com.yw.gourmet.listener.OnCancelClickListener;
 import com.yw.gourmet.listener.OnDeleteListener;
 import com.yw.gourmet.listener.OnItemClickListener;
+import com.yw.gourmet.ui.share.menu.MenuActivity;
 import com.yw.gourmet.utils.ThreadUtils;
 import com.yw.gourmet.utils.ToastUtils;
 
@@ -41,7 +46,7 @@ import okhttp3.RequestBody;
 
 public class CommonShareActivity extends BaseActivity<CommonSharePresenter> implements CommonShareContract.View
         ,View.OnClickListener,OnChooseLister{
-    private TextView tv_cancel,tv_send,tv_count,tv_type;
+    private TextView tv_cancel,tv_send,tv_count,tv_type,tv_address;
     private EditText et_content;
     private RecyclerView recycler_share;
     private ImgAddAdapter addAdapter;
@@ -56,16 +61,20 @@ public class CommonShareActivity extends BaseActivity<CommonSharePresenter> impl
     private ExecutorService executorService,executorServiceCompress;
     private List<Future<Integer>> future = new ArrayList<>();
     private int status = 1;//权限,1为公开,0为私有,默认公开
+    private SaveData saveData,saveDataCache;
+    private double lat,lng;//地点坐标
 
     @Override
     protected void initView() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        tv_address = findViewById(R.id.tv_address);
         tv_cancel = (TextView)findViewById(R.id.tv_cancel);
         tv_send = (TextView)findViewById(R.id.tv_send);
         tv_count = (TextView)findViewById(R.id.tv_count);
         tv_type = findViewById(R.id.tv_type);
+        tv_address.setOnClickListener(this);
         tv_type.setOnClickListener(this);
         tv_cancel.setOnClickListener(this);
         tv_send.setOnClickListener(this);
@@ -120,20 +129,73 @@ public class CommonShareActivity extends BaseActivity<CommonSharePresenter> impl
 
         String type = getIntent().getStringExtra("type");
         if (type != null){
-            if (type.equals("photo")){//照片选择
-                recycler_share.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        new MyDialogPhotoChooseFragment().setType(MyDialogPhotoChooseFragment.PHOTO)
-                                .setChooseNum(maxSize - imgs.size()+1)
-                                .setOnPhotoChooseListener(CommonShareActivity.this).show(getSupportFragmentManager(),"");
+            List<SaveData> data = null;
+            switch (type){
+                case "photo"://照片选择
+                    recycler_share.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            new MyDialogPhotoChooseFragment().setType(MyDialogPhotoChooseFragment.PHOTO)
+                                    .setChooseNum(maxSize - imgs.size()+1)
+                                    .setOnPhotoChooseListener(CommonShareActivity.this).show(getSupportFragmentManager(),"");
+                        }
+                    });
+                    break;
+                case "take_photo"://拍照
+                    new MyDialogPhotoChooseFragment().setType(MyDialogPhotoChooseFragment.TAKE_PHOTO)
+                            .setChooseNum(maxSize - imgs.size()+1)
+                            .setOnPhotoChooseListener(CommonShareActivity.this).show(getSupportFragmentManager(),"");
+                    break;
+                case "new":
+                    data = SaveDataUtil
+                            .querydataById(SaveDataDao.Properties.Type.eq(Constant.TypeFlag.SHARE)
+                                    ,SaveDataDao.Properties.User_id.eq(Constant.userData.getId()));
+                    if (data != null && data.size()>0) {
+                        saveDataCache = data.get(0);
+                        new MyDialogTipFragment().setTextEnter("是").setTextCancel("否")
+                                .setShowText("草稿箱中存在未完成分享,是否继续上次的编辑?")
+                                .setOnEnterListener(new MyDialogTipFragment.OnEnterListener() {
+                                    @Override
+                                    public void OnEnter(String Tag) {
+                                        saveData = saveDataCache;
+                                        initSaveData(saveDataCache);
+                                        saveDataCache = null;
+                                    }
+                                }).show(getSupportFragmentManager(), "tip");
                     }
-                });
-            }else if (type.equals("take_photo")){//拍照
-                new MyDialogPhotoChooseFragment().setType(MyDialogPhotoChooseFragment.TAKE_PHOTO)
-                        .setChooseNum(maxSize - imgs.size()+1)
-                        .setOnPhotoChooseListener(CommonShareActivity.this).show(getSupportFragmentManager(),"");
+                    break;
+                case "change":
+                    data = SaveDataUtil
+                            .querydataById(SaveDataDao.Properties.Type.eq(Constant.TypeFlag.SHARE)
+                                    ,SaveDataDao.Properties.User_id.eq(Constant.userData.getId()));
+                    if (data != null && data.size()>0) {
+                        saveData = data.get(0);
+                        initSaveData(saveData);
+                    }
+                    break;
             }
+        }
+    }
+
+    /**
+     * 配置存储的数据
+     */
+    public void initSaveData(SaveData saveData){
+        if (saveData != null) {
+            et_content.setText(saveData.getContent());
+            status = saveData.getStatus();
+            if (status == 1){
+                tv_type.setText("公开");
+            }else if (status == 0){
+                tv_type.setText("私有");
+            }
+            tv_address.setText(saveData.getAddress());
+            lat = saveData.getLat();
+            lng = saveData.getLng();
+            imgs.clear();
+
+            imgs.addAll(saveData.getImg());
+            addAdapter.notifyDataSetChanged();
         }
     }
 
@@ -143,10 +205,15 @@ public class CommonShareActivity extends BaseActivity<CommonSharePresenter> impl
     }
 
     @Override
+    public void onBackPressed() {
+        back();
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.tv_cancel:
-                finish();
+                back();
                 break;
             case R.id.tv_send:
                 if (et_content.getText().toString().trim().length() == 0 && imgs.size() == 0){
@@ -154,41 +221,41 @@ public class CommonShareActivity extends BaseActivity<CommonSharePresenter> impl
                 }else {
                     new MyDialogTipFragment().setShowText("是否分享")
                             .setOnEnterListener(new MyDialogTipFragment.OnEnterListener() {
-                        @Override
-                        public void OnEnter(String Tag) {
-                            setLoadDialog(true);
-                            for (int i = 0,len = imgs.size();i < len;i++) {
-                                setUpImg(imgs.get(i), upPosition++);
-                            }
-                            if (executorService == null){
-                                executorService = ThreadUtils.newCachedThreadPool();
-                            }
-                            executorService.submit(new Runnable() {
                                 @Override
-                                public void run() {
-                                    while (upImg.size() != imgs.size()){
-                                        try {
-                                            Thread.sleep(100);
-                                        } catch (InterruptedException e) {
-                                            return;
+                                public void OnEnter(String Tag) {
+                                    setLoadDialog(true);
+                                    for (int i = 0,len = imgs.size();i < len;i++) {
+                                        setUpImg(imgs.get(i), upPosition++);
+                                    }
+                                    if (executorService == null){
+                                        executorService = ThreadUtils.newCachedThreadPool();
+                                    }
+                                    executorService.submit(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            while (upImg.size() != imgs.size()){
+                                                try {
+                                                    Thread.sleep(100);
+                                                } catch (InterruptedException e) {
+                                                    return;
+                                                }
+                                            }
+                                            MultipartBody.Builder builder = new MultipartBody.Builder()
+                                                    .addFormDataPart("id",Constant.userData.getId())
+                                                    .addFormDataPart("status",String.valueOf(status));
+                                            if (et_content.getText().toString().trim().length() != 0){
+                                                builder.addFormDataPart("content",et_content.getText().toString());
+                                            }
+                                            if (upImg.size() > 0){
+                                                builder.addFormDataPart("img",new JSONArray(upImg).toString());
+                                            }else {
+                                                builder.addFormDataPart("img","[]");
+                                            }
+                                            mPresenter.shareCommon(builder.build().parts());
                                         }
-                                    }
-                                    MultipartBody.Builder builder = new MultipartBody.Builder()
-                                            .addFormDataPart("id",Constant.userData.getId())
-                                            .addFormDataPart("status",String.valueOf(status));
-                                    if (et_content.getText().toString().trim().length() != 0){
-                                        builder.addFormDataPart("content",et_content.getText().toString());
-                                    }
-                                    if (upImg.size() > 0){
-                                        builder.addFormDataPart("img",new JSONArray(upImg).toString());
-                                    }else {
-                                        builder.addFormDataPart("img","[]");
-                                    }
-                                    mPresenter.shareCommon(builder.build().parts());
+                                    });
                                 }
-                            });
-                        }
-                    }).show(getSupportFragmentManager(),"share");
+                            }).show(getSupportFragmentManager(),"share");
                 }
                 break;
             case R.id.tv_type:
@@ -290,6 +357,11 @@ public class CommonShareActivity extends BaseActivity<CommonSharePresenter> impl
     public void onShareSuccess(BaseData model) {
         super.onSuccess(model.getMessage());
         setLoadDialog(false);
+        try {
+            if (saveData != null) {
+                SaveDataUtil.delete(saveData.get_id());
+            }
+        }catch (Exception e){}
         finish();
     }
 
@@ -312,5 +384,60 @@ public class CommonShareActivity extends BaseActivity<CommonSharePresenter> impl
             executorServiceCompress.shutdownNow();
         }
         super.onDestroy();
+    }
+
+    /**
+     * 判断是否需要存储
+     * @return
+     */
+    public boolean isNeedSave(){
+        if (!et_content.getText().toString().trim().isEmpty()){
+            return true;
+        }else if (imgs != null && imgs.size()>0){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 退出操作
+     */
+    public void back(){
+        if (isNeedSave()){
+            new MyDialogTipFragment().setShowText("是否将此次编辑内容保存到草稿箱?")
+                    .setTextCancel("否")
+                    .setTextEnter("是")
+                    .setOnCancelClickListener(new OnCancelClickListener() {
+                        @Override
+                        public void OnCancel(String tag) {
+                            finish();
+                        }
+                    })
+                    .setOnEnterListener(new MyDialogTipFragment.OnEnterListener() {
+                        @Override
+                        public void OnEnter(String Tag) {
+                            SaveData saveData = new SaveData();
+                            saveData.setUser_id(Constant.userData.getId())
+                                    .setChange_time(System.currentTimeMillis())
+                                    .setContent(et_content.getText().toString())
+                                    .setStatus(status)
+                                    .setImg(imgs)
+                                    .setAddress(tv_address.getText().toString())
+                                    .setLat(lat).setLng(lng)
+                                    .setType(Constant.TypeFlag.SHARE);
+                            if (CommonShareActivity.this.saveData == null) {
+                                saveData.set_id(System.currentTimeMillis());
+                                SaveDataUtil.insert(saveData);
+                            }else {
+                                saveData.set_id(CommonShareActivity.this.saveData.get_id());
+                                SaveDataUtil.updata(saveData);
+                            }
+                            finish();
+                        }
+                    })
+                    .show(getSupportFragmentManager(),"isSave");
+        }else {
+            finish();
+        }
     }
 }

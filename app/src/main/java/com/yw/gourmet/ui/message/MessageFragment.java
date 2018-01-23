@@ -100,14 +100,14 @@ public class MessageFragment extends BaseFragment<MessagePresenter> implements M
         bt_login.setOnClickListener(this);
 
         constraint_message = (ConstraintLayout)view.findViewById(R.id.constraint_message);
-        if (Constant.userData == null){
-            constraint_message.setVisibility(View.VISIBLE);
-            ll_message.setVisibility(View.GONE);
-        }else {
-            constraint_message.setVisibility(View.GONE);
-            ll_message.setVisibility(View.VISIBLE);
-            swipeToLoadLayout.setRefreshing(true);
-        }
+//        if (Constant.userData == null){
+//            constraint_message.setVisibility(View.VISIBLE);
+//            ll_message.setVisibility(View.GONE);
+//        }else {
+//            constraint_message.setVisibility(View.GONE);
+//            ll_message.setVisibility(View.VISIBLE);
+//            swipeToLoadLayout.setRefreshing(true);
+//        }
         setRxBus();
 
     }

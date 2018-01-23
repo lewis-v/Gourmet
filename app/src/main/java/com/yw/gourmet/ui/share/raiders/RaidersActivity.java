@@ -15,6 +15,9 @@ import com.yw.gourmet.R;
 import com.yw.gourmet.adapter.IngredientAdapter;
 import com.yw.gourmet.adapter.RaidersListAdapter;
 import com.yw.gourmet.base.BaseActivity;
+import com.yw.gourmet.dao.data.SaveData;
+import com.yw.gourmet.dao.data.SaveDataUtil;
+import com.yw.gourmet.dao.gen.SaveDataDao;
 import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.data.RaidersListData;
 import com.yw.gourmet.dialog.MyDialogEditFragment;
@@ -22,6 +25,7 @@ import com.yw.gourmet.dialog.MyDialogPhotoChooseFragment;
 import com.yw.gourmet.dialog.MyDialogRaidersListFragment;
 import com.yw.gourmet.dialog.MyDialogTipFragment;
 import com.yw.gourmet.listener.OnAddListener;
+import com.yw.gourmet.listener.OnCancelClickListener;
 import com.yw.gourmet.listener.OnDeleteListener;
 import com.yw.gourmet.listener.OnEditDialogEnterClickListener;
 import com.yw.gourmet.listener.OnItemClickListener;
@@ -51,6 +55,7 @@ public class RaidersActivity extends BaseActivity<RaidersPresenter> implements V
     private List<RaidersListData<List<String>>> raidersListData = new ArrayList<>();
     private List<String> tagList = new ArrayList<>();
     private int status = 1;//权限,公开或私有,1公开,0私有,默认公开
+    private SaveData saveData;
 
     @Override
     protected int getLayoutId() {
@@ -142,13 +147,69 @@ public class RaidersActivity extends BaseActivity<RaidersPresenter> implements V
                 return false;
             }
         });
+
+        String type = getIntent().getStringExtra("type");
+        if (type != null){
+            List<SaveData> data = SaveDataUtil
+                    .querydataById(SaveDataDao.Properties.Type.eq(Constant.TypeFlag.RAIDERS)
+                            , SaveDataDao.Properties.User_id.eq(Constant.userData.getId()));
+            switch (type){
+                case "new":
+                    if (data != null && data.size()>0) {
+                        saveData = data.get(0);
+                        new MyDialogTipFragment().setTextEnter("是").setTextCancel("否")
+                                .setShowText("草稿箱中存在未完成攻略,是否继续上次的编辑?")
+                                .setOnEnterListener(new MyDialogTipFragment.OnEnterListener() {
+                                    @Override
+                                    public void OnEnter(String Tag) {
+                                        initSaveData(saveData);
+                                    }
+                                }).show(getSupportFragmentManager(), "tip");
+                    }
+                    break;
+                case "change":
+                    if (data != null && data.size()>0) {
+                        saveData = data.get(0);
+                        initSaveData(saveData);
+                    }
+                    break;
+            }
+        }
+    }
+
+    /**
+     * 配置存储的数据
+     * @param saveData
+     */
+    public void initSaveData(SaveData saveData){
+        if (saveData != null){
+            et_title.setText(saveData.getTitle());
+            et_introduction.setText(saveData.getIntroduction());
+            status = saveData.getStatus();
+            if (status == 1){
+                tv_power.setText("公开");
+            }else if (status == 0){
+                tv_power.setText("私有");
+            }
+            tagList.clear();
+            tagList.addAll(saveData.getRaiders_type());
+            tagAdapter.notifyDataSetChanged();
+            raidersListData.clear();
+            raidersListData.addAll(saveData.getRaiders_content());
+            raidersListAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        back();
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.tv_cancel:
-                finish();
+                back();
                 break;
             case R.id.tv_send:
                 if (isEmtry()){
@@ -202,6 +263,11 @@ public class RaidersActivity extends BaseActivity<RaidersPresenter> implements V
     @Override
     public void onShareSuccess(String msg) {
         super.onSuccess(msg);
+        try {
+            if (saveData != null) {
+                SaveDataUtil.delete(saveData.get_id());
+            }
+        }catch (Exception e){}
         finish();
     }
 
@@ -252,5 +318,64 @@ public class RaidersActivity extends BaseActivity<RaidersPresenter> implements V
             return true;
         }
         return false;
+    }
+
+
+    /**
+     * 判断是否需要存储
+     * @return
+     */
+    public boolean isNeedSave(){
+        if (!et_title.getText().toString().trim().isEmpty()){
+            return true;
+        }else if (tagList!=null && tagList.size()>0){
+            return true;
+        }else if (!et_introduction.getText().toString().trim().isEmpty()){
+            return true;
+        }else if (raidersListData != null && raidersListData.size()>0){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 退出操作
+     */
+    public void back(){
+        if (isNeedSave()){
+            new MyDialogTipFragment().setShowText("是否将此次编辑内容保存到草稿箱?")
+                    .setTextCancel("否")
+                    .setTextEnter("是")
+                    .setOnCancelClickListener(new OnCancelClickListener() {
+                        @Override
+                        public void OnCancel(String tag) {
+                            finish();
+                        }
+                    })
+                    .setOnEnterListener(new MyDialogTipFragment.OnEnterListener() {
+                        @Override
+                        public void OnEnter(String Tag) {
+                            SaveData saveData = new SaveData();
+                            saveData.setUser_id(Constant.userData.getId())
+                                    .setChange_time(System.currentTimeMillis())
+                                    .setTitle(et_title.getText().toString()).setStatus(status)
+                                    .setIntroduction(et_introduction.getText().toString())
+                                    .setType(Constant.TypeFlag.RAIDERS)
+                                    .setRaiders_type(tagList)
+                                    .setRaiders_content(raidersListData);
+                            if (RaidersActivity.this.saveData == null) {
+                                saveData.set_id(System.currentTimeMillis());
+                                SaveDataUtil.insert(saveData);
+                            }else {
+                                saveData.set_id(RaidersActivity.this.saveData.get_id());
+                                SaveDataUtil.updata(saveData);
+                            }
+                            finish();
+                        }
+                    })
+                    .show(getSupportFragmentManager(),"isSave");
+        }else {
+            finish();
+        }
     }
 }

@@ -22,11 +22,11 @@ public class SaveData {
     private long change_time;//最后修改时间
     private int status;//发布的可见状态
     private int difficult_level;//困难程度
+    private double lat;//坐标
+    private double lng;//坐标
     private String user_id;//用户id
     private String address;//地址
     private String content;//内容
-    private String lat;//坐标
-    private String lng;//坐标
     private String time;//记录时间
     private String title;//标题
     private String cover;//封面
@@ -48,9 +48,11 @@ public class SaveData {
     public SaveData() {
     }
 
-    @Generated(hash = 464452963)
+
+
+    @Generated(hash = 1162626406)
     public SaveData(long _id, int type, long change_time, int status, int difficult_level,
-            String user_id, String address, String content, String lat, String lng,
+            double lat, double lng, String user_id, String address, String content,
             String time, String title, String cover, String play_time, String introduction,
             String tip, List<String> img, List<String> ingredient, List<String> raiders_type,
             List<MenuPracticeData<List<String>>> practice,
@@ -60,11 +62,11 @@ public class SaveData {
         this.change_time = change_time;
         this.status = status;
         this.difficult_level = difficult_level;
+        this.lat = lat;
+        this.lng = lng;
         this.user_id = user_id;
         this.address = address;
         this.content = content;
-        this.lat = lat;
-        this.lng = lng;
         this.time = time;
         this.title = title;
         this.cover = cover;
@@ -77,6 +79,8 @@ public class SaveData {
         this.practice = practice;
         this.raiders_content = raiders_content;
     }
+
+    
 
     public long get_id() {
         return _id;
@@ -132,20 +136,20 @@ public class SaveData {
         return this;
     }
 
-    public String getLat() {
+    public double getLat() {
         return lat;
     }
 
-    public SaveData setLat(String lat) {
+    public SaveData setLat(double lat) {
         this.lat = lat;
         return this;
     }
 
-    public String getLng() {
+    public double getLng() {
         return lng;
     }
 
-    public SaveData setLng(String lng) {
+    public SaveData setLng(double lng) {
         this.lng = lng;
         return this;
     }

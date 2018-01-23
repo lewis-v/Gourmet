@@ -15,6 +15,7 @@ import com.yw.gourmet.R;
 import com.yw.gourmet.adapter.DraftAdapter;
 import com.yw.gourmet.base.BaseActivity;
 import com.yw.gourmet.dao.data.SaveData;
+import com.yw.gourmet.dao.data.SaveDataUtil;
 import com.yw.gourmet.dialog.MyDialogDraftFragment;
 import com.yw.gourmet.listener.OnItemClickListener;
 import com.yw.gourmet.listener.OnOtherClickListener;
@@ -92,12 +93,14 @@ public class DraftActivity extends BaseActivity<DraftPresenter> implements Draft
                 new MyDialogDraftFragment().setOnDeleteListener(new MyDialogDraftFragment.OnDeleteListener() {
                     @Override
                     public void onDelete(String Tag) {
+                        SaveDataUtil.delete(data.get(position).get_id());
                         data.remove(position);
                         adapter.notifyItemRemoved(position);
                     }
 
                     @Override
                     public void onDeleteAll(String Tag) {
+                        SaveDataUtil.clearAll();
                         while (data.size()>0){
                             data.remove(0);
                             adapter.notifyItemRemoved(0);

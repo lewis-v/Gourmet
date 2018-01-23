@@ -18,18 +18,24 @@ import android.widget.TextView;
 import com.yw.gourmet.Constant;
 import com.yw.gourmet.R;
 import com.yw.gourmet.base.BaseActivity;
+import com.yw.gourmet.dao.data.SaveData;
+import com.yw.gourmet.dao.data.SaveDataUtil;
+import com.yw.gourmet.dao.gen.SaveDataDao;
 import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.dialog.MyDialogPhotoChooseFragment;
 import com.yw.gourmet.dialog.MyDialogTipFragment;
 import com.yw.gourmet.listener.MyAction;
+import com.yw.gourmet.listener.OnCancelClickListener;
 import com.yw.gourmet.listener.OnToolClickListener;
 import com.yw.gourmet.ui.share.ToolFragment;
 import com.yw.gourmet.ui.share.ToolType;
+import com.yw.gourmet.ui.share.common.CommonShareActivity;
 import com.yw.gourmet.utils.ToastUtils;
 
 import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import id.zelory.compressor.Compressor;
 import io.reactivex.functions.Consumer;
@@ -54,6 +60,8 @@ public class DiaryActivity extends BaseActivity<DiaryPresenter> implements View.
     private long create_time;//创建时间
     private int status = 1;//权限,公开或私有,1公开,0私有,默认公开
     private boolean toolShowing = false;//工具栏动画是否在展示中
+    private SaveData saveData;
+    private double lat,lng;//坐标
 
     @Override
     protected void initView() {
@@ -62,7 +70,7 @@ public class DiaryActivity extends BaseActivity<DiaryPresenter> implements View.
         toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        create_time = System.currentTimeMillis()/1000;
+        create_time = System.currentTimeMillis();
         et_title = (EditText)findViewById(R.id.et_title);
 
         fl_tool = (FrameLayout)findViewById(R.id.fl_tool);
@@ -105,11 +113,62 @@ public class DiaryActivity extends BaseActivity<DiaryPresenter> implements View.
         });
 
         type = new ToolType();
+
+        String mType = getIntent().getStringExtra("type");
+        if (mType != null){
+            List<SaveData> data = SaveDataUtil
+                    .querydataById(SaveDataDao.Properties.Type.eq(Constant.TypeFlag.DIARY)
+                            , SaveDataDao.Properties.User_id.eq(Constant.userData.getId()));
+            switch (mType){
+                case "new":
+                    if (data != null && data.size()>0) {
+                        saveData = data.get(0);
+                        new MyDialogTipFragment().setTextEnter("是").setTextCancel("否")
+                                .setShowText("草稿箱中存在未完成日记,是否继续上次的编辑?")
+                                .setOnEnterListener(new MyDialogTipFragment.OnEnterListener() {
+                                    @Override
+                                    public void OnEnter(String Tag) {
+                                        initSaveData(saveData);
+                                    }
+                                }).show(getSupportFragmentManager(), "tip");
+                    }
+                    break;
+                case "change":
+                    if (data != null && data.size()>0) {
+                        saveData = data.get(0);
+                        initSaveData(saveData);
+                    }
+                    break;
+            }
+        }
+    }
+
+    public void initSaveData(SaveData saveData){
+        if (saveData != null){
+            et_title.setText(saveData.getTitle());
+            tv_address.setText(saveData.getAddress());
+            lat = saveData.getLat();
+            lng = saveData.getLng();
+            tv_time.setText(saveData.getTime());
+            status = saveData.getStatus();
+            if (status == 1){
+                tv_power.setText("公开");
+            }else if (status == 0){
+                tv_power.setText("私有");
+            }
+            content = saveData.getContent();
+            richeditor_diary.setHtml(saveData.getContent());
+        }
     }
 
     @Override
     protected int getLayoutId() {
         return R.layout.activity_diary;
+    }
+
+    @Override
+    public void onBackPressed() {
+        back();
     }
 
     @Override
@@ -125,7 +184,7 @@ public class DiaryActivity extends BaseActivity<DiaryPresenter> implements View.
                 addFragmentFunction(!isShowTool,null);
                 break;
             case R.id.tv_cancel:
-                finish();
+                back();
                 break;
             case R.id.tv_power:
                 if (status == 1){
@@ -271,6 +330,11 @@ public class DiaryActivity extends BaseActivity<DiaryPresenter> implements View.
     @Override
     public void onPutSuccess(BaseData model) {
         ToastUtils.showLongToast(model.getMessage());
+        try {
+            if (saveData != null) {
+                SaveDataUtil.delete(saveData.get_id());
+            }
+        }catch (Exception e){}
         finish();
     }
 
@@ -322,5 +386,65 @@ public class DiaryActivity extends BaseActivity<DiaryPresenter> implements View.
     protected void onDestroy() {
         richeditor_diary.destroy();
         super.onDestroy();
+    }
+
+    /**
+     * 判断是否需要存储
+     * @return
+     */
+    public boolean isNeedSave(){
+        if (!et_title.getText().toString().trim().isEmpty()){
+            return true;
+        }else if (!tv_time.getText().toString().trim().isEmpty()){
+            return true;
+        }else if (!tv_address.getText().toString().trim().isEmpty()){
+            return true;
+        }else if (!content.trim().isEmpty()){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 退出操作
+     */
+    public void back(){
+        if (isNeedSave()){
+            new MyDialogTipFragment().setShowText("是否将此次编辑内容保存到草稿箱?")
+                    .setTextCancel("否")
+                    .setTextEnter("是")
+                    .setOnCancelClickListener(new OnCancelClickListener() {
+                        @Override
+                        public void OnCancel(String tag) {
+                            finish();
+                        }
+                    })
+                    .setOnEnterListener(new MyDialogTipFragment.OnEnterListener() {
+                        @Override
+                        public void OnEnter(String Tag) {
+                            SaveData saveData = new SaveData();
+                            saveData.setUser_id(Constant.userData.getId())
+                                    .setChange_time(System.currentTimeMillis())
+                                    .setTitle(et_title.getText().toString())
+                                    .setContent(content)
+                                    .setTime(tv_time.getText().toString())
+                                    .setStatus(status)
+                                    .setAddress(tv_address.getText().toString())
+                                    .setLat(lat).setLng(lng)
+                                    .setType(Constant.TypeFlag.DIARY);
+                            if (DiaryActivity.this.saveData == null) {
+                                saveData.set_id(System.currentTimeMillis());
+                                SaveDataUtil.insert(saveData);
+                            }else {
+                                saveData.set_id(DiaryActivity.this.saveData.get_id());
+                                SaveDataUtil.updata(saveData);
+                            }
+                            finish();
+                        }
+                    })
+                    .show(getSupportFragmentManager(),"isSave");
+        }else {
+            finish();
+        }
     }
 }

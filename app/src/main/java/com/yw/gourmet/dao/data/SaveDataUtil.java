@@ -44,7 +44,7 @@ public class SaveDataUtil {
 //                .orderAsc(CityInfoDao.Properties.CityName)//.limit(5)//orderDesc
                 .build();
         List<SaveData> cityInfos = nQuery.list();
-        Log.i("tag", "当前数量：" + cityInfos.size());
+        Log.e("---dao---",cityInfos.toString());
         return cityInfos;
     }
 
@@ -53,6 +53,10 @@ public class SaveDataUtil {
      */
     public static void clearAll(){
         GreenDaoManager.getInstance().getmDaoSession().getSaveDataDao().deleteAll();
+    }
+
+    public static void delete(Long _id){
+        GreenDaoManager.getInstance().getmDaoSession().getSaveDataDao().deleteByKey(_id);
     }
 
     /**
@@ -68,6 +72,7 @@ public class SaveDataUtil {
 //                .orderAsc(CityInfoDao.Properties.CityName)//.limit(5)//orderDesc
                 .build();
         List<SaveData> cityInfos = nQuery.list();
+        Log.e("---dao---",cityInfos.toString());
         return cityInfos;
     }
 }

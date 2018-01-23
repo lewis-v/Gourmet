@@ -64,7 +64,9 @@ public class FunctionFragment extends BaseFragment implements View.OnClickListen
                     ToastUtils.showSingleToast("请登录后在操作");
                     return;
                 }
-                startActivity(new Intent(getContext(), CommonShareActivity.class));
+                Intent intent0 = new Intent(getContext(), CommonShareActivity.class);
+                intent0.putExtra("type","new");
+                startActivity(intent0);
                 break;
             case R.id.ll_photo:
                 if (Constant.userData == null){
@@ -89,8 +91,9 @@ public class FunctionFragment extends BaseFragment implements View.OnClickListen
                     ToastUtils.showSingleToast("请登录后在操作");
                     return;
                 }
-                Intent intent2 ;
-                startActivity(new Intent(getContext(),DiaryActivity.class));
+                Intent intent2 = new Intent(getContext(),DiaryActivity.class);
+                intent2.putExtra("type","new");
+                startActivity(intent2);
                 break;
             case R.id.ll_menu:
                 if (Constant.userData == null){
@@ -106,7 +109,9 @@ public class FunctionFragment extends BaseFragment implements View.OnClickListen
                     ToastUtils.showSingleToast("请登录后在操作");
                     return;
                 }
-                startActivity(new Intent(getContext(), RaidersActivity.class));
+                Intent intent4 = new Intent(getContext(), RaidersActivity.class);
+                intent4.putExtra("type","new");
+                startActivity(intent4);
                 break;
             case R.id.ll_close:
                 ((MainContract.View) getActivity()).addFragmentFunction(false);
