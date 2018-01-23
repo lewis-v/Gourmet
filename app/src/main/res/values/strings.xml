@@ -89,4 +89,6 @@
     <string name="my_collection">我的收藏</string>
     <string name="check_version">检查更新</string>
     <string name="no_title">无标题</string>
+    <string name="delete_this_draft">删除此草稿</string>
+    <string name="delete_draft_all">清空草稿箱</string>
 </resources>

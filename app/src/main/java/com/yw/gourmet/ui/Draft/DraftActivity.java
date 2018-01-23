@@ -1,5 +1,6 @@
 package com.yw.gourmet.ui.Draft;
 
+import android.content.Intent;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,17 +10,25 @@ import android.widget.LinearLayout;
 
 import com.aspsine.swipetoloadlayout.OnRefreshListener;
 import com.aspsine.swipetoloadlayout.SwipeToLoadLayout;
+import com.yw.gourmet.Constant;
 import com.yw.gourmet.R;
 import com.yw.gourmet.adapter.DraftAdapter;
 import com.yw.gourmet.base.BaseActivity;
 import com.yw.gourmet.dao.data.SaveData;
+import com.yw.gourmet.dialog.MyDialogDraftFragment;
+import com.yw.gourmet.listener.OnItemClickListener;
+import com.yw.gourmet.listener.OnOtherClickListener;
+import com.yw.gourmet.ui.share.common.CommonShareActivity;
+import com.yw.gourmet.ui.share.diary.DiaryActivity;
+import com.yw.gourmet.ui.share.menu.MenuActivity;
+import com.yw.gourmet.ui.share.raiders.RaidersActivity;
 import com.yw.gourmet.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class DraftActivity extends BaseActivity<DraftPresenter> implements DraftContract.View
-,OnRefreshListener {
+        ,OnRefreshListener {
     private List<SaveData> data = new ArrayList<>();
     private RecyclerView swipe_target;
     private SwipeToLoadLayout swipeToLoadLayout;
@@ -47,13 +56,63 @@ public class DraftActivity extends BaseActivity<DraftPresenter> implements Draft
         swipe_target.setLayoutManager(new LinearLayoutManager(this));
         swipe_target.setItemAnimator(new DefaultItemAnimator());
         adapter = new DraftAdapter(this,data);
+        adapter.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void OnClick(View v, int position) {
+                Intent intent = null;
+                switch (data.get(position).getType()){
+                    case Constant.TypeFlag.DIARY:
+                        intent = new Intent(DraftActivity.this, DiaryActivity.class);
+                        break;
+                    case Constant.TypeFlag.MENU:
+                        intent = new Intent(DraftActivity.this, MenuActivity.class);
+                        break;
+                    case Constant.TypeFlag.RAIDERS:
+                        intent = new Intent(DraftActivity.this, RaidersActivity.class);
+                        break;
+                    case Constant.TypeFlag.SHARE:
+                        intent = new Intent(DraftActivity.this, CommonShareActivity.class);
+                        break;
+                }
+                if (intent != null){
+                    intent.putExtra("type","change");
+                    intent.putExtra("_id",data.get(position).get_id());
+                    startActivity(intent);
+                }
+            }
+
+            @Override
+            public boolean OnLongClick(View v, int position) {
+                return false;
+            }
+        });
+        adapter.setOnOtherClickListener(new OnOtherClickListener() {
+            @Override
+            public void onOther(View view, final int position) {
+                new MyDialogDraftFragment().setOnDeleteListener(new MyDialogDraftFragment.OnDeleteListener() {
+                    @Override
+                    public void onDelete(String Tag) {
+                        data.remove(position);
+                        adapter.notifyItemRemoved(position);
+                    }
+
+                    @Override
+                    public void onDeleteAll(String Tag) {
+                        while (data.size()>0){
+                            data.remove(0);
+                            adapter.notifyItemRemoved(0);
+                        }
+                    }
+                }).show(getSupportFragmentManager(),"delete");
+            }
+        });
         swipe_target.setAdapter(adapter);
         swipeToLoadLayout.setOnRefreshListener(this);
-        mPresenter.getAllSaveData();
     }
 
     @Override
     public void onGetSuccess(List<SaveData> model) {
+        Log.e("---model---",model.toString());
         data.clear();
         data.addAll(model);
         runOnUiThread(new Runnable() {
@@ -83,6 +142,12 @@ public class DraftActivity extends BaseActivity<DraftPresenter> implements Draft
 
     @Override
     public void onRefresh() {
+        mPresenter.getAllSaveData();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         mPresenter.getAllSaveData();
     }
 }

@@ -1,6 +1,7 @@
 package com.yw.gourmet.adapter;
 
 import android.content.Context;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +12,11 @@ import android.widget.TextView;
 import com.yw.gourmet.Constant;
 import com.yw.gourmet.R;
 import com.yw.gourmet.dao.data.SaveData;
+import com.yw.gourmet.listener.OnItemClickListener;
+import com.yw.gourmet.listener.OnOtherClickListener;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -22,6 +27,8 @@ import java.util.List;
 public class DraftAdapter extends RecyclerView.Adapter<DraftAdapter.MyViewHolder>{
     private Context context;
     private List<SaveData> data;
+    private OnItemClickListener onItemClickListener;
+    private OnOtherClickListener onOtherClickListener;
 
     public DraftAdapter(Context context, List<SaveData> data) {
         this.context = context;
@@ -34,7 +41,7 @@ public class DraftAdapter extends RecyclerView.Adapter<DraftAdapter.MyViewHolder
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(final MyViewHolder holder, int position) {
         switch (data.get(position).getType()){
             case Constant.TypeFlag.SHARE:
                 holder.tv_type.setText("分享");
@@ -49,9 +56,30 @@ public class DraftAdapter extends RecyclerView.Adapter<DraftAdapter.MyViewHolder
                 holder.tv_type.setText("攻略");
                 break;
         }
-        holder.tv_time.setText(data.get(position).getTime());
+        holder.tv_time.setText(new SimpleDateFormat("yy-mm-dd HH:mm:ss").format(new Date(data.get(position).getChange_time())));
         holder.tv_title.setText(data.get(position).getTitle());
-
+        if (onItemClickListener != null){
+            holder.constraint_item.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onItemClickListener.OnClick(v,holder.getLayoutPosition());
+                }
+            });
+            holder.constraint_item.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    return onItemClickListener.OnLongClick(v,holder.getLayoutPosition());
+                }
+            });
+        }
+        if (onOtherClickListener != null){
+            holder.ll_other.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onOtherClickListener.onOther(v,holder.getLayoutPosition());
+                }
+            });
+        }
     }
 
     @Override
@@ -62,13 +90,25 @@ public class DraftAdapter extends RecyclerView.Adapter<DraftAdapter.MyViewHolder
     class MyViewHolder extends RecyclerView.ViewHolder {
         TextView tv_type,tv_time,tv_title;
         LinearLayout ll_other;
+        ConstraintLayout constraint_item;
 
         public MyViewHolder(View itemView) {
             super(itemView);
+            constraint_item = itemView.findViewById(R.id.constraint_item);
             tv_time = itemView.findViewById(R.id.tv_time);
             tv_type = itemView.findViewById(R.id.tv_type);
             tv_title = itemView.findViewById(R.id.tv_title);
             ll_other = itemView.findViewById(R.id.ll_other);
         }
+    }
+
+    public DraftAdapter setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+        return this;
+    }
+
+    public DraftAdapter setOnOtherClickListener(OnOtherClickListener onOtherClickListener) {
+        this.onOtherClickListener = onOtherClickListener;
+        return this;
     }
 }

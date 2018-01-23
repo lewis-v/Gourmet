@@ -226,7 +226,7 @@ public class MenuActivity extends BaseActivity<MenuPresenter> implements View.On
                 case "change"://更改之前的
                     data = SaveDataUtil
                             .querydataById(SaveDataDao.Properties.Type.eq(Constant.TypeFlag.MENU)
-                            ,SaveDataDao.Properties._id.eq(getIntent().getStringExtra("_id"))
+                            ,SaveDataDao.Properties._id.eq(getIntent().getLongExtra("_id",0))
                                     ,SaveDataDao.Properties.User_id.eq(Constant.userData.getId()));
                     if (data != null && data.size()>0){
                         saveData = data.get(0);
@@ -492,6 +492,7 @@ public class MenuActivity extends BaseActivity<MenuPresenter> implements View.On
                         public void OnEnter(String Tag) {
                             SaveData saveData = new SaveData();
                             saveData.setUser_id(Constant.userData.getId())
+                                    .setChange_time(System.currentTimeMillis())
                                     .setTitle(et_title.getText().toString()).setStatus(status)
                                     .setCover(coverPath).setDifficult_level(difficultLevel)
                                     .setPlay_time(et_time_hour.getText().toString()+"&&"+et_time_min.getText().toString())
