@@ -5,6 +5,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/ui_back"
     tools:context="com.yw.gourmet.ui.main.MainActivity">
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -298,6 +299,7 @@
                 android:layout_height="1px"/>
 
             <LinearLayout
+                android:id="@+id/ll_draft"
                 android:background="@drawable/ll_back_change"
                 android:padding="8dp"
                 android:gravity="center_vertical"

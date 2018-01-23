@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.bumptech.glide.Glide;
+import com.yw.gourmet.dao.GreenDaoManager;
 
 /**
  * Created by yw on 2017/10/21.

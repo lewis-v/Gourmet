@@ -119,15 +119,37 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <!-- 攻略分享 -->
         <activity
             android:name=".ui.share.raiders.RaidersActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".ui.detail.raiders.RaidersDetailActivity" />
-        <activity android:name=".ui.myShare.MyShareActivity" />
-        <activity android:name=".ui.commentMy.CommentMyActivity" />
-        <activity android:name=".ui.collection.CollectionActivity" />
-        <activity android:name=".ui.about.AboutActivity"></activity>
+        <!-- 攻略详情 -->
+        <activity
+            android:name=".ui.detail.raiders.RaidersDetailActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        <!-- 所有分享 -->
+        <activity
+            android:name=".ui.myShare.MyShareActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        <!-- 所有评论 -->
+        <activity
+            android:name=".ui.commentMy.CommentMyActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        <!-- 所有收藏 -->
+        <activity
+            android:name=".ui.collection.CollectionActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        <!-- 关于我们 -->
+        <activity
+            android:name=".ui.about.AboutActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".ui.Draft.DraftActivity"></activity>
     </application>
 
 </manifest>

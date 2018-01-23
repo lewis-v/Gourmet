@@ -55,7 +55,7 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.My
                 holder.tv_name.setVisibility(View.VISIBLE);
                 holder.img_delete.setVisibility(View.VISIBLE);
                 holder.img_add.setVisibility(View.GONE);
-                String[] content = list.get(position).split(",");
+                String[] content = list.get(position).split("&&");
                 if (content.length == 2) {
                     holder.tv_name.setText(content[0] + "\t\t" + content[1]);
                 }else {
@@ -68,7 +68,7 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.My
             holder.tv_name.setVisibility(View.VISIBLE);
             holder.img_delete.setVisibility(View.GONE);
             holder.img_add.setVisibility(View.GONE);
-            String[] content = list.get(position).split(",");
+            String[] content = list.get(position).split("&&");
             if (content.length == 2) {
                 holder.tv_name.setText(content[0] + "\t\t" + content[1]);
             }else {

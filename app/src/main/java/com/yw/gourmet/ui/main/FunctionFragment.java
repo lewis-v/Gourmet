@@ -7,12 +7,14 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 
+import com.yw.gourmet.Constant;
 import com.yw.gourmet.R;
 import com.yw.gourmet.base.BaseFragment;
 import com.yw.gourmet.ui.share.common.CommonShareActivity;
 import com.yw.gourmet.ui.share.diary.DiaryActivity;
 import com.yw.gourmet.ui.share.menu.MenuActivity;
 import com.yw.gourmet.ui.share.raiders.RaidersActivity;
+import com.yw.gourmet.utils.ToastUtils;
 import com.yw.gourmet.utils.WindowUtil;
 
 /**
@@ -58,25 +60,52 @@ public class FunctionFragment extends BaseFragment implements View.OnClickListen
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ll_text:
+                if (Constant.userData == null){
+                    ToastUtils.showSingleToast("请登录后在操作");
+                    return;
+                }
                 startActivity(new Intent(getContext(), CommonShareActivity.class));
                 break;
             case R.id.ll_photo:
+                if (Constant.userData == null){
+                    ToastUtils.showSingleToast("请登录后在操作");
+                    return;
+                }
                 Intent intent = new Intent(getContext(),CommonShareActivity.class);
                 intent.putExtra("type","photo");
                 startActivity(intent);
                 break;
             case R.id.ll_take_photo:
+                if (Constant.userData == null){
+                    ToastUtils.showSingleToast("请登录后在操作");
+                    return;
+                }
                 Intent intent1 = new Intent(getContext(),CommonShareActivity.class);
                 intent1.putExtra("type","take_photo");
                 startActivity(intent1);
                 break;
             case R.id.ll_diary:
+                if (Constant.userData == null){
+                    ToastUtils.showSingleToast("请登录后在操作");
+                    return;
+                }
+                Intent intent2 ;
                 startActivity(new Intent(getContext(),DiaryActivity.class));
                 break;
             case R.id.ll_menu:
-                startActivity(new Intent(getContext(), MenuActivity.class));
+                if (Constant.userData == null){
+                    ToastUtils.showSingleToast("请登录后在操作");
+                    return;
+                }
+                Intent intent3 = new Intent(getContext(), MenuActivity.class);
+                intent3.putExtra("type","new");
+                startActivity(intent3);
                 break;
             case R.id.ll_raiders:
+                if (Constant.userData == null){
+                    ToastUtils.showSingleToast("请登录后在操作");
+                    return;
+                }
                 startActivity(new Intent(getContext(), RaidersActivity.class));
                 break;
             case R.id.ll_close:

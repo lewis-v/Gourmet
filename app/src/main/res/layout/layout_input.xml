@@ -23,6 +23,7 @@
         <EditText
             android:id="@+id/et_input"
             android:hint="@string/write_comment"
+            android:inputType="text"
             android:imeOptions="actionDone"
             android:background="@drawable/chat_edit_back"
             android:layout_margin="3dp"

@@ -5,6 +5,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -16,12 +17,16 @@ import com.yw.gourmet.R;
 import com.yw.gourmet.adapter.IngredientAdapter;
 import com.yw.gourmet.adapter.PracticeAdapter;
 import com.yw.gourmet.base.BaseActivity;
+import com.yw.gourmet.dao.data.SaveData;
+import com.yw.gourmet.dao.data.SaveDataUtil;
+import com.yw.gourmet.dao.gen.SaveDataDao;
 import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.data.MenuPracticeData;
 import com.yw.gourmet.dialog.MyDialogIngredientFragment;
 import com.yw.gourmet.dialog.MyDialogPhotoChooseFragment;
 import com.yw.gourmet.dialog.MyDialogTipFragment;
 import com.yw.gourmet.listener.OnAddListener;
+import com.yw.gourmet.listener.OnCancelClickListener;
 import com.yw.gourmet.listener.OnDeleteListener;
 import com.yw.gourmet.listener.OnItemClickListener;
 import com.yw.gourmet.utils.ToastUtils;
@@ -56,6 +61,7 @@ public class MenuActivity extends BaseActivity<MenuPresenter> implements View.On
     private int difficultLevel = 1;//困难等级,默认为1
     private String coverPath;//封面地址
     private long create_time;//创建时间
+    private SaveData saveData;//本地数据库中的数据
 
     @Override
     protected int getLayoutId() {
@@ -112,7 +118,7 @@ public class MenuActivity extends BaseActivity<MenuPresenter> implements View.On
         adapterIngredient.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void OnClick(View v, int position) {
-                String[] content = listIngredient.get(position).split(",");
+                String[] content = listIngredient.get(position).split("&&");
                 if (content.length > 1) {
                     new MyDialogIngredientFragment().setChange(adapterIngredient.isChange()).setPosition(position)
                             .setOnEnterListener(MenuActivity.this).setLeftText(content[0]).setRightText(content[1])
@@ -204,6 +210,64 @@ public class MenuActivity extends BaseActivity<MenuPresenter> implements View.On
                         }).show(getSupportFragmentManager(), "crop");
             }
         });
+
+        String type = getIntent().getStringExtra("type");
+        if (type != null){
+            List<SaveData> data = null;
+            switch (type){
+                case "new"://打开新的
+                    data = SaveDataUtil
+                            .querydataById(SaveDataDao.Properties.Type.eq(Constant.TypeFlag.MENU)
+                            ,SaveDataDao.Properties.User_id.eq(Constant.userData.getId()));
+                    if (data != null && data.size()>0){
+                        saveData = data.get(0);
+                    }
+                    break;
+                case "change"://更改之前的
+                    data = SaveDataUtil
+                            .querydataById(SaveDataDao.Properties.Type.eq(Constant.TypeFlag.MENU)
+                            ,SaveDataDao.Properties._id.eq(getIntent().getStringExtra("_id"))
+                                    ,SaveDataDao.Properties.User_id.eq(Constant.userData.getId()));
+                    if (data != null && data.size()>0){
+                        saveData = data.get(0);
+                    }
+                    break;
+            }
+            if (saveData != null){
+                et_title.setText(saveData.getTitle());
+                status = saveData.getStatus();
+                if (status == 1){
+                    tv_power.setText("公开");
+                }else if (status == 0){
+                    tv_power.setText("私有");
+                }
+                GlideApp.with(this).load(saveData.getCover()).into(img_cover);
+                difficultLevel = saveData.getDifficult_level();
+                setDifficultLevel(difficultLevel);
+                String play = saveData.getPlay_time();
+                if (play != null && play.length() > 0) {
+                    String[] playTime = play.split("&&");
+                    if (playTime.length == 2) {
+                        et_time_hour.setText(playTime[0]);
+                        et_time_min.setText(playTime[1]);
+                    }
+                }
+                et_introduction.setText(saveData.getIntroduction());
+                et_tip.setText(saveData.getTip());
+                listIngredient.clear();
+                listIngredient.addAll(saveData.getIngredient());
+                Log.e("---ingre---",saveData.getIngredient().toString());
+                adapterIngredient.notifyDataSetChanged();
+                listPractice.clear();
+                listPractice.addAll(saveData.getPractice());
+                adapterPractice.notifyDataSetChanged();
+            }
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        back();
     }
 
     @Override
@@ -227,7 +291,7 @@ public class MenuActivity extends BaseActivity<MenuPresenter> implements View.On
                 }
                 break;
             case R.id.tv_cancel:
-                finish();
+                back();
                 break;
             case R.id.img_difficult1:
                 setDifficultLevel(0);
@@ -386,5 +450,69 @@ public class MenuActivity extends BaseActivity<MenuPresenter> implements View.On
             return true;
         }
         return false;
+    }
+
+    /**
+     * 判断是否需要存储
+     * @return
+     */
+    public boolean isNeedSave(){
+        if (!et_title.getText().toString().trim().isEmpty()){
+            return true;
+        }else if (coverPath!=null && !coverPath.trim().isEmpty()){
+            return true;
+        }else if (!et_introduction.getText().toString().trim().isEmpty()){
+            return true;
+        }else if (listIngredient != null && listIngredient.size()>0){
+            return true;
+        }else if (listPractice != null && listPractice.size()>0){
+            return true;
+        }else if (et_tip.getText().toString().trim().isEmpty()){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 退出操作
+     */
+    public void back(){
+        if (isNeedSave()){
+            new MyDialogTipFragment().setShowText("是否将此次编辑内容保存到草稿箱?")
+                    .setTextCancel("否")
+                    .setTextEnter("是")
+                    .setOnCancelClickListener(new OnCancelClickListener() {
+                        @Override
+                        public void OnCancel(String tag) {
+                            finish();
+                        }
+                    })
+                    .setOnEnterListener(new MyDialogTipFragment.OnEnterListener() {
+                        @Override
+                        public void OnEnter(String Tag) {
+                            SaveData saveData = new SaveData();
+                            saveData.setUser_id(Constant.userData.getId())
+                                    .setTitle(et_title.getText().toString()).setStatus(status)
+                                    .setCover(coverPath).setDifficult_level(difficultLevel)
+                                    .setPlay_time(et_time_hour.getText().toString()+"&&"+et_time_min.getText().toString())
+                                    .setIntroduction(et_introduction.getText().toString())
+                                    .setTip(et_tip.getText().toString())
+                                    .setIngredient(listIngredient).setPractice(listPractice).setType(Constant.TypeFlag.MENU);
+                            if (MenuActivity.this.saveData == null) {
+                                saveData.set_id(System.currentTimeMillis());
+                                SaveDataUtil.insert(saveData);
+                                Log.e("---getinsert---",SaveDataUtil.querydataBy().toString());
+                            }else {
+                                saveData.set_id(MenuActivity.this.saveData.get_id());
+                                SaveDataUtil.updata(saveData);
+                                Log.e("---getupdata---",SaveDataUtil.querydataBy().toString());
+                            }
+                            finish();
+                        }
+                    })
+                    .show(getSupportFragmentManager(),"isSave");
+        }else {
+            finish();
+        }
     }
 }

@@ -112,8 +112,13 @@ public class MyDialogIngredientFragment extends BaseDialogFragment implements Vi
                         ToastUtils.showLongToast("请输入" + rightHint);
                         break;
                     }
+                    if (et_left.getText().toString().contains(",")
+                            || et_right.getText().toString().contains(",")){
+                        ToastUtils.showSingleToast("不可输入\"&&\"符号");
+                        break;
+                    }
                     if (onEnterListener != null) {
-                        onEnterListener.OnEnter(et_left.getText().toString() + "," + et_right.getText().toString(), position, getTag());
+                        onEnterListener.OnEnter(et_left.getText().toString() + "&&" + et_right.getText().toString(), position, getTag());
                     }
                 }
                 dismiss();

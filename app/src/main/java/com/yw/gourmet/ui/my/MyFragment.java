@@ -21,6 +21,7 @@ import com.yw.gourmet.rxbus.EventSticky;
 import com.yw.gourmet.rxbus.RxBus;
 import com.yw.gourmet.rxbus.RxBusSubscriber;
 import com.yw.gourmet.rxbus.RxSubscriptions;
+import com.yw.gourmet.ui.Draft.DraftActivity;
 import com.yw.gourmet.ui.collection.CollectionActivity;
 import com.yw.gourmet.ui.commentMy.CommentMyActivity;
 import com.yw.gourmet.ui.login.LoginActivity;
@@ -38,7 +39,7 @@ import rx.functions.Func1;
  */
 
 public class MyFragment extends BaseFragment implements View.OnClickListener,MyContract.View{
-    private LinearLayout ll_set,ll_share,ll_menu,ll_diary,ll_raiders,ll_comment,ll_collection;
+    private LinearLayout ll_set,ll_share,ll_menu,ll_diary,ll_raiders,ll_comment,ll_collection,ll_draft;
     private ScrollView scroll_my;
     private TextView tv_nickname,tv_set,tv_diary,tv_menu,tv_raiders,tv_share;
     private Button bt_login,bt_register;
@@ -53,6 +54,7 @@ public class MyFragment extends BaseFragment implements View.OnClickListener,MyC
     protected void initView() {
         toolbar = (Toolbar)view.findViewById(R.id.toolbar);
 
+        ll_draft = view.findViewById(R.id.ll_draft);
         ll_collection = view.findViewById(R.id.ll_collection);
         ll_share = view.findViewById(R.id.ll_share);
         ll_menu = view.findViewById(R.id.ll_menu);
@@ -67,6 +69,7 @@ public class MyFragment extends BaseFragment implements View.OnClickListener,MyC
         ll_share.setOnClickListener(this);
         ll_comment.setOnClickListener(this);
         ll_collection.setOnClickListener(this);
+        ll_draft.setOnClickListener(this);
 
         img_header = (ImageView) view.findViewById(R.id.img_header);
 
@@ -154,6 +157,9 @@ public class MyFragment extends BaseFragment implements View.OnClickListener,MyC
                 break;
             case R.id.ll_collection:
                 intent = new Intent(getContext(), CollectionActivity.class);
+                break;
+            case R.id.ll_draft:
+                intent = new Intent(getContext(), DraftActivity.class);
                 break;
         }
         if (intent != null){

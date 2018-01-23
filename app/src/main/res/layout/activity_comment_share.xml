@@ -55,6 +55,7 @@
         android:layout_margin="10dp"
         android:layout_width="match_parent"
         android:gravity="start"
+        android:imeOptions="actionDone"
         android:background="@null"
         android:layout_height="wrap_content"
         android:minLines="8"

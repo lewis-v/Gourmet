@@ -43,7 +43,8 @@
         android:layout_height="1dp" />
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_chat"
-        android:layout_margin="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"/>
@@ -74,7 +75,7 @@
                 android:background="@null"
                 android:maxLines="5"
                 android:inputType="text"
-                android:imeOptions="actionDone"
+                android:imeOptions="actionSend"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"/>

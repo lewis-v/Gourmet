@@ -57,6 +57,8 @@
         android:hint="@string/diary_title_tip"
         android:textColor="@color/word_black"
         android:textSize="20sp"
+        android:inputType="text"
+        android:imeOptions="actionDone"
         android:gravity="center"
         android:background="@null"
         android:layout_width="match_parent"
