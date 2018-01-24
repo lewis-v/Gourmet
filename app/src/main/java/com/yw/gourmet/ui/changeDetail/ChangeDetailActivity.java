@@ -14,12 +14,14 @@ import com.yw.gourmet.R;
 import com.yw.gourmet.base.BaseActivity;
 import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.data.UserData;
+import com.yw.gourmet.dialog.MyDialogChooseListFragment;
 import com.yw.gourmet.dialog.MyDialogEditFragment;
 import com.yw.gourmet.dialog.MyDialogPhotoChooseFragment;
 import com.yw.gourmet.listener.OnEditDialogEnterClickListener;
 import com.yw.gourmet.utils.ToastUtils;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 
 import id.zelory.compressor.Compressor;
@@ -36,6 +38,7 @@ public class ChangeDetailActivity extends BaseActivity<ChangeDetailPresenter> im
     private LinearLayout ll_nickname,ll_sex,ll_address,ll_introduction,ll_header;
     private ImageView img_back,img_header;
     private TextView tv_nickname,tv_sex,tv_address,tv_introduction;
+    private List<String> listSex = Arrays.asList("男","女");
 
     @Override
     protected void initView() {
@@ -118,10 +121,34 @@ public class ChangeDetailActivity extends BaseActivity<ChangeDetailPresenter> im
                 }
                 break;
             case R.id.ll_sex:
-
+                int sexPosition =  listSex.indexOf(tv_sex.getText().toString());
+                new MyDialogChooseListFragment().setTip("请选择性别:").setData(listSex)
+                        .setPosition(sexPosition==-1?0:sexPosition)
+                        .setOnChooseListener(new MyDialogChooseListFragment.OnChooseListener() {
+                    @Override
+                    public void onChoose(int position, String tag) {
+                        MultipartBody.Builder builder = new MultipartBody.Builder()
+                                .setType(MultipartBody.FORM)
+                                .addFormDataPart("id",Constant.userData.getId())
+                                .addFormDataPart("sex",listSex.get(position));
+                        mPresenter.changeDetail(builder.build().parts());
+                    }
+                }).show(getSupportFragmentManager(),"sex");
                 break;
             case R.id.ll_address:
-
+                int addressPosition =  Constant.areaList.indexOf(tv_address.getText().toString());
+                new MyDialogChooseListFragment().setTip("请选择地址:").setData(Constant.areaList)
+                        .setPosition(addressPosition == -1?0:addressPosition)
+                        .setOnChooseListener(new MyDialogChooseListFragment.OnChooseListener() {
+                            @Override
+                            public void onChoose(int position, String tag) {
+                                MultipartBody.Builder builder = new MultipartBody.Builder()
+                                        .setType(MultipartBody.FORM)
+                                        .addFormDataPart("id",Constant.userData.getId())
+                                        .addFormDataPart("address",Constant.areaList.get(position));
+                                mPresenter.changeDetail(builder.build().parts());
+                            }
+                        }).show(getSupportFragmentManager(),"address");
                 break;
             case R.id.ll_introduction:
                 if (Constant.userData != null) {

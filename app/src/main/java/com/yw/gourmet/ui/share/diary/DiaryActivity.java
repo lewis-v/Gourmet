@@ -60,7 +60,7 @@ public class DiaryActivity extends BaseActivity<DiaryPresenter> implements View.
     private long create_time;//创建时间
     private int status = 1;//权限,公开或私有,1公开,0私有,默认公开
     private boolean toolShowing = false;//工具栏动画是否在展示中
-    private SaveData saveData;
+    private SaveData saveData,saveDataCache;
     private double lat,lng;//坐标
 
     @Override
@@ -116,27 +116,31 @@ public class DiaryActivity extends BaseActivity<DiaryPresenter> implements View.
 
         String mType = getIntent().getStringExtra("type");
         if (mType != null){
-            List<SaveData> data = SaveDataUtil
-                    .querydataById(SaveDataDao.Properties.Type.eq(Constant.TypeFlag.DIARY)
-                            , SaveDataDao.Properties.User_id.eq(Constant.userData.getId()));
+            List<SaveData> data ;
             switch (mType){
                 case "new":
+                    data = SaveDataUtil
+                            .querydataById(SaveDataDao.Properties.Type.eq(Constant.TypeFlag.DIARY)
+                                    , SaveDataDao.Properties.User_id.eq(Constant.userData.getId()));
                     if (data != null && data.size()>0) {
-                        saveData = data.get(0);
+                        saveDataCache = data.get(0);
                         new MyDialogTipFragment().setTextEnter("是").setTextCancel("否")
                                 .setShowText("草稿箱中存在未完成日记,是否继续上次的编辑?")
                                 .setOnEnterListener(new MyDialogTipFragment.OnEnterListener() {
                                     @Override
                                     public void OnEnter(String Tag) {
-                                        initSaveData(saveData);
+                                        initSaveData(saveDataCache);
                                     }
                                 }).show(getSupportFragmentManager(), "tip");
                     }
                     break;
                 case "change":
+                    data = SaveDataUtil
+                            .querydataById(SaveDataDao.Properties.Type.eq(Constant.TypeFlag.DIARY)
+                            ,SaveDataDao.Properties._id.eq(getIntent().getLongExtra("_id",0)));
                     if (data != null && data.size()>0) {
-                        saveData = data.get(0);
-                        initSaveData(saveData);
+                        saveDataCache = data.get(0);
+                        initSaveData(saveDataCache);
                     }
                     break;
             }
@@ -145,6 +149,7 @@ public class DiaryActivity extends BaseActivity<DiaryPresenter> implements View.
 
     public void initSaveData(SaveData saveData){
         if (saveData != null){
+            this.saveData = saveDataCache;
             et_title.setText(saveData.getTitle());
             tv_address.setText(saveData.getAddress());
             lat = saveData.getLat();

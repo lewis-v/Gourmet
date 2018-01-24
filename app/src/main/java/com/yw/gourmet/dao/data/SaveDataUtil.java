@@ -55,6 +55,10 @@ public class SaveDataUtil {
         GreenDaoManager.getInstance().getmDaoSession().getSaveDataDao().deleteAll();
     }
 
+    /**
+     * 删除指定id的数据
+     * @param _id
+     */
     public static void delete(Long _id){
         GreenDaoManager.getInstance().getmDaoSession().getSaveDataDao().deleteByKey(_id);
     }

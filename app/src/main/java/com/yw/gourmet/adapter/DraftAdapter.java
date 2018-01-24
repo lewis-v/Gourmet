@@ -45,19 +45,22 @@ public class DraftAdapter extends RecyclerView.Adapter<DraftAdapter.MyViewHolder
         switch (data.get(position).getType()){
             case Constant.TypeFlag.SHARE:
                 holder.tv_type.setText("分享");
+                holder.tv_title.setText(data.get(position).getContent());
                 break;
             case Constant.TypeFlag.DIARY:
                 holder.tv_type.setText("日记");
+                holder.tv_title.setText(data.get(position).getTitle());
                 break;
             case Constant.TypeFlag.MENU:
                 holder.tv_type.setText("食谱");
+                holder.tv_title.setText(data.get(position).getTitle());
                 break;
             case Constant.TypeFlag.RAIDERS:
                 holder.tv_type.setText("攻略");
+                holder.tv_title.setText(data.get(position).getTitle());
                 break;
         }
         holder.tv_time.setText(new SimpleDateFormat("yy-MM-dd HH:mm:ss").format(new Date(data.get(position).getChange_time())));
-        holder.tv_title.setText(data.get(position).getTitle());
         if (onItemClickListener != null){
             holder.constraint_item.setOnClickListener(new View.OnClickListener() {
                 @Override

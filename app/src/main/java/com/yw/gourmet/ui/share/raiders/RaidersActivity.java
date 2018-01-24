@@ -55,7 +55,7 @@ public class RaidersActivity extends BaseActivity<RaidersPresenter> implements V
     private List<RaidersListData<List<String>>> raidersListData = new ArrayList<>();
     private List<String> tagList = new ArrayList<>();
     private int status = 1;//权限,公开或私有,1公开,0私有,默认公开
-    private SaveData saveData;
+    private SaveData saveData,saveDataCache;
 
     @Override
     protected int getLayoutId() {
@@ -150,24 +150,30 @@ public class RaidersActivity extends BaseActivity<RaidersPresenter> implements V
 
         String type = getIntent().getStringExtra("type");
         if (type != null){
-            List<SaveData> data = SaveDataUtil
-                    .querydataById(SaveDataDao.Properties.Type.eq(Constant.TypeFlag.RAIDERS)
-                            , SaveDataDao.Properties.User_id.eq(Constant.userData.getId()));
+            List<SaveData> data ;
             switch (type){
                 case "new":
+                    data = SaveDataUtil
+                            .querydataById(SaveDataDao.Properties.Type.eq(Constant.TypeFlag.RAIDERS)
+                                    , SaveDataDao.Properties.User_id.eq(Constant.userData.getId()));
                     if (data != null && data.size()>0) {
-                        saveData = data.get(0);
+                        saveDataCache = data.get(0);
                         new MyDialogTipFragment().setTextEnter("是").setTextCancel("否")
                                 .setShowText("草稿箱中存在未完成攻略,是否继续上次的编辑?")
                                 .setOnEnterListener(new MyDialogTipFragment.OnEnterListener() {
                                     @Override
                                     public void OnEnter(String Tag) {
+                                        saveData = saveDataCache;
                                         initSaveData(saveData);
                                     }
                                 }).show(getSupportFragmentManager(), "tip");
                     }
                     break;
                 case "change":
+                    data = SaveDataUtil
+                            .querydataById(SaveDataDao.Properties.Type.eq(Constant.TypeFlag.RAIDERS)
+                                    ,SaveDataDao.Properties._id.eq(getIntent().getLongExtra("_id",0))
+                                    ,SaveDataDao.Properties.User_id.eq(Constant.userData.getId()));
                     if (data != null && data.size()>0) {
                         saveData = data.get(0);
                         initSaveData(saveData);

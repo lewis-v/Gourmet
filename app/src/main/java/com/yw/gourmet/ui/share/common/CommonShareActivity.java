@@ -167,7 +167,7 @@ public class CommonShareActivity extends BaseActivity<CommonSharePresenter> impl
                 case "change":
                     data = SaveDataUtil
                             .querydataById(SaveDataDao.Properties.Type.eq(Constant.TypeFlag.SHARE)
-                                    ,SaveDataDao.Properties.User_id.eq(Constant.userData.getId()));
+                                    ,SaveDataDao.Properties._id.eq(getIntent().getLongExtra("_id",0)));
                     if (data != null && data.size()>0) {
                         saveData = data.get(0);
                         initSaveData(saveData);

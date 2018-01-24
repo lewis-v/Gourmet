@@ -61,7 +61,7 @@ public class MenuActivity extends BaseActivity<MenuPresenter> implements View.On
     private int difficultLevel = 0;//困难等级,默认为0
     private String coverPath;//封面地址
     private long create_time;//创建时间
-    private SaveData saveData;//本地数据库中的数据
+    private SaveData saveData,saveDataCache;//本地数据库中的数据
 
     @Override
     protected int getLayoutId() {
@@ -220,12 +220,13 @@ public class MenuActivity extends BaseActivity<MenuPresenter> implements View.On
                             .querydataById(SaveDataDao.Properties.Type.eq(Constant.TypeFlag.MENU)
                                     ,SaveDataDao.Properties.User_id.eq(Constant.userData.getId()));
                     if (data != null && data.size()>0) {
-                        saveData = data.get(0);
+                        saveDataCache = data.get(0);
                         new MyDialogTipFragment().setTextEnter("是").setTextCancel("否")
                                 .setShowText("草稿箱中存在未完成食谱,是否继续上次的编辑?")
                                 .setOnEnterListener(new MyDialogTipFragment.OnEnterListener() {
                                     @Override
                                     public void OnEnter(String Tag) {
+                                        saveData = saveDataCache;
                                         initSaveData(saveData);
                                     }
                                 }).show(getSupportFragmentManager(), "tip");
