@@ -174,4 +174,11 @@ public class Api {
     public Observable<BaseData<List<ShareListData<List<String>>>>> GetCollection(List<MultipartBody.Part> parts){
         return service.GetCollection(parts);
     }
+
+    public Observable<BaseData<List<ShareListData<List<String>>>>> GetTop(List<MultipartBody.Part> parts){
+        return service.GetTop(parts);
+    }
+    public Observable<BaseData> PutTop(List<MultipartBody.Part> parts){
+        return service.PutTop(parts);
+    }
 }

@@ -49,7 +49,8 @@ public class ChooseListAdapter extends RecyclerView.Adapter<ChooseListAdapter.My
                 if (choosePosition != holder.getLayoutPosition()){
                     int cachePosition = choosePosition;
                     choosePosition = holder.getLayoutPosition();
-                    notifyDataSetChanged();
+                    notifyItemChanged(choosePosition);
+                    notifyItemChanged(cachePosition);
                 }
             }
         });
@@ -59,7 +60,8 @@ public class ChooseListAdapter extends RecyclerView.Adapter<ChooseListAdapter.My
                 if (choosePosition != holder.getLayoutPosition()){
                     int cachePosition = choosePosition;
                     choosePosition = holder.getLayoutPosition();
-                    notifyDataSetChanged();
+                    notifyItemChanged(choosePosition);
+                    notifyItemChanged(cachePosition);
                 }
             }
         });

@@ -34,9 +34,7 @@ public class MyDialogChooseListFragment extends BaseDialogFragment implements Vi
     @Override
     public void onStart() {
         super.onStart();
-        if (data != null && data.size()>10) {
-            getDialog().getWindow().setLayout((int) (WindowUtil.width * 0.7),(int) (WindowUtil.height * 0.7));
-        }
+            getDialog().getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
     @Override
@@ -54,21 +52,21 @@ public class MyDialogChooseListFragment extends BaseDialogFragment implements Vi
         recycler_choose.setLayoutManager(new LinearLayoutManager(getContext()));
         if (data != null) {
             adapter = new ChooseListAdapter(getContext(), data);
-            recycler_choose.setAdapter(adapter);
             adapter.setChoosePosition(position);
+            recycler_choose.setAdapter(adapter);
+
             adapter.notifyDataSetChanged();
         }
-//        recycler_choose.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                if (recycler_choose.getHeight()> WindowUtil.height*2/3){
-//                    ViewGroup.LayoutParams layoutParams = recycler_choose.getLayoutParams();
-//                    layoutParams.height = WindowUtil.height*2/3;
-//                    recycler_choose.setLayoutParams(layoutParams);
-//                    adapter.notifyDataSetChanged();
-//                }
-//            }
-//        });
+        recycler_choose.post(new Runnable() {
+            @Override
+            public void run() {
+                if (recycler_choose.getHeight()> WindowUtil.height*2/3){
+                    ViewGroup.LayoutParams layoutParams = recycler_choose.getLayoutParams();
+                    layoutParams.height = WindowUtil.height*2/3;
+                    recycler_choose.setLayoutParams(layoutParams);
+                }
+            }
+        });
     }
 
     @Override

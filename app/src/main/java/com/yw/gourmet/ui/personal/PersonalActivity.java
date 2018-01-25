@@ -10,6 +10,9 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -22,15 +25,28 @@ import com.bumptech.glide.Glide;
 import com.yw.gourmet.Constant;
 import com.yw.gourmet.GlideApp;
 import com.yw.gourmet.R;
+import com.yw.gourmet.adapter.ShareListAdapter;
+import com.yw.gourmet.api.Api;
 import com.yw.gourmet.base.BaseActivity;
 import com.yw.gourmet.data.BaseData;
+import com.yw.gourmet.data.ShareListData;
 import com.yw.gourmet.data.UserData;
+import com.yw.gourmet.dialog.MyDialogMoreFragment;
 import com.yw.gourmet.dialog.MyDialogPhotoChooseFragment;
 import com.yw.gourmet.dialog.MyDialogPhotoShowFragment;
+import com.yw.gourmet.listener.OnItemClickListener;
+import com.yw.gourmet.listener.OnMoreListener;
+import com.yw.gourmet.listener.OnReMarkListener;
 import com.yw.gourmet.ui.changeDetail.ChangeDetailActivity;
+import com.yw.gourmet.ui.detail.common.CommonDetailActivity;
+import com.yw.gourmet.ui.detail.diary.DiaryDetailActivity;
+import com.yw.gourmet.ui.detail.menu.MenuDetailActivity;
+import com.yw.gourmet.ui.detail.raiders.RaidersDetailActivity;
 import com.yw.gourmet.utils.ToastUtils;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import id.zelory.compressor.Compressor;
 import io.reactivex.functions.Consumer;
@@ -48,7 +64,10 @@ public class PersonalActivity extends BaseActivity<PersonalPresenter> implements
     private TextView tv_nickname,tv_sex,tv_address,tv_introduction,tv_change_back;
     private FloatingActionButton float_action_header;
     private ImageView img_tool_back,img_header;
-    private String id;//用户id
+    private String id ;//打开此界面的用户id
+    private RecyclerView recycler_top;
+    private ShareListAdapter adapter;
+    private List<ShareListData<List<String>>> listTop = new ArrayList<>();
 
     /**
      * 初始化UI
@@ -147,7 +166,130 @@ public class PersonalActivity extends BaseActivity<PersonalPresenter> implements
             }
         });
         app_bar.setOnClickListener(this);
+
         setData();
+
+        if (id != null) {
+            recycler_top = findViewById(R.id.recycler_top);
+            recycler_top.setItemAnimator(new DefaultItemAnimator());
+            recycler_top.setLayoutManager(new LinearLayoutManager(this));
+            adapter = new ShareListAdapter(this, listTop, getSupportFragmentManager());
+            recycler_top.setAdapter(adapter);
+            mPresenter.getTop(new MultipartBody.Builder().setType(MultipartBody.FORM)
+                    .addFormDataPart("id", Constant.userData.getId()).build().parts());
+            adapter.setListener(new OnItemClickListener() {
+                @Override
+                public void OnClick(View v, int position) {
+                    Intent intent = null;
+                    switch (listTop.get(position).getType()) {
+                        case Constant.TypeFlag.SHARE:
+                            intent = new Intent(PersonalActivity.this, CommonDetailActivity.class);
+                            break;
+                        case Constant.TypeFlag.DIARY:
+                            intent = new Intent(PersonalActivity.this, DiaryDetailActivity.class);
+                            break;
+                        case Constant.TypeFlag.MENU:
+                            intent = new Intent(PersonalActivity.this, MenuDetailActivity.class);
+                            break;
+                        case Constant.TypeFlag.RAIDERS:
+                            intent = new Intent(PersonalActivity.this, RaidersDetailActivity.class);
+                            break;
+                    }
+                    if (intent != null){
+                        intent.putExtra("id",listTop.get(position).getId());
+                        intent.putExtra("type",String.valueOf(listTop.get(position).getType()));
+                        startActivity(intent);
+                    }
+
+                }
+
+                @Override
+                public boolean OnLongClick(View v, int position) {
+                    return false;
+                }
+            });
+            adapter.setOnMoreListener(new OnMoreListener() {
+                @Override
+                public void OnMoreClick(View view, int position) {
+                    MyDialogMoreFragment myDialogMoreFragment = new MyDialogMoreFragment()
+                            .setId(listTop.get(position).getId());
+                    switch (listTop.get(position).getType()) {
+                        case Constant.TypeFlag.SHARE://普通分享
+                            myDialogMoreFragment.setShare(false).setType(listTop.get(position).getType())
+                                    .show(getSupportFragmentManager(), "share");
+                            break;
+                        case Constant.TypeFlag.DIARY://日记分享
+                        case Constant.TypeFlag.MENU://食谱分享
+                        case Constant.TypeFlag.RAIDERS://攻略分享
+                            myDialogMoreFragment.setShareCoverUrl(listTop.get(position).getCover())
+                                    .setId(listTop.get(position).getId())
+                                    .setType(listTop.get(position).getType())
+                                    .setShareDescription(listTop.get(position).getContent())
+                                    .setShareTitle(listTop.get(position).getTitle())
+                                    .setShareUrl(Api.API_BASE_URL + "/Share/Other?id="
+                                            + listTop.get(position).getId() + "&type=" + listTop.get(position).getType())
+                                    .show(getSupportFragmentManager(), "share");
+                            break;
+                    }
+                }
+            });
+            adapter.setOnReMarkListener(new OnReMarkListener() {
+                @Override
+                public void OnGoodClick(View view, int position) {
+                    if (Constant.userData == null){
+                        ToastUtils.showSingleToast("请登陆后再进行操作");
+                    }else {
+                        MultipartBody.Builder builder = new MultipartBody.Builder()
+                                .setType(MultipartBody.FORM)
+                                .addFormDataPart("id", Constant.userData.getId())
+                                .addFormDataPart("type",listTop.get(position).getType()+"")
+                                .addFormDataPart("act_id",listTop.get(position).getId())
+                                .addFormDataPart("act","1");
+                        mPresenter.reMark(builder.build().parts(),position);
+                    }
+                }
+
+                @Override
+                public void OnBadClick(View view, int position) {
+                    if (Constant.userData == null){
+                        ToastUtils.showSingleToast("请登陆后再进行操作");
+                    }else {
+                        MultipartBody.Builder builder = new MultipartBody.Builder()
+                                .setType(MultipartBody.FORM)
+                                .addFormDataPart("id", Constant.userData.getId())
+                                .addFormDataPart("type",listTop.get(position).getType()+"")
+                                .addFormDataPart("act_id",listTop.get(position).getId())
+                                .addFormDataPart("act","0");
+                        mPresenter.reMark(builder.build().parts(),position);
+                    }
+                }
+
+                @Override
+                public void OnCommentClick(View view, int position) {
+                    Intent intent = null;
+                    switch (listTop.get(position).getType()) {
+                        case Constant.TypeFlag.SHARE:
+                            intent = new Intent(PersonalActivity.this, CommonDetailActivity.class);
+                            break;
+                        case Constant.TypeFlag.DIARY:
+                            intent = new Intent(PersonalActivity.this, DiaryDetailActivity.class);
+                            break;
+                        case Constant.TypeFlag.MENU:
+                            intent = new Intent(PersonalActivity.this, MenuDetailActivity.class);
+                            break;
+                        case Constant.TypeFlag.RAIDERS:
+                            intent = new Intent(PersonalActivity.this, RaidersDetailActivity.class);
+                            break;
+                    }
+                    if (intent != null){
+                        intent.putExtra("id",listTop.get(position).getId());
+                        intent.putExtra("type",String.valueOf(listTop.get(position).getType()));
+                        intent.putExtra("isComment",true);
+                        startActivity(intent);
+                    }
+                }
+            });
+        }
     }
 
     /**
@@ -155,13 +297,14 @@ public class PersonalActivity extends BaseActivity<PersonalPresenter> implements
      */
     public void setData(){
         id = getIntent().getStringExtra("id");
-        if (id != null && id.length()>0){//查看其它用户信息
+        if (id != null && !id.equals(Constant.userData.getId())){//查看其它用户信息
             ll_change_detail.setVisibility(View.GONE);
             ll_change_bottom.setVisibility(View.GONE);
             ll_change_top.setVisibility(View.GONE);
 
         }else {//查看自身信息
             if (Constant.userData != null) {
+                id = Constant.userData.getId();
                 ll_change_detail.setVisibility(View.VISIBLE);
                 ll_change_bottom.setVisibility(View.VISIBLE);
                 ll_change_top.setVisibility(View.VISIBLE);
@@ -276,5 +419,23 @@ public class PersonalActivity extends BaseActivity<PersonalPresenter> implements
         Constant.userData = model.getData();
         setData();
         ToastUtils.showLongToast(model.getMessage());
+    }
+
+    @Override
+    public void onGetTopSuccess(BaseData<List<ShareListData<List<String>>>> model) {
+        listTop.clear();
+        listTop.addAll(model.getData());
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void OnGetTopFail(String msg) {
+
+    }
+
+    @Override
+    public void onReMarkSuccess(BaseData<ShareListData<List<String>>> model,int position) {
+        listTop.set(position,model.getData());
+        adapter.notifyDataSetChanged();
     }
 }
