@@ -42,6 +42,7 @@ public class SetTopActivity extends BaseActivity<SetTopPresenter> implements Set
     private TextView tv_move;
     private MyShareFragment shareFragment;
     private ImageView img_top;
+    private float downY;
 
     @Override
     protected int getLayoutId() {
@@ -65,6 +66,7 @@ public class SetTopActivity extends BaseActivity<SetTopPresenter> implements Set
             public boolean onTouch(View v, MotionEvent event) {
                     switch (event.getAction()) {
                         case MotionEvent.ACTION_DOWN:
+                            downY = event.getRawY();
                             return true;
                         case MotionEvent.ACTION_MOVE:
                             if (event.getRawY() > WindowUtil.height/8) {
@@ -74,12 +76,24 @@ public class SetTopActivity extends BaseActivity<SetTopPresenter> implements Set
                             }
                             return true;
                         case MotionEvent.ACTION_UP:
-                            Log.e("Y",event.getRawY()+"");
-                            if (event.getRawY()>WindowUtil.height/2){
-                                perforAnimate(ll_share,ll_share.getHeight(),WindowUtil.height/8);
-                            }else{
-                                perforAnimate(ll_share,ll_share.getHeight(),WindowUtil.height*7/8);
+                            if (downY > event.getRawY()){//上滑
+                                if (downY - event.getRawY() > WindowUtil.height/8){
+                                    perforAnimate(ll_share,ll_share.getHeight(),WindowUtil.height*7/8);
+                                }else{
+                                    perforAnimate(ll_share,ll_share.getHeight(),WindowUtil.height/8);
+                                }
+                            }else{//下滑
+                                if (event.getRawY() - downY > WindowUtil.height/8){
+                                    perforAnimate(ll_share,ll_share.getHeight(),WindowUtil.height/8);
+                                }else{
+                                    perforAnimate(ll_share,ll_share.getHeight(),WindowUtil.height*7/8);
+                                }
                             }
+//                            if (event.getRawY()>WindowUtil.height/2){
+//
+//                            }else{
+//
+//                            }
                             return true;
                     }
                 return false;
