@@ -44,6 +44,7 @@ public class MyShareFragment extends BaseFragment<MySharePresenter> implements M
     private List<ShareListData<List<String>>> listData = new ArrayList<>();
     private ShareListAdapter adapter;
     private int type = -1;//显示类型,默认为全部-1
+    private String id;//显示者的id
 
     @Override
     protected int getLayoutId() {
@@ -229,8 +230,8 @@ public class MyShareFragment extends BaseFragment<MySharePresenter> implements M
         if (type != -1){
             builder.addFormDataPart("type",String.valueOf(type));
         }
-        if (Constant.userData != null){
-            builder.addFormDataPart("id",Constant.userData.getId());
+        if (id != null){
+            builder.addFormDataPart("id",id);
         }else {
             ToastUtils.showSingleToast("请登陆后再进行操作");
         }
@@ -256,19 +257,34 @@ public class MyShareFragment extends BaseFragment<MySharePresenter> implements M
         if (type != -1){
             builder.addFormDataPart("type",String.valueOf(type));
         }
-        if (Constant.userData != null){
-            builder.addFormDataPart("id",Constant.userData.getId());
+        if (id != null){
+            builder.addFormDataPart("id",id);
         }else {
             ToastUtils.showSingleToast("请登陆后再进行操作");
         }
         if (Constant.userData != null){
-            builder.addFormDataPart("user_id",Constant.userData.getId());
+            builder.addFormDataPart("user_id",id);
         }
         mPresenter.getShareList(builder.build().parts(), LoadEnum.REFRESH);
     }
 
+    /**
+     * 设置显示类型
+     * @param type
+     * @return
+     */
     public MyShareFragment setType(int type) {
         this.type = type;
+        return this;
+    }
+
+    /**
+     * 设置显示者id
+     * @param id
+     * @return
+     */
+    public MyShareFragment setId(String id) {
+        this.id = id;
         return this;
     }
 }

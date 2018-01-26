@@ -206,6 +206,38 @@
                 android:layout_height="1px"/>
 
             <LinearLayout
+                android:id="@+id/ll_top"
+                android:background="@drawable/ll_back_change"
+                android:padding="8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/top_back"
+                    android:src="@drawable/top"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp" />
+                <TextView
+                    android:text="@string/top"
+                    android:textSize="16sp"
+                    android:textColor="@color/word_black"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content" />
+                <ImageView
+                    android:src="@drawable/chevron_right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:background="@color/dev"
+                android:layout_width="match_parent"
+                android:layout_height="1px"/>
+
+            <LinearLayout
                 android:id="@+id/ll_collection"
                 android:background="@drawable/ll_back_change"
                 android:padding="8dp"

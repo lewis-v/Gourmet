@@ -44,6 +44,7 @@ public class CommentMyFragment extends BaseFragment<CommentMyPresenter> implemen
     private List<ShareListData<List<String>>> listData = new ArrayList<>();
     private ShareListAdapter adapter;
     private int type = Constant.CommentType.COMMENT;//显示类型,0,全部,1评论,2赞,3踩
+    private String id;//打开者的id
 
     @Override
     protected int getLayoutId() {
@@ -228,8 +229,8 @@ public class CommentMyFragment extends BaseFragment<CommentMyPresenter> implemen
                 .addFormDataPart("token", Constant.userData == null?"0":Constant.userData.getToken());
         builder.addFormDataPart("type",String.valueOf(type));
 
-        if (Constant.userData != null){
-            builder.addFormDataPart("id",Constant.userData.getId());
+        if (id != null){
+            builder.addFormDataPart("id",id);
         }else {
             ToastUtils.showSingleToast("请登陆后再进行操作");
         }
@@ -254,16 +255,31 @@ public class CommentMyFragment extends BaseFragment<CommentMyPresenter> implemen
                 .addFormDataPart("token", Constant.userData == null ? "0" :  Constant.userData.getToken());
         builder.addFormDataPart("type",String.valueOf(type));
         if (Constant.userData != null){
-            builder.addFormDataPart("id",Constant.userData.getId());
-            builder.addFormDataPart("user_id",Constant.userData.getId());
+            builder.addFormDataPart("id",id);
+            builder.addFormDataPart("user_id",id);
         }else {
             ToastUtils.showSingleToast("请登陆后再进行操作");
         }
         mPresenter.getShareList(builder.build().parts(), LoadEnum.REFRESH);
     }
 
+    /**
+     * 设置打开类型
+     * @param type
+     * @return
+     */
     public CommentMyFragment setType(int type) {
         this.type = type;
+        return this;
+    }
+
+    /**
+     * 设置打开者的id
+     * @param id
+     * @return
+     */
+    public CommentMyFragment setId(String id) {
+        this.id = id;
         return this;
     }
 }

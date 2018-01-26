@@ -91,4 +91,10 @@
     <string name="no_title">无标题</string>
     <string name="delete_this_draft">删除此草稿</string>
     <string name="delete_draft_all">清空草稿箱</string>
+    <string name="ta_share">Ta的分享</string>
+    <string name="my_top">我的置顶</string>
+    <string name="now_top">当前置顶内容</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

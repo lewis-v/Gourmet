@@ -29,12 +29,10 @@ import com.yw.gourmet.listener.OnCancelClickListener;
 import com.yw.gourmet.listener.OnToolClickListener;
 import com.yw.gourmet.ui.share.ToolFragment;
 import com.yw.gourmet.ui.share.ToolType;
-import com.yw.gourmet.ui.share.common.CommonShareActivity;
 import com.yw.gourmet.utils.ToastUtils;
 
 import java.io.File;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import id.zelory.compressor.Compressor;
@@ -261,7 +259,7 @@ public class DiaryActivity extends BaseActivity<DiaryPresenter> implements View.
             @Override
             public void run() {
                 if (action != null) {
-                    action.Action1();
+                    action.Action0();
                 }
                 isShowTool = isShow;
                 toolShowing = false;

@@ -149,7 +149,8 @@
             android:name=".ui.about.AboutActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".ui.Draft.DraftActivity"></activity>
+        <activity android:name=".ui.Draft.DraftActivity" />
+        <activity android:name=".ui.setTop.SetTopActivity"></activity>
     </application>
 
 </manifest>

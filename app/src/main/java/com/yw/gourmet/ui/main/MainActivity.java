@@ -1,16 +1,12 @@
 package com.yw.gourmet.ui.main;
 
 import android.Manifest;
-import android.content.Intent;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -21,11 +17,9 @@ import com.yw.gourmet.base.BaseActivity;
 import com.yw.gourmet.listener.MyAction;
 import com.yw.gourmet.rxbus.RxBus;
 import com.yw.gourmet.ui.gourmet.GourmetFragment;
-import com.yw.gourmet.ui.login.LoginActivity;
 import com.yw.gourmet.ui.message.MessageFragment;
 import com.yw.gourmet.ui.my.MyFragment;
 import com.yw.gourmet.ui.search.SearchFragment;
-import com.yw.gourmet.ui.share.common.CommonShareActivity;
 import com.yw.gourmet.utils.DisplayUtils;
 import com.yw.gourmet.utils.WindowUtil;
 import com.yw.gourmet.widget.DepthPageTransformer;
@@ -33,8 +27,6 @@ import com.yw.gourmet.widget.MyViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import rx.Subscriber;
 
 import static android.support.v4.content.PermissionChecker.PERMISSION_DENIED;
 
@@ -240,7 +232,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
             @Override
             public void run() {
                 if (action != null) {
-                    action.Action1();
+                    action.Action0();
                 }
                 isFunction = isShow;
                 funtionShowing = false;

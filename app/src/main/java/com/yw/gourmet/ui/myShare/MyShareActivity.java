@@ -2,9 +2,11 @@ package com.yw.gourmet.ui.myShare;
 
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.yw.gourmet.Constant;
 import com.yw.gourmet.R;
@@ -17,12 +19,16 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MyShareActivity extends BaseActivity {
+    private final static String TAG = "MyShareActivity";
+
+    private TextView tv_title;
     private TabLayout tab;
     private MyViewPager viewpager;
     private LinearLayout ll_back;
     private List<Fragment> fragmentList = new ArrayList<>();
     private List<String> listTitle = Arrays.asList("全部","日记","攻略","食谱","分享");
     private MyFragmentStringAdapter adapter;
+    private String id;//显示者id
 
     @Override
     protected int getLayoutId() {
@@ -34,11 +40,21 @@ public class MyShareActivity extends BaseActivity {
         tab = findViewById(R.id.tab);
         viewpager = findViewById(R.id.viewpager);
 
-        fragmentList.add(new MyShareFragment());
-        fragmentList.add(new MyShareFragment().setType(Constant.TypeFlag.DIARY));
-        fragmentList.add(new MyShareFragment().setType(Constant.TypeFlag.RAIDERS));
-        fragmentList.add(new MyShareFragment().setType(Constant.TypeFlag.MENU));
-        fragmentList.add(new MyShareFragment().setType(Constant.TypeFlag.SHARE));
+        id = getIntent().getStringExtra("id");
+        if (id == null){
+            Log.e(TAG,"id is null");
+        }else{
+            tv_title = findViewById(R.id.tv_title);
+            if (Constant.userData == null || !id.equals(Constant.userData.getId())){
+                tv_title.setText(R.string.ta_share);
+            }
+        }
+
+        fragmentList.add(new MyShareFragment().setId(id));
+        fragmentList.add(new MyShareFragment().setType(Constant.TypeFlag.DIARY).setId(id));
+        fragmentList.add(new MyShareFragment().setType(Constant.TypeFlag.RAIDERS).setId(id));
+        fragmentList.add(new MyShareFragment().setType(Constant.TypeFlag.MENU).setId(id));
+        fragmentList.add(new MyShareFragment().setType(Constant.TypeFlag.SHARE).setId(id));
         adapter = new MyFragmentStringAdapter(getSupportFragmentManager(),fragmentList,listTitle);
         viewpager.setPagingEnabled(true);
         viewpager.setAdapter(adapter);

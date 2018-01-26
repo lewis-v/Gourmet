@@ -38,10 +38,12 @@ import com.yw.gourmet.listener.OnItemClickListener;
 import com.yw.gourmet.listener.OnMoreListener;
 import com.yw.gourmet.listener.OnReMarkListener;
 import com.yw.gourmet.ui.changeDetail.ChangeDetailActivity;
+import com.yw.gourmet.ui.commentMy.CommentMyActivity;
 import com.yw.gourmet.ui.detail.common.CommonDetailActivity;
 import com.yw.gourmet.ui.detail.diary.DiaryDetailActivity;
 import com.yw.gourmet.ui.detail.menu.MenuDetailActivity;
 import com.yw.gourmet.ui.detail.raiders.RaidersDetailActivity;
+import com.yw.gourmet.ui.myShare.MyShareActivity;
 import com.yw.gourmet.utils.ToastUtils;
 
 import java.io.File;
@@ -61,10 +63,10 @@ public class PersonalActivity extends BaseActivity<PersonalPresenter> implements
     private AppBarLayout app_bar;
     private LinearLayout ll_tool,ll_change_detail,ll_change_bottom,ll_change_top;
     private AnimatorSet animatorSetToolBarShow,animatorSetToolBarHide;//toolbar的显示隐藏动画
-    private TextView tv_nickname,tv_sex,tv_address,tv_introduction,tv_change_back;
+    private TextView tv_nickname,tv_sex,tv_address,tv_introduction,tv_change_back,tv_more;
     private FloatingActionButton float_action_header;
     private ImageView img_tool_back,img_header;
-    private String id ;//打开此界面的用户id
+    private String id ;//此界面的用户id
     private RecyclerView recycler_top;
     private ShareListAdapter adapter;
     private List<ShareListData<List<String>>> listTop = new ArrayList<>();
@@ -82,6 +84,8 @@ public class PersonalActivity extends BaseActivity<PersonalPresenter> implements
         tv_address = (TextView)findViewById(R.id.tv_address);
         tv_introduction = (TextView)findViewById(R.id.tv_introduction);
         tv_change_back = (TextView)findViewById(R.id.tv_change_back);
+        tv_more = findViewById(R.id.tv_more);
+        tv_more.setOnClickListener(this);
         tv_change_back.setOnClickListener(this);
 
         img_tool_back = (ImageView)findViewById(R.id.img_tool_back);
@@ -341,6 +345,12 @@ public class PersonalActivity extends BaseActivity<PersonalPresenter> implements
                 new MyDialogPhotoChooseFragment().setCrop(true).setChooseNum(1).setRatio(2/3f)
                         .setOnCropListener(this).show(getSupportFragmentManager(),"changeBack");
                 break;
+            case R.id.tv_more:
+                Intent intent = new Intent(this, MyShareActivity.class);
+                intent.putExtra("id",id == null?Constant.userData.getId():id);
+                startActivity(intent);
+                break;
+
         }
     }
 

@@ -5,5 +5,5 @@ package com.yw.gourmet.listener;
  */
 
 public interface MyAction {
-    void Action1();
+    void Action0();
 }

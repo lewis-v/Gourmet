@@ -2,6 +2,7 @@ package com.yw.gourmet.ui.commentMy;
 
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -16,12 +17,15 @@ import java.util.Arrays;
 import java.util.List;
 
 public class CommentMyActivity extends BaseActivity {
+    private final static String TAG = "CommentMyActivity";
+
     private TabLayout tab;
     private MyViewPager viewpager;
     private LinearLayout ll_back;
     private List<Fragment> fragmentList = new ArrayList<>();
     private List<String> listTitle = Arrays.asList("全部","评论","赞","踩");
     private MyFragmentStringAdapter adapter;
+    private String id;//打开者的id
 
     @Override
     protected int getLayoutId() {
@@ -33,10 +37,15 @@ public class CommentMyActivity extends BaseActivity {
         tab = findViewById(R.id.tab);
         viewpager = findViewById(R.id.viewpager);
 
-        fragmentList.add(new CommentMyFragment().setType(Constant.CommentType.ALL));
-        fragmentList.add(new CommentMyFragment().setType(Constant.CommentType.COMMENT));
-        fragmentList.add(new CommentMyFragment().setType(Constant.CommentType.GOOD));
-        fragmentList.add(new CommentMyFragment().setType(Constant.CommentType.BAD));
+        id = getIntent().getStringExtra("id");
+        if (id == null){
+            Log.e(TAG,"id is null");
+        }
+
+        fragmentList.add(new CommentMyFragment().setType(Constant.CommentType.ALL).setId(id));
+        fragmentList.add(new CommentMyFragment().setType(Constant.CommentType.COMMENT).setId(id));
+        fragmentList.add(new CommentMyFragment().setType(Constant.CommentType.GOOD).setId(id));
+        fragmentList.add(new CommentMyFragment().setType(Constant.CommentType.BAD).setId(id));
         adapter = new MyFragmentStringAdapter(getSupportFragmentManager(),fragmentList,listTitle);
         viewpager.setPagingEnabled(true);
         viewpager.setAdapter(adapter);

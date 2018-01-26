@@ -28,6 +28,7 @@ import com.yw.gourmet.ui.login.LoginActivity;
 import com.yw.gourmet.ui.myShare.MyShareActivity;
 import com.yw.gourmet.ui.personal.PersonalActivity;
 import com.yw.gourmet.ui.set.SetActivity;
+import com.yw.gourmet.ui.setTop.SetTopActivity;
 
 import rx.Observable;
 import rx.Subscription;
@@ -46,6 +47,7 @@ public class MyFragment extends BaseFragment implements View.OnClickListener,MyC
     private ConstraintLayout constraint_my;
     private Subscription mRxSubSticky;
     private ImageView img_header;
+    private LinearLayout ll_top;
 
     /**
      * 初始化UI
@@ -62,6 +64,8 @@ public class MyFragment extends BaseFragment implements View.OnClickListener,MyC
         ll_raiders = view.findViewById(R.id.ll_raiders);
         ll_set = (LinearLayout)view.findViewById(R.id.ll_set);
         ll_comment = view.findViewById(R.id.ll_comment);
+        ll_top = view.findViewById(R.id.ll_top);
+        ll_top.setOnClickListener(this);
         ll_set.setOnClickListener(this);
         ll_menu.setOnClickListener(this);
         ll_diary.setOnClickListener(this);
@@ -139,27 +143,35 @@ public class MyFragment extends BaseFragment implements View.OnClickListener,MyC
             case R.id.ll_raiders:
                 intent = new Intent(getContext(), MyShareActivity.class);
                 intent.putExtra("type",Constant.TypeFlag.RAIDERS);
+                intent.putExtra("id",Constant.userData.getId());
                 break;
             case R.id.ll_share:
                 intent = new Intent(getContext(), MyShareActivity.class);
                 intent.putExtra("type",Constant.TypeFlag.SHARE);
+                intent.putExtra("id",Constant.userData.getId());
                 break;
             case R.id.ll_diary:
                 intent = new Intent(getContext(), MyShareActivity.class);
                 intent.putExtra("type",Constant.TypeFlag.DIARY);
+                intent.putExtra("id",Constant.userData.getId());
                 break;
             case R.id.ll_menu:
                 intent = new Intent(getContext(), MyShareActivity.class);
                 intent.putExtra("type",Constant.TypeFlag.MENU);
+                intent.putExtra("id",Constant.userData.getId());
                 break;
             case R.id.ll_comment:
                 intent = new Intent(getContext(), CommentMyActivity.class);
+                intent.putExtra("id",Constant.userData.getId());
                 break;
             case R.id.ll_collection:
                 intent = new Intent(getContext(), CollectionActivity.class);
                 break;
             case R.id.ll_draft:
                 intent = new Intent(getContext(), DraftActivity.class);
+                break;
+            case R.id.ll_top:
+                intent = new Intent(getContext(), SetTopActivity.class);
                 break;
         }
         if (intent != null){
