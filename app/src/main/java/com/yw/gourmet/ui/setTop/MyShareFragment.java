@@ -41,6 +41,8 @@ public class MyShareFragment extends BaseFragment<MySharePresenter> implements S
     private SwipeToLoadLayout swipeToLoadLayout;
     private MySetTopAdapter adapter;
     private List<ShareListData<List<String>>> listData = new ArrayList<>();
+    private List<ShareListData<List<String>>> topList;//当前置顶的列表
+    private MySetTopAdapter topAdapter;//置顶适配器
 
     @Override
     protected int getLayoutId() {
@@ -86,6 +88,12 @@ public class MyShareFragment extends BaseFragment<MySharePresenter> implements S
             @Override
             public boolean OnLongClick(View v, int position) {
                 return false;
+            }
+        });
+        adapter.setOnTopClickListener(new MySetTopAdapter.OnTopClickListener() {
+            @Override
+            public void onSetTop(View view, int position) {
+
             }
         });
         refresh();
@@ -148,7 +156,21 @@ public class MyShareFragment extends BaseFragment<MySharePresenter> implements S
                 ToastUtils.showSingleToast("已经是最新的啦");
             }else {
                 listData.clear();
-                listData.addAll(model.getData());
+                adapter.notifyDataSetChanged();
+                if (topList == null || topList.size() == 0) {
+                    listData.addAll(model.getData());
+                }else {
+                    for (ShareListData<List<String>> data : model.getData()){
+                        for (ShareListData<List<String>> top : topList){
+                            if (data.getType() == top.getType() && data.getId().equals(top.getId())){
+                                break;
+                            }
+                                listData.add(data);
+                                adapter.notifyItemInserted(listData.size()-1);
+                                break;
+                        }
+                    }
+                }
                 adapter.notifyDataSetChanged();
             }
             swipeToLoadLayout.setRefreshing(false);
@@ -159,11 +181,15 @@ public class MyShareFragment extends BaseFragment<MySharePresenter> implements S
             if (model.getData() == null || model.getData().size() == 0){
                 ToastUtils.showSingleToast("没有更多啦");
             }else {
-                for (int i = 0,len = model.getData().size();i<len;i++){
-                    listData.add(model.getData().get(i));
-                    adapter.notifyItemChanged(listData.size() -1);
-                    if (listData.size()>=2){
-                        adapter.notifyItemChanged(listData.size() -2);
+                for (ShareListData<List<String>> data : model.getData()){
+                    for (ShareListData<List<String>> top : topList){
+                        if (data.getType() == top.getType() && data.getId().equals(top.getId())){
+                            break;
+                        }
+                            listData.add(data);
+                            adapter.notifyItemInserted(listData.size()-1);
+                            break;
+
                     }
                 }
             }
@@ -181,4 +207,13 @@ public class MyShareFragment extends BaseFragment<MySharePresenter> implements S
         }
     }
 
+    public MyShareFragment setTopList(List<ShareListData<List<String>>> topList) {
+        this.topList = topList;
+        return this;
+    }
+
+    public MyShareFragment setTopAdapter(MySetTopAdapter topAdapter) {
+        this.topAdapter = topAdapter;
+        return this;
+    }
 }

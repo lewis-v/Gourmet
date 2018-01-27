@@ -89,11 +89,6 @@ public class SetTopActivity extends BaseActivity<SetTopPresenter> implements Set
                                     perforAnimate(ll_share,ll_share.getHeight(),WindowUtil.height*7/8);
                                 }
                             }
-//                            if (event.getRawY()>WindowUtil.height/2){
-//
-//                            }else{
-//
-//                            }
                             return true;
                     }
                 return false;
@@ -131,7 +126,7 @@ public class SetTopActivity extends BaseActivity<SetTopPresenter> implements Set
      */
     public void addFragmentFunction() {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        shareFragment = new MyShareFragment();
+        shareFragment = new MyShareFragment().setTopList(data).setTopAdapter(adapter);
         fragmentTransaction.add(R.id.fl_share, shareFragment);
         fragmentTransaction.commitNow();
     }
