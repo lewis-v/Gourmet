@@ -9,14 +9,14 @@ import com.yw.gourmet.base.BaseFragment;
  * Created by Administrator on 2017/10/22.
  */
 
-public class SearchFragment extends BaseFragment
+public class SearchFragment extends BaseFragment<SearchPresenter> implements SearchContract.View
 {
     /**
      * 初始化UI
      */
     @Override
     protected void initView() {
-        toolbar = (Toolbar)view.findViewById(R.id.toolbar);
+
     }
 
     /**

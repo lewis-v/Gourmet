@@ -7,21 +7,17 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.yw.gourmet.Constant;
 import com.yw.gourmet.GlideApp;
 import com.yw.gourmet.R;
@@ -38,7 +34,6 @@ import com.yw.gourmet.listener.OnItemClickListener;
 import com.yw.gourmet.listener.OnMoreListener;
 import com.yw.gourmet.listener.OnReMarkListener;
 import com.yw.gourmet.ui.changeDetail.ChangeDetailActivity;
-import com.yw.gourmet.ui.commentMy.CommentMyActivity;
 import com.yw.gourmet.ui.detail.common.CommonDetailActivity;
 import com.yw.gourmet.ui.detail.diary.DiaryDetailActivity;
 import com.yw.gourmet.ui.detail.menu.MenuDetailActivity;
@@ -63,9 +58,10 @@ public class PersonalActivity extends BaseActivity<PersonalPresenter> implements
     private AppBarLayout app_bar;
     private LinearLayout ll_tool,ll_change_detail,ll_change_bottom,ll_change_top;
     private AnimatorSet animatorSetToolBarShow,animatorSetToolBarHide;//toolbar的显示隐藏动画
-    private TextView tv_nickname,tv_sex,tv_address,tv_introduction,tv_change_back,tv_more;
+    private TextView tv_nickname,tv_sex,tv_address,tv_introduction,tv_change_back,tv_more,tv_nothing;
     private FloatingActionButton float_action_header;
     private ImageView img_tool_back,img_header;
+    private LinearLayout ll_nothing;
     private String id ;//此界面的用户id
     private UserData userData;
     private RecyclerView recycler_top;
@@ -86,6 +82,7 @@ public class PersonalActivity extends BaseActivity<PersonalPresenter> implements
         tv_introduction = (TextView)findViewById(R.id.tv_introduction);
         tv_change_back = (TextView)findViewById(R.id.tv_change_back);
         tv_more = findViewById(R.id.tv_more);
+        tv_nothing = findViewById(R.id.tv_nothing);
         tv_more.setOnClickListener(this);
         tv_change_back.setOnClickListener(this);
 
@@ -101,6 +98,7 @@ public class PersonalActivity extends BaseActivity<PersonalPresenter> implements
         ll_change_bottom = (LinearLayout)findViewById(R.id.ll_change_bottom);
         ll_change_top = (LinearLayout)findViewById(R.id.ll_change_top);
         ll_change_detail = (LinearLayout)findViewById(R.id.ll_change_detail);
+        ll_nothing = findViewById(R.id.ll_nothing);
         ll_change_detail.setOnClickListener(this);
 
         ObjectAnimator animatorToolBarShow = ObjectAnimator.ofFloat(ll_tool,"alpha",0f,1f);
@@ -439,9 +437,15 @@ public class PersonalActivity extends BaseActivity<PersonalPresenter> implements
 
     @Override
     public void onGetTopSuccess(BaseData<List<ShareListData<List<String>>>> model) {
-        listTop.clear();
-        listTop.addAll(model.getData());
-        adapter.notifyDataSetChanged();
+        if (model.getData().size()>0) {
+            listTop.clear();
+            listTop.addAll(model.getData());
+            adapter.notifyDataSetChanged();
+            ll_nothing.setVisibility(View.GONE);
+        }else{
+            ll_nothing.setVisibility(View.VISIBLE);
+            tv_nothing.setText("没有置顶内容哟");
+        }
     }
 
     @Override

@@ -19,6 +19,8 @@
     <color name="img_back">#8f000000</color>
     <color name="change_back">#8f939393</color>
     <color name="blue_light">#cbc7ff</color>
+    <color name="search_back">#8fcacaca</color>
+    <color name="search_text">#757474</color>
 
     <color name="theme_orange_primary">#FF5722</color>
     <color name="theme_orange_dark">#E64A19</color>

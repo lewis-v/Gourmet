@@ -198,10 +198,16 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
     public void onLoadSuccess(BaseData<List<ShareListData<List<String>>>> model, LoadEnum flag) {
         if (flag == LoadEnum.REFRESH) {
             if ((model.getData() == null || model.getData().size() == 0) && listData.size()>0){
-                ToastUtils.showSingleToast("已经是最新的啦");
+//                ToastUtils.showSingleToast("已经是最新的啦");
             }else {
+                if (model.getData().size() < 10){
+                    adapter.setEnd(true);
+                }else {
+                    adapter.setEnd(false);
+                }
                 listData.clear();
                 listData.addAll(model.getData());
+                adapter.setEnd(false);
                 adapter.notifyDataSetChanged();
             }
             swipeToLoadLayout.setRefreshing(false);
@@ -211,7 +217,15 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
         }else {
             if (model.getData() == null || model.getData().size() == 0){
                 ToastUtils.showSingleToast("没有更多啦");
+                adapter.setEnd(true);
+                adapter.notifyDataSetChanged();
             }else {
+                if (model.getData().size() < 10){
+                    adapter.setEnd(true);
+                }else {
+                    adapter.setEnd(false);
+                }
+                adapter.notifyDataSetChanged();
                 for (int i = 0,len = model.getData().size();i<len;i++){
                     listData.add(model.getData().get(i));
                     adapter.notifyItemChanged(listData.size() -1);
@@ -265,6 +279,5 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
             builder.addFormDataPart("user_id",Constant.userData.getUser_id());
         }
         mPresenter.load(builder.build().parts(), LoadEnum.REFRESH);
-
     }
 }

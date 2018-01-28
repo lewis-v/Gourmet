@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.aspsine.swipetoloadlayout.OnRefreshListener;
 import com.aspsine.swipetoloadlayout.SwipeToLoadLayout;
@@ -33,7 +34,8 @@ public class DraftActivity extends BaseActivity<DraftPresenter> implements Draft
     private List<SaveData> data = new ArrayList<>();
     private RecyclerView swipe_target;
     private SwipeToLoadLayout swipeToLoadLayout;
-    private LinearLayout ll_back;
+    private LinearLayout ll_back,ll_nothing;
+    private TextView tv_nothing;
     private DraftAdapter adapter;
 
     @Override
@@ -44,6 +46,7 @@ public class DraftActivity extends BaseActivity<DraftPresenter> implements Draft
     @Override
     protected void initView() {
         setLoadDialog(true);
+        ll_nothing = findViewById(R.id.ll_nothing);
         ll_back = findViewById(R.id.ll_back);
         ll_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,6 +54,8 @@ public class DraftActivity extends BaseActivity<DraftPresenter> implements Draft
                 finish();
             }
         });
+
+        tv_nothing = findViewById(R.id.tv_nothing);
 
         swipeToLoadLayout = findViewById(R.id.swipeToLoadLayout);
         swipe_target = findViewById(R.id.swipe_target);
@@ -114,18 +119,23 @@ public class DraftActivity extends BaseActivity<DraftPresenter> implements Draft
     }
 
     @Override
-    public void onGetSuccess(List<SaveData> model) {
-        Log.e("---model---",model.toString());
-        data.clear();
-        data.addAll(model);
+    public void onGetSuccess(final List<SaveData> model) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                adapter.notifyDataSetChanged();
                 setLoadDialog(false);
                 swipeToLoadLayout.setRefreshing(false);
-                if (data.size() == 0){
-                    ToastUtils.showSingleToast("草稿箱里什么都没有哟");
+                if (model == null || model.size()==0){
+                    ll_nothing.setVisibility(View.VISIBLE);
+                    tv_nothing.setText("草稿箱里什么都没有哟");
+                }else {
+                    ll_nothing.setVisibility(View.GONE);
+                    data.clear();
+                    data.addAll(model);
+                    adapter.notifyDataSetChanged();
+                    if (data.size() == 0) {
+                        ToastUtils.showSingleToast("草稿箱里什么都没有哟");
+                    }
                 }
             }
         });

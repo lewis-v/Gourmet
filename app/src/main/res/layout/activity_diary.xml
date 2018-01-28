@@ -98,7 +98,7 @@
         <TextView
             android:id="@+id/tv_power"
             android:gravity="center"
-            android:textColor="@color/colorAccent"
+            android:textColor="@android:color/white"
             android:layout_marginRight="10dp"
             android:text="@string/public_type"
             android:background="@drawable/circle_back"

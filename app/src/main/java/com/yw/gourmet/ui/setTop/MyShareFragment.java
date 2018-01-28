@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.aspsine.swipetoloadlayout.OnLoadMoreListener;
 import com.aspsine.swipetoloadlayout.OnRefreshListener;
@@ -43,8 +44,7 @@ public class MyShareFragment extends BaseFragment<MySharePresenter> implements S
     private SwipeToLoadLayout swipeToLoadLayout;
     private MySetTopAdapter adapter;
     private List<ShareListData<List<String>>> listData = new ArrayList<>();
-    private List<ShareListData<List<String>>> topList;//当前置顶的列表
-    private MySetTopAdapter topAdapter;//置顶适配器
+    private LinearLayout ll_nothing;
 
     @Override
     protected int getLayoutId() {
@@ -53,6 +53,8 @@ public class MyShareFragment extends BaseFragment<MySharePresenter> implements S
 
     @Override
     protected void initView() {
+        ll_nothing = view.findViewById(R.id.ll_nothing);
+
         swipeToLoadLayout = (SwipeToLoadLayout)view.findViewById(R.id.swipeToLoadLayout);
         swipeToLoadLayout.setOnRefreshListener(this);
         swipeToLoadLayout.setOnLoadMoreListener(this);
@@ -160,14 +162,10 @@ public class MyShareFragment extends BaseFragment<MySharePresenter> implements S
     @Override
     public void onSetTopSuccess(String msg, int position) {
         ((BaseActivity)getActivity()).setLoadDialog(false);
-        if (topList.size() == 3){
-            topList.remove(2);
-            topAdapter.notifyItemRemoved(2);
+        ((SetTopContract.TopView)getActivity()).addTop(listData.get(position),position);
+        if (listData.size() == 0){
+            ll_nothing.setVisibility(View.VISIBLE);
         }
-        topList.add(0,listData.get(position));
-        topAdapter.notifyItemInserted(0);
-        listData.remove(position);
-        adapter.notifyItemRemoved(position);
     }
 
     @Override
@@ -180,16 +178,19 @@ public class MyShareFragment extends BaseFragment<MySharePresenter> implements S
     public void onGetListSuccess(BaseData<List<ShareListData<List<String>>>> model, LoadEnum flag) {
         boolean isLive = false;//是否存在
         if (flag == LoadEnum.REFRESH) {
-            if ((model.getData() == null || model.getData().size() == 0) && listData.size()>0){
-                ToastUtils.showSingleToast("已经是最新的啦");
+            if (model.getData() == null || model.getData().size() == 0){
+//                ToastUtils.showSingleToast("已经是最新的啦");
+                ll_nothing.setVisibility(View.VISIBLE);
             }else {
+                ll_nothing.setVisibility(View.GONE);
                 listData.clear();
                 adapter.notifyDataSetChanged();
-                if (topList == null || topList.size() == 0) {
+                if (((SetTopContract.TopView)getActivity()).getTop() == null
+                        || ((SetTopContract.TopView)getActivity()).getTop().size() == 0) {
                     listData.addAll(model.getData());
                 }else {
                     for (ShareListData<List<String>> data : model.getData()){
-                        for (ShareListData<List<String>> top : topList){
+                        for (ShareListData<List<String>> top : ((SetTopContract.TopView)getActivity()).getTop()){
                             if (data.getType() == top.getType() && data.getId().equals(top.getId())){
                                 isLive = true;
                                 break;
@@ -210,10 +211,15 @@ public class MyShareFragment extends BaseFragment<MySharePresenter> implements S
             }
         }else {
             if (model.getData() == null || model.getData().size() == 0){
-                ToastUtils.showSingleToast("没有更多啦");
+                if (listData.size() > 0) {
+                    ToastUtils.showSingleToast("没有更多啦");
+                }else {
+                    ll_nothing.setVisibility(View.VISIBLE);
+                }
             }else {
+                ll_nothing.setVisibility(View.GONE);
                 for (ShareListData<List<String>> data : model.getData()){
-                    for (ShareListData<List<String>> top : topList){
+                    for (ShareListData<List<String>> top : ((SetTopContract.TopView)getActivity()).getTop()){
                         if (data.getType() == top.getType() && data.getId().equals(top.getId())){
                             isLive = true;
                             break;
@@ -240,13 +246,4 @@ public class MyShareFragment extends BaseFragment<MySharePresenter> implements S
         }
     }
 
-    public MyShareFragment setTopList(List<ShareListData<List<String>>> topList) {
-        this.topList = topList;
-        return this;
-    }
-
-    public MyShareFragment setTopAdapter(MySetTopAdapter topAdapter) {
-        this.topAdapter = topAdapter;
-        return this;
-    }
 }

@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.aspsine.swipetoloadlayout.OnLoadMoreListener;
 import com.aspsine.swipetoloadlayout.OnRefreshListener;
@@ -37,7 +38,8 @@ public class CollectionActivity extends BaseActivity<CollectionPresenter> implem
         ,OnRefreshListener,OnLoadMoreListener {
     private RecyclerView swipe_target;
     private SwipeToLoadLayout swipeToLoadLayout;
-    private LinearLayout ll_back;
+    private LinearLayout ll_back,ll_nothing;
+    private TextView tv_nothing;
     private List<ShareListData<List<String>>> listData = new ArrayList<>();
     private ShareListAdapter adapter;
     private int type = Constant.CommentType.COMMENT;//显示类型,0,全部,1评论,2赞,3踩
@@ -50,12 +52,15 @@ public class CollectionActivity extends BaseActivity<CollectionPresenter> implem
     @Override
     protected void initView() {
         ll_back = findViewById(R.id.ll_back);
+        ll_nothing = findViewById(R.id.ll_nothing);
         ll_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
+
+        tv_nothing = findViewById(R.id.tv_nothing);
 
         swipeToLoadLayout = (SwipeToLoadLayout)findViewById(R.id.swipeToLoadLayout);
         swipe_target = (RecyclerView)findViewById(R.id.swipe_target);
@@ -120,6 +125,12 @@ public class CollectionActivity extends BaseActivity<CollectionPresenter> implem
                                                 return;
                                             }
                                         }
+                                    }
+                                    if (listData.size() == 0){
+                                        adapter.setEnd(false);
+                                        adapter.notifyDataSetChanged();
+                                        ll_nothing.setVisibility(View.VISIBLE);
+                                        tv_nothing.setText("没有收藏内容哟");
                                     }
                                 }
                             }
@@ -206,9 +217,18 @@ public class CollectionActivity extends BaseActivity<CollectionPresenter> implem
     @Override
     public void onGetCollectionSuccess(BaseData<List<ShareListData<List<String>>>> model, LoadEnum flag) {
         if (flag == LoadEnum.REFRESH) {
-            if ((model.getData() == null || model.getData().size() == 0) && listData.size()>0){
-                ToastUtils.showSingleToast("已经是最新的啦");
+            if (model.getData() == null || model.getData().size() == 0){
+//                ToastUtils.showSingleToast("已经是最新的啦");
+                ll_nothing.setVisibility(View.VISIBLE);
+                tv_nothing.setText("没有收藏内容哟");
             }else {
+                ll_nothing.setVisibility(View.GONE);
+                if (model.getData().size() < 10){
+                    adapter.setEnd(true);
+                }else {
+                    adapter.setEnd(false);
+                }
+                adapter.notifyDataSetChanged();
                 listData.clear();
                 listData.addAll(model.getData());
                 adapter.notifyDataSetChanged();
@@ -219,8 +239,21 @@ public class CollectionActivity extends BaseActivity<CollectionPresenter> implem
             }
         }else {
             if (model.getData() == null || model.getData().size() == 0){
-                ToastUtils.showSingleToast("没有更多啦");
+                if (listData.size() > 0) {
+                    ToastUtils.showSingleToast("没有更多啦");
+                    adapter.setEnd(true);
+                    adapter.notifyDataSetChanged();
+                }else {
+                    ll_nothing.setVisibility(View.VISIBLE);
+                }
             }else {
+                ll_nothing.setVisibility(View.GONE);
+                if (model.getData().size() < 10){
+                    adapter.setEnd(true);
+                }else {
+                    adapter.setEnd(false);
+                }
+                adapter.notifyDataSetChanged();
                 for (int i = 0,len = model.getData().size();i<len;i++){
                     listData.add(model.getData().get(i));
                     adapter.notifyItemChanged(listData.size() -1);

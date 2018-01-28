@@ -61,6 +61,11 @@
         android:background="@color/ui_back"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+    <include
+        layout="@layout/layout_nothing"
+        android:layout_below="@+id/tv_dev2"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent" />
     <LinearLayout
         android:id="@+id/ll_share"
         android:orientation="vertical"

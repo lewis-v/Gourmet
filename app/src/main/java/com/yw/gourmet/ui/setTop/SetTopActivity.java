@@ -48,6 +48,8 @@ public class SetTopActivity extends BaseActivity<SetTopPresenter> implements Set
     private MyShareFragment shareFragment;
     private ImageView img_top;
     private float downY;
+    private LinearLayout ll_nothing;
+    private TextView tv_nothing;
 
     @Override
     protected int getLayoutId() {
@@ -62,8 +64,12 @@ public class SetTopActivity extends BaseActivity<SetTopPresenter> implements Set
         img_back.setOnClickListener(this);
 
         ll_share = findViewById(R.id.ll_share);
+        ll_nothing = findViewById(R.id.ll_nothing);
 
         fl_share = findViewById(R.id.fl_share);
+
+        tv_nothing = findViewById(R.id.tv_nothing);
+        tv_nothing.setText("没有置顶内容哟");
         tv_move = findViewById(R.id.tv_move);
         tv_move.setOnClickListener(this);
         img_top.setOnTouchListener(new OnTouchListener() {
@@ -205,7 +211,7 @@ public class SetTopActivity extends BaseActivity<SetTopPresenter> implements Set
      */
     public void addFragmentFunction() {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        shareFragment = new MyShareFragment().setTopList(data).setTopAdapter(adapter);
+        shareFragment = new MyShareFragment();
         fragmentTransaction.add(R.id.fl_share, shareFragment);
         fragmentTransaction.commitNow();
     }
@@ -216,6 +222,9 @@ public class SetTopActivity extends BaseActivity<SetTopPresenter> implements Set
         if (position == endPosition){//删除
             data.remove(position);
             adapter.notifyItemRemoved(position);
+            if (data.size() == 0){
+                ll_nothing.setVisibility(View.VISIBLE);
+            }
         }else {//换位置
             ShareListData<List<String>> cache = data.get(position);
             data.set(position,data.get(endPosition));
@@ -230,12 +239,33 @@ public class SetTopActivity extends BaseActivity<SetTopPresenter> implements Set
         data.clear();
         data.addAll(model.getData());
         adapter.notifyDataSetChanged();
+        if (data.size() == 0){
+            ll_nothing.setVisibility(View.VISIBLE);
+        }else {
+            ll_nothing.setVisibility(View.GONE);
+        }
         addFragmentFunction();
     }
 
     @Override
     public void OnGetTopFail(String msg) {
 
+    }
+
+    @Override
+    public void addTop(ShareListData<List<String>> data,int position) {
+        if (this.data.size() == 3){
+            this.data.remove(2);
+            adapter.notifyItemRemoved(2);
+        }
+        this.data.add(0,data);
+        adapter.notifyItemInserted(0);
+        ll_nothing.setVisibility(View.GONE);
+    }
+
+    @Override
+    public List<ShareListData<List<String>>> getTop() {
+        return data;
     }
 
     /**

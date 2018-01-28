@@ -31,6 +31,8 @@ public interface SetTopContract {
         void onSetTopSuccess(String msg,int position,int endPosition);
         void onGetTopSuccess(BaseData<List<ShareListData<List<String>>>> model);
         void OnGetTopFail(String msg);
+        void addTop(ShareListData<List<String>> data,int position);
+        List<ShareListData<List<String>>> getTop();
     }
 
     abstract class TopPresenter extends BasePresenter<TopView>{

@@ -47,6 +47,7 @@ public class ShareListAdapter extends RecyclerView.Adapter<ShareListAdapter.MyVi
     private OnReMarkListener onReMarkListener;
     private OnMoreListener onMoreListener;
     private FragmentManager fragmentManager;
+    private boolean isEnd = false;//是否到底了
 
     public ShareListAdapter setListener(OnItemClickListener listener) {
         this.listener = listener;
@@ -63,7 +64,13 @@ public class ShareListAdapter extends RecyclerView.Adapter<ShareListAdapter.MyVi
         return this;
     }
 
-    public ShareListAdapter(Context context, List<ShareListData<List<String>>> listData,FragmentManager fragmentManager){
+
+    public ShareListAdapter setEnd(boolean end) {
+        isEnd = end;
+        return this;
+    }
+
+    public ShareListAdapter(Context context, List<ShareListData<List<String>>> listData, FragmentManager fragmentManager){
         this.context = context;
         this.listData = listData;
         this.fragmentManager = fragmentManager;
@@ -77,193 +84,205 @@ public class ShareListAdapter extends RecyclerView.Adapter<ShareListAdapter.MyVi
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-        holder.tv_content.setText(listData.get(position).getContent());
-        holder.tv_time.setText(listData.get(position).getPut_time());
-        holder.tv_nickname.setText(listData.get(position).getNickname());
-        GlideApp.with(context).load(listData.get(position).getImg_header())
-                .error(R.mipmap.load_fail).into(holder.img_header);
-        if (listData.get(position).getContent() == null || listData.get(position).getContent().length() == 0){
-            holder.tv_content.setVisibility(View.GONE);
-        }else {
-            holder.tv_content.setVisibility(View.VISIBLE);
-        }
-        if (listData.get(position).getComment_num() > 0 ){
-            holder.tv_comment.setText(listData.get(position).getComment_num()+"");
-        }else {
-            holder.tv_comment.setText(R.string.comment);
-        }
-        if (listData.get(position).getGood_num() > 0){
-            holder.tv_good.setText(listData.get(position).getGood_num()+"");
-        }else {
-            holder.tv_good.setText(R.string.good);
-        }
-        if (listData.get(position).getBad_num() > 0){
-            holder.tv_bad.setText(listData.get(position).getBad_num()+"");
-        }else {
-            holder.tv_bad.setText(R.string.bad);
-        }
-        String goodAct = listData.get(position).getGood_act();
-        if (goodAct!=null){
-            if (goodAct.equals("0")){//踩了
-                holder.img_bad.setImageResource(R.drawable.bad_ic);
-                holder.img_good.setImageResource(R.drawable.good);
-                holder.tv_good.setTextColor(ContextCompat.getColor(context,R.color.close));
-                holder.tv_bad.setTextColor(ContextCompat.getColor(context,R.color.colorAccent));
-            }else if (goodAct.equals("1")){//点赞了
-                holder.img_bad.setImageResource(R.drawable.bad);
-                holder.img_good.setImageResource(R.drawable.good_ic);
-                holder.tv_good.setTextColor(ContextCompat.getColor(context,R.color.colorAccent));
-                holder.tv_bad.setTextColor(ContextCompat.getColor(context,R.color.close));
-            }else  {
-                holder.img_bad.setImageResource(R.drawable.bad);
-                holder.img_good.setImageResource(R.drawable.good);
-                holder.tv_good.setTextColor(ContextCompat.getColor(context,R.color.close));
-                holder.tv_bad.setTextColor(ContextCompat.getColor(context,R.color.close));
+        if (position == listData.size()){
+            holder.constraint_item.setVisibility(View.GONE);
+            holder.tv_bottom.setVisibility(View.VISIBLE);
+            if (isEnd) {
+                holder.tv_bottom.setText(R.string.is_end);
+            }else{
+                holder.tv_bottom.setText("");
             }
-        }else  {
-            holder.img_bad.setImageResource(R.drawable.bad);
-            holder.img_good.setImageResource(R.drawable.good);
-            holder.tv_good.setTextColor(ContextCompat.getColor(context,R.color.close));
-            holder.tv_bad.setTextColor(ContextCompat.getColor(context,R.color.close));
-        }
-        String is_comment = listData.get(position).getIs_comment();
-        if (is_comment != null && is_comment.length()>0){//评论了
-            holder.img_comment.setImageResource(R.drawable.comment_ic);
-            holder.tv_comment.setTextColor(ContextCompat.getColor(context,R.color.colorAccent));
         }else {
-            holder.img_comment.setImageResource(R.drawable.comment);
-            holder.tv_comment.setTextColor(ContextCompat.getColor(context,R.color.close));
-        }
+            holder.constraint_item.setVisibility(View.VISIBLE);
+            holder.tv_bottom.setVisibility(View.GONE);
+            holder.tv_content.setText(listData.get(position).getContent());
+            holder.tv_time.setText(listData.get(position).getPut_time());
+            holder.tv_nickname.setText(listData.get(position).getNickname());
+            GlideApp.with(context).load(listData.get(position).getImg_header())
+                    .error(R.mipmap.load_fail).into(holder.img_header);
+            if (listData.get(position).getContent() == null || listData.get(position).getContent().length() == 0) {
+                holder.tv_content.setVisibility(View.GONE);
+            } else {
+                holder.tv_content.setVisibility(View.VISIBLE);
+            }
+            if (listData.get(position).getComment_num() > 0) {
+                holder.tv_comment.setText(listData.get(position).getComment_num() + "");
+            } else {
+                holder.tv_comment.setText(R.string.comment);
+            }
+            if (listData.get(position).getGood_num() > 0) {
+                holder.tv_good.setText(listData.get(position).getGood_num() + "");
+            } else {
+                holder.tv_good.setText(R.string.good);
+            }
+            if (listData.get(position).getBad_num() > 0) {
+                holder.tv_bad.setText(listData.get(position).getBad_num() + "");
+            } else {
+                holder.tv_bad.setText(R.string.bad);
+            }
+            String goodAct = listData.get(position).getGood_act();
+            if (goodAct != null) {
+                if (goodAct.equals("0")) {//踩了
+                    holder.img_bad.setImageResource(R.drawable.bad_ic);
+                    holder.img_good.setImageResource(R.drawable.good);
+                    holder.tv_good.setTextColor(ContextCompat.getColor(context, R.color.close));
+                    holder.tv_bad.setTextColor(ContextCompat.getColor(context, R.color.colorAccent));
+                } else if (goodAct.equals("1")) {//点赞了
+                    holder.img_bad.setImageResource(R.drawable.bad);
+                    holder.img_good.setImageResource(R.drawable.good_ic);
+                    holder.tv_good.setTextColor(ContextCompat.getColor(context, R.color.colorAccent));
+                    holder.tv_bad.setTextColor(ContextCompat.getColor(context, R.color.close));
+                } else {
+                    holder.img_bad.setImageResource(R.drawable.bad);
+                    holder.img_good.setImageResource(R.drawable.good);
+                    holder.tv_good.setTextColor(ContextCompat.getColor(context, R.color.close));
+                    holder.tv_bad.setTextColor(ContextCompat.getColor(context, R.color.close));
+                }
+            } else {
+                holder.img_bad.setImageResource(R.drawable.bad);
+                holder.img_good.setImageResource(R.drawable.good);
+                holder.tv_good.setTextColor(ContextCompat.getColor(context, R.color.close));
+                holder.tv_bad.setTextColor(ContextCompat.getColor(context, R.color.close));
+            }
+            String is_comment = listData.get(position).getIs_comment();
+            if (is_comment != null && is_comment.length() > 0) {//评论了
+                holder.img_comment.setImageResource(R.drawable.comment_ic);
+                holder.tv_comment.setTextColor(ContextCompat.getColor(context, R.color.colorAccent));
+            } else {
+                holder.img_comment.setImageResource(R.drawable.comment);
+                holder.tv_comment.setTextColor(ContextCompat.getColor(context, R.color.close));
+            }
 
 
-        if (listData.get(position).getType() == Constant.TypeFlag.SHARE) {//普通分享
-            holder.ll_other.setVisibility(View.GONE);
-            holder.ll_content.setVisibility(View.VISIBLE);
-            if (listData.get(position).getImg() == null
-                    || listData.get(position).getImg().size() == 0) {//无图片
-                holder.recycler_share.setVisibility(View.GONE);
-                holder.ll_img.setVisibility(View.GONE);
-            } else if (listData.get(position).getImg().size() == 1) {//单张图片
-                holder.ll_img.setVisibility(View.VISIBLE);
-                holder.recycler_share.setVisibility(View.GONE);
-                GlideApp.with(context).load(listData.get(position).getImg().get(0)).error(R.mipmap.load_fail).into(holder.img_share);
-                holder.img_share.setOnClickListener(new View.OnClickListener() {
+            if (listData.get(position).getType() == Constant.TypeFlag.SHARE) {//普通分享
+                holder.ll_other.setVisibility(View.GONE);
+                holder.ll_content.setVisibility(View.VISIBLE);
+                if (listData.get(position).getImg() == null
+                        || listData.get(position).getImg().size() == 0) {//无图片
+                    holder.recycler_share.setVisibility(View.GONE);
+                    holder.ll_img.setVisibility(View.GONE);
+                } else if (listData.get(position).getImg().size() == 1) {//单张图片
+                    holder.ll_img.setVisibility(View.VISIBLE);
+                    holder.recycler_share.setVisibility(View.GONE);
+                    GlideApp.with(context).load(listData.get(position).getImg().get(0)).error(R.mipmap.load_fail).into(holder.img_share);
+                    holder.img_share.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            new MyDialogPhotoShowFragment().setImgString(listData.get(holder.getLayoutPosition())
+                                    .getImg()).show(fragmentManager, "imgShow");
+                        }
+                    });
+                } else if (listData.size() > 1) {//多张图片
+                    ImgAdapter adapter = new ImgAdapter(context, listData.get(position).getImg());
+                    holder.ll_img.setVisibility(View.GONE);
+                    holder.recycler_share.setVisibility(View.VISIBLE);
+                    holder.recycler_share.setLayoutManager(new StaggeredGridLayoutManager(3
+                            , StaggeredGridLayoutManager.VERTICAL));
+                    holder.recycler_share.setItemAnimator(new DefaultItemAnimator());
+                    holder.recycler_share.setAdapter(adapter);
+                    adapter.setOnItemClickListener(new OnItemClickListener() {
+                        @Override
+                        public void OnClick(View v, int position) {
+                            new MyDialogPhotoShowFragment().setImgString(listData.get(holder.getLayoutPosition()).getImg())
+                                    .setPosition(position).show(fragmentManager, "imgShow");
+                        }
+
+                        @Override
+                        public boolean OnLongClick(View v, int position) {
+                            return false;
+                        }
+                    });
+                }
+            } else {//非普通类型
+                holder.ll_other.setVisibility(View.VISIBLE);
+                holder.ll_content.setVisibility(View.GONE);
+                holder.tv_title.setText(listData.get(position).getTitle());
+                GlideApp.with(context).load(listData.get(position).getCover()).error(R.mipmap.load_fail)
+                        .into(holder.img_cover);
+                switch (listData.get(position).getType()) {
+                    case Constant.TypeFlag.DIARY://日记
+                        holder.tv_title.setBackgroundResource(R.drawable.diary_back);
+                        break;
+                    case Constant.TypeFlag.MENU://食谱
+                        holder.tv_title.setBackgroundResource(R.drawable.menu_back);
+                        break;
+                    case Constant.TypeFlag.RAIDERS://攻略
+                        holder.tv_title.setBackgroundResource(R.drawable.raiders_back);
+                        break;
+                }
+            }
+
+            if (listener != null) {
+                holder.constraint_item.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        new MyDialogPhotoShowFragment().setImgString(listData.get(holder.getLayoutPosition())
-                                .getImg()).show(fragmentManager, "imgShow");
+                        listener.OnClick(v, holder.getLayoutPosition());
                     }
                 });
-            } else if (listData.size() > 1) {//多张图片
-                ImgAdapter adapter = new ImgAdapter(context, listData.get(position).getImg());
-                holder.ll_img.setVisibility(View.GONE);
-                holder.recycler_share.setVisibility(View.VISIBLE);
-                holder.recycler_share.setLayoutManager(new StaggeredGridLayoutManager(3
-                        , StaggeredGridLayoutManager.VERTICAL));
-                holder.recycler_share.setItemAnimator(new DefaultItemAnimator());
-                holder.recycler_share.setAdapter(adapter);
-                adapter.setOnItemClickListener(new OnItemClickListener() {
+                holder.constraint_item.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
-                    public void OnClick(View v, int position) {
-                        new MyDialogPhotoShowFragment().setImgString(listData.get(holder.getLayoutPosition()).getImg())
-                                .setPosition(position).show(fragmentManager, "imgShow");
-                    }
-
-                    @Override
-                    public boolean OnLongClick(View v, int position) {
-                        return false;
+                    public boolean onLongClick(View v) {
+                        return listener.OnLongClick(v, holder.getLayoutPosition());
                     }
                 });
             }
-        }else {//非普通类型
-            holder.ll_other.setVisibility(View.VISIBLE);
-            holder.ll_content.setVisibility(View.GONE);
-            holder.tv_title.setText(listData.get(position).getTitle());
-            GlideApp.with(context).load(listData.get(position).getCover()).error(R.mipmap.load_fail)
-                    .into(holder.img_cover);
-            switch (listData.get(position).getType()){
-                case Constant.TypeFlag.DIARY://日记
-                    holder.tv_title.setBackgroundResource(R.drawable.diary_back);
-                    break;
-                case Constant.TypeFlag.MENU://食谱
-                    holder.tv_title.setBackgroundResource(R.drawable.menu_back);
-                    break;
-                case Constant.TypeFlag.RAIDERS://攻略
-                    holder.tv_title.setBackgroundResource(R.drawable.raiders_back);
-                    break;
+            if (onReMarkListener != null) {
+                holder.ll_comment.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onReMarkListener.OnCommentClick(v, holder.getLayoutPosition());
+                    }
+                });
+                holder.ll_good.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onReMarkListener.OnGoodClick(v, holder.getLayoutPosition());
+                    }
+                });
+                holder.ll_bad.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onReMarkListener.OnBadClick(v, holder.getLayoutPosition());
+                    }
+                });
             }
-        }
+            if (onMoreListener != null) {
+                holder.img_more.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onMoreListener.OnMoreClick(v, holder.getLayoutPosition());
+                    }
+                });
+            }
 
-        if (listener != null){
-            holder.constraint_item.setOnClickListener(new View.OnClickListener() {
+            holder.img_header.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    listener.OnClick(v,holder.getLayoutPosition());
+                    Intent intent = new Intent(context, PersonalActivity.class);
+                    intent.putExtra("id", listData.get(holder.getLayoutPosition()).getUser_id());
+                    context.startActivity(intent);
                 }
             });
-            holder.constraint_item.setOnLongClickListener(new View.OnLongClickListener() {
+            holder.tv_nickname.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public boolean onLongClick(View v) {
-                    return listener.OnLongClick(v,holder.getLayoutPosition());
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, PersonalActivity.class);
+                    intent.putExtra("id", listData.get(holder.getLayoutPosition()).getUser_id());
+                    context.startActivity(intent);
                 }
             });
         }
-        if (onReMarkListener != null){
-            holder.ll_comment.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onReMarkListener.OnCommentClick(v,holder.getLayoutPosition());
-                }
-            });
-            holder.ll_good.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onReMarkListener.OnGoodClick(v,holder.getLayoutPosition());
-                }
-            });
-            holder.ll_bad.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onReMarkListener.OnBadClick(v,holder.getLayoutPosition());
-                }
-            });
-        }
-        if (onMoreListener != null){
-            holder.img_more.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onMoreListener.OnMoreClick(v,holder.getLayoutPosition());
-                }
-            });
-        }
-
-        holder.img_header.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, PersonalActivity.class);
-                intent.putExtra("id",listData.get(holder.getLayoutPosition()).getUser_id());
-                context.startActivity(intent);
-            }
-        });
-        holder.tv_nickname.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, PersonalActivity.class);
-                intent.putExtra("id",listData.get(holder.getLayoutPosition()).getUser_id());
-                context.startActivity(intent);
-            }
-        });
     }
 
     @Override
     public int getItemCount() {
-        return listData.size();
+        return listData.size()+1;
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder{
         ConstraintLayout constraint_item;
         ImageView img_header,img_share,img_more,img_cover,img_comment,img_good,img_bad;
-        TextView tv_nickname,tv_time,tv_content,tv_comment,tv_good,tv_bad,tv_title;
+        TextView tv_nickname,tv_time,tv_content,tv_comment,tv_good,tv_bad,tv_title,tv_bottom;
         LinearLayout ll_img,ll_comment,ll_good,ll_bad,ll_content,ll_other;
         RecyclerView recycler_share;
         MyViewHolder(View itemView) {
@@ -290,6 +309,7 @@ public class ShareListAdapter extends RecyclerView.Adapter<ShareListAdapter.MyVi
             tv_good = (TextView) itemView.findViewById(R.id.tv_good);
             tv_bad = (TextView)itemView.findViewById(R.id.tv_bad);
             tv_title = (TextView)itemView.findViewById(R.id.tv_title);
+            tv_bottom = itemView.findViewById(R.id.tv_bottom);
         }
     }
 }
