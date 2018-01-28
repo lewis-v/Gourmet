@@ -166,6 +166,7 @@
                         android:id="@+id/tv_comment"
                         android:layout_marginLeft="10dp"
                         android:text="@string/comment"
+                        android:textColor="@color/close"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
@@ -185,6 +186,7 @@
                     <TextView
                         android:id="@+id/tv_good"
                         android:layout_marginLeft="10dp"
+                        android:textColor="@color/close"
                         android:text="@string/good"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
@@ -204,6 +206,7 @@
                     <TextView
                         android:id="@+id/tv_bad"
                         android:layout_marginLeft="10dp"
+                        android:textColor="@color/close"
                         android:text="@string/bad"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />

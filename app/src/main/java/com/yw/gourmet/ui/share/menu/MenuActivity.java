@@ -201,7 +201,7 @@ public class MenuActivity extends BaseActivity<MenuPresenter> implements View.On
                                             public void accept(File file) throws Exception {
                                                 MultipartBody.Builder builder = new MultipartBody.Builder()
                                                         .setType(MultipartBody.FORM)
-                                                        .addFormDataPart("id",Constant.userData.getId())
+                                                        .addFormDataPart("id",Constant.userData.getUser_id())
                                                         .addFormDataPart("path",file.getName(),RequestBody.create(MediaType.parse("multipart/form-data"),file));
                                                 mPresenter.upImg(builder.build().parts(),position);
                                             }
@@ -218,7 +218,7 @@ public class MenuActivity extends BaseActivity<MenuPresenter> implements View.On
                 case "new"://打开新的
                     data = SaveDataUtil
                             .querydataById(SaveDataDao.Properties.Type.eq(Constant.TypeFlag.MENU)
-                                    ,SaveDataDao.Properties.User_id.eq(Constant.userData.getId()));
+                                    ,SaveDataDao.Properties.User_id.eq(Constant.userData.getUser_id()));
                     if (data != null && data.size()>0) {
                         saveDataCache = data.get(0);
                         new MyDialogTipFragment().setTextEnter("是").setTextCancel("否")
@@ -236,7 +236,7 @@ public class MenuActivity extends BaseActivity<MenuPresenter> implements View.On
                     data = SaveDataUtil
                             .querydataById(SaveDataDao.Properties.Type.eq(Constant.TypeFlag.MENU)
                             ,SaveDataDao.Properties._id.eq(getIntent().getLongExtra("_id",0))
-                                    ,SaveDataDao.Properties.User_id.eq(Constant.userData.getId()));
+                                    ,SaveDataDao.Properties.User_id.eq(Constant.userData.getUser_id()));
                     if (data != null && data.size()>0){
                         saveData = data.get(0);
                     }
@@ -336,7 +336,7 @@ public class MenuActivity extends BaseActivity<MenuPresenter> implements View.On
                             public void OnEnter(String Tag) {
                                 MultipartBody.Builder builder = new MultipartBody.Builder()
                                         .setType(MultipartBody.FORM)
-                                        .addFormDataPart("id",Constant.userData.getId())
+                                        .addFormDataPart("id",Constant.userData.getUser_id())
                                         .addFormDataPart("status",String.valueOf(status))
                                         .addFormDataPart("title",et_title.getText().toString())
                                         .addFormDataPart("cover",coverPath)
@@ -372,7 +372,7 @@ public class MenuActivity extends BaseActivity<MenuPresenter> implements View.On
                             public void run() {
                                 MultipartBody.Builder builder =new MultipartBody.Builder()
                                         .setType(MultipartBody.FORM)
-                                        .addFormDataPart("id", Constant.userData.getId())
+                                        .addFormDataPart("id", Constant.userData.getUser_id())
                                         .addFormDataPart("path",file.getName()
                                                 , RequestBody.create(MediaType.parse("multipart/form-data"),file));
                                 mPresenter.upImg(builder.build().parts());
@@ -514,7 +514,7 @@ public class MenuActivity extends BaseActivity<MenuPresenter> implements View.On
                         @Override
                         public void OnEnter(String Tag) {
                             SaveData saveData = new SaveData();
-                            saveData.setUser_id(Constant.userData.getId())
+                            saveData.setUser_id(Constant.userData.getUser_id())
                                     .setChange_time(System.currentTimeMillis())
                                     .setTitle(et_title.getText().toString()).setStatus(status)
                                     .setCover(coverPath).setDifficult_level(difficultLevel)

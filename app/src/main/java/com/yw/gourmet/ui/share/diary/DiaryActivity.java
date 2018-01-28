@@ -119,7 +119,7 @@ public class DiaryActivity extends BaseActivity<DiaryPresenter> implements View.
                 case "new":
                     data = SaveDataUtil
                             .querydataById(SaveDataDao.Properties.Type.eq(Constant.TypeFlag.DIARY)
-                                    , SaveDataDao.Properties.User_id.eq(Constant.userData.getId()));
+                                    , SaveDataDao.Properties.User_id.eq(Constant.userData.getUser_id()));
                     if (data != null && data.size()>0) {
                         saveDataCache = data.get(0);
                         new MyDialogTipFragment().setTextEnter("是").setTextCancel("否")
@@ -208,7 +208,7 @@ public class DiaryActivity extends BaseActivity<DiaryPresenter> implements View.
                     public void OnEnter(String Tag) {
                         MultipartBody.Builder builder = new MultipartBody.Builder()
                                 .setType(MultipartBody.FORM)
-                                .addFormDataPart("id",Constant.userData.getId())
+                                .addFormDataPart("id",Constant.userData.getUser_id())
                                 .addFormDataPart("time",tv_time.getText().toString())
                                 .addFormDataPart("title",et_title.getText().toString())
                                 .addFormDataPart("content",content)
@@ -316,7 +316,7 @@ public class DiaryActivity extends BaseActivity<DiaryPresenter> implements View.
                     public void accept(File file) throws Exception {
                         MultipartBody.Builder builder = new MultipartBody.Builder()
                                 .setType(MultipartBody.FORM)
-                                .addFormDataPart("id",Constant.userData.getId())
+                                .addFormDataPart("id",Constant.userData.getUser_id())
                                 .addFormDataPart("path",file.getName(), RequestBody.create(MediaType.parse("multipart/form-data"),file));
                         mPresenter.upImg(builder.build().parts());
                     }
@@ -426,7 +426,7 @@ public class DiaryActivity extends BaseActivity<DiaryPresenter> implements View.
                         @Override
                         public void OnEnter(String Tag) {
                             SaveData saveData = new SaveData();
-                            saveData.setUser_id(Constant.userData.getId())
+                            saveData.setUser_id(Constant.userData.getUser_id())
                                     .setChange_time(System.currentTimeMillis())
                                     .setTitle(et_title.getText().toString())
                                     .setContent(content)

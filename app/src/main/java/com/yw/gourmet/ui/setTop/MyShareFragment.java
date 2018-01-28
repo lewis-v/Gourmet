@@ -101,7 +101,7 @@ public class MyShareFragment extends BaseFragment<MySharePresenter> implements S
                     public void OnEnter(String Tag) {
                         ((BaseActivity)getActivity()).setLoadDialog(true);
                         mPresenter.setTop(new MultipartBody.Builder().setType(MultipartBody.FORM)
-                        .addFormDataPart("id",Constant.userData.getId())
+                        .addFormDataPart("id",Constant.userData.getUser_id())
                         .addFormDataPart("act_id",listData.get(position).getId())
                         .addFormDataPart("type", String.valueOf(listData.get(position).getType()))
                         .build().parts(),position);
@@ -123,7 +123,7 @@ public class MyShareFragment extends BaseFragment<MySharePresenter> implements S
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("token", Constant.userData == null?"0":Constant.userData.getToken());
         if (Constant.userData != null){
-            builder.addFormDataPart("id",Constant.userData.getId());
+            builder.addFormDataPart("id",Constant.userData.getUser_id());
         }else {
             ToastUtils.showSingleToast("请登陆后再进行操作");
         }
@@ -146,13 +146,13 @@ public class MyShareFragment extends BaseFragment<MySharePresenter> implements S
         MultipartBody.Builder builder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("token", Constant.userData == null ? "0" :  Constant.userData.getToken());
-        if (Constant.userData.getId() != null){
-            builder.addFormDataPart("id",Constant.userData.getId());
+        if (Constant.userData.getUser_id() != null){
+            builder.addFormDataPart("id",Constant.userData.getUser_id());
         }else {
             ToastUtils.showSingleToast("请登陆后再进行操作");
         }
         if (Constant.userData != null){
-            builder.addFormDataPart("user_id",Constant.userData.getId());
+            builder.addFormDataPart("user_id",Constant.userData.getUser_id());
         }
         mPresenter.getShareList(builder.build().parts(), LoadEnum.REFRESH);
     }

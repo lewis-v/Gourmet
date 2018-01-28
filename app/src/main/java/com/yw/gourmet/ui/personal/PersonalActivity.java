@@ -67,6 +67,7 @@ public class PersonalActivity extends BaseActivity<PersonalPresenter> implements
     private FloatingActionButton float_action_header;
     private ImageView img_tool_back,img_header;
     private String id ;//此界面的用户id
+    private UserData userData;
     private RecyclerView recycler_top;
     private ShareListAdapter adapter;
     private List<ShareListData<List<String>>> listTop = new ArrayList<>();
@@ -180,7 +181,7 @@ public class PersonalActivity extends BaseActivity<PersonalPresenter> implements
             adapter = new ShareListAdapter(this, listTop, getSupportFragmentManager());
             recycler_top.setAdapter(adapter);
             mPresenter.getTop(new MultipartBody.Builder().setType(MultipartBody.FORM)
-                    .addFormDataPart("id", Constant.userData.getId()).build().parts());
+                    .addFormDataPart("id", id).build().parts());
             adapter.setListener(new OnItemClickListener() {
                 @Override
                 public void OnClick(View v, int position) {
@@ -245,7 +246,7 @@ public class PersonalActivity extends BaseActivity<PersonalPresenter> implements
                     }else {
                         MultipartBody.Builder builder = new MultipartBody.Builder()
                                 .setType(MultipartBody.FORM)
-                                .addFormDataPart("id", Constant.userData.getId())
+                                .addFormDataPart("id", Constant.userData.getUser_id())
                                 .addFormDataPart("type",listTop.get(position).getType()+"")
                                 .addFormDataPart("act_id",listTop.get(position).getId())
                                 .addFormDataPart("act","1");
@@ -260,7 +261,7 @@ public class PersonalActivity extends BaseActivity<PersonalPresenter> implements
                     }else {
                         MultipartBody.Builder builder = new MultipartBody.Builder()
                                 .setType(MultipartBody.FORM)
-                                .addFormDataPart("id", Constant.userData.getId())
+                                .addFormDataPart("id", Constant.userData.getUser_id())
                                 .addFormDataPart("type",listTop.get(position).getType()+"")
                                 .addFormDataPart("act_id",listTop.get(position).getId())
                                 .addFormDataPart("act","0");
@@ -301,14 +302,17 @@ public class PersonalActivity extends BaseActivity<PersonalPresenter> implements
      */
     public void setData(){
         id = getIntent().getStringExtra("id");
-        if (id != null && !id.equals(Constant.userData.getId())){//查看其它用户信息
+        if (id != null && !id.equals(Constant.userData.getUser_id())){//查看其它用户信息
+            setLoadDialog(true);
             ll_change_detail.setVisibility(View.GONE);
             ll_change_bottom.setVisibility(View.GONE);
             ll_change_top.setVisibility(View.GONE);
-
+            mPresenter.getUserInfo(new MultipartBody.Builder().setType(MultipartBody.FORM)
+            .addFormDataPart("id",id).build().parts());
         }else {//查看自身信息
             if (Constant.userData != null) {
-                id = Constant.userData.getId();
+                userData = Constant.userData;
+                id = Constant.userData.getUser_id();
                 ll_change_detail.setVisibility(View.VISIBLE);
                 ll_change_bottom.setVisibility(View.VISIBLE);
                 ll_change_top.setVisibility(View.VISIBLE);
@@ -332,14 +336,16 @@ public class PersonalActivity extends BaseActivity<PersonalPresenter> implements
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.app_bar:
-                setBackChangeShow();
+                if (userData.getId().equals(Constant.userData.getUser_id())) {
+                    setBackChangeShow();
+                }
                 break;
             case R.id.ll_change_detail:
                 startActivity(new Intent(this, ChangeDetailActivity.class));
                 break;
             case R.id.img_header:
             case R.id.float_action_header:
-                new MyDialogPhotoShowFragment().addImgString(Constant.userData.getImg_header()).show(getSupportFragmentManager(),"header");
+                new MyDialogPhotoShowFragment().addImgString(userData.getImg_header()).show(getSupportFragmentManager(),"header");
                 break;
             case R.id.tv_change_back:
                 new MyDialogPhotoChooseFragment().setCrop(true).setChooseNum(1).setRatio(2/3f)
@@ -347,7 +353,7 @@ public class PersonalActivity extends BaseActivity<PersonalPresenter> implements
                 break;
             case R.id.tv_more:
                 Intent intent = new Intent(this, MyShareActivity.class);
-                intent.putExtra("id",id == null?Constant.userData.getId():id);
+                intent.putExtra("id",userData.getId());
                 startActivity(intent);
                 break;
 
@@ -407,7 +413,7 @@ public class PersonalActivity extends BaseActivity<PersonalPresenter> implements
                     public void accept(File file) throws Exception {
                         MultipartBody.Builder builder = new MultipartBody.Builder()
                                 .setType(MultipartBody.FORM)
-                                .addFormDataPart("id",Constant.userData.getId())
+                                .addFormDataPart("id",Constant.userData.getUser_id())
                                 .addFormDataPart("path",file.getName(), RequestBody.create(MediaType.parse(""),file));
                         mPresenter.upImg(builder.build().parts());
                     }
@@ -418,7 +424,7 @@ public class PersonalActivity extends BaseActivity<PersonalPresenter> implements
     public void onUpImgSuccess(BaseData<String> model) {
         MultipartBody.Builder builder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                .addFormDataPart("id",Constant.userData.getId())
+                .addFormDataPart("id",Constant.userData.getUser_id())
                 .addFormDataPart("personal_back",model.getData());
         mPresenter.changeBack(builder.build().parts());
     }
@@ -447,5 +453,24 @@ public class PersonalActivity extends BaseActivity<PersonalPresenter> implements
     public void onReMarkSuccess(BaseData<ShareListData<List<String>>> model,int position) {
         listTop.set(position,model.getData());
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onGetUserInfoSuccess(BaseData<UserData> model) {
+        setLoadDialog(false);
+        userData = model.getData();
+        tv_nickname.setText(model.getData().getNickname());
+        tv_sex.setText(model.getData().getSex());
+        tv_address.setText(model.getData().getAddress());
+        tv_introduction.setText(model.getData().getIntroduction());
+        GlideApp.with(this).load(model.getData().getImg_header()).error(R.mipmap.load_fail).into(float_action_header);
+        GlideApp.with(this).load(model.getData().getImg_header()).error(R.mipmap.load_fail).into(img_header);
+        GlideApp.with(this).load(model.getData().getPersonal_back()).error(R.mipmap.load_fail).into(img_tool_back);
+    }
+
+    @Override
+    public void onGetUserInfoFail(String msg) {
+        super.onFail(msg);
+        finish();
     }
 }

@@ -2,6 +2,7 @@ package com.yw.gourmet.ui.detail.raiders;
 
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -49,6 +50,7 @@ public class RaidersDetailActivity extends BaseActivity<RaidersDetailPresenter> 
         RaidersDetailContract.View , View.OnClickListener{
     private TextView tv_title,tv_introduction,tv_comment,tv_good,tv_bad,tv_dev_input;
     private ImageView img_back,img_other;
+    private ImageView img_comment,img_good,img_bad;
     private RecyclerView recycler_raiders_list,recycler_tag;
     private LinearLayout ll_comment,ll_bad,ll_good,ll_input,ll_position,ll_title;
     private RecyclerView recycler_comment;
@@ -85,6 +87,9 @@ public class RaidersDetailActivity extends BaseActivity<RaidersDetailPresenter> 
 
         img_back = findViewById(R.id.img_back);
         img_other = findViewById(R.id.img_other);
+        img_comment = findViewById(R.id.img_comment);
+        img_good = findViewById(R.id.img_good);
+        img_bad = findViewById(R.id.img_bad);
 
         img_other.setOnClickListener(this);
         img_back.setOnClickListener(this);
@@ -139,6 +144,9 @@ public class RaidersDetailActivity extends BaseActivity<RaidersDetailPresenter> 
         MultipartBody.Builder builder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("id",getIntent().getStringExtra("id"));
+        if (Constant.userData != null){
+            builder.addFormDataPart("user_id",Constant.userData.getUser_id());
+        }
         mPresenter.getDetail(builder.build().parts());
 
         recycler_comment.post(new Runnable() {
@@ -194,6 +202,21 @@ public class RaidersDetailActivity extends BaseActivity<RaidersDetailPresenter> 
         if (data.getComment_num() > 0){
             tv_comment.setText(String.valueOf(data.getComment_num()));
         }
+        String isComment = data.getIs_comment();
+        if (isComment != null && isComment.length()>0){
+            img_comment.setImageResource(R.drawable.comment_ic);
+            tv_comment.setTextColor(ContextCompat.getColor(this,R.color.colorAccent));
+        }
+        String goodAct = data.getGood_act();
+        if (goodAct != null){
+            if (goodAct.equals("0")){
+                img_bad.setImageResource(R.drawable.bad_ic);
+                tv_bad.setTextColor(ContextCompat.getColor(this,R.color.colorAccent));
+            }else if (goodAct.equals("1")){
+                img_good.setImageResource(R.drawable.good_ic);
+                tv_good.setTextColor(ContextCompat.getColor(this,R.color.colorAccent));
+            }
+        }
     }
 
     @Override
@@ -215,6 +238,7 @@ public class RaidersDetailActivity extends BaseActivity<RaidersDetailPresenter> 
                 }
             }
         });
+
     }
 
     @Override
@@ -232,6 +256,8 @@ public class RaidersDetailActivity extends BaseActivity<RaidersDetailPresenter> 
         scroll_raiders.fullScroll(View.FOCUS_DOWN);
         recycler_comment.smoothScrollToPosition(commentDataList.size());
         et_input.setText("");
+        img_comment.setImageResource(R.drawable.comment_ic);
+        tv_comment.setTextColor(ContextCompat.getColor(this,R.color.colorAccent));
     }
 
     @Override
@@ -252,6 +278,16 @@ public class RaidersDetailActivity extends BaseActivity<RaidersDetailPresenter> 
         }
         if (data.getComment_num() > 0){
             tv_comment.setText(String.valueOf(data.getComment_num()));
+        }
+        String goodAct = model.getData().getGood_act();
+        if (goodAct != null){
+            if (goodAct.equals("0")){
+                img_bad.setImageResource(R.drawable.bad_ic);
+                tv_bad.setTextColor(ContextCompat.getColor(this,R.color.colorAccent));
+            }else if (goodAct.equals("1")){
+                img_good.setImageResource(R.drawable.good_ic);
+                tv_good.setTextColor(ContextCompat.getColor(this,R.color.colorAccent));
+            }
         }
     }
 
@@ -279,7 +315,7 @@ public class RaidersDetailActivity extends BaseActivity<RaidersDetailPresenter> 
                 if (Constant.userData != null) {
                     MultipartBody.Builder builderGood = new MultipartBody.Builder()
                             .setType(MultipartBody.FORM)
-                            .addFormDataPart("id", Constant.userData.getId())
+                            .addFormDataPart("id", Constant.userData.getUser_id())
                             .addFormDataPart("type",String.valueOf(data.getType()))
                             .addFormDataPart("act_id",data.getId())
                             .addFormDataPart("act","1");
@@ -292,7 +328,7 @@ public class RaidersDetailActivity extends BaseActivity<RaidersDetailPresenter> 
                 if (Constant.userData != null) {
                     MultipartBody.Builder builderGood = new MultipartBody.Builder()
                             .setType(MultipartBody.FORM)
-                            .addFormDataPart("id", Constant.userData.getId())
+                            .addFormDataPart("id", Constant.userData.getUser_id())
                             .addFormDataPart("type",String.valueOf(data.getType()))
                             .addFormDataPart("act_id",data.getId())
                             .addFormDataPart("act","0");
@@ -334,7 +370,7 @@ public class RaidersDetailActivity extends BaseActivity<RaidersDetailPresenter> 
         MultipartBody.Builder builder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("token",Constant.userData.getToken())
-                .addFormDataPart("user_id",Constant.userData.getId())
+                .addFormDataPart("user_id",Constant.userData.getUser_id())
                 .addFormDataPart("act_id",data.getId())
                 .addFormDataPart("type",getIntent().getStringExtra("type"))
                 .addFormDataPart("content",et_input.getText().toString());

@@ -3,6 +3,7 @@ package com.yw.gourmet.ui.detail.menu;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -52,6 +53,7 @@ import static com.yw.gourmet.ui.share.menu.MenuActivity.levelText;
 public class MenuDetailActivity extends BaseActivity<MenuDetailPresenter> implements
         MenuDetailContract.View,View.OnClickListener{
     private ImageView img_back,img_other,img_no_comment,img_up,img_cover;
+    private ImageView img_comment,img_good,img_bad;
     private List<ImageView> difficultList = new ArrayList<>();//难度条
     private TextView tv_title,tv_comment,tv_good,tv_bad,tv_dev_input,tv_introduction,tv_tip
             ,tv_time_hour,tv_time_min,tv_difficult;
@@ -120,6 +122,9 @@ public class MenuDetailActivity extends BaseActivity<MenuDetailPresenter> implem
         img_no_comment = findViewById(R.id.img_no_comment);
         img_up = findViewById(R.id.img_up);
         img_cover = findViewById(R.id.img_cover);
+        img_comment = findViewById(R.id.img_comment);
+        img_good = findViewById(R.id.img_good);
+        img_bad = findViewById(R.id.img_bad);
 
         ImageView imageView = (ImageView)findViewById(R.id.img_difficult1);
         imageView.setOnClickListener(this);
@@ -179,6 +184,9 @@ public class MenuDetailActivity extends BaseActivity<MenuDetailPresenter> implem
         MultipartBody.Builder builder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("id",getIntent().getStringExtra("id"));
+        if (Constant.userData != null){
+            builder.addFormDataPart("user_id",Constant.userData.getUser_id());
+        }
         mPresenter.getDetail(builder.build().parts());
 
         recycler_comment = findViewById(R.id.recycler_comment);
@@ -236,7 +244,7 @@ public class MenuDetailActivity extends BaseActivity<MenuDetailPresenter> implem
                 if (Constant.userData != null) {
                     MultipartBody.Builder builderGood = new MultipartBody.Builder()
                             .setType(MultipartBody.FORM)
-                            .addFormDataPart("id", Constant.userData.getId())
+                            .addFormDataPart("id", Constant.userData.getUser_id())
                             .addFormDataPart("type",String.valueOf(shareListData.getType()))
                             .addFormDataPart("act_id",shareListData.getId())
                             .addFormDataPart("act","1");
@@ -249,7 +257,7 @@ public class MenuDetailActivity extends BaseActivity<MenuDetailPresenter> implem
                 if (Constant.userData != null) {
                     MultipartBody.Builder builderGood = new MultipartBody.Builder()
                             .setType(MultipartBody.FORM)
-                            .addFormDataPart("id", Constant.userData.getId())
+                            .addFormDataPart("id", Constant.userData.getUser_id())
                             .addFormDataPart("type",String.valueOf(shareListData.getType()))
                             .addFormDataPart("act_id",shareListData.getId())
                             .addFormDataPart("act","0");
@@ -313,6 +321,21 @@ public class MenuDetailActivity extends BaseActivity<MenuDetailPresenter> implem
         if (shareListData.getComment_num() > 0){
             tv_comment.setText(String.valueOf(shareListData.getComment_num()));
         }
+        String isComment = shareListData.getIs_comment();
+        if (isComment != null && isComment.length()>0){
+            img_comment.setImageResource(R.drawable.comment_ic);
+            tv_comment.setTextColor(ContextCompat.getColor(this,R.color.colorAccent));
+        }
+        String goodAct = shareListData.getGood_act();
+        if (goodAct != null){
+            if (goodAct.equals("0")){
+                img_bad.setImageResource(R.drawable.bad_ic);
+                tv_bad.setTextColor(ContextCompat.getColor(this,R.color.colorAccent));
+            }else if (goodAct.equals("1")){
+                img_good.setImageResource(R.drawable.good_ic);
+                tv_good.setTextColor(ContextCompat.getColor(this,R.color.colorAccent));
+            }
+        }
     }
 
     @Override
@@ -352,6 +375,8 @@ public class MenuDetailActivity extends BaseActivity<MenuDetailPresenter> implem
         scroll_menu.fullScroll(View.FOCUS_DOWN);
         recycler_comment.smoothScrollToPosition(commentDataList.size());
         et_input.setText("");
+        img_comment.setImageResource(R.drawable.comment_ic);
+        tv_comment.setTextColor(ContextCompat.getColor(this,R.color.colorAccent));
     }
 
     @Override
@@ -372,6 +397,16 @@ public class MenuDetailActivity extends BaseActivity<MenuDetailPresenter> implem
         }
         if (shareListData.getComment_num() > 0){
             tv_comment.setText(String.valueOf(shareListData.getComment_num()));
+        }
+        String goodAct = model.getData().getGood_act();
+        if (goodAct != null){
+            if (goodAct.equals("0")){
+                img_bad.setImageResource(R.drawable.bad_ic);
+                tv_bad.setTextColor(ContextCompat.getColor(this,R.color.colorAccent));
+            }else if (goodAct.equals("1")){
+                img_good.setImageResource(R.drawable.good_ic);
+                tv_good.setTextColor(ContextCompat.getColor(this,R.color.colorAccent));
+            }
         }
     }
 
@@ -432,7 +467,7 @@ public class MenuDetailActivity extends BaseActivity<MenuDetailPresenter> implem
         MultipartBody.Builder builder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("token",Constant.userData.getToken())
-                .addFormDataPart("user_id",Constant.userData.getId())
+                .addFormDataPart("user_id",Constant.userData.getUser_id())
                 .addFormDataPart("act_id",shareListData.getId())
                 .addFormDataPart("type",getIntent().getStringExtra("type"))
                 .addFormDataPart("content",et_input.getText().toString());

@@ -1,9 +1,7 @@
 package com.yw.gourmet.ui.my;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -21,7 +19,7 @@ import com.yw.gourmet.rxbus.EventSticky;
 import com.yw.gourmet.rxbus.RxBus;
 import com.yw.gourmet.rxbus.RxBusSubscriber;
 import com.yw.gourmet.rxbus.RxSubscriptions;
-import com.yw.gourmet.ui.Draft.DraftActivity;
+import com.yw.gourmet.ui.draft.DraftActivity;
 import com.yw.gourmet.ui.collection.CollectionActivity;
 import com.yw.gourmet.ui.commentMy.CommentMyActivity;
 import com.yw.gourmet.ui.login.LoginActivity;
@@ -143,26 +141,26 @@ public class MyFragment extends BaseFragment implements View.OnClickListener,MyC
             case R.id.ll_raiders:
                 intent = new Intent(getContext(), MyShareActivity.class);
                 intent.putExtra("type",Constant.TypeFlag.RAIDERS);
-                intent.putExtra("id",Constant.userData.getId());
+                intent.putExtra("id",Constant.userData.getUser_id());
                 break;
             case R.id.ll_share:
                 intent = new Intent(getContext(), MyShareActivity.class);
                 intent.putExtra("type",Constant.TypeFlag.SHARE);
-                intent.putExtra("id",Constant.userData.getId());
+                intent.putExtra("id",Constant.userData.getUser_id());
                 break;
             case R.id.ll_diary:
                 intent = new Intent(getContext(), MyShareActivity.class);
                 intent.putExtra("type",Constant.TypeFlag.DIARY);
-                intent.putExtra("id",Constant.userData.getId());
+                intent.putExtra("id",Constant.userData.getUser_id());
                 break;
             case R.id.ll_menu:
                 intent = new Intent(getContext(), MyShareActivity.class);
                 intent.putExtra("type",Constant.TypeFlag.MENU);
-                intent.putExtra("id",Constant.userData.getId());
+                intent.putExtra("id",Constant.userData.getUser_id());
                 break;
             case R.id.ll_comment:
                 intent = new Intent(getContext(), CommentMyActivity.class);
-                intent.putExtra("id",Constant.userData.getId());
+                intent.putExtra("id",Constant.userData.getUser_id());
                 break;
             case R.id.ll_collection:
                 intent = new Intent(getContext(), CollectionActivity.class);

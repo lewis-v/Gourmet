@@ -1,4 +1,4 @@
-package com.yw.gourmet.ui.Draft;
+package com.yw.gourmet.ui.draft;
 
 import com.yw.gourmet.dao.data.SaveDataUtil;
 import com.yw.gourmet.utils.ThreadUtils;

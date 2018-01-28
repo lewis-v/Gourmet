@@ -1,18 +1,15 @@
 package com.yw.gourmet.ui.detail.common;
 
-import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,6 +38,7 @@ import com.yw.gourmet.data.ShareListData;
 import com.yw.gourmet.dialog.MyDialogMoreFragment;
 import com.yw.gourmet.dialog.MyDialogPhotoShowFragment;
 import com.yw.gourmet.listener.OnItemClickListener;
+import com.yw.gourmet.ui.personal.PersonalActivity;
 import com.yw.gourmet.utils.ToastUtils;
 import com.yw.gourmet.utils.WindowUtil;
 
@@ -52,6 +50,7 @@ import okhttp3.MultipartBody;
 public class CommonDetailActivity extends BaseActivity<CommonDetailPresenter> implements
         CommonDetailContract.View,View.OnClickListener{
     private ImageView img_header,img_back,img_other,img_share,img_no_comment,img_up;
+    private ImageView img_comment,img_good,img_bad;
     private TextView tv_nickname,tv_time,tv_content,tv_comment,tv_good,tv_bad,tv_dev_input;
     private LinearLayout ll_img,ll_comment,ll_bad,ll_good,ll_input,ll_position,ll_title;
     private RelativeLayout rl_layout;
@@ -117,7 +116,11 @@ public class CommonDetailActivity extends BaseActivity<CommonDetailPresenter> im
         img_share = findViewById(R.id.img_share);
         img_no_comment = findViewById(R.id.img_no_comment);
         img_up = findViewById(R.id.img_up);
+        img_comment = findViewById(R.id.img_comment);
+        img_good = findViewById(R.id.img_good);
+        img_bad = findViewById(R.id.img_bad);
 
+        img_header.setOnClickListener(this);
         img_back.setOnClickListener(this);
         img_other.setOnClickListener(this);
         img_share.setOnClickListener(this);
@@ -130,6 +133,8 @@ public class CommonDetailActivity extends BaseActivity<CommonDetailPresenter> im
         tv_good = findViewById(R.id.tv_good);
         tv_bad = findViewById(R.id.tv_bad);
         tv_dev_input = findViewById(R.id.tv_dev_input);
+
+        tv_nickname.setOnClickListener(this);
 
         ll_img = findViewById(R.id.ll_img);
         ll_comment = findViewById(R.id.ll_comment);
@@ -154,6 +159,9 @@ public class CommonDetailActivity extends BaseActivity<CommonDetailPresenter> im
         MultipartBody.Builder builder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("id",getIntent().getStringExtra("id"));
+        if (Constant.userData != null){
+            builder.addFormDataPart("user_id",Constant.userData.getUser_id());
+        }
         mPresenter.getDetail(builder.build().parts());
 
         recycler_comment = findViewById(R.id.recycler_comment);
@@ -234,6 +242,21 @@ public class CommonDetailActivity extends BaseActivity<CommonDetailPresenter> im
         if (listShareListData.getComment_num() > 0){
             tv_comment.setText(String.valueOf(listShareListData.getComment_num()));
         }
+        String isComment = listShareListData.getIs_comment();
+        if (isComment != null && isComment.length()>0){
+            img_comment.setImageResource(R.drawable.comment_ic);
+            tv_comment.setTextColor(ContextCompat.getColor(this,R.color.colorAccent));
+        }
+        String goodAct = listShareListData.getGood_act();
+        if (goodAct != null){
+            if (goodAct.equals("0")){
+                img_bad.setImageResource(R.drawable.bad_ic);
+                tv_bad.setTextColor(ContextCompat.getColor(this,R.color.colorAccent));
+            }else if (goodAct.equals("1")){
+                img_good.setImageResource(R.drawable.good_ic);
+                tv_good.setTextColor(ContextCompat.getColor(this,R.color.colorAccent));
+            }
+        }
     }
 
     @Override
@@ -272,6 +295,8 @@ public class CommonDetailActivity extends BaseActivity<CommonDetailPresenter> im
         tv_comment.setText(String.valueOf(commentDataList.size()));
         scroll_comment.fullScroll(View.FOCUS_DOWN);
         recycler_comment.smoothScrollToPosition(commentDataList.size());
+        img_comment.setImageResource(R.drawable.comment_ic);
+        tv_comment.setTextColor(ContextCompat.getColor(this,R.color.colorAccent));
     }
 
     @Override
@@ -292,6 +317,16 @@ public class CommonDetailActivity extends BaseActivity<CommonDetailPresenter> im
         }
         if (listShareListData.getComment_num() > 0){
             tv_comment.setText(String.valueOf(listShareListData.getComment_num()));
+        }
+        String goodAct = model.getData().getGood_act();
+        if (goodAct != null){
+            if (goodAct.equals("0")){
+                img_bad.setImageResource(R.drawable.bad_ic);
+                tv_bad.setTextColor(ContextCompat.getColor(this,R.color.colorAccent));
+            }else if (goodAct.equals("1")){
+                img_good.setImageResource(R.drawable.good_ic);
+                tv_good.setTextColor(ContextCompat.getColor(this,R.color.colorAccent));
+            }
         }
     }
 
@@ -325,7 +360,7 @@ public class CommonDetailActivity extends BaseActivity<CommonDetailPresenter> im
                 if (Constant.userData != null) {
                     MultipartBody.Builder builderGood = new MultipartBody.Builder()
                             .setType(MultipartBody.FORM)
-                            .addFormDataPart("id", Constant.userData.getId())
+                            .addFormDataPart("id", Constant.userData.getUser_id())
                             .addFormDataPart("type",String.valueOf(listShareListData.getType()))
                             .addFormDataPart("act_id",listShareListData.getId())
                             .addFormDataPart("act","1");
@@ -338,7 +373,7 @@ public class CommonDetailActivity extends BaseActivity<CommonDetailPresenter> im
                 if (Constant.userData != null) {
                     MultipartBody.Builder builderGood = new MultipartBody.Builder()
                             .setType(MultipartBody.FORM)
-                            .addFormDataPart("id", Constant.userData.getId())
+                            .addFormDataPart("id", Constant.userData.getUser_id())
                             .addFormDataPart("type",String.valueOf(listShareListData.getType()))
                             .addFormDataPart("act_id",listShareListData.getId())
                             .addFormDataPart("act","0");
@@ -355,6 +390,12 @@ public class CommonDetailActivity extends BaseActivity<CommonDetailPresenter> im
                 break;
             case R.id.tv_share:
 
+                break;
+            case R.id.img_header:
+            case R.id.tv_nickname:
+                Intent intent = new Intent(this, PersonalActivity.class);
+                intent.putExtra("id",listShareListData.getUser_id());
+                startActivity(intent);
                 break;
         }
     }
@@ -415,7 +456,7 @@ public class CommonDetailActivity extends BaseActivity<CommonDetailPresenter> im
         MultipartBody.Builder builder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("token",Constant.userData.getToken())
-                .addFormDataPart("user_id",Constant.userData.getId())
+                .addFormDataPart("user_id",Constant.userData.getUser_id())
                 .addFormDataPart("act_id",listShareListData.getId())
                 .addFormDataPart("type",getIntent().getStringExtra("type"))
                 .addFormDataPart("content",et_input.getText().toString());

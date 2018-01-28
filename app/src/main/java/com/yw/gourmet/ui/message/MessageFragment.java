@@ -70,12 +70,12 @@ public class MessageFragment extends BaseFragment<MessagePresenter> implements M
             @Override
             public void OnClick(View v, int position) {
                 String put_id,get_id;
-                if (Constant.userData.getId().equals(listData.get(position).getPut_id())){
+                if (Constant.userData.getUser_id().equals(listData.get(position).getPut_id())){
                     get_id = listData.get(position).getGet_id();
                 }else {
                     get_id = listData.get(position).getPut_id();
                 }
-                put_id = Constant.userData.getId();
+                put_id = Constant.userData.getUser_id();
                 Intent intent = new Intent(getContext(), ChatActivity.class);
                 intent.putExtra("put_id",put_id);
                 intent.putExtra("get_id",get_id);
@@ -127,7 +127,7 @@ public class MessageFragment extends BaseFragment<MessagePresenter> implements M
         if (Constant.userData != null) {
             MultipartBody.Builder builder = new MultipartBody.Builder()
                     .setType(MultipartBody.FORM)
-                .addFormDataPart("id", Constant.userData.getId());
+                .addFormDataPart("id", Constant.userData.getUser_id());
             mPresenter.LoadMessageList(builder.build().parts());
         }else {
             swipeToLoadLayout.setRefreshing(false);

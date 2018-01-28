@@ -1,6 +1,7 @@
 package com.yw.gourmet.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import com.yw.gourmet.GlideApp;
 import com.yw.gourmet.R;
 import com.yw.gourmet.data.CommentData;
+import com.yw.gourmet.ui.personal.PersonalActivity;
 
 import java.util.List;
 
@@ -34,7 +36,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.MyViewHo
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(final MyViewHolder holder, int position) {
         if (position >= list.size()){
             holder.tv_end.setVisibility(View.VISIBLE);
             holder.tv_dev.setVisibility(View.GONE);
@@ -54,6 +56,22 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.MyViewHo
             holder.tv_time.setText(list.get(position).getCreate_time());
             holder.tv_content.setText(list.get(position).getContent());
         }
+        holder.img_header.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, PersonalActivity.class);
+                intent.putExtra("id",list.get(holder.getLayoutPosition()).getUser_id());
+                context.startActivity(intent);
+            }
+        });
+        holder.tv_nickname.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, PersonalActivity.class);
+                intent.putExtra("id",list.get(holder.getLayoutPosition()).getUser_id());
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override

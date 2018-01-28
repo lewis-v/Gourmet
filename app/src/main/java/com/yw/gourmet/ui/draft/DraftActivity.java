@@ -1,4 +1,4 @@
-package com.yw.gourmet.ui.Draft;
+package com.yw.gourmet.ui.draft;
 
 import android.content.Intent;
 import android.support.v7.widget.DefaultItemAnimator;

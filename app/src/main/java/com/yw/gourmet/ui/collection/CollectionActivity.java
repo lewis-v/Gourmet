@@ -151,7 +151,7 @@ public class CollectionActivity extends BaseActivity<CollectionPresenter> implem
                 }else {
                     MultipartBody.Builder builder = new MultipartBody.Builder()
                             .setType(MultipartBody.FORM)
-                            .addFormDataPart("id", Constant.userData.getId())
+                            .addFormDataPart("id", Constant.userData.getUser_id())
                             .addFormDataPart("type",listData.get(position).getType()+"")
                             .addFormDataPart("act_id",listData.get(position).getId())
                             .addFormDataPart("act","1");
@@ -166,7 +166,7 @@ public class CollectionActivity extends BaseActivity<CollectionPresenter> implem
                 }else {
                     MultipartBody.Builder builder = new MultipartBody.Builder()
                             .setType(MultipartBody.FORM)
-                            .addFormDataPart("id", Constant.userData.getId())
+                            .addFormDataPart("id", Constant.userData.getUser_id())
                             .addFormDataPart("type",listData.get(position).getType()+"")
                             .addFormDataPart("act_id",listData.get(position).getId())
                             .addFormDataPart("act","0");
@@ -257,7 +257,8 @@ public class CollectionActivity extends BaseActivity<CollectionPresenter> implem
         builder.addFormDataPart("type",String.valueOf(type));
 
         if (Constant.userData != null){
-            builder.addFormDataPart("id",Constant.userData.getId());
+            builder.addFormDataPart("id",Constant.userData.getUser_id());
+            builder.addFormDataPart("user_id",Constant.userData.getUser_id());
         }else {
             ToastUtils.showSingleToast("请登陆后再进行操作");
         }
@@ -282,12 +283,12 @@ public class CollectionActivity extends BaseActivity<CollectionPresenter> implem
                 .addFormDataPart("token", Constant.userData == null ? "0" :  Constant.userData.getToken());
         builder.addFormDataPart("type",String.valueOf(type));
         if (Constant.userData != null){
-            builder.addFormDataPart("id",Constant.userData.getId());
+            builder.addFormDataPart("id",Constant.userData.getUser_id());
         }else {
             ToastUtils.showSingleToast("请登陆后再进行操作");
         }
         if (Constant.userData != null){
-            builder.addFormDataPart("user_id",Constant.userData.getId());
+            builder.addFormDataPart("user_id",Constant.userData.getUser_id());
         }
         mPresenter.getCollection(builder.build().parts(), LoadEnum.REFRESH);
     }

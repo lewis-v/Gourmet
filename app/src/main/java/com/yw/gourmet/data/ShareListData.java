@@ -27,6 +27,7 @@ public class ShareListData<T> {
     private String is_collection;//是否收藏,长度大于0则收藏
     private String good_act;//点赞情况,1/0,空则没有
     private String is_comment;//是否评论,长度大于0则评论
+    private String user_id;//发布者id
 
     public String getId() {
         return id;
@@ -226,6 +227,15 @@ public class ShareListData<T> {
         return this;
     }
 
+    public String getUser_id() {
+        return user_id;
+    }
+
+    public ShareListData setUser_id(String user_id) {
+        this.user_id = user_id;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "ShareListData{" +
@@ -251,6 +261,7 @@ public class ShareListData<T> {
                 ", is_collection='" + is_collection + '\'' +
                 ", good_act='" + good_act + '\'' +
                 ", is_comment='" + is_comment + '\'' +
+                ", user_id='" + user_id + '\'' +
                 '}';
     }
 }

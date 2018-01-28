@@ -40,6 +40,11 @@ public interface ApiService {
     @POST("/Login")
     Observable<BaseData<UserData>> Login(@Part List<MultipartBody.Part> parts);
 
+    //获取用户信息
+    @Multipart
+    @POST("/User/Info/Get")
+    Observable<BaseData<UserData>> GetUserInfo(@Part List<MultipartBody.Part> parts);
+
     //加载分享列表
     @Multipart
     @POST("/ShareList/Load")

@@ -19,6 +19,8 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
+        android:screenOrientation="portrait"
+        android:windowSoftInputMode="adjustResize"
         android:theme="@style/AppTheme">
 
         <!-- 百度地图服务 -->
@@ -41,10 +43,12 @@
         <!-- 登录 -->
         <activity
             android:name=".ui.login.LoginActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <!-- 设置界面 -->
         <activity
             android:name=".ui.set.SetActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <!-- 引导页 -->
         <activity
@@ -59,6 +63,7 @@
         <!-- 修改个人信息 -->
         <activity
             android:name=".ui.changeDetail.ChangeDetailActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <!-- 照片选择.剪裁 -->
         <activity
@@ -76,20 +81,24 @@
         <!-- 普通分享 -->
         <activity
             android:name=".ui.share.common.CommonShareActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <!-- 日记分享 -->
         <activity
             android:name=".ui.share.diary.DiaryActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <!-- 食谱分享 -->
         <activity
             android:name=".ui.share.menu.MenuActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <!-- 聊天 -->
         <activity
             android:name=".ui.chat.ChatActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <!-- 普通分享详情 -->
@@ -122,6 +131,7 @@
         <!-- 攻略分享 -->
         <activity
             android:name=".ui.share.raiders.RaidersActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <!-- 攻略详情 -->
@@ -147,10 +157,19 @@
         <!-- 关于我们 -->
         <activity
             android:name=".ui.about.AboutActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".ui.Draft.DraftActivity" />
-        <activity android:name=".ui.setTop.SetTopActivity"></activity>
+        <!--草稿箱-->
+        <activity android:name=".ui.draft.DraftActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"  />
+        <!--置顶设置-->
+        <activity android:name=".ui.setTop.SetTopActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

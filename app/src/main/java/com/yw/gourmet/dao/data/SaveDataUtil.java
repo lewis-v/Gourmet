@@ -39,7 +39,7 @@ public class SaveDataUtil {
     public static List<SaveData> querydataBy() {
         Query<SaveData> nQuery =  GreenDaoManager.getInstance().getmDaoSession().getSaveDataDao().queryBuilder()
                 .orderDesc(SaveDataDao.Properties.Change_time)
-                .where(SaveDataDao.Properties.User_id.eq(Constant.userData.getId()))
+                .where(SaveDataDao.Properties.User_id.eq(Constant.userData.getUser_id()))
 //                .where(UserDao.Properties.Name.eq("user1"))//.where(UserDao.Properties.Id.notEq(999))
 //                .orderAsc(CityInfoDao.Properties.CityName)//.limit(5)//orderDesc
                 .build();

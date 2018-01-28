@@ -124,7 +124,7 @@ public class CommentMyFragment extends BaseFragment<CommentMyPresenter> implemen
                 }else {
                     MultipartBody.Builder builder = new MultipartBody.Builder()
                             .setType(MultipartBody.FORM)
-                            .addFormDataPart("id", Constant.userData.getId())
+                            .addFormDataPart("id", Constant.userData.getUser_id())
                             .addFormDataPart("type",listData.get(position).getType()+"")
                             .addFormDataPart("act_id",listData.get(position).getId())
                             .addFormDataPart("act","1");
@@ -139,7 +139,7 @@ public class CommentMyFragment extends BaseFragment<CommentMyPresenter> implemen
                 }else {
                     MultipartBody.Builder builder = new MultipartBody.Builder()
                             .setType(MultipartBody.FORM)
-                            .addFormDataPart("id", Constant.userData.getId())
+                            .addFormDataPart("id", Constant.userData.getUser_id())
                             .addFormDataPart("type",listData.get(position).getType()+"")
                             .addFormDataPart("act_id",listData.get(position).getId())
                             .addFormDataPart("act","0");
@@ -233,6 +233,9 @@ public class CommentMyFragment extends BaseFragment<CommentMyPresenter> implemen
             builder.addFormDataPart("id",id);
         }else {
             ToastUtils.showSingleToast("请登陆后再进行操作");
+        }
+        if (Constant.userData != null){
+            builder.addFormDataPart("user_id",Constant.userData.getUser_id());
         }
         if (listData.size()>0){
             builder.addFormDataPart("time_flag",listData.get(listData.size()-1).getTime_flag())

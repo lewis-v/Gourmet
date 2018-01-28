@@ -155,7 +155,7 @@ public class RaidersActivity extends BaseActivity<RaidersPresenter> implements V
                 case "new":
                     data = SaveDataUtil
                             .querydataById(SaveDataDao.Properties.Type.eq(Constant.TypeFlag.RAIDERS)
-                                    , SaveDataDao.Properties.User_id.eq(Constant.userData.getId()));
+                                    , SaveDataDao.Properties.User_id.eq(Constant.userData.getUser_id()));
                     if (data != null && data.size()>0) {
                         saveDataCache = data.get(0);
                         new MyDialogTipFragment().setTextEnter("是").setTextCancel("否")
@@ -173,7 +173,7 @@ public class RaidersActivity extends BaseActivity<RaidersPresenter> implements V
                     data = SaveDataUtil
                             .querydataById(SaveDataDao.Properties.Type.eq(Constant.TypeFlag.RAIDERS)
                                     ,SaveDataDao.Properties._id.eq(getIntent().getLongExtra("_id",0))
-                                    ,SaveDataDao.Properties.User_id.eq(Constant.userData.getId()));
+                                    ,SaveDataDao.Properties.User_id.eq(Constant.userData.getUser_id()));
                     if (data != null && data.size()>0) {
                         saveData = data.get(0);
                         initSaveData(saveData);
@@ -228,7 +228,7 @@ public class RaidersActivity extends BaseActivity<RaidersPresenter> implements V
                                 setLoadDialog(true);
                                 MultipartBody.Builder builder = new MultipartBody.Builder()
                                         .setType(MultipartBody.FORM)
-                                        .addFormDataPart("id",Constant.userData.getId())
+                                        .addFormDataPart("id",Constant.userData.getUser_id())
                                         .addFormDataPart("status",String.valueOf(status))
                                         .addFormDataPart("title",et_title.getText().toString())
                                         .addFormDataPart("cover",raidersListData.get(0).getImg_cover())
@@ -298,7 +298,7 @@ public class RaidersActivity extends BaseActivity<RaidersPresenter> implements V
                     public void accept(File file) throws Exception {
                         MultipartBody.Builder builder = new MultipartBody.Builder()
                                 .setType(MultipartBody.FORM)
-                                .addFormDataPart("id", Constant.userData.getId())
+                                .addFormDataPart("id", Constant.userData.getUser_id())
                                 .addFormDataPart("path", file.getName(), RequestBody.create(MediaType.parse("multipart/form-data"), file));
                         mPresenter.upImg(builder.build().parts(), position);
                     }
@@ -362,7 +362,7 @@ public class RaidersActivity extends BaseActivity<RaidersPresenter> implements V
                         @Override
                         public void OnEnter(String Tag) {
                             SaveData saveData = new SaveData();
-                            saveData.setUser_id(Constant.userData.getId())
+                            saveData.setUser_id(Constant.userData.getUser_id())
                                     .setChange_time(System.currentTimeMillis())
                                     .setTitle(et_title.getText().toString()).setStatus(status)
                                     .setIntroduction(et_introduction.getText().toString())

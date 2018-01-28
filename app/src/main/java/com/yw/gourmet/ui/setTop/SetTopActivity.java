@@ -149,7 +149,7 @@ public class SetTopActivity extends BaseActivity<SetTopPresenter> implements Set
                 setLoadDialog(true);
                 mPresenter.setTop(new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                .addFormDataPart("id",Constant.userData.getId())
+                .addFormDataPart("id",Constant.userData.getUser_id())
                 .addFormDataPart("type", String.valueOf(data.get(position).getType()))
                 .addFormDataPart("act_id",data.get(position).getId())
                 .addFormDataPart("top_num", String.valueOf(position+1))
@@ -161,7 +161,7 @@ public class SetTopActivity extends BaseActivity<SetTopPresenter> implements Set
                 setLoadDialog(true);
                 mPresenter.setTop(new MultipartBody.Builder()
                         .setType(MultipartBody.FORM)
-                        .addFormDataPart("id",Constant.userData.getId())
+                        .addFormDataPart("id",Constant.userData.getUser_id())
                         .addFormDataPart("type", String.valueOf(data.get(position).getType()))
                         .addFormDataPart("act_id",data.get(position).getId())
                         .addFormDataPart("top_num", String.valueOf(position+1))
@@ -173,7 +173,7 @@ public class SetTopActivity extends BaseActivity<SetTopPresenter> implements Set
                 setLoadDialog(true);
                 mPresenter.setTop(new MultipartBody.Builder()
                         .setType(MultipartBody.FORM)
-                        .addFormDataPart("id",Constant.userData.getId())
+                        .addFormDataPart("id",Constant.userData.getUser_id())
                         .addFormDataPart("type", String.valueOf(data.get(position).getType()))
                         .addFormDataPart("act_id",data.get(position).getId())
                         .addFormDataPart("top_num", String.valueOf(position+1))
@@ -243,7 +243,7 @@ public class SetTopActivity extends BaseActivity<SetTopPresenter> implements Set
      */
     public void refresh(){
         mPresenter.getTop(new MultipartBody.Builder().setType(MultipartBody.FORM)
-                .addFormDataPart("id", Constant.userData.getId()).build().parts());
+                .addFormDataPart("id", Constant.userData.getUser_id()).build().parts());
     }
 
     @Override

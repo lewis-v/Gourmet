@@ -100,7 +100,7 @@ public class MyDialogMoreFragment extends BaseDialogFragment<MyDIalogPresenter>
                         .addFormDataPart("act",isCollected?"-1":"1")
                         .addFormDataPart("act_id",id)
                         .addFormDataPart("type",String.valueOf(type))
-                        .addFormDataPart("id",Constant.userData.getId());
+                        .addFormDataPart("id",Constant.userData.getUser_id());
                 mPresenter.collection(builder.build().parts());
                 break;
             case R.id.ll_share_people://分享微信好友

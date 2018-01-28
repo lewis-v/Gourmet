@@ -21,11 +21,14 @@ public interface PersonalContract {
         void onGetTopSuccess(BaseData<List<ShareListData<List<String>>>> model);
         void OnGetTopFail(String msg);
         void onReMarkSuccess(BaseData<ShareListData<List<String>>> model,int position);
+        void onGetUserInfoSuccess(BaseData<UserData> model);
+        void onGetUserInfoFail(String msg);
     }
     abstract class Presenter extends BasePresenter<View>{
         abstract void upImg(List<MultipartBody.Part> parts);
         abstract void changeBack(List<MultipartBody.Part> parts);
         abstract void getTop(List<MultipartBody.Part> parts);
         abstract void reMark(List<MultipartBody.Part> parts,int position);
+        abstract void getUserInfo(List<MultipartBody.Part> parts);
     }
 }

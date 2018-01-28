@@ -149,7 +149,7 @@ public class CommonShareActivity extends BaseActivity<CommonSharePresenter> impl
                 case "new":
                     data = SaveDataUtil
                             .querydataById(SaveDataDao.Properties.Type.eq(Constant.TypeFlag.SHARE)
-                                    ,SaveDataDao.Properties.User_id.eq(Constant.userData.getId()));
+                                    ,SaveDataDao.Properties.User_id.eq(Constant.userData.getUser_id()));
                     if (data != null && data.size()>0) {
                         saveDataCache = data.get(0);
                         new MyDialogTipFragment().setTextEnter("是").setTextCancel("否")
@@ -241,7 +241,7 @@ public class CommonShareActivity extends BaseActivity<CommonSharePresenter> impl
                                                 }
                                             }
                                             MultipartBody.Builder builder = new MultipartBody.Builder()
-                                                    .addFormDataPart("id",Constant.userData.getId())
+                                                    .addFormDataPart("id",Constant.userData.getUser_id())
                                                     .addFormDataPart("status",String.valueOf(status));
                                             if (et_content.getText().toString().trim().length() != 0){
                                                 builder.addFormDataPart("content",et_content.getText().toString());
@@ -311,7 +311,7 @@ public class CommonShareActivity extends BaseActivity<CommonSharePresenter> impl
                                 isUpLoad = true;
                                 mPresenter.upImg(new MultipartBody.Builder()
                                         .setType(MultipartBody.FORM)
-                                        .addFormDataPart("id", Constant.userData.getId())
+                                        .addFormDataPart("id", Constant.userData.getUser_id())
                                         .addFormDataPart("path", file.getName(), RequestBody.create(MediaType.parse("multipart/form-data"), file))
                                         .build().parts(), position);
                                 isCompress = false;
@@ -417,7 +417,7 @@ public class CommonShareActivity extends BaseActivity<CommonSharePresenter> impl
                         @Override
                         public void OnEnter(String Tag) {
                             SaveData saveData = new SaveData();
-                            saveData.setUser_id(Constant.userData.getId())
+                            saveData.setUser_id(Constant.userData.getUser_id())
                                     .setChange_time(System.currentTimeMillis())
                                     .setContent(et_content.getText().toString())
                                     .setStatus(status)

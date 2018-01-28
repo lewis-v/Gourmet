@@ -91,4 +91,25 @@ public class PersonalPresenter extends PersonalContract.Presenter{
             }
         }));
     }
+
+    @Override
+    void getUserInfo(List<MultipartBody.Part> parts) {
+        mRxManager.add(Api.getInstance().GetUserInfo(parts),new RxSubscriberCallBack<BaseData<UserData>>(new RxApiCallback<BaseData<UserData>>() {
+            @Override
+            public void onSuccess(BaseData<UserData> model) {
+                if (model.getStatus() == 0){
+                    mView.onGetUserInfoSuccess(model);
+                }else {
+                    mView.onGetUserInfoFail(model.getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(int code, String msg) {
+                mView.onGetUserInfoFail(msg);
+            }
+        }));
+    }
+
+
 }

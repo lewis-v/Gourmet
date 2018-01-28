@@ -6,6 +6,7 @@ package com.yw.gourmet.data;
 
 public class UserData {
     private String id;
+    private String user_id;
     private String sex;
     private String like;
     private String address;
@@ -137,10 +138,20 @@ public class UserData {
         return this;
     }
 
+    public String getUser_id() {
+        return user_id;
+    }
+
+    public UserData setUser_id(String user_id) {
+        this.user_id = user_id;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "UserData{" +
                 "id='" + id + '\'' +
+                ", user_id='" + user_id + '\'' +
                 ", sex='" + sex + '\'' +
                 ", like='" + like + '\'' +
                 ", address='" + address + '\'' +

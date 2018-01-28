@@ -1,10 +1,12 @@
 package com.yw.gourmet.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -30,6 +32,7 @@ import com.yw.gourmet.dialog.MyDialogPhotoShowFragment;
 import com.yw.gourmet.listener.OnItemClickListener;
 import com.yw.gourmet.listener.OnMoreListener;
 import com.yw.gourmet.listener.OnReMarkListener;
+import com.yw.gourmet.ui.personal.PersonalActivity;
 
 import java.util.List;
 
@@ -104,22 +107,32 @@ public class ShareListAdapter extends RecyclerView.Adapter<ShareListAdapter.MyVi
             if (goodAct.equals("0")){//踩了
                 holder.img_bad.setImageResource(R.drawable.bad_ic);
                 holder.img_good.setImageResource(R.drawable.good);
+                holder.tv_good.setTextColor(ContextCompat.getColor(context,R.color.close));
+                holder.tv_bad.setTextColor(ContextCompat.getColor(context,R.color.colorAccent));
             }else if (goodAct.equals("1")){//点赞了
                 holder.img_bad.setImageResource(R.drawable.bad);
                 holder.img_good.setImageResource(R.drawable.good_ic);
+                holder.tv_good.setTextColor(ContextCompat.getColor(context,R.color.colorAccent));
+                holder.tv_bad.setTextColor(ContextCompat.getColor(context,R.color.close));
             }else  {
                 holder.img_bad.setImageResource(R.drawable.bad);
                 holder.img_good.setImageResource(R.drawable.good);
+                holder.tv_good.setTextColor(ContextCompat.getColor(context,R.color.close));
+                holder.tv_bad.setTextColor(ContextCompat.getColor(context,R.color.close));
             }
         }else  {
             holder.img_bad.setImageResource(R.drawable.bad);
             holder.img_good.setImageResource(R.drawable.good);
+            holder.tv_good.setTextColor(ContextCompat.getColor(context,R.color.close));
+            holder.tv_bad.setTextColor(ContextCompat.getColor(context,R.color.close));
         }
         String is_comment = listData.get(position).getIs_comment();
         if (is_comment != null && is_comment.length()>0){//评论了
             holder.img_comment.setImageResource(R.drawable.comment_ic);
+            holder.tv_comment.setTextColor(ContextCompat.getColor(context,R.color.colorAccent));
         }else {
             holder.img_comment.setImageResource(R.drawable.comment);
+            holder.tv_comment.setTextColor(ContextCompat.getColor(context,R.color.close));
         }
 
 
@@ -223,6 +236,23 @@ public class ShareListAdapter extends RecyclerView.Adapter<ShareListAdapter.MyVi
                 }
             });
         }
+
+        holder.img_header.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, PersonalActivity.class);
+                intent.putExtra("id",listData.get(holder.getLayoutPosition()).getUser_id());
+                context.startActivity(intent);
+            }
+        });
+        holder.tv_nickname.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, PersonalActivity.class);
+                intent.putExtra("id",listData.get(holder.getLayoutPosition()).getUser_id());
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override

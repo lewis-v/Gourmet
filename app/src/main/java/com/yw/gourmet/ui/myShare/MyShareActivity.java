@@ -45,7 +45,7 @@ public class MyShareActivity extends BaseActivity {
             Log.e(TAG,"id is null");
         }else{
             tv_title = findViewById(R.id.tv_title);
-            if (Constant.userData == null || !id.equals(Constant.userData.getId())){
+            if (Constant.userData == null || !id.equals(Constant.userData.getUser_id())){
                 tv_title.setText(R.string.ta_share);
             }
         }

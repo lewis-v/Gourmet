@@ -26,6 +26,9 @@ public class MenuDetailData<T,V> {
     private V ingredient;//用料
     private String tip;//小贴士
     private int difficult_level;//困难程度
+    private String is_collection;//是否收藏,长度大于0则收藏
+    private String good_act;//点赞情况,1/0,空则没有
+    private String is_comment;//是否评论,长度大于0则评论
 
     public String getId() {
         return id;
@@ -216,6 +219,33 @@ public class MenuDetailData<T,V> {
         return this;
     }
 
+    public String getIs_collection() {
+        return is_collection;
+    }
+
+    public MenuDetailData setIs_collection(String is_collection) {
+        this.is_collection = is_collection;
+        return this;
+    }
+
+    public String getGood_act() {
+        return good_act;
+    }
+
+    public MenuDetailData setGood_act(String good_act) {
+        this.good_act = good_act;
+        return this;
+    }
+
+    public String getIs_comment() {
+        return is_comment;
+    }
+
+    public MenuDetailData setIs_comment(String is_comment) {
+        this.is_comment = is_comment;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "MenuDetailData{" +
@@ -240,6 +270,9 @@ public class MenuDetailData<T,V> {
                 ", ingredient=" + ingredient +
                 ", tip='" + tip + '\'' +
                 ", difficult_level=" + difficult_level +
+                ", is_collection='" + is_collection + '\'' +
+                ", good_act='" + good_act + '\'' +
+                ", is_comment='" + is_comment + '\'' +
                 '}';
     }
 }
