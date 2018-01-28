@@ -2,6 +2,7 @@ package com.yw.gourmet.ui.setTop;
 
 import android.animation.IntEvaluator;
 import android.animation.ValueAnimator;
+import android.content.Intent;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,8 +23,12 @@ import com.yw.gourmet.adapter.MySetTopAdapter;
 import com.yw.gourmet.base.BaseActivity;
 import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.data.ShareListData;
-import com.yw.gourmet.myenum.LoadEnum;
-import com.yw.gourmet.ui.main.FunctionFragment;
+import com.yw.gourmet.listener.OnItemClickListener;
+import com.yw.gourmet.listener.OnMoveListener;
+import com.yw.gourmet.ui.detail.common.CommonDetailActivity;
+import com.yw.gourmet.ui.detail.diary.DiaryDetailActivity;
+import com.yw.gourmet.ui.detail.menu.MenuDetailActivity;
+import com.yw.gourmet.ui.detail.raiders.RaidersDetailActivity;
 import com.yw.gourmet.utils.WindowUtil;
 
 import java.util.ArrayList;
@@ -100,9 +105,83 @@ public class SetTopActivity extends BaseActivity<SetTopPresenter> implements Set
         recycler_top.setLayoutManager(new LinearLayoutManager(this));
         adapter = new MySetTopAdapter(this,data);
         recycler_top.setAdapter(adapter);
+        adapter.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void OnClick(View v, int position) {
+                Intent intent = null;
+                switch (data.get(position).getType()) {
+                    case Constant.TypeFlag.SHARE:
+                        intent = new Intent(SetTopActivity.this, CommonDetailActivity.class);
+                        break;
+                    case Constant.TypeFlag.DIARY:
+                        intent = new Intent(SetTopActivity.this, DiaryDetailActivity.class);
+                        break;
+                    case Constant.TypeFlag.MENU:
+                        intent = new Intent(SetTopActivity.this, MenuDetailActivity.class);
+                        break;
+                    case Constant.TypeFlag.RAIDERS:
+                        intent = new Intent(SetTopActivity.this, RaidersDetailActivity.class);
+                        break;
+                }
+                if (intent != null){
+                    intent.putExtra("id",data.get(position).getId());
+                    intent.putExtra("type",String.valueOf(data.get(position).getType()));
+                    startActivity(intent);
+                }
+
+            }
+
+            @Override
+            public boolean OnLongClick(View v, int position) {
+                return false;
+            }
+        });
+        adapter.setOnTopClickListener(new MySetTopAdapter.OnTopClickListener() {
+            @Override
+            public void onSetTop(View view, int position) {
+                adapter.setMove(position);
+            }
+        });
+
+        adapter.setOnMoveListener(new OnMoveListener() {
+            @Override
+            public void onUp(View vIew, int position) {
+                setLoadDialog(true);
+                mPresenter.setTop(new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("id",Constant.userData.getId())
+                .addFormDataPart("type", String.valueOf(data.get(position).getType()))
+                .addFormDataPart("act_id",data.get(position).getId())
+                .addFormDataPart("top_num", String.valueOf(position+1))
+                .addFormDataPart("top_num2", String.valueOf(position)).build().parts(),position,position-1);
+            }
+
+            @Override
+            public void onDelete(View vIew, int position) {
+                setLoadDialog(true);
+                mPresenter.setTop(new MultipartBody.Builder()
+                        .setType(MultipartBody.FORM)
+                        .addFormDataPart("id",Constant.userData.getId())
+                        .addFormDataPart("type", String.valueOf(data.get(position).getType()))
+                        .addFormDataPart("act_id",data.get(position).getId())
+                        .addFormDataPart("top_num", String.valueOf(position+1))
+                        .addFormDataPart("top_num2", String.valueOf(position+1)).build().parts(),position,position);
+            }
+
+            @Override
+            public void onDown(View vIew, int position) {
+                setLoadDialog(true);
+                mPresenter.setTop(new MultipartBody.Builder()
+                        .setType(MultipartBody.FORM)
+                        .addFormDataPart("id",Constant.userData.getId())
+                        .addFormDataPart("type", String.valueOf(data.get(position).getType()))
+                        .addFormDataPart("act_id",data.get(position).getId())
+                        .addFormDataPart("top_num", String.valueOf(position+1))
+                        .addFormDataPart("top_num2", String.valueOf(position+2)).build().parts(),position,position+1);
+            }
+        });
 
         refresh();
-        addFragmentFunction();
     }
 
     public void perforAnimate(final View view, final int starHeight, final int endHeight){
@@ -132,8 +211,18 @@ public class SetTopActivity extends BaseActivity<SetTopPresenter> implements Set
     }
 
     @Override
-    public void onSetTopSuccess(String msg, int position) {
-
+    public void onSetTopSuccess(String msg, int position,int endPosition) {
+        setLoadDialog(false);
+        if (position == endPosition){//删除
+            data.remove(position);
+            adapter.notifyItemRemoved(position);
+        }else {//换位置
+            ShareListData<List<String>> cache = data.get(position);
+            data.set(position,data.get(endPosition));
+            data.set(endPosition,cache);
+            adapter.notifyItemMoved(position,endPosition);
+        }
+        adapter.setMove(endPosition);
     }
 
     @Override
@@ -141,6 +230,7 @@ public class SetTopActivity extends BaseActivity<SetTopPresenter> implements Set
         data.clear();
         data.addAll(model.getData());
         adapter.notifyDataSetChanged();
+        addFragmentFunction();
     }
 
     @Override

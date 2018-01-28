@@ -28,13 +28,13 @@ public interface SetTopContract {
     }
 
     interface TopView extends BaseView{
-        void onSetTopSuccess(String msg,int position);
+        void onSetTopSuccess(String msg,int position,int endPosition);
         void onGetTopSuccess(BaseData<List<ShareListData<List<String>>>> model);
         void OnGetTopFail(String msg);
     }
 
     abstract class TopPresenter extends BasePresenter<TopView>{
-        abstract void setTop(List<MultipartBody.Part> parts,int position);
+        abstract void setTop(List<MultipartBody.Part> parts,int position,int endPosition);
         abstract void getTop(List<MultipartBody.Part> parts);
     }
 }

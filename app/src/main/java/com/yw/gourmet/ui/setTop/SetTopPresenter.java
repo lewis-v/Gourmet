@@ -17,12 +17,12 @@ import okhttp3.MultipartBody;
 
 public class SetTopPresenter extends SetTopContract.TopPresenter {
     @Override
-    void setTop(List<MultipartBody.Part> parts, final int position) {
+    void setTop(List<MultipartBody.Part> parts, final int position, final int endPosition) {
         mRxManager.add(Api.getInstance().PutTop(parts),new RxSubscriberCallBack<BaseData>(new RxApiCallback<BaseData>() {
             @Override
             public void onSuccess(BaseData model) {
                 if (model.getStatus() == 0) {
-                    mView.onSetTopSuccess(model.getMessage(), position);
+                    mView.onSetTopSuccess(model.getMessage(), position,endPosition);
                 }else {
                     mView.onFail(model.getMessage());
                 }

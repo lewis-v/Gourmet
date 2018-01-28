@@ -14,6 +14,7 @@ import com.yw.gourmet.Constant;
 import com.yw.gourmet.R;
 import com.yw.gourmet.data.ShareListData;
 import com.yw.gourmet.listener.OnItemClickListener;
+import com.yw.gourmet.listener.OnMoveListener;
 
 import java.util.List;
 
@@ -27,6 +28,8 @@ public class MySetTopAdapter extends RecyclerView.Adapter<MySetTopAdapter.MyView
     private List<ShareListData<List<String>>> data;
     private OnItemClickListener onItemClickListener;
     private OnTopClickListener onTopClickListener;
+    private OnMoveListener onMoveListener;
+    private int movePosition = -1;//移动的位置
 
     public MySetTopAdapter(Context context, List<ShareListData<List<String>>> data) {
         this.context = context;
@@ -81,6 +84,47 @@ public class MySetTopAdapter extends RecyclerView.Adapter<MySetTopAdapter.MyView
                 }
             });
         }
+
+        if (onMoveListener != null){
+            if (1==data.size()){
+                holder.img_down.setVisibility(View.GONE);
+                holder.img_up.setVisibility(View.GONE);
+            }else if (position == 0){
+                holder.img_up.setVisibility(View.GONE);
+                holder.img_down.setVisibility(View.VISIBLE);
+            }else if (position == data.size() -1){
+                holder.img_down.setVisibility(View.GONE);
+                holder.img_up.setVisibility(View.VISIBLE);
+            }else {
+                holder.img_up.setVisibility(View.VISIBLE);
+                holder.img_down.setVisibility(View.VISIBLE);
+            }
+
+            if (movePosition == position){
+                holder.ll_change.setVisibility(View.VISIBLE);
+            }else {
+                holder.ll_change.setVisibility(View.GONE);
+            }
+
+            holder.img_up.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onMoveListener.onUp(v,holder.getLayoutPosition());
+                }
+            });
+            holder.img_delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onMoveListener.onDelete(v,holder.getLayoutPosition());
+                }
+            });
+            holder.img_down.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onMoveListener.onDown(v,holder.getLayoutPosition());
+                }
+            });
+        }
     }
 
     @Override
@@ -90,9 +134,9 @@ public class MySetTopAdapter extends RecyclerView.Adapter<MySetTopAdapter.MyView
 
     class MyViewHolder extends RecyclerView.ViewHolder {
         TextView tv_type,tv_time,tv_title;
-        LinearLayout ll_other;
+        LinearLayout ll_other,ll_change;
         ConstraintLayout constraint_item;
-        ImageView img_other;
+        ImageView img_other,img_up,img_delete,img_down;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -101,7 +145,11 @@ public class MySetTopAdapter extends RecyclerView.Adapter<MySetTopAdapter.MyView
             tv_type = itemView.findViewById(R.id.tv_type);
             tv_title = itemView.findViewById(R.id.tv_title);
             ll_other = itemView.findViewById(R.id.ll_other);
+            ll_change = itemView.findViewById(R.id.ll_change);
             img_other = itemView.findViewById(R.id.img_other);
+            img_delete = itemView.findViewById(R.id.img_delete);
+            img_up = itemView.findViewById(R.id.img_up);
+            img_down = itemView.findViewById(R.id.img_down);
         }
     }
 
@@ -117,5 +165,27 @@ public class MySetTopAdapter extends RecyclerView.Adapter<MySetTopAdapter.MyView
     public MySetTopAdapter setOnTopClickListener(OnTopClickListener onTopClickListener) {
         this.onTopClickListener = onTopClickListener;
         return this;
+    }
+
+    public MySetTopAdapter setOnMoveListener(OnMoveListener onMoveListener) {
+        this.onMoveListener = onMoveListener;
+        return this;
+    }
+
+    /**
+     * 设置move模式的位置
+     * @param movePosition
+     */
+    public void setMove(int movePosition){
+        if (movePosition == this.movePosition){
+            this.movePosition = -1;
+        }else {
+            int position = this.movePosition;
+            this.movePosition = movePosition;
+            if (position >= 0) {
+                notifyItemChanged(position);
+            }
+        }
+        notifyItemChanged(movePosition);
     }
 }

@@ -16,9 +16,11 @@ import com.yw.gourmet.Constant;
 import com.yw.gourmet.R;
 import com.yw.gourmet.adapter.MySetTopAdapter;
 import com.yw.gourmet.adapter.ShareListAdapter;
+import com.yw.gourmet.base.BaseActivity;
 import com.yw.gourmet.base.BaseFragment;
 import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.data.ShareListData;
+import com.yw.gourmet.dialog.MyDialogTipFragment;
 import com.yw.gourmet.listener.OnItemClickListener;
 import com.yw.gourmet.myenum.LoadEnum;
 import com.yw.gourmet.ui.detail.common.CommonDetailActivity;
@@ -92,8 +94,19 @@ public class MyShareFragment extends BaseFragment<MySharePresenter> implements S
         });
         adapter.setOnTopClickListener(new MySetTopAdapter.OnTopClickListener() {
             @Override
-            public void onSetTop(View view, int position) {
-
+            public void onSetTop(View view, final int position) {
+                new MyDialogTipFragment().setShowText("是否设置此消息置顶?").setTextEnter("是")
+                        .setTextCancel("否").setOnEnterListener(new MyDialogTipFragment.OnEnterListener() {
+                    @Override
+                    public void OnEnter(String Tag) {
+                        ((BaseActivity)getActivity()).setLoadDialog(true);
+                        mPresenter.setTop(new MultipartBody.Builder().setType(MultipartBody.FORM)
+                        .addFormDataPart("id",Constant.userData.getId())
+                        .addFormDataPart("act_id",listData.get(position).getId())
+                        .addFormDataPart("type", String.valueOf(listData.get(position).getType()))
+                        .build().parts(),position);
+                    }
+                }).show(getFragmentManager(),"top");
             }
         });
         refresh();
@@ -146,11 +159,26 @@ public class MyShareFragment extends BaseFragment<MySharePresenter> implements S
 
     @Override
     public void onSetTopSuccess(String msg, int position) {
+        ((BaseActivity)getActivity()).setLoadDialog(false);
+        if (topList.size() == 3){
+            topList.remove(2);
+            topAdapter.notifyItemRemoved(2);
+        }
+        topList.add(0,listData.get(position));
+        topAdapter.notifyItemInserted(0);
+        listData.remove(position);
+        adapter.notifyItemRemoved(position);
+    }
 
+    @Override
+    public void onFail(String msg) {
+        super.onFail(msg);
+        ((BaseActivity)getActivity()).setLoadDialog(false);
     }
 
     @Override
     public void onGetListSuccess(BaseData<List<ShareListData<List<String>>>> model, LoadEnum flag) {
+        boolean isLive = false;//是否存在
         if (flag == LoadEnum.REFRESH) {
             if ((model.getData() == null || model.getData().size() == 0) && listData.size()>0){
                 ToastUtils.showSingleToast("已经是最新的啦");
@@ -163,12 +191,15 @@ public class MyShareFragment extends BaseFragment<MySharePresenter> implements S
                     for (ShareListData<List<String>> data : model.getData()){
                         for (ShareListData<List<String>> top : topList){
                             if (data.getType() == top.getType() && data.getId().equals(top.getId())){
+                                isLive = true;
                                 break;
                             }
-                                listData.add(data);
-                                adapter.notifyItemInserted(listData.size()-1);
-                                break;
                         }
+                        if (!isLive) {
+                            listData.add(data);
+                            adapter.notifyItemInserted(listData.size() - 1);
+                        }
+                        isLive = false;
                     }
                 }
                 adapter.notifyDataSetChanged();
@@ -184,13 +215,15 @@ public class MyShareFragment extends BaseFragment<MySharePresenter> implements S
                 for (ShareListData<List<String>> data : model.getData()){
                     for (ShareListData<List<String>> top : topList){
                         if (data.getType() == top.getType() && data.getId().equals(top.getId())){
+                            isLive = true;
                             break;
                         }
-                            listData.add(data);
-                            adapter.notifyItemInserted(listData.size()-1);
-                            break;
-
                     }
+                    if (!isLive) {
+                        listData.add(data);
+                        adapter.notifyItemInserted(listData.size() - 1);
+                    }
+                    isLive = false;
                 }
             }
             swipeToLoadLayout.setLoadingMore(false);
