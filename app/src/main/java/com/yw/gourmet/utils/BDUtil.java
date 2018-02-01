@@ -68,7 +68,7 @@ public class BDUtil {
         //获取定位的频率
         option.setScanSpan(1000);
         //返回的坐标类型
-        option.setCoorType("bd09ll");
+//        option.setCoorType("bd09ll");
         //是否使用gps
         option.setOpenGps(true);
         //是否需要地址信息
@@ -203,7 +203,7 @@ public class BDUtil {
                 mBaiduMap.animateMapStatus(mMapStatusUpdate);
                 try {
                     //此处延时是为了防止多个带动画的动作被覆盖
-                    Thread.sleep(100);
+                    Thread.sleep(300);
                 } catch (InterruptedException e) {
                     return ;
                 }
@@ -228,7 +228,7 @@ public class BDUtil {
                 //改变地图状态
                 mBaiduMap.animateMapStatus(mMapStatusUpdate);
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(300);
                 } catch (InterruptedException e) {
                     return;
                 }

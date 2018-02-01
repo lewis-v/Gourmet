@@ -167,7 +167,7 @@ public class MyDialogRaidersListFragment extends BaseDialogFragment implements V
                 public void OnLocalSuccess(BDLocation location) {
                     latLng = new LatLng(location.getLatitude(), location.getLongitude());
                     bdUtil.setCenter(baiduMap,latLng)
-                            .setZoom(baiduMap,10);
+                            .setZoom(baiduMap,10).setMarkerByRes(baiduMap,latLng,R.mipmap.icon_gcoding);
                 }
 
                 @Override

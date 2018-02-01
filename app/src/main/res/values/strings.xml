@@ -98,4 +98,12 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="nothing">什么都没有哟</string>
+    <string name="search_diary">搜日记</string>
+    <string name="search_menu">搜食谱</string>
+    <string name="search_raiders">搜攻略</string>
+    <string name="local">本地</string>
+    <string name="ji">记</string>
+    <string name="pu">谱</string>
+    <string name="lue">略</string>
+    <string name="ben">本</string>
 </resources>

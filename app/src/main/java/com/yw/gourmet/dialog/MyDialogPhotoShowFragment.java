@@ -23,7 +23,7 @@ import java.util.List;
 
 public class MyDialogPhotoShowFragment extends BaseDialogFragment implements View.OnClickListener{
     private MyViewPager viewpager_photo;
-    private MyImgViewPagerAdapter adapter;
+    private MyImgViewPagerAdapter<PhotoView> adapter;
     private List<String> imgString = new ArrayList<>(2);
     private List<PhotoView> list = new ArrayList<>(2);
     private int position = 0;//默认显示位置,0
@@ -37,7 +37,7 @@ public class MyDialogPhotoShowFragment extends BaseDialogFragment implements Vie
     @Override
     protected void initView() {
         viewpager_photo = (MyViewPager)view.findViewById(R.id.viewpager_photo);
-        adapter = new MyImgViewPagerAdapter(list);
+        adapter = new MyImgViewPagerAdapter<PhotoView>(list);
         viewpager_photo.setAdapter(adapter);
         viewpager_photo.setPagingEnabled(true);
         setData();
