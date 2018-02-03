@@ -44,8 +44,8 @@
                         android:layout_height="wrap_content" />
                 </LinearLayout>
             </android.support.v7.widget.Toolbar>
-            <com.yw.gourmet.widget.YWFlowViewPager
-                android:id="@+id/viewpager"
+            <com.yw.gourmet.widget.YWFlowView
+                android:id="@+id/flow_view"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"/>
             <LinearLayout

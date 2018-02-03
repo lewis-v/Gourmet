@@ -2,19 +2,21 @@ package com.yw.gourmet.ui.search;
 
 import android.content.Intent;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.baidu.location.BDLocation;
+import com.yw.gourmet.GlideApp;
 import com.yw.gourmet.R;
-import com.yw.gourmet.adapter.MyImgViewPagerAdapter;
 import com.yw.gourmet.base.BaseFragment;
+import com.yw.gourmet.data.BaseData;
+import com.yw.gourmet.data.FlowData;
+import com.yw.gourmet.ui.search.keySearch.KeySearchActivity;
 import com.yw.gourmet.utils.BDUtil;
 import com.yw.gourmet.utils.ToastUtils;
-import com.yw.gourmet.widget.MyViewPager;
+import com.yw.gourmet.widget.YWFlowView;
 import com.yw.gourmet.widget.YWFlowViewPager;
 
 import java.util.ArrayList;
@@ -28,8 +30,8 @@ public class SearchFragment extends BaseFragment<SearchPresenter> implements Sea
     ,View.OnClickListener {
     private LinearLayout ll_search,ll_diary,ll_menu,ll_raiders,ll_local;
     private TextView tv_search,tv_local_text,tv_local;
-    private YWFlowViewPager<ImageView> viewpager;
-    private List<ImageView> imageViews = new ArrayList<>();
+    private YWFlowView flow_view;
+    private ArrayList<View> imageViews = new ArrayList<>();
     private BDUtil bdUtil;
 
     /**
@@ -68,35 +70,9 @@ public class SearchFragment extends BaseFragment<SearchPresenter> implements Sea
 
             }
         },true);
+        flow_view = view.findViewById(R.id.flow_view);
+        mPresenter.getFlow();
 
-        ImageView imageView = new ImageView(getContext());
-        imageView.setImageResource(R.drawable.comment_ic);
-        ImageView imageView2 = new ImageView(getContext());
-        imageView2.setImageResource(R.drawable.good_ic);
-        ImageView imageView3 = new ImageView(getContext());
-        imageView3.setImageResource(R.drawable.bad_ic);
-
-        ImageView imageView4 = new ImageView(getContext());
-        imageView4.setImageResource(R.drawable.add_circle_outline);
-        ImageView imageView5 = new ImageView(getContext());
-        imageView5.setImageResource(R.drawable.add_circle);
-        ImageView imageView6 = new ImageView(getContext());
-        imageView6.setImageResource(R.drawable.refresh);
-        imageViews.add(imageView);
-        imageViews.add(imageView2);
-        imageViews.add(imageView3);
-//        imageViews.add(imageView4);
-//        imageViews.add(imageView5);
-//        imageViews.add(imageView6);
-        viewpager = view.findViewById(R.id.viewpager);
-        viewpager.setFlowView(imageViews);
-        viewpager.start(true);
-        viewpager.setOnPageClickListener(new YWFlowViewPager.OnPageClickListener() {
-            @Override
-            public void onPageClick(View view, int position) {
-                ToastUtils.showSingleToast(view.toString()+position);
-            }
-        });
     }
 
     /**
@@ -111,7 +87,7 @@ public class SearchFragment extends BaseFragment<SearchPresenter> implements Sea
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.ll_search:
-
+                startActivity(new Intent(getContext(), KeySearchActivity.class));
                 break;
             case R.id.ll_diary:
 
@@ -131,12 +107,31 @@ public class SearchFragment extends BaseFragment<SearchPresenter> implements Sea
     @Override
     public void onResume() {
         super.onResume();
-        viewpager.resume();
+        flow_view.resume();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        viewpager.pause();
+        flow_view.pause();
+    }
+
+    @Override
+    public void onGetFlowSuccess(BaseData<List<FlowData>> model) {
+        if (model != null){
+            for (FlowData data : model.getData()){
+                ImageView imageView = new ImageView(getContext());
+                imageView.setScaleType(ImageView.ScaleType.CENTER);
+                GlideApp.with(this).load(data.getImg()).error(R.mipmap.load_fail).into(imageView);
+                imageViews.add(imageView);
+            }
+            flow_view.setFlowViewList(imageViews).setPointLayoutBackground(R.color.transparent)
+            .setOnPageClickListener(new YWFlowViewPager.OnPageClickListener() {
+                @Override
+                public void onPageClick(View view, int position) {
+                    ToastUtils.showSingleToast("广告栏招商中");
+                }
+            }).start(getContext(),true);
+        }
     }
 }

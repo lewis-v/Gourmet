@@ -47,6 +47,8 @@ import java.util.List;
 
 import okhttp3.MultipartBody;
 
+import static com.yw.gourmet.utils.SoftInputUtils.hideSoftInput;
+
 public class CommonDetailActivity extends BaseActivity<CommonDetailPresenter> implements
         CommonDetailContract.View,View.OnClickListener{
     private ImageView img_header,img_back,img_other,img_share,img_no_comment,img_up;
@@ -464,18 +466,6 @@ public class CommonDetailActivity extends BaseActivity<CommonDetailPresenter> im
         setLoadDialog(true);
     }
 
-    /**
-     * 隐藏对应控件的软键盘
-     * @param view
-     */
-    public void hideSoftInput(View view){
-        InputMethodManager imm = (InputMethodManager) view
-                .getContext().getApplicationContext().getSystemService(
-                        Context.INPUT_METHOD_SERVICE);
-        try {
-            imm.hideSoftInputFromWindow(view.getApplicationWindowToken(), 0);
-        }catch (Exception e){}
-    }
 
     /**
      * UI的显示隐藏,带从上往下的动画

@@ -46,6 +46,8 @@ import java.util.List;
 
 import okhttp3.MultipartBody;
 
+import static com.yw.gourmet.utils.SoftInputUtils.hideSoftInput;
+
 public class RaidersDetailActivity extends BaseActivity<RaidersDetailPresenter> implements
         RaidersDetailContract.View , View.OnClickListener{
     private TextView tv_title,tv_introduction,tv_comment,tv_good,tv_bad,tv_dev_input;
@@ -379,18 +381,7 @@ public class RaidersDetailActivity extends BaseActivity<RaidersDetailPresenter> 
     }
 
 
-    /**
-     * 隐藏对应控件的软键盘
-     * @param view
-     */
-    public void hideSoftInput(View view){
-        InputMethodManager imm = (InputMethodManager) view
-                .getContext().getApplicationContext().getSystemService(
-                        Context.INPUT_METHOD_SERVICE);
-        try {
-            imm.hideSoftInputFromWindow(view.getApplicationWindowToken(), 0);
-        }catch (Exception e){}
-    }
+
 
 
     /**

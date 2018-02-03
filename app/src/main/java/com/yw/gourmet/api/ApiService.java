@@ -3,6 +3,7 @@ package com.yw.gourmet.api;
 
 import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.data.CommentData;
+import com.yw.gourmet.data.FlowData;
 import com.yw.gourmet.data.InitData;
 import com.yw.gourmet.data.MenuDetailData;
 import com.yw.gourmet.data.MenuPracticeData;
@@ -154,4 +155,13 @@ public interface ApiService {
     @Multipart
     @POST("/Top/Put")
     Observable<BaseData> PutTop(@Part List<MultipartBody.Part> parts);
+
+    //获取滚动广告
+    @GET("/Flow/Get")
+    Observable<BaseData<List<FlowData>>> GetFlow();
+
+    //搜索
+    @Multipart
+    @POST("/Find/Share")
+    Observable<BaseData<List<ShareListData<List<String>>>>> Search(@Part List<MultipartBody.Part> parts);
 }

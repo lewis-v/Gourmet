@@ -49,6 +49,7 @@ import java.util.List;
 import okhttp3.MultipartBody;
 
 import static com.yw.gourmet.ui.share.menu.MenuActivity.levelText;
+import static com.yw.gourmet.utils.SoftInputUtils.hideSoftInput;
 
 public class MenuDetailActivity extends BaseActivity<MenuDetailPresenter> implements
         MenuDetailContract.View,View.OnClickListener{
@@ -476,18 +477,7 @@ public class MenuDetailActivity extends BaseActivity<MenuDetailPresenter> implem
     }
 
 
-    /**
-     * 隐藏对应控件的软键盘
-     * @param view
-     */
-    public void hideSoftInput(View view){
-        InputMethodManager imm = (InputMethodManager) view
-                .getContext().getApplicationContext().getSystemService(
-                        Context.INPUT_METHOD_SERVICE);
-        try {
-            imm.hideSoftInputFromWindow(view.getApplicationWindowToken(), 0);
-        }catch (Exception e){}
-    }
+
 
     /**
      * 设置难度等级的显示

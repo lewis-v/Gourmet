@@ -18,10 +18,10 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:supportsRtl="true"
         android:screenOrientation="portrait"
-        android:windowSoftInputMode="adjustResize"
-        android:theme="@style/AppTheme">
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        android:windowSoftInputMode="adjustResize">
 
         <!-- 百度地图服务 -->
         <service
@@ -160,16 +160,19 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
-        <!--草稿箱-->
-        <activity android:name=".ui.draft.DraftActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"  />
-        <!--置顶设置-->
-        <activity android:name=".ui.setTop.SetTopActivity"
+        <!-- 草稿箱 -->
+        <activity
+            android:name=".ui.draft.DraftActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
+        <!-- 置顶设置 -->
+        <activity
+            android:name=".ui.setTop.SetTopActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".ui.search.keySearch.KeySearchActivity"></activity>
     </application>
 
 </manifest>

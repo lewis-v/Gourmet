@@ -106,4 +106,6 @@
     <string name="pu">谱</string>
     <string name="lue">略</string>
     <string name="ben">本</string>
+    <string name="find_friend">搜朋友</string>
+    <string name="search_key">搜索关键字</string>
 </resources>

@@ -1,0 +1,11 @@
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+android:color="@color/common_divider_narrow">
+<item>
+    <shape>
+        <!-- 中间的背景色 -->
+        <solid android:color="@android:color/white"/>
+        <!-- 设置四个角的角度 -->
+        <corners android:radius="4dp"/>
+    </shape>
+</item>
+</ripple>

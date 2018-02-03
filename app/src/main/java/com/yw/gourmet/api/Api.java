@@ -4,6 +4,7 @@ package com.yw.gourmet.api;
 import com.yw.gourmet.Constant;
 import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.data.CommentData;
+import com.yw.gourmet.data.FlowData;
 import com.yw.gourmet.data.InitData;
 import com.yw.gourmet.data.MenuDetailData;
 import com.yw.gourmet.data.MenuPracticeData;
@@ -34,7 +35,7 @@ import rx.Observable;
  */
 
 public class Api {
-    public final static String API_BASE_URL = "http://39.108.236.30:47423";//这里是服务器连接的接口的固定部分 39.108.236.30
+    public final static String API_BASE_URL = "http://192.168.0.102:47423";//这里是服务器连接的接口的固定部分 39.108.236.30
     public static Api instance;//单例
     private ApiService service;//声明apiservier,下面要通过这个调用与服务器交互的方法
     private OkHttpClient okHttpClient;
@@ -184,5 +185,13 @@ public class Api {
     }
     public Observable<BaseData> PutTop(List<MultipartBody.Part> parts){
         return service.PutTop(parts);
+    }
+
+    public Observable<BaseData<List<FlowData>>> GetFlow(){
+        return service.GetFlow();
+    }
+
+    public Observable<BaseData<List<ShareListData<List<String>>>>> Search(List<MultipartBody.Part> parts){
+        return service.Search(parts);
     }
 }
