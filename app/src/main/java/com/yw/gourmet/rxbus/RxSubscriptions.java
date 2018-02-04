@@ -3,11 +3,7 @@ package com.yw.gourmet.rxbus;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
-/**
- * 管理 CompositeSubscription
- * <p>
- * Created by yw on 16/7/19.
- */
+
 public class RxSubscriptions {
     private static CompositeSubscription mSubscriptions = new CompositeSubscription();
 

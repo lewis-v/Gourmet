@@ -289,7 +289,8 @@ public class MenuDetailActivity extends BaseActivity<MenuDetailPresenter> implem
         setLoadDialog(false);
         shareListData = model.getData();
         tv_title.setText(shareListData.getTitle());
-        GlideApp.with(this).load(shareListData.getCover()).error(R.mipmap.load_fail).into(img_cover);
+        GlideApp.with(this).load(shareListData.getCover()).error(R.mipmap.load_fail)
+                .placeholder(R.mipmap.loading).into(img_cover);
         setDifficultLevel(shareListData.getDifficult_level());
         String[] time = shareListData.getPlay_time().split(",");
         if (time != null && time.length > 1) {

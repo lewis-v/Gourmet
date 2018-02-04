@@ -103,7 +103,8 @@ public class MyDialogRaidersListFragment extends BaseDialogFragment implements V
             et_title.setText(raidersData.getTitle());
             et_address.setText(raidersData.getAddress());
             et_introduction.setText(raidersData.getIntroduction());
-            GlideApp.with(this).load(raidersData.getImg_cover()).error(R.mipmap.load_fail)
+            GlideApp.with(this).load(raidersData.getImg_cover())
+                    .placeholder(R.mipmap.loading).error(R.mipmap.load_fail)
                     .into(img_cover);
             latLng = new LatLng(raidersData.getLat(),raidersData.getLng());
         }
@@ -251,7 +252,8 @@ public class MyDialogRaidersListFragment extends BaseDialogFragment implements V
                             .setOnCropListener(new MyDialogPhotoChooseFragment.OnCropListener() {
                                 @Override
                                 public void OnCrop(String path, String tag) {
-                                    GlideApp.with(getContext()).load(path).error(R.mipmap.load_fail)
+                                    GlideApp.with(getContext()).load(path)
+                                            .placeholder(R.mipmap.loading).error(R.mipmap.load_fail)
                                             .into(img_cover);
                                     raidersData.setImg_cover(path);
                                     if (tv_img_tip.getVisibility() == View.VISIBLE) {

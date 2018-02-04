@@ -33,6 +33,7 @@ import com.yw.gourmet.listener.OnItemClickListener;
 import com.yw.gourmet.listener.OnMoreListener;
 import com.yw.gourmet.listener.OnReMarkListener;
 import com.yw.gourmet.ui.personal.PersonalActivity;
+import com.yw.gourmet.widget.GlideCircleTransform;
 
 import java.util.List;
 
@@ -98,7 +99,8 @@ public class ShareListAdapter extends RecyclerView.Adapter<ShareListAdapter.MyVi
             holder.tv_content.setText(listData.get(position).getContent());
             holder.tv_time.setText(listData.get(position).getPut_time());
             holder.tv_nickname.setText(listData.get(position).getNickname());
-            GlideApp.with(context).load(listData.get(position).getImg_header())
+            GlideApp.with(context).load(listData.get(position).getImg_header()).placeholder(R.mipmap.loading)
+                    .transform(new GlideCircleTransform(context)).placeholder(R.mipmap.loading)
                     .error(R.mipmap.load_fail).into(holder.img_header);
             if (listData.get(position).getContent() == null || listData.get(position).getContent().length() == 0) {
                 holder.tv_content.setVisibility(View.GONE);
@@ -164,7 +166,9 @@ public class ShareListAdapter extends RecyclerView.Adapter<ShareListAdapter.MyVi
                 } else if (listData.get(position).getImg().size() == 1) {//单张图片
                     holder.ll_img.setVisibility(View.VISIBLE);
                     holder.recycler_share.setVisibility(View.GONE);
-                    GlideApp.with(context).load(listData.get(position).getImg().get(0)).error(R.mipmap.load_fail).into(holder.img_share);
+                    GlideApp.with(context).load(listData.get(position).getImg().get(0))
+                            .placeholder(R.mipmap.loading)
+                            .error(R.mipmap.load_fail).into(holder.img_share);
                     holder.img_share.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -197,7 +201,8 @@ public class ShareListAdapter extends RecyclerView.Adapter<ShareListAdapter.MyVi
                 holder.ll_other.setVisibility(View.VISIBLE);
                 holder.ll_content.setVisibility(View.GONE);
                 holder.tv_title.setText(listData.get(position).getTitle());
-                GlideApp.with(context).load(listData.get(position).getCover()).error(R.mipmap.load_fail)
+                GlideApp.with(context).load(listData.get(position).getCover())
+                        .placeholder(R.mipmap.loading).error(R.mipmap.load_fail)
                         .into(holder.img_cover);
                 switch (listData.get(position).getType()) {
                     case Constant.TypeFlag.DIARY://日记

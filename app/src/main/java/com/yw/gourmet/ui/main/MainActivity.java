@@ -155,8 +155,9 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         if (isFunction){
             addFragmentFunction(false);
             return;
+        }else {
+            moveTaskToBack(true);
         }
-        super.onBackPressed();
     }
 
     /**
@@ -185,7 +186,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
      * @param isShow 是否显示
      */
     @Override
-    public void addFragmentFunction(final boolean isShow){
+    public synchronized void addFragmentFunction(final boolean isShow){
         if (funtionShowing){
             return;
         }
@@ -195,11 +196,12 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         if (isShow){
             if (functionFragment == null){
                 functionFragment = new FunctionFragment();
+                fragmentTransaction.add(R.id.fl_function,functionFragment);
             }
-            fragmentTransaction.add(R.id.fl_function,functionFragment);
         }else {
             if (functionFragment != null) {
                 fragmentTransaction.remove(functionFragment);
+                functionFragment = null;
             }
         }
         fragmentTransaction.runOnCommit(new Runnable() {

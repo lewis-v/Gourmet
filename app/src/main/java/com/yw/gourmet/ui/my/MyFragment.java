@@ -11,8 +11,8 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.yw.gourmet.Constant;
+import com.yw.gourmet.GlideApp;
 import com.yw.gourmet.R;
 import com.yw.gourmet.base.BaseFragment;
 import com.yw.gourmet.rxbus.EventSticky;
@@ -27,6 +27,7 @@ import com.yw.gourmet.ui.myShare.MyShareActivity;
 import com.yw.gourmet.ui.personal.PersonalActivity;
 import com.yw.gourmet.ui.set.SetActivity;
 import com.yw.gourmet.ui.setTop.SetTopActivity;
+import com.yw.gourmet.widget.GlideCircleTransform;
 
 import rx.Observable;
 import rx.Subscription;
@@ -107,7 +108,9 @@ public class MyFragment extends BaseFragment implements View.OnClickListener,MyC
      */
     public void setData(){
         tv_nickname.setText(Constant.userData.getNickname());
-        Glide.with(this).load(Constant.userData.getImg_header()).into(img_header);
+        GlideApp.with(this).load(Constant.userData.getImg_header()).error(R.mipmap.load_fail)
+                .placeholder(R.mipmap.loading)
+                .transform(new GlideCircleTransform(getContext())).into(img_header);
         tv_raiders.setText(String.valueOf(Constant.userData.getRaiders_num()));
         tv_menu.setText(String.valueOf(Constant.userData.getMenu_num()));
         tv_diary.setText(String.valueOf(Constant.userData.getDiary_num()));

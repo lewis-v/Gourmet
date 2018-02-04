@@ -2,11 +2,6 @@ package com.yw.gourmet.rxbus;
 
 import rx.Subscriber;
 
-/**
- * 为RxBus使用的Subscriber, 主要提供next事件的try,catch
- * <p>
- * Created by yw on 16/7/20.
- */
 public abstract class RxBusSubscriber<T> extends Subscriber<T> {
 
     @Override

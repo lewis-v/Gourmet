@@ -17,6 +17,7 @@ import com.yw.gourmet.GlideApp;
 import com.yw.gourmet.R;
 import com.yw.gourmet.data.MessageListData;
 import com.yw.gourmet.listener.OnRefreshListener;
+import com.yw.gourmet.widget.GlideCircleTransform;
 
 import java.util.List;
 
@@ -45,7 +46,9 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
             if (Constant.userData.getUser_id().equals(list.get(position).getPut_id())){//自己发送的
                 holder.ll_other.setVisibility(View.GONE);
                 holder.ll_myself.setVisibility(View.VISIBLE);
-                GlideApp.with(context).load(list.get(position).getImg_header()).error(R.mipmap.load_fail)
+                GlideApp.with(context).load(list.get(position).getImg_header())
+                        .placeholder(R.mipmap.loading).error(R.mipmap.load_fail)
+                        .transform(new GlideCircleTransform(context))
                         .into(holder.img_header_myself);
                 switch (list.get(position).getType()) {
                     case MessageListData.TEXT:
@@ -59,7 +62,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
                     case MessageListData.IMG:
                         holder.tv_myself.setVisibility(View.GONE);
                         holder.img_myself.setVisibility(View.VISIBLE);
-                        GlideApp.with(context).load(list.get(position).getImg()).error(R.mipmap.load_fail)
+                        GlideApp.with(context).load(list.get(position).getImg())
+                                .placeholder(R.mipmap.loading).error(R.mipmap.load_fail)
                                 .into(holder.img_myself);
                         break;
                 }
@@ -93,7 +97,9 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
             }else {//别人发送的
                 holder.ll_other.setVisibility(View.VISIBLE);
                 holder.ll_myself.setVisibility(View.GONE);
-                GlideApp.with(context).load(list.get(position).getImg_header()).error(R.mipmap.load_fail)
+                GlideApp.with(context).load(list.get(position).getImg_header())
+                        .placeholder(R.mipmap.loading).error(R.mipmap.load_fail)
+                        .transform(new GlideCircleTransform(context))
                         .into(holder.img_header_other);
                 switch (list.get(position).getType()) {
                     case MessageListData.TEXT:
@@ -107,7 +113,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
                     case MessageListData.IMG:
                         holder.tv_other.setVisibility(View.GONE);
                         holder.tv_other.setVisibility(View.VISIBLE);
-                        GlideApp.with(context).load(list.get(position).getImg()).error(R.mipmap.load_fail)
+                        GlideApp.with(context).load(list.get(position).getImg())
+                                .placeholder(R.mipmap.loading).error(R.mipmap.load_fail)
                                 .into(holder.img_other);
                         break;
                 }

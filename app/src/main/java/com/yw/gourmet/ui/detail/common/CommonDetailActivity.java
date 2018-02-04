@@ -41,6 +41,7 @@ import com.yw.gourmet.listener.OnItemClickListener;
 import com.yw.gourmet.ui.personal.PersonalActivity;
 import com.yw.gourmet.utils.ToastUtils;
 import com.yw.gourmet.utils.WindowUtil;
+import com.yw.gourmet.widget.GlideCircleTransform;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -204,7 +205,9 @@ public class CommonDetailActivity extends BaseActivity<CommonDetailPresenter> im
     public void onGetDetailSuccess(BaseData<ShareListData<List<String>>> model) {
         setLoadDialog(false);
         listShareListData = model.getData();
-        GlideApp.with(this).load(listShareListData.getImg_header()).error(R.mipmap.load_fail).into(img_header);
+        GlideApp.with(this).load(listShareListData.getImg_header()).error(R.mipmap.load_fail)
+                .placeholder(R.mipmap.loading)
+                .transform(new GlideCircleTransform(this)).into(img_header);
         tv_nickname.setText(listShareListData.getNickname());
         tv_time.setText(listShareListData.getPut_time());
         if (listShareListData.getContent() != null && listShareListData.getContent().length() > 0){
@@ -230,7 +233,7 @@ public class CommonDetailActivity extends BaseActivity<CommonDetailPresenter> im
                 });
             }else if (listShareListData.getImg().size() == 1){//1张照片
                 shoViewTop(ll_img,true);
-                GlideApp.with(this).load(listShareListData.getImg().get(0))
+                GlideApp.with(this).load(listShareListData.getImg().get(0)).placeholder(R.mipmap.loading)
                         .error(R.mipmap.load_fail).into(img_share);
             }
         }

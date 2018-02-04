@@ -47,7 +47,8 @@ public class ImgAdapter extends RecyclerView.Adapter<ImgAdapter.MyViewHolder>{
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-        GlideApp.with(context).load(listImg.get(position)).error(R.mipmap.load_fail).into(holder.img);
+        GlideApp.with(context).load(listImg.get(position)).error(R.mipmap.load_fail)
+                .placeholder(R.mipmap.loading).into(holder.img);
         if (onItemClickListener != null){
             holder.img.setOnClickListener(new View.OnClickListener() {
                 @Override

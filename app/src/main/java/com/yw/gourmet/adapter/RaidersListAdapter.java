@@ -84,7 +84,7 @@ public class RaidersListAdapter extends RecyclerView.Adapter<RaidersListAdapter.
                 holder.tv_title.setText(listData.get(position).getTitle());
                 holder.tv_type.setText(listData.get(position).getType().toString());
                 holder.tv_address.setText(listData.get(position).getAddress());
-                GlideApp.with(context).load(listData.get(position).getImg_cover())
+                GlideApp.with(context).load(listData.get(position).getImg_cover()).placeholder(R.mipmap.loading)
                         .error(R.mipmap.load_fail).into(holder.img_cover);
                 holder.img_change.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -174,7 +174,7 @@ public class RaidersListAdapter extends RecyclerView.Adapter<RaidersListAdapter.
             holder.tv_title.setText(listData.get(position).getTitle());
             holder.tv_type.setText(listData.get(position).getType().toString());
             holder.tv_address.setText(listData.get(position).getAddress());
-            GlideApp.with(context).load(listData.get(position).getImg_cover())
+            GlideApp.with(context).load(listData.get(position).getImg_cover()).placeholder(R.mipmap.loading)
                     .error(R.mipmap.load_fail).into(holder.img_cover);
         }
         if (onItemClickListener != null){

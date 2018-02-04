@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
-import com.aspsine.swipetoloadlayout.OnLoadMoreListener;
 import com.aspsine.swipetoloadlayout.OnRefreshListener;
 import com.aspsine.swipetoloadlayout.SwipeToLoadLayout;
 import com.yw.gourmet.Constant;
@@ -25,11 +24,9 @@ import com.yw.gourmet.rxbus.EventSticky;
 import com.yw.gourmet.rxbus.RxBus;
 import com.yw.gourmet.rxbus.RxBusSubscriber;
 import com.yw.gourmet.rxbus.RxSubscriptions;
-import com.yw.gourmet.swipAnim.LoadMoreFooterView;
 import com.yw.gourmet.ui.chat.ChatActivity;
 import com.yw.gourmet.ui.login.LoginActivity;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 

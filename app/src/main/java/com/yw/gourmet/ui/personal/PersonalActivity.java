@@ -40,6 +40,7 @@ import com.yw.gourmet.ui.detail.menu.MenuDetailActivity;
 import com.yw.gourmet.ui.detail.raiders.RaidersDetailActivity;
 import com.yw.gourmet.ui.myShare.MyShareActivity;
 import com.yw.gourmet.utils.ToastUtils;
+import com.yw.gourmet.widget.GlideCircleTransform;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -318,11 +319,22 @@ public class PersonalActivity extends BaseActivity<PersonalPresenter> implements
                 tv_sex.setText(Constant.userData.getSex());
                 tv_address.setText(Constant.userData.getAddress());
                 tv_introduction.setText(Constant.userData.getIntroduction());
-                GlideApp.with(this).load(Constant.userData.getImg_header()).error(R.mipmap.load_fail).into(float_action_header);
-                GlideApp.with(this).load(Constant.userData.getImg_header()).error(R.mipmap.load_fail).into(img_header);
-                GlideApp.with(this).load(Constant.userData.getPersonal_back()).error(R.mipmap.load_fail).into(img_tool_back);
+                GlideApp.with(this).load(Constant.userData.getImg_header()).placeholder(R.mipmap.loading).error(R.mipmap.load_fail)
+                        .transform(new GlideCircleTransform(this)).into(float_action_header);
+                GlideApp.with(this).load(Constant.userData.getImg_header())
+                        .placeholder(R.mipmap.loading).error(R.mipmap.load_fail)
+                        .transform(new GlideCircleTransform(this))
+                        .into(img_header);
+                GlideApp.with(this).load(Constant.userData.getPersonal_back())
+                        .placeholder(R.mipmap.loading).error(R.mipmap.load_fail).into(img_tool_back);
             }
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setData();
     }
 
     @Override
@@ -467,9 +479,14 @@ public class PersonalActivity extends BaseActivity<PersonalPresenter> implements
         tv_sex.setText(model.getData().getSex());
         tv_address.setText(model.getData().getAddress());
         tv_introduction.setText(model.getData().getIntroduction());
-        GlideApp.with(this).load(model.getData().getImg_header()).error(R.mipmap.load_fail).into(float_action_header);
-        GlideApp.with(this).load(model.getData().getImg_header()).error(R.mipmap.load_fail).into(img_header);
-        GlideApp.with(this).load(model.getData().getPersonal_back()).error(R.mipmap.load_fail).into(img_tool_back);
+        GlideApp.with(this).load(model.getData().getImg_header()).error(R.mipmap.load_fail)
+                .placeholder(R.mipmap.loading)
+                .transform(new GlideCircleTransform(this)).into(float_action_header);
+        GlideApp.with(this).load(model.getData().getImg_header()).error(R.mipmap.load_fail)
+                .placeholder(R.mipmap.loading)
+                .transform(new GlideCircleTransform(this)).into(img_header);
+        GlideApp.with(this).load(model.getData().getPersonal_back())
+                .placeholder(R.mipmap.loading).error(R.mipmap.load_fail).into(img_tool_back);
     }
 
     @Override

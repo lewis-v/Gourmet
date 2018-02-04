@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+//apply plugin: "com.mob.sdk"
 apply plugin: 'org.greenrobot.greendao'
 
 android {
@@ -48,7 +49,12 @@ android {
     }
 }
 
-
+//MobSDK {
+//    appKey "23c7a82a9c634"
+//    appSecret "491ec79a55737a9fbbf1d8c124d8b1d6"
+//
+//    SMSSDK {}
+//}
 
 
 
@@ -80,7 +86,6 @@ dependencies {
     //上拉下拉刷新
     compile 'com.github.Aspsine:SwipeToLoadLayout:v1.0.4'
     //图片压缩
-    compile 'top.zibin:Luban:1.1.3'
     compile 'id.zelory:compressor:2.1.0'
     //图片选择
     compile 'me.iwf.photopicker:PhotoPicker:0.9.10@aar'

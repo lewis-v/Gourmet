@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.yw.gourmet.Constant;
 import com.yw.gourmet.R;
 import com.yw.gourmet.adapter.ShareListAdapter;
+import com.yw.gourmet.adapter.UserAdapter;
 import com.yw.gourmet.api.Api;
 import com.yw.gourmet.base.BaseActivity;
 import com.yw.gourmet.data.BaseData;
@@ -28,6 +29,7 @@ import com.yw.gourmet.ui.detail.common.CommonDetailActivity;
 import com.yw.gourmet.ui.detail.diary.DiaryDetailActivity;
 import com.yw.gourmet.ui.detail.menu.MenuDetailActivity;
 import com.yw.gourmet.ui.detail.raiders.RaidersDetailActivity;
+import com.yw.gourmet.ui.personal.PersonalActivity;
 import com.yw.gourmet.utils.SoftInputUtils;
 import com.yw.gourmet.utils.ToastUtils;
 
@@ -43,7 +45,9 @@ public class KeySearchActivity extends BaseActivity<KeySearchPresenter> implemen
     private TextView tv_cancel;
     private RecyclerView recycler_friend,recycler_other;
     private ShareListAdapter shareListAdapter;
+    private UserAdapter userAdapter;
     private List<ShareListData<List<String>>> shareListData = new ArrayList<>();
+    private List<ShareListData> list = new ArrayList<>();
     private List<String> spinner = Arrays.asList("找朋友","分享","日记","食谱","攻略");
 
     @Override
@@ -59,6 +63,9 @@ public class KeySearchActivity extends BaseActivity<KeySearchPresenter> implemen
     public void onSearchUserSuccess(BaseData<List<ShareListData<List<String>>>> model) {
         setLoadDialog(false);
         recycler_friend.setVisibility(View.VISIBLE);
+        list.clear();
+        list.addAll(model.getData());
+        userAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -128,9 +135,8 @@ public class KeySearchActivity extends BaseActivity<KeySearchPresenter> implemen
                         }
                         setLoadDialog(true);
                         SoftInputUtils.hideSoftInput(et_search);
-                        int size = shareListData.size();
-                        shareListData.clear();
-                        shareListAdapter.notifyItemRangeRemoved(0,size);
+                        recycler_friend.setVisibility(View.GONE);
+                        recycler_other.setVisibility(View.GONE);
                     }
                     return true;
                 }
@@ -147,6 +153,24 @@ public class KeySearchActivity extends BaseActivity<KeySearchPresenter> implemen
         });
 
         recycler_friend = findViewById(R.id.recycler_friend);
+        userAdapter = new UserAdapter(this,list);
+        recycler_friend.setItemAnimator(new DefaultItemAnimator());
+        recycler_friend.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
+        recycler_friend.setAdapter(userAdapter);
+
+        userAdapter.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void OnClick(View v, int position) {
+                Intent intent = new Intent(KeySearchActivity.this, PersonalActivity.class);
+                intent.putExtra("id",list.get(position).getUser_id());
+                startActivity(intent);
+            }
+
+            @Override
+            public boolean OnLongClick(View v, int position) {
+                return false;
+            }
+        });
 
         recycler_other = findViewById(R.id.recycler_other);
         recycler_other.setItemAnimator(new DefaultItemAnimator());

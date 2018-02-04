@@ -1,23 +1,26 @@
 package com.yw.gourmet.ui.login;
 
-import android.content.SharedPreferences;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.yw.gourmet.Constant;
+import com.yw.gourmet.GlideApp;
 import com.yw.gourmet.R;
 import com.yw.gourmet.base.BaseActivity;
 import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.data.UserData;
 import com.yw.gourmet.utils.SPUtils;
 import com.yw.gourmet.utils.ToastUtils;
+import com.yw.gourmet.widget.GlideCircleTransform;
 
 import okhttp3.MultipartBody;
 
 public class LoginActivity extends BaseActivity<LoginPresenter> implements LoginContract.View,View.OnClickListener{
     private EditText et_id,et_password;
     private Button bt_login;
+    private ImageView img_header;
 
     @Override
     protected void initView() {
@@ -26,8 +29,14 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
         bt_login = (Button)findViewById(R.id.bt_login);
         bt_login.setOnClickListener(this);
 
-        SharedPreferences sharedPreferences = getSharedPreferences(getPackageName(),MODE_PRIVATE);
         et_id.setText(SPUtils.getSharedStringData(getApplicationContext(),"id"));
+
+        img_header = findViewById(R.id.img_header);
+        String header = SPUtils.getSharedStringData(this,"img_header");
+        if (header.length()>1){
+            GlideApp.with(this).load(header).transform(new GlideCircleTransform(this))
+                    .error(R.mipmap.load_fail).into(img_header);
+        }
     }
 
     @Override
@@ -62,6 +71,7 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
         Constant.userData = model.getData();
         SPUtils.setSharedStringData(getApplicationContext(),"token",model.getData().getToken());
         SPUtils.setSharedStringData(getApplicationContext(),"id",et_id.getText().toString());
+        SPUtils.setSharedStringData(getApplicationContext(),"img_header",model.getData().getImg_header());
         finish();
     }
 

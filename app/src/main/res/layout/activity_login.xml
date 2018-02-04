@@ -9,6 +9,7 @@
     tools:context="com.yw.gourmet.ui.login.LoginActivity">
 
     <ImageView
+        android:id="@+id/img_header"
         android:src="@mipmap/login_header"
         android:layout_width="100dp"
         android:layout_height="100dp"

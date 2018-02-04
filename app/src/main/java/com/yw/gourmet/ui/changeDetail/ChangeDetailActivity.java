@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.yw.gourmet.Constant;
+import com.yw.gourmet.GlideApp;
 import com.yw.gourmet.R;
 import com.yw.gourmet.base.BaseActivity;
 import com.yw.gourmet.data.BaseData;
@@ -18,7 +19,9 @@ import com.yw.gourmet.dialog.MyDialogChooseListFragment;
 import com.yw.gourmet.dialog.MyDialogEditFragment;
 import com.yw.gourmet.dialog.MyDialogPhotoChooseFragment;
 import com.yw.gourmet.listener.OnEditDialogEnterClickListener;
+import com.yw.gourmet.utils.SPUtils;
 import com.yw.gourmet.utils.ToastUtils;
+import com.yw.gourmet.widget.GlideCircleTransform;
 
 import java.io.File;
 import java.util.Arrays;
@@ -73,7 +76,9 @@ public class ChangeDetailActivity extends BaseActivity<ChangeDetailPresenter> im
      */
     public void setData(){
         if (Constant.userData != null){
-            Glide.with(this).load(Constant.userData.getImg_header()).into(img_header);
+            GlideApp.with(this).load(Constant.userData.getImg_header()).placeholder(R.mipmap.loading)
+                    .error(R.mipmap.load_fail)
+                    .transform(new GlideCircleTransform(this)).into(img_header);
             tv_address.setText(Constant.userData.getAddress());
             tv_introduction.setText(Constant.userData.getIntroduction());
             tv_nickname.setText(Constant.userData.getNickname());
@@ -90,6 +95,7 @@ public class ChangeDetailActivity extends BaseActivity<ChangeDetailPresenter> im
     public void onChangeSuccess(BaseData<UserData> model) {
         super.onSuccess(model.getMessage());
         Constant.userData = model.getData();
+        SPUtils.setSharedStringData(getApplicationContext(),"img_header",model.getData().getImg_header());
         setData();
     }
 
@@ -189,7 +195,6 @@ public class ChangeDetailActivity extends BaseActivity<ChangeDetailPresenter> im
                 .subscribe(new Consumer<File>() {
                     @Override
                     public void accept(File file) throws Exception {
-                        Log.i("---length---",file.length()+"");
                         RequestBody imageBody = RequestBody.create(MediaType.parse("multipart/form-data"), file);
                         MultipartBody.Builder builder = new MultipartBody.Builder()
                                 .setType(MultipartBody.FORM)

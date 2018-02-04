@@ -10,8 +10,6 @@ import android.widget.TextView;
 import com.yw.gourmet.R;
 import com.yw.gourmet.base.BaseActivity;
 import com.yw.gourmet.dialog.MyDialogTipFragment;
-import com.yw.gourmet.rxbus.EventSticky;
-import com.yw.gourmet.rxbus.RxBus;
 import com.yw.gourmet.ui.about.AboutActivity;
 import com.yw.gourmet.utils.SizeChangeUtils;
 import com.yw.gourmet.utils.ToastUtils;

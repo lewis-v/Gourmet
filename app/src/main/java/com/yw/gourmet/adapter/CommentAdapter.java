@@ -14,6 +14,7 @@ import com.yw.gourmet.GlideApp;
 import com.yw.gourmet.R;
 import com.yw.gourmet.data.CommentData;
 import com.yw.gourmet.ui.personal.PersonalActivity;
+import com.yw.gourmet.widget.GlideCircleTransform;
 
 import java.util.List;
 
@@ -51,7 +52,9 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.MyViewHo
             holder.tv_time.setVisibility(View.VISIBLE);
             holder.tv_nickname.setVisibility(View.VISIBLE);
             holder.img_header.setVisibility(View.VISIBLE);
-            GlideApp.with(context).load(list.get(position).getImg_header()).error(R.mipmap.load_fail).into(holder.img_header);
+            GlideApp.with(context).load(list.get(position).getImg_header()).error(R.mipmap.load_fail)
+                    .placeholder(R.mipmap.loading)
+                    .transform(new GlideCircleTransform(context)).into(holder.img_header);
             holder.tv_nickname.setText(list.get(position).getNickname());
             holder.tv_time.setText(list.get(position).getCreate_time());
             holder.tv_content.setText(list.get(position).getContent());

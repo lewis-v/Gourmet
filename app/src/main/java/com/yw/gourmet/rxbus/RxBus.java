@@ -11,12 +11,7 @@ import rx.subjects.PublishSubject;
 import rx.subjects.SerializedSubject;
 import rx.subjects.Subject;
 
-/**
- * 使用RxJava代替EventBus的方案
- *
- * @author yw
- * @create 2016-01-05
- **/
+
 public class RxBus {
     private static volatile RxBus mDefaultInstance;
     private final Subject<Object, Object> mBus;

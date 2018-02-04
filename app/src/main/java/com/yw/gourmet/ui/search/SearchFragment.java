@@ -122,7 +122,8 @@ public class SearchFragment extends BaseFragment<SearchPresenter> implements Sea
             for (FlowData data : model.getData()){
                 ImageView imageView = new ImageView(getContext());
                 imageView.setScaleType(ImageView.ScaleType.CENTER);
-                GlideApp.with(this).load(data.getImg()).error(R.mipmap.load_fail).into(imageView);
+                GlideApp.with(this).load(data.getImg()).error(R.mipmap.load_fail)
+                        .placeholder(R.mipmap.loading).into(imageView);
                 imageViews.add(imageView);
             }
             flow_view.setFlowViewList(imageViews).setPointLayoutBackground(R.color.transparent)
