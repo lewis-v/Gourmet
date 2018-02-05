@@ -23,6 +23,7 @@
     <color name="search_text">#757474</color>
     <color name="viewpager_point_back">#3fffffff</color>
     <color name="transparent">#00000000</color>
+    <color name="choose_back">#ffc389</color>
 
     <color name="theme_orange_primary">#FF5722</color>
     <color name="theme_orange_dark">#E64A19</color>

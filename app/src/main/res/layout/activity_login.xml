@@ -49,7 +49,7 @@
     <Button
         android:id="@+id/bt_login"
         android:layout_width="250dp"
-        android:background="@color/colorAccent"
+        android:background="@drawable/back_change"
         android:layout_height="wrap_content"
         android:textColor="@android:color/white"
         android:text="@string/login"

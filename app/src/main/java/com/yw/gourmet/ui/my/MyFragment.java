@@ -25,6 +25,7 @@ import com.yw.gourmet.ui.commentMy.CommentMyActivity;
 import com.yw.gourmet.ui.login.LoginActivity;
 import com.yw.gourmet.ui.myShare.MyShareActivity;
 import com.yw.gourmet.ui.personal.PersonalActivity;
+import com.yw.gourmet.ui.registered.RegisteredActivity;
 import com.yw.gourmet.ui.set.SetActivity;
 import com.yw.gourmet.ui.setTop.SetTopActivity;
 import com.yw.gourmet.widget.GlideCircleTransform;
@@ -133,7 +134,7 @@ public class MyFragment extends BaseFragment implements View.OnClickListener,MyC
                 startActivity(new Intent(getContext(), PersonalActivity.class));
                 break;
             case R.id.bt_register:
-
+                startActivity(new Intent(getContext(), RegisteredActivity.class));
                 break;
             case R.id.bt_login:
                 startActivity(new Intent(getContext(), LoginActivity.class));

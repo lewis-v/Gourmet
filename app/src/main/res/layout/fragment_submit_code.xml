@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <TextView
+        android:id="@+id/tv_tip"
+        android:text="@string/input_code"
+        android:textStyle="bold"
+        android:textSize="23sp"
+        android:textColor="@color/word_black"
+        android:gravity="center"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:padding="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <EditText
+        android:id="@+id/et_code"
+        android:hint="@string/code"
+        android:background="@null"
+        android:inputType="number"
+        app:layout_constraintTop_toBottomOf="@+id/tv_tip"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:textSize="18sp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content" />
+    <View
+        android:id="@+id/dev"
+        android:background="@color/dev"
+        app:layout_constraintTop_toBottomOf="@+id/et_code"
+        app:layout_constraintLeft_toLeftOf="@+id/et_code"
+        app:layout_constraintRight_toRightOf="@+id/et_code"
+        android:layout_width="0dp"
+        android:layout_height="1px"/>
+    <Button
+        android:id="@+id/bt_register"
+        android:text="@string/register"
+        android:textColor="@android:color/white"
+        android:background="@drawable/back_change"
+        app:layout_constraintTop_toBottomOf="@+id/dev"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</android.support.constraint.ConstraintLayout>

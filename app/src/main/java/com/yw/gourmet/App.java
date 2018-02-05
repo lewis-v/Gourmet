@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.bumptech.glide.Glide;
+import com.mob.MobSDK;
 import com.yw.gourmet.dao.GreenDaoManager;
 
 /**
@@ -20,6 +21,7 @@ public class App extends Application{
         super.onCreate();
         context = this;
         SDKInitializer.initialize(getApplicationContext());
+        MobSDK.init(this);
     }
 
     public static App getApp(){

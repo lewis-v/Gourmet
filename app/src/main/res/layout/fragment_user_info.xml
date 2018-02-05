@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <TextView
+        android:id="@+id/tv_tip"
+        android:text="@string/input_user_info"
+        android:textStyle="bold"
+        android:textSize="23sp"
+        android:textColor="@color/word_black"
+        android:gravity="center"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:padding="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <EditText
+        android:id="@+id/et_password"
+        android:textSize="16sp"
+        android:background="@null"
+        android:inputType="textPassword"
+        android:layout_marginTop="20dp"
+        android:hint="@string/input_password"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_tip"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <View
+        app:layout_constraintLeft_toLeftOf="@+id/et_password"
+        app:layout_constraintRight_toRightOf="@+id/et_password"
+        app:layout_constraintTop_toBottomOf="@+id/et_password"
+        android:background="@color/dev"
+        android:layout_width="0dp"
+        android:layout_height="1px"/>
+    <EditText
+        android:id="@+id/et_password2"
+        android:textSize="16sp"
+        android:background="@null"
+        android:inputType="textPassword"
+        android:layout_marginTop="50dp"
+        android:hint="@string/input_password_again"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_password"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <View
+        app:layout_constraintLeft_toLeftOf="@+id/et_password2"
+        app:layout_constraintRight_toRightOf="@+id/et_password2"
+        app:layout_constraintTop_toBottomOf="@+id/et_password2"
+        android:background="@color/dev"
+        android:layout_width="0dp"
+        android:layout_height="1px"/>
+    <TextView
+        android:id="@+id/tv_sex"
+        app:layout_constraintTop_toBottomOf="@+id/et_password2"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="50dp"
+        android:text="@string/sex"
+        android:textSize="16sp"
+        android:layout_marginLeft="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <RadioGroup
+        android:orientation="horizontal"
+        app:layout_constraintLeft_toRightOf="@+id/tv_sex"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_sex"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_sex"
+        android:layout_marginLeft="20dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content">
+        <android.support.v7.widget.AppCompatRadioButton
+            android:id="@+id/radio_boy"
+            android:text="@string/boy"
+            android:layout_width="wrap_content"
+            android:checked="true"
+            android:layout_marginRight="50dp"
+            android:layout_height="wrap_content" />
+        <android.support.v7.widget.AppCompatRadioButton
+            android:text="@string/girl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RadioGroup>
+    <Button
+        android:id="@+id/bt_enter"
+        app:layout_constraintTop_toBottomOf="@+id/tv_sex"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="50dp"
+        android:text="@string/enter"
+        android:textColor="@android:color/white"
+        android:background="@drawable/back_change"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</android.support.constraint.ConstraintLayout>

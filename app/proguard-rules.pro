@@ -30,3 +30,6 @@
 -keep class com.baidu.** {*;}
 -keep class vi.com.** {*;}
 -dontwarn com.baidu.**
+#mob
+-keep class com.mob.**{*;}
+-keep class cn.smssdk.**{*;}

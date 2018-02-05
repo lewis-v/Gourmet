@@ -164,4 +164,14 @@ public interface ApiService {
     @Multipart
     @POST("/Find/Share")
     Observable<BaseData<List<ShareListData<List<String>>>>> Search(@Part List<MultipartBody.Part> parts);
+
+    //检测账号和昵称是否已经被使用
+    @Multipart
+    @POST("/User/Check")
+    Observable<BaseData> Check(@Part List<MultipartBody.Part> parts);
+
+    //注册账号
+    @Multipart
+    @POST("/User/Registered")
+    Observable<BaseData> Registered(@Part List<MultipartBody.Part> parts);
 }

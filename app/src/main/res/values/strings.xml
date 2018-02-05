@@ -108,4 +108,14 @@
     <string name="ben">本</string>
     <string name="find_friend">搜朋友</string>
     <string name="search_key">搜索关键字</string>
+    <string name="user_phone">短信验证,快速注册</string>
+    <string name="input_phone">请输入手机号码</string>
+    <string name="_86">目前仅支持中国+86手机号验证</string>
+    <string name="input_code">请输入验证码</string>
+    <string name="code">验证码</string>
+    <string name="input_user_info">请填写个人信息</string>
+    <string name="input_password">请输入账号密码</string>
+    <string name="input_password_again">请再次输入密码</string>
+    <string name="boy">男</string>
+    <string name="girl">女</string>
 </resources>

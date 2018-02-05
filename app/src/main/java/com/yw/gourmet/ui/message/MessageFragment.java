@@ -26,6 +26,7 @@ import com.yw.gourmet.rxbus.RxBusSubscriber;
 import com.yw.gourmet.rxbus.RxSubscriptions;
 import com.yw.gourmet.ui.chat.ChatActivity;
 import com.yw.gourmet.ui.login.LoginActivity;
+import com.yw.gourmet.ui.registered.RegisteredActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -149,7 +150,7 @@ public class MessageFragment extends BaseFragment<MessagePresenter> implements M
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.bt_register_message:
-
+                startActivity(new Intent(getContext(), RegisteredActivity.class));
                 break;
             case R.id.bt_login_message:
                 startActivity(new Intent(getContext(), LoginActivity.class));

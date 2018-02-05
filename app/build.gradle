@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
-//apply plugin: "com.mob.sdk"
 apply plugin: 'org.greenrobot.greendao'
+apply plugin: "com.mob.sdk"
 
 android {
     signingConfigs {
@@ -49,12 +49,12 @@ android {
     }
 }
 
-//MobSDK {
-//    appKey "23c7a82a9c634"
-//    appSecret "491ec79a55737a9fbbf1d8c124d8b1d6"
-//
-//    SMSSDK {}
-//}
+MobSDK {
+    appKey "23c7a82a9c634"
+    appSecret "491ec79a55737a9fbbf1d8c124d8b1d6"
+
+    SMSSDK { gui false }
+}
 
 
 

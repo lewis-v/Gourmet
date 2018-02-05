@@ -29,13 +29,17 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
         bt_login = (Button)findViewById(R.id.bt_login);
         bt_login.setOnClickListener(this);
 
-        et_id.setText(SPUtils.getSharedStringData(getApplicationContext(),"id"));
+        if (getIntent().getStringExtra("id") != null){
+            et_id.setText(getIntent().getStringExtra("id"));
+        }else {
+            et_id.setText(SPUtils.getSharedStringData(getApplicationContext(), "id"));
 
-        img_header = findViewById(R.id.img_header);
-        String header = SPUtils.getSharedStringData(this,"img_header");
-        if (header.length()>1){
-            GlideApp.with(this).load(header).transform(new GlideCircleTransform(this))
-                    .error(R.mipmap.load_fail).into(img_header);
+            img_header = findViewById(R.id.img_header);
+            String header = SPUtils.getSharedStringData(this, "img_header");
+            if (header.length() > 1) {
+                GlideApp.with(this).load(header).transform(new GlideCircleTransform(this))
+                        .error(R.mipmap.load_fail).into(img_header);
+            }
         }
     }
 
