@@ -2,25 +2,22 @@
 
 buildscript {
     repositories {
-//        maven {
-//            url "http://mvn.mob.com/android"
-//        }
         jcenter()
         google()
         mavenCentral()
+        maven {
+            url "http://mvn.mob.com/android"
+        }
     }
     dependencies {
-//        classpath "com.mob.sdk:MobSDK:+"
         classpath 'com.android.tools.build:gradle:3.0.1'
         classpath 'org.greenrobot:greendao-gradle-plugin:3.2.2'
+        classpath "com.mob.sdk:MobSDK:+"
     }
 }
 
 allprojects {
     repositories {
-//        maven {
-//            url "http://mvn.mob.com/android"
-//        }
         jcenter()
         google()
         maven { url "https://jitpack.io" }

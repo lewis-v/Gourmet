@@ -301,33 +301,31 @@ public class PersonalActivity extends BaseActivity<PersonalPresenter> implements
      */
     public void setData(){
         id = getIntent().getStringExtra("id");
-        if (id != null && !id.equals(Constant.userData.getUser_id())){//查看其它用户信息
+        if (Constant.userData == null || id != null && !id.equals(Constant.userData.getUser_id())){//查看其它用户信息
             setLoadDialog(true);
             ll_change_detail.setVisibility(View.GONE);
             ll_change_bottom.setVisibility(View.GONE);
             ll_change_top.setVisibility(View.GONE);
             mPresenter.getUserInfo(new MultipartBody.Builder().setType(MultipartBody.FORM)
-            .addFormDataPart("id",id).build().parts());
+                    .addFormDataPart("id",id).build().parts());
         }else {//查看自身信息
-            if (Constant.userData != null) {
-                userData = Constant.userData;
-                id = Constant.userData.getUser_id();
-                ll_change_detail.setVisibility(View.VISIBLE);
-                ll_change_bottom.setVisibility(View.VISIBLE);
-                ll_change_top.setVisibility(View.VISIBLE);
-                tv_nickname.setText(Constant.userData.getNickname());
-                tv_sex.setText(Constant.userData.getSex());
-                tv_address.setText(Constant.userData.getAddress());
-                tv_introduction.setText(Constant.userData.getIntroduction());
-                GlideApp.with(this).load(Constant.userData.getImg_header()).placeholder(R.mipmap.loading).error(R.mipmap.load_fail)
-                        .transform(new GlideCircleTransform(this)).into(float_action_header);
-                GlideApp.with(this).load(Constant.userData.getImg_header())
-                        .placeholder(R.mipmap.loading).error(R.mipmap.load_fail)
-                        .transform(new GlideCircleTransform(this))
-                        .into(img_header);
-                GlideApp.with(this).load(Constant.userData.getPersonal_back())
-                        .placeholder(R.mipmap.loading).error(R.mipmap.load_fail).into(img_tool_back);
-            }
+            userData = Constant.userData;
+            id = Constant.userData.getUser_id();
+            ll_change_detail.setVisibility(View.VISIBLE);
+            ll_change_bottom.setVisibility(View.VISIBLE);
+            ll_change_top.setVisibility(View.VISIBLE);
+            tv_nickname.setText(Constant.userData.getNickname());
+            tv_sex.setText(Constant.userData.getSex());
+            tv_address.setText(Constant.userData.getAddress());
+            tv_introduction.setText(Constant.userData.getIntroduction());
+            GlideApp.with(this).load(Constant.userData.getImg_header()).placeholder(R.mipmap.loading).error(R.mipmap.load_fail)
+                    .transform(new GlideCircleTransform(this)).into(float_action_header);
+            GlideApp.with(this).load(Constant.userData.getImg_header())
+                    .placeholder(R.mipmap.loading).error(R.mipmap.load_fail)
+                    .transform(new GlideCircleTransform(this))
+                    .into(img_header);
+            GlideApp.with(this).load(Constant.userData.getPersonal_back())
+                    .placeholder(R.mipmap.loading).error(R.mipmap.load_fail).into(img_tool_back);
         }
     }
 

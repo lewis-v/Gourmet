@@ -17,6 +17,8 @@
         app:layout_constraintTop_toBottomOf="@+id/img_header"
         app:layout_constraintLeft_toLeftOf="@+id/img_header"
         app:layout_constraintRight_toRightOf="@+id/img_header"
+        android:lines="1"
+        android:ellipsize="end"
         android:textSize="12sp"
         android:textColor="@color/word_black"
         android:layout_width="wrap_content"
