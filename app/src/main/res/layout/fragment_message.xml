@@ -87,14 +87,14 @@
                 android:text="@string/register"
                 android:layout_marginRight="20dp"
                 android:textColor="@android:color/white"
-                android:background="@drawable/bt_back_login"
+                android:background="@drawable/back_change"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <Button
                 android:id="@+id/bt_login_message"
                 android:layout_marginLeft="20dp"
                 android:textColor="@android:color/white"
-                android:background="@drawable/bt_back_login"
+                android:background="@drawable/back_change"
                 android:text="@string/login"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>

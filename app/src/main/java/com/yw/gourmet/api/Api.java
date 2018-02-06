@@ -49,7 +49,7 @@ public class Api {
             //这里添加头部,这里可以用addHeader来添加多个头部,如果使用header方法就只能添加一个头部
             Request.Builder requestBuilder = original.newBuilder()//添加头部信息
                     .addHeader("head", head)
-                    .addHeader("time",String.valueOf(System.currentTimeMillis()/1000+ Constant.serviceTime));
+                    .addHeader("time",String.valueOf(System.currentTimeMillis()+ Constant.serviceTime));
             Request request = requestBuilder.build();//用设置好的requestBuilder建立一个新的request
             return chain.proceed(request);
         }

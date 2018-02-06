@@ -11,6 +11,7 @@ import com.yw.gourmet.R;
 import com.yw.gourmet.base.BaseActivity;
 import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.data.UserData;
+import com.yw.gourmet.push.PushManager;
 import com.yw.gourmet.utils.SPUtils;
 import com.yw.gourmet.utils.ToastUtils;
 import com.yw.gourmet.widget.GlideCircleTransform;
@@ -76,6 +77,7 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
         SPUtils.setSharedStringData(getApplicationContext(),"token",model.getData().getToken());
         SPUtils.setSharedStringData(getApplicationContext(),"id",et_id.getText().toString());
         SPUtils.setSharedStringData(getApplicationContext(),"img_header",model.getData().getImg_header());
+        PushManager.getInstance().setTag(Constant.userData.getUser_id(),PushManager.NOMAL_TAG);
         finish();
     }
 

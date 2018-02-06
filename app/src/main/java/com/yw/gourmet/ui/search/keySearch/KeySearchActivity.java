@@ -291,5 +291,21 @@ public class KeySearchActivity extends BaseActivity<KeySearchPresenter> implemen
                 }
             }
         });
+
+        int type = getIntent().getIntExtra("type",-2);
+        switch (type){
+            case Constant.TypeFlag.DIARY:
+                spinner_type.setSelection(2);
+                break;
+            case Constant.TypeFlag.MENU:
+                spinner_type.setSelection(3);
+                break;
+            case Constant.TypeFlag.RAIDERS:
+                spinner_type.setSelection(4);
+                break;
+            case -1://本地搜索
+
+                break;
+        }
     }
 }

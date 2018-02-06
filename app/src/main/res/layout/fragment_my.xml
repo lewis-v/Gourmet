@@ -30,6 +30,7 @@
                 android:id="@+id/tv_set"
                 android:text="@string/setting"
                 android:gravity="center"
+                android:background="@drawable/ll_back_change"
                 android:layout_alignParentRight="true"
                 android:paddingRight="10dp"
                 android:paddingLeft="10dp"
@@ -64,7 +65,7 @@
                 android:id="@+id/ll_set"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/white"
+                android:background="@drawable/ll_back_change"
                 android:gravity="center_vertical">
 
                 <ImageView
@@ -106,6 +107,7 @@
                     android:layout_width="0dp"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
+                    android:background="@drawable/ll_back_change"
                     android:gravity="center_horizontal"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -130,6 +132,7 @@
                     android:layout_width="0dp"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
+                    android:background="@drawable/ll_back_change"
                     android:gravity="center_horizontal"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -154,6 +157,7 @@
                     android:layout_width="0dp"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
+                    android:background="@drawable/ll_back_change"
                     android:gravity="center_horizontal"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -178,6 +182,7 @@
                     android:layout_width="0dp"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
+                    android:background="@drawable/ll_back_change"
                     android:gravity="center_horizontal"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -392,14 +397,14 @@
                 android:text="@string/register"
                 android:layout_marginRight="20dp"
                 android:textColor="@android:color/white"
-                android:background="@drawable/bt_back_login"
+                android:background="@drawable/back_change"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <Button
                 android:id="@+id/bt_login"
                 android:layout_marginLeft="20dp"
                 android:textColor="@android:color/white"
-                android:background="@drawable/bt_back_login"
+                android:background="@drawable/back_change"
                 android:text="@string/login"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>

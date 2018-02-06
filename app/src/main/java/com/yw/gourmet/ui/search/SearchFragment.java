@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.baidu.location.BDLocation;
+import com.yw.gourmet.Constant;
 import com.yw.gourmet.GlideApp;
 import com.yw.gourmet.R;
 import com.yw.gourmet.base.BaseFragment;
@@ -85,22 +86,26 @@ public class SearchFragment extends BaseFragment<SearchPresenter> implements Sea
 
     @Override
     public void onClick(View v) {
+        Intent intent = new Intent(getContext(), KeySearchActivity.class);
         switch (v.getId()){
             case R.id.ll_search:
-                startActivity(new Intent(getContext(), KeySearchActivity.class));
+
                 break;
             case R.id.ll_diary:
-
+                intent.putExtra("type", Constant.TypeFlag.DIARY);
                 break;
             case R.id.ll_menu:
-
+                intent.putExtra("type",Constant.TypeFlag.MENU);
                 break;
             case R.id.ll_raiders:
-
+                intent.putExtra("type",Constant.TypeFlag.RAIDERS);
                 break;
             case R.id.ll_local:
-
+                intent.putExtra("type",-1);
                 break;
+        }
+        if (intent != null){
+            startActivity(intent);
         }
     }
 

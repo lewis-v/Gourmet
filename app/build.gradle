@@ -54,6 +54,8 @@ MobSDK {
     appSecret "491ec79a55737a9fbbf1d8c124d8b1d6"
 
     SMSSDK { gui false }
+    MobPush {}
+    MobIM { gui false }
 }
 
 
