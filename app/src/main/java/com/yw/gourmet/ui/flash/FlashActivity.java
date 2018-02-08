@@ -1,11 +1,7 @@
 package com.yw.gourmet.ui.flash;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 
-import com.mob.pushsdk.MobPush;
 import com.yw.gourmet.Constant;
 import com.yw.gourmet.R;
 import com.yw.gourmet.base.BaseActivity;
@@ -47,7 +43,7 @@ public class FlashActivity extends BaseActivity<FlashPresenter> implements Flash
     public void onLoginSuccess(BaseData<UserData> model) {
         SPUtils.setSharedStringData(getApplicationContext(),"token",model.getData().getToken());
         Constant.userData = model.getData();
-        PushManager.getInstance().setTag(Constant.userData.getUser_id(),PushManager.NOMAL_TAG);
+        PushManager.getInstance().setTag(this,Constant.userData.getUser_id(),PushManager.NOMAL_TAG);
         startActivity(new Intent(this, MainActivity.class));
         finish();
     }
@@ -81,7 +77,7 @@ public class FlashActivity extends BaseActivity<FlashPresenter> implements Flash
 
     @Override
     public void onFail(String msg) {
-        PushManager.getInstance().setTag(PushManager.NOMAL_ALIAS,PushManager.NOMAL_TAG);
+        PushManager.getInstance().setTag(getApplicationContext(),PushManager.NOMAL_ALIAS,PushManager.NOMAL_TAG);
         startActivity(new Intent(this, MainActivity.class));
         finish();
     }

@@ -2,9 +2,11 @@ package com.yw.gourmet.push;
 
 import android.content.Context;
 
-import com.mob.MobSDK;
-import com.mob.pushsdk.MobPush;
-import com.mob.pushsdk.MobPushReceiver;
+import java.util.HashSet;
+import java.util.Set;
+
+import cn.jpush.android.api.JPushInterface;
+
 
 /**
  * auth: lewis-v
@@ -29,7 +31,7 @@ public class PushManager {
      * @param context
      */
     public PushManager initPush(Context context){
-        MobSDK.init(context);
+        JPushInterface.init(context);
         return this;
     }
 
@@ -38,10 +40,26 @@ public class PushManager {
      * @param alias 别名(用于指定用户,使用user_id,未登录的使用游客标记)
      * @param tags 标签(用于用户分组)
      */
-    public PushManager setTag(String alias,String[] tags){
-        clearTag();
-        MobPush.setAlias(alias);//设置别名
-        MobPush.addTags(tags);//设置标签
+    public PushManager setTag(Context context,String alias,String[] tags){
+            //建议添加tag标签，发送消息的之后就可以指定tag标签来发送了
+            Set<String> set = new HashSet<>();
+            for (String str : tags) {
+                set.add(str);
+            }
+            JPushInterface.setTags(context,100, set);//设置标签
+            JPushInterface.setAlias(context, 100, alias);//设置别名
+        return this;
+    }
+
+    /**
+     * 检测push是否关闭,关闭了自动重启
+     * @param context
+     * @return
+     */
+    public PushManager checkPush(Context context){
+        if (JPushInterface.isPushStopped(context)){
+            JPushInterface.resumePush(context);
+        }
         return this;
     }
 
@@ -49,9 +67,7 @@ public class PushManager {
      * 停止推送
      */
     public PushManager Pause(){
-        if (!MobPush.isPushStopped()) {
-            MobPush.stopPush();
-        }
+
         return this;
     }
 
@@ -59,27 +75,7 @@ public class PushManager {
      * 重启推送
      */
     public PushManager reStart(){
-        if (MobPush.isPushStopped()){
-            MobPush.restartPush();
-        }
-        return this;
-    }
 
-    /**
-     * 添加监听器
-     * @param receiver
-     */
-    public PushManager addReceiver(MobPushReceiver receiver){
-        MobPush.addPushReceiver(receiver);
-        return this;
-    }
-
-    /**
-     * 移除监听器
-     * @param receiver
-     */
-    public PushManager removeReceiver(MobPushReceiver receiver){
-        MobPush.removePushReceiver(receiver);
         return this;
     }
 
@@ -87,7 +83,7 @@ public class PushManager {
      * 消除通知栏通知
      */
     public PushManager clearAllNotification(){
-        MobPush.clearLocalNotifications();
+
         return this;
     }
 
@@ -96,7 +92,7 @@ public class PushManager {
      * @param id
      */
     public PushManager clearNotification(int id){
-        MobPush.removeLocalNotification(id);
+
         return this;
     }
 
@@ -104,8 +100,7 @@ public class PushManager {
      * 清除所有标记
      */
     public PushManager clearTag(){
-        MobPush.cleanTags();
-        MobPush.deleteAlias();
+
         return this;
     }
 }

@@ -122,10 +122,14 @@ public class MessageFragment extends BaseFragment<MessagePresenter> implements M
 
     @Override
     public void onRefresh() {
+        refresh();
+    }
+
+    public void refresh(){
         if (Constant.userData != null) {
             MultipartBody.Builder builder = new MultipartBody.Builder()
                     .setType(MultipartBody.FORM)
-                .addFormDataPart("id", Constant.userData.getUser_id());
+                    .addFormDataPart("id", Constant.userData.getUser_id());
             mPresenter.LoadMessageList(builder.build().parts());
         }else {
             swipeToLoadLayout.setRefreshing(false);
@@ -167,7 +171,7 @@ public class MessageFragment extends BaseFragment<MessagePresenter> implements M
         }else {
             constraint_message.setVisibility(View.GONE);
             ll_message.setVisibility(View.VISIBLE);
-            swipeToLoadLayout.setRefreshing(true);
+            refresh();
         }
     }
 

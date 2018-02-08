@@ -77,7 +77,7 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
         SPUtils.setSharedStringData(getApplicationContext(),"token",model.getData().getToken());
         SPUtils.setSharedStringData(getApplicationContext(),"id",et_id.getText().toString());
         SPUtils.setSharedStringData(getApplicationContext(),"img_header",model.getData().getImg_header());
-        PushManager.getInstance().setTag(Constant.userData.getUser_id(),PushManager.NOMAL_TAG);
+        PushManager.getInstance().setTag(getApplicationContext(),Constant.userData.getUser_id(),PushManager.NOMAL_TAG);
         finish();
     }
 

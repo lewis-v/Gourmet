@@ -1,25 +1,22 @@
 package com.yw.gourmet.ui.chat;
 
-import android.content.Context;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.yw.gourmet.Constant;
 import com.yw.gourmet.R;
 import com.yw.gourmet.adapter.ChatAdapter;
 import com.yw.gourmet.base.BaseActivity;
+import com.yw.gourmet.center.event.IMessageGet;
 import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.data.MessageListData;
 
@@ -32,6 +29,7 @@ import static com.yw.gourmet.utils.SoftInputUtils.hideSoftInput;
 
 public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatContract.View
         ,View.OnClickListener{
+    private final static String TAG = "ChatActivity";
     private final static int TEXT = 0;//发送文本模式
     private final static int VOICE = 1;//发送语音模式
 
@@ -43,6 +41,7 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
     private ChatAdapter adapter;
     private List<MessageListData> listData = new ArrayList<>();
     private String get_id,put_id;//接收者id与发送者id
+    private IMessageGet iMessageGet;
 
     @Override
     protected int getLayoutId() {
@@ -75,7 +74,7 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
         et_chat.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                if (actionId == EditorInfo.IME_ACTION_SEND) {
                     hideSoftInput(et_chat);
                     //发送文本信息
                     MessageListData data = new MessageListData();
@@ -85,6 +84,7 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
                     data.setGet_id(get_id);
                     data.setImg_header(Constant.userData.getImg_header());
                     data.setSendStatus(MessageListData.SENDING);
+                    data.setNickname(Constant.userData.getNickname());
                     listData.add(data);
                     adapter.notifyItemChanged(listData.size() - 1);
                     recycler_chat.smoothScrollToPosition(listData.size() - 1);
@@ -97,6 +97,7 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
                             .addFormDataPart("type",String.valueOf(TEXT))
                             .addFormDataPart("content",data.getContent());
                     mPresenter.sendMessage(builder.build().parts(),listData.size()-1);
+
                     return true;
                 }
                 return false;
@@ -129,6 +130,7 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
 
     @Override
     public void onSendFail(String msg, int position) {
+        Log.e(TAG,msg);
         listData.get(position).setSendStatus(MessageListData.SEND_FAIL);
         adapter.notifyItemChanged(position);
     }
