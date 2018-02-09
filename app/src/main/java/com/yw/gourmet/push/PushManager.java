@@ -1,6 +1,9 @@
 package com.yw.gourmet.push;
 
 import android.content.Context;
+import android.content.Intent;
+
+import com.yw.gourmet.service.MessageService;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -32,6 +35,7 @@ public class PushManager {
      */
     public PushManager initPush(Context context){
         JPushInterface.init(context);
+        context.startService(new Intent(context, MessageService.class));
         return this;
     }
 

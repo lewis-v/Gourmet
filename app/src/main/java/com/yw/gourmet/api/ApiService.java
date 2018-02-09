@@ -101,6 +101,11 @@ public interface ApiService {
     @POST("/Message/Put")
     Observable<BaseData> SendMessage(@Part List<MultipartBody.Part> parts);
 
+    //设置消息已读
+    @Multipart
+    @POST("/Message/Read")
+    Observable<BaseData> SetMessageRead(@Part List<MultipartBody.Part> parts);
+
     //获取评论信息
     @Multipart
     @POST("/Comment/Get")

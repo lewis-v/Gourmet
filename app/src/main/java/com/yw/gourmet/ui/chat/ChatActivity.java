@@ -16,6 +16,7 @@ import com.yw.gourmet.Constant;
 import com.yw.gourmet.R;
 import com.yw.gourmet.adapter.ChatAdapter;
 import com.yw.gourmet.base.BaseActivity;
+import com.yw.gourmet.center.MessageCenter;
 import com.yw.gourmet.center.event.IMessageGet;
 import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.data.MessageListData;
@@ -113,13 +114,34 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
         put_id = getIntent().getStringExtra("put_id");
         get_id = getIntent().getStringExtra("get_id");
 
-        MultipartBody.Builder builder = new MultipartBody.Builder()
+        final MultipartBody.Builder builder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("token", Constant.userData.getToken())
                 .addFormDataPart("put_id", put_id)
                 .addFormDataPart("get_id", get_id);
         mPresenter.getMessageDetail(builder.build().parts());
-
+        iMessageGet = new IMessageGet() {
+            @Override
+            public boolean onGetMessage(final MessageListData message) {
+                if (message.getPut_id().equals(get_id)) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            listData.add(message);
+                            adapter.notifyItemInserted(listData.size() - 1);
+                            recycler_chat.smoothScrollToPosition(listData.size()-1);
+                            MultipartBody.Builder builder1 = new MultipartBody.Builder()
+                                    .setType(MultipartBody.FORM)
+                                    .addFormDataPart("id",message.getId());
+                            mPresenter.setMessageRead(builder.build().parts());
+                        }
+                    });
+                    return true;
+                }
+                return false;
+            }
+        };
+        MessageCenter.getInstance().addMessageHandleTop(iMessageGet);
     }
 
     @Override
@@ -141,6 +163,11 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
         listData.addAll(model.getData());
         adapter.notifyDataSetChanged();
         recycler_chat.scrollToPosition(listData.size() - 1);
+        MultipartBody.Builder builder = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("put_id",get_id)
+                .addFormDataPart("get_id",put_id);//此处的接收者和发送者位置对换,因为要设置我接受的信息已读
+        mPresenter.setMessageRead(builder.build().parts());
     }
 
     @Override
@@ -177,5 +204,11 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
         }
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (iMessageGet != null){
+            MessageCenter.getInstance().removeMessageHandle(iMessageGet);
+        }
+    }
 }

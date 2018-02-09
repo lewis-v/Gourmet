@@ -17,6 +17,17 @@
         android:padding="5dp"
         android:layout_width="50dp"
         android:layout_height="50dp" />
+    <TextView
+        android:id="@+id/tv_un_read_num"
+        app:layout_constraintTop_toTopOf="@+id/img_header"
+        app:layout_constraintRight_toRightOf="@+id/img_header"
+        android:text="@string/test_num"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"
+        android:background="@drawable/back_message_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
     <LinearLayout
         android:id="@+id/ll_name"

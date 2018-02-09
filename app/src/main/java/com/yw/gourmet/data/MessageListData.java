@@ -26,6 +26,8 @@ public class MessageListData {
     private String cover;//特殊分享类型封面
     private String img;
     private int sendStatus = SEND_SUCCESS;//消息发送状态,默认为成功
+    private int is_read;//是否已读
+    private int un_read_num;//未读数量
 
     public MessageListData() {
     }
@@ -147,6 +149,33 @@ public class MessageListData {
         return this;
     }
 
+    public int getIs_read() {
+        return is_read;
+    }
+
+    public MessageListData setIs_read(int is_read) {
+        this.is_read = is_read;
+        return this;
+    }
+
+    public int getUn_read_num() {
+        return un_read_num;
+    }
+
+    public MessageListData setUn_read_num(int un_read_num) {
+        this.un_read_num = un_read_num;
+        return this;
+    }
+
+    /**
+     * 添加一条未读消息
+     * @return
+     */
+    public MessageListData addUnReadNum(){
+        un_read_num++;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "MessageListData{" +
@@ -162,6 +191,8 @@ public class MessageListData {
                 ", cover='" + cover + '\'' +
                 ", img='" + img + '\'' +
                 ", sendStatus=" + sendStatus +
+                ", is_read=" + is_read +
+                ", un_read_num=" + un_read_num +
                 '}';
     }
 }

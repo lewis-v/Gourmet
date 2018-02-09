@@ -17,6 +17,8 @@ import com.yw.gourmet.Constant;
 import com.yw.gourmet.R;
 import com.yw.gourmet.adapter.MessageListAdapter;
 import com.yw.gourmet.base.BaseFragment;
+import com.yw.gourmet.center.MessageCenter;
+import com.yw.gourmet.center.event.IMessageGet;
 import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.data.MessageListData;
 import com.yw.gourmet.listener.OnItemClickListener;
@@ -51,6 +53,7 @@ public class MessageFragment extends BaseFragment<MessagePresenter> implements M
     private ConstraintLayout constraint_message;
     private Button bt_login,bt_register;
     private Subscription mRxSubSticky;
+    private IMessageGet iMessageGet;
 
     /**
      * 初始化UI
@@ -98,16 +101,29 @@ public class MessageFragment extends BaseFragment<MessagePresenter> implements M
         bt_login.setOnClickListener(this);
 
         constraint_message = (ConstraintLayout)view.findViewById(R.id.constraint_message);
-//        if (Constant.userData == null){
-//            constraint_message.setVisibility(View.VISIBLE);
-//            ll_message.setVisibility(View.GONE);
-//        }else {
-//            constraint_message.setVisibility(View.GONE);
-//            ll_message.setVisibility(View.VISIBLE);
-//            swipeToLoadLayout.setRefreshing(true);
-//        }
         setRxBus();
-
+        iMessageGet = new IMessageGet() {
+            @Override
+            public boolean onGetMessage(MessageListData message) {
+                for (int len = listData.size(),num = 0;num < len;num++){
+                    if(listData.get(num).getPut_id().equals(message.getPut_id())
+                            || listData.get(num).getGet_id().equals(message.getPut_id())){//消息是这里的
+                        listData.get(num).setContent(message.getContent())
+                                .setPut_time(message.getPut_time())
+                                .addUnReadNum();
+                        final int finalNum = num;
+                        swipe_target.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                adapter.notifyItemChanged(finalNum);
+                            }
+                        });
+                    }
+                }
+                return false;
+            }
+        };
+        MessageCenter.getInstance().addMessageHandle(iMessageGet);
     }
 
     /**
@@ -172,6 +188,14 @@ public class MessageFragment extends BaseFragment<MessagePresenter> implements M
             constraint_message.setVisibility(View.GONE);
             ll_message.setVisibility(View.VISIBLE);
             refresh();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (iMessageGet != null){
+            MessageCenter.getInstance().removeMessageHandle(iMessageGet);
         }
     }
 

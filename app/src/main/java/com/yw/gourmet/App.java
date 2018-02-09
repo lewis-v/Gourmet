@@ -2,6 +2,8 @@ package com.yw.gourmet;
 
 import android.app.Application;
 import android.content.Context;
+import android.support.multidex.MultiDex;
+import android.support.multidex.MultiDexApplication;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.bumptech.glide.Glide;
@@ -11,11 +13,17 @@ import com.yw.gourmet.push.PushManager;
  * Created by yw on 2017/10/21.
  */
 
-public class App extends Application{
+public class App extends MultiDexApplication {
     private static final String TAG = "APP";
 
     private static App app;
     private static Context context;
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
 
     @Override
     public void onCreate() {

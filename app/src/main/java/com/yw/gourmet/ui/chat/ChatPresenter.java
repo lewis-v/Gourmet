@@ -53,4 +53,19 @@ public class ChatPresenter extends ChatContract.Presenter {
         }));
     }
 
+    @Override
+    void setMessageRead(List<MultipartBody.Part> parts) {
+        mRxManager.add(Api.getInstance().SetMessageRead(parts),new RxSubscriberCallBack<BaseData>(new RxApiCallback<BaseData>() {
+            @Override
+            public void onSuccess(BaseData model) {
+
+            }
+
+            @Override
+            public void onFailure(int code, String msg) {
+
+            }
+        }));
+    }
+
 }

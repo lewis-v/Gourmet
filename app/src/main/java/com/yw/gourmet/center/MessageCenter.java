@@ -1,6 +1,7 @@
 package com.yw.gourmet.center;
 
 import com.yw.gourmet.center.event.IMessageGet;
+import com.yw.gourmet.data.MessageListData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,17 +76,29 @@ public class MessageCenter {
      * @param message
      * @return
      */
-//    public MessageCenter pushMessage(final IMMessage message){
-//        executorService.execute(new Runnable() {
-//            @Override
-//            public void run() {
-//                for (IMessageGet iMessageGet : messageEvent){
-//                    if (iMessageGet.onGetMessage(message)){//返回true为处理完毕,不在向后发送
-//                        return;
-//                    }
-//                }
-//            }
-//        });
-//        return this;
-//    }
+    public MessageCenter pushMessage(final MessageListData message){
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                for (IMessageGet iMessageGet : messageEvent){
+                    if (iMessageGet.onGetMessage(message)){//返回true为处理完毕,不在向后发送
+                        return;
+                    }
+                }
+            }
+        });
+        return this;
+    }
+
+    /**
+     * 查看是否存在对应处理
+     * @param iMessageGet
+     * @return
+     */
+    public boolean isExist(IMessageGet iMessageGet){
+        if (messageEvent != null && messageEvent.indexOf(iMessageGet)>-1){
+            return true;
+        }
+        return false;
+    }
 }

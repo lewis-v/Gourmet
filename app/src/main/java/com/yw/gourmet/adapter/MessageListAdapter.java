@@ -49,6 +49,16 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
         holder.tv_time.setText(listData.get(position).getTime());
         holder.tv_content.setText(listData.get(position).getContent());
         holder.tv_nickname.setText(listData.get(position).getNickname());
+        if (listData.get(position).getUn_read_num() > 0){
+            if (listData.get(position).getUn_read_num() > 99){
+                holder.tv_un_read_num.setText("...");
+            }else {
+                holder.tv_un_read_num.setText(String.valueOf(listData.get(position).getUn_read_num()));
+            }
+            holder.tv_un_read_num.setVisibility(View.VISIBLE);
+        }else {
+            holder.tv_un_read_num.setVisibility(View.GONE);
+        }
         GlideApp.with(context).load(listData.get(position).getImg_header())
                 .placeholder(R.mipmap.loading).error(R.mipmap.load_fail)
                 .transform(new GlideCircleTransform(context))
@@ -77,7 +87,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
     class MyViewHolder extends RecyclerView.ViewHolder{
         ConstraintLayout constraint_item;
         ImageView img_header;
-        TextView tv_nickname,tv_time,tv_content;
+        TextView tv_nickname,tv_time,tv_content,tv_un_read_num;
         public MyViewHolder(View itemView) {
             super(itemView);
             constraint_item = (ConstraintLayout)itemView.findViewById(R.id.constraint_item);
@@ -85,6 +95,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
             tv_nickname = (TextView)itemView.findViewById(R.id.tv_nickname);
             tv_content = (TextView)itemView.findViewById(R.id.tv_content);
             tv_time = (TextView)itemView.findViewById(R.id.tv_time);
+            tv_un_read_num = itemView.findViewById(R.id.tv_un_read_num);
         }
     }
 }

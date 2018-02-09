@@ -9,6 +9,10 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.yw.gourmet.center.MessageCenter;
+import com.yw.gourmet.data.MessageListData;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -35,10 +39,6 @@ public class PushReceiver extends BroadcastReceiver {
             Bundle bundle = intent.getExtras();
             String json= printBundle(bundle);
             Log.e(TAG,json);
-            Log.d(TAG, "[MyReceiver] onReceive - " + intent.getAction() + ", extras: " + printBundle(bundle));
-
-//            JSONObject json2 = new JSONObject(bundle.getString(JPushInterface.EXTRA_EXTRA));
-
 
 
             if (JPushInterface.ACTION_REGISTRATION_ID.equals(intent.getAction())) {
@@ -48,8 +48,12 @@ public class PushReceiver extends BroadcastReceiver {
 
             } else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent.getAction())) {
                 Log.d(TAG, "[MyReceiver] 接收到推送下来的自定义消息: " + bundle.getString(JPushInterface.EXTRA_MESSAGE));
-//                processCustomMessage(context, bundle);
-
+                try {
+                    MessageCenter.getInstance().pushMessage(
+                            new Gson().fromJson(bundle.getString(JPushInterface.EXTRA_EXTRA), MessageListData.class));
+                }catch (Exception e){
+                    Log.e(TAG,"转换出错");
+                }
             } else if (JPushInterface.ACTION_NOTIFICATION_RECEIVED.equals(intent.getAction())) {
                 Log.d(TAG, "[MyReceiver] 接收到推送下来的通知");
                 String notifactionId = bundle.getString(JPushInterface.EXTRA_MSG_ID);
@@ -57,19 +61,11 @@ public class PushReceiver extends BroadcastReceiver {
 
             } else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent.getAction())) {
                 Log.d(TAG, "[MyReceiver] 用户点击打开了通知");
-                Intent intent1 = null;
-//                if (Constant.personalData == null) {
-//                    intent1 = new Intent(context, FlashActivity.class);
-//                }else {
-//                    intent1 = new Intent(context, ActivityStack.getScreenManager().getTopActivity().getClass());
-//                }
-//                if (intent1 != null){
-//                    intent1.addCategory(Intent.CATEGORY_LAUNCHER);
-//                    intent1.setAction(Intent.ACTION_MAIN);
-//                    intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-//                    context.startActivity(intent1);
-//                }
-
+                Intent intent1 = new Intent();
+                intent1.addCategory(Intent.CATEGORY_LAUNCHER);
+                intent1.setAction(Intent.ACTION_MAIN);
+                intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+                context.startActivity(intent1);
             } else if (JPushInterface.ACTION_RICHPUSH_CALLBACK.equals(intent.getAction())) {
                 Log.d(TAG, "[MyReceiver] 用户收到到RICH PUSH CALLBACK: " + bundle.getString(JPushInterface.EXTRA_EXTRA));
                 //在这里根据 JPushInterface.EXTRA_EXTRA 的内容处理代码，比如打开新的Activity， 打开一个网页等..
