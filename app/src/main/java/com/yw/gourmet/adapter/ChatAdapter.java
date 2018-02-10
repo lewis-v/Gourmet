@@ -122,7 +122,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
                         break;
                     case MessageListData.IMG:
                         holder.tv_other.setVisibility(View.GONE);
-                        holder.tv_other.setVisibility(View.VISIBLE);
+                        holder.img_other.setVisibility(View.VISIBLE);
                         GlideApp.with(context).load(list.get(position).getImg())
                                 .placeholder(R.mipmap.loading).error(R.mipmap.load_fail)
                                 .into(holder.img_other);

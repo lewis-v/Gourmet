@@ -210,6 +210,7 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
         adapter.notifyItemChanged(listData.size() - 1);
         recycler_chat.smoothScrollToPosition(listData.size() - 1);
         et_chat.setText("");
+        mPresenter.insertDB(data);
         MultipartBody.Builder builder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("token",Constant.userData.getToken())
@@ -400,6 +401,7 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
                 .setPut_id(put_id).setGet_id(get_id).setImg_header(Constant.userData.getImg_header())
                 .setSendStatus(MessageListData.SENDING);
         listData.add(messageListData);
+        mPresenter.insertDB(messageListData);
         final int position = listData.size() -1;
         adapter.notifyItemInserted(position);
         recycler_chat.smoothScrollToPosition(position);

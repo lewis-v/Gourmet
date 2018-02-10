@@ -20,7 +20,7 @@ public class MessageListData {
 
     @Id(autoincrement = true)
     private Long _id;//数据库id
-    private Long cli_id;//客户端id
+    private int cli_id;//客户端id
     private String user_id;//存储的用户id
     private String id;
     private String put_id;
@@ -41,8 +41,8 @@ public class MessageListData {
     }
 
 
-    @Generated(hash = 386150179)
-    public MessageListData(Long _id, Long cli_id, String user_id, String id,
+    @Generated(hash = 1778411488)
+    public MessageListData(Long _id, int cli_id, String user_id, String id,
             String put_id, String get_id, String nickname, String content,
             String put_time, String img_header, int type, String title,
             String cover, String img, int sendStatus, int is_read,
@@ -67,11 +67,11 @@ public class MessageListData {
     }
 
 
-    public Long getCli_id() {
+    public int getCli_id() {
         return cli_id;
     }
 
-    public MessageListData setCli_id(Long cli_id) {
+    public MessageListData setCli_id(int cli_id) {
         this.cli_id = cli_id;
         return this;
     }
