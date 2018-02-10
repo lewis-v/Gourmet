@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.yw.gourmet.Constant;
 import com.yw.gourmet.R;
-import com.yw.gourmet.dao.data.SaveData;
+import com.yw.gourmet.dao.data.saveData.SaveData;
 import com.yw.gourmet.listener.OnItemClickListener;
 import com.yw.gourmet.listener.OnOtherClickListener;
 

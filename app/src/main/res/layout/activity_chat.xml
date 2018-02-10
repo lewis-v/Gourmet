@@ -91,12 +91,88 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </LinearLayout>
+        <FrameLayout
+            android:layout_margin="5dp"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
         <ImageView
             android:id="@+id/img_add"
             android:src="@drawable/add_circle_outline"
-            android:padding="5dp"
             android:layout_width="40dp"
-            android:layout_height="40dp" />
+            android:layout_height="match_parent" />
+            <TextView
+                android:id="@+id/tv_send"
+                android:visibility="gone"
+                android:text="@string/send"
+                android:textColor="@android:color/white"
+                android:gravity="center"
+                android:padding="5dp"
+                android:layout_gravity="center"
+                android:background="@drawable/back_change"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content" />
+        </FrameLayout>
+    </LinearLayout>
+    <View
+        android:background="@color/dev"
+        android:layout_width="match_parent"
+        android:layout_height="1px"/>
+    <LinearLayout
+        android:id="@+id/ll_add_other"
+        android:visibility="gone"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:id="@+id/ll_img"
+            android:orientation="vertical"
+            android:background="@drawable/ll_back_change"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/img_photo"
+                android:src="@drawable/img"
+                android:tint="@color/close"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp" />
+            <TextView
+                android:text="@string/photo"
+                android:textSize="12sp"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/ll_take_photo"
+            android:orientation="vertical"
+            android:background="@drawable/ll_back_change"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/img_take_photo"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"
+                android:src="@drawable/take_photo"
+                android:tint="@color/close"
+                android:layout_width="40dp"
+                android:layout_height="40dp" />
+            <TextView
+                android:text="@string/photo"
+                android:textSize="12sp"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+
     </LinearLayout>
 
 </LinearLayout>

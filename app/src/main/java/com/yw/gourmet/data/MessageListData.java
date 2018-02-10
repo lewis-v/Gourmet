@@ -1,9 +1,13 @@
 package com.yw.gourmet.data;
 
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Generated;
+
 /**
  * Created by LYW on 2017/11/26.
  */
-
+@Entity
 public class MessageListData {
     //消息类型
     public final static int TEXT = 0;//文本
@@ -14,6 +18,9 @@ public class MessageListData {
     public final static int SEND_SUCCESS = 4;//发送成功
     public final static int SEND_FAIL = 5;//发送失败
 
+    @Id
+    private Long cli_id;//客户端id
+    private String user_id;//存储的用户id
     private String id;
     private String put_id;
     private String get_id;
@@ -30,6 +37,49 @@ public class MessageListData {
     private int un_read_num;//未读数量
 
     public MessageListData() {
+    }
+
+
+    @Generated(hash = 874256519)
+    public MessageListData(Long cli_id, String user_id, String id, String put_id,
+            String get_id, String nickname, String content, String put_time,
+            String img_header, int type, String title, String cover, String img,
+            int sendStatus, int is_read, int un_read_num) {
+        this.cli_id = cli_id;
+        this.user_id = user_id;
+        this.id = id;
+        this.put_id = put_id;
+        this.get_id = get_id;
+        this.nickname = nickname;
+        this.content = content;
+        this.put_time = put_time;
+        this.img_header = img_header;
+        this.type = type;
+        this.title = title;
+        this.cover = cover;
+        this.img = img;
+        this.sendStatus = sendStatus;
+        this.is_read = is_read;
+        this.un_read_num = un_read_num;
+    }
+
+
+    public Long getCli_id() {
+        return cli_id;
+    }
+
+    public MessageListData setCli_id(Long cli_id) {
+        this.cli_id = cli_id;
+        return this;
+    }
+
+    public String getUser_id() {
+        return user_id;
+    }
+
+    public MessageListData setUser_id(String user_id) {
+        this.user_id = user_id;
+        return this;
     }
 
     public String getId() {
@@ -179,7 +229,9 @@ public class MessageListData {
     @Override
     public String toString() {
         return "MessageListData{" +
-                "id='" + id + '\'' +
+                "cli_id='" + cli_id + '\'' +
+                ", user_id='" + user_id + '\'' +
+                ", id='" + id + '\'' +
                 ", put_id='" + put_id + '\'' +
                 ", get_id='" + get_id + '\'' +
                 ", nickname='" + nickname + '\'' +

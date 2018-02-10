@@ -2,7 +2,7 @@ package com.yw.gourmet.ui.draft;
 
 import com.yw.gourmet.base.BasePresenter;
 import com.yw.gourmet.base.BaseView;
-import com.yw.gourmet.dao.data.SaveData;
+import com.yw.gourmet.dao.data.saveData.SaveData;
 
 import java.util.List;
 

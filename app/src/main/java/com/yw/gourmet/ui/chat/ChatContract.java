@@ -18,11 +18,18 @@ public interface ChatContract {
         void onSendSuccess(int position);
         void onSendFail(String msg,int position);
         void onGetDetailSuccess(BaseData<List<MessageListData>> model);
+        void onUpImgSuccess(BaseData<String> model,int position);
+        void onUpImgFail(String msg,int position);
+        void onGetHistorySuccess(List<MessageListData> model);
+        void onGetHistoryFail(String msg);
     }
 
     abstract class Presenter extends BasePresenter<View>{
         abstract void sendMessage(List<MultipartBody.Part> parts,int position);
         abstract void getMessageDetail(List<MultipartBody.Part> parts);
         abstract void setMessageRead(List<MultipartBody.Part> parts);
+        abstract void upImg(List<MultipartBody.Part> parts,int position);
+        abstract void getHistory(String put_id,String get_id,int startId);
+        abstract void insertDB(MessageListData messageListData);
     }
 }

@@ -12,7 +12,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:3.0.1'
         classpath 'org.greenrobot:greendao-gradle-plugin:3.2.2'
-        classpath "com.mob.sdk:MobSDK:+"
+        classpath "com.mob.sdk:MobSDK:2018.0208.1548"
     }
 }
 

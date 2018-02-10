@@ -16,6 +16,7 @@ import android.support.v4.app.NotificationCompat;
 import com.bumptech.glide.load.Transformation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.yw.gourmet.Constant;
 import com.yw.gourmet.GlideApp;
 import com.yw.gourmet.GlideRequest;
 import com.yw.gourmet.R;

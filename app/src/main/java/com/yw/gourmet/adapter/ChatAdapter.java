@@ -3,6 +3,7 @@ package com.yw.gourmet.adapter;
 import android.content.Context;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
     private Context context;
     private List<MessageListData> list;
     private OnRefreshListener onRefreshListener;
+    private OnImgClickListener onImgClickListener;
 
     public ChatAdapter(Context context, List<MessageListData> list) {
         this.context = context;
@@ -43,6 +45,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         if (Constant.userData != null){
+            Log.e("adapter",list.get(position).getGet_id()+";"+list.get(position).getPut_id());
             if (Constant.userData.getUser_id().equals(list.get(position).getPut_id())){//自己发送的
                 holder.ll_other.setVisibility(View.GONE);
                 holder.ll_myself.setVisibility(View.VISIBLE);
@@ -65,6 +68,14 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
                         GlideApp.with(context).load(list.get(position).getImg())
                                 .placeholder(R.mipmap.loading).error(R.mipmap.load_fail)
                                 .into(holder.img_myself);
+                        if (onImgClickListener != null){
+                            holder.img_myself.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    onImgClickListener.onClick(v,holder.getLayoutPosition());
+                                }
+                            });
+                        }
                         break;
                 }
                 holder.fl_sending_myself.removeAllViews();
@@ -116,6 +127,14 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
                         GlideApp.with(context).load(list.get(position).getImg())
                                 .placeholder(R.mipmap.loading).error(R.mipmap.load_fail)
                                 .into(holder.img_other);
+                        if (onImgClickListener != null){
+                            holder.img_other.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    onImgClickListener.onClick(v,holder.getLayoutPosition());
+                                }
+                            });
+                        }
                         break;
                 }
                 holder.fl_sending_other.removeAllViews();
@@ -156,6 +175,15 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
     public ChatAdapter setOnRefreshListener(OnRefreshListener onRefreshListener) {
         this.onRefreshListener = onRefreshListener;
         return this;
+    }
+
+    public ChatAdapter setOnImgClickListener(OnImgClickListener onImgClickListener) {
+        this.onImgClickListener = onImgClickListener;
+        return this;
+    }
+
+    public interface OnImgClickListener{
+        void onClick(View view,int position);
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {

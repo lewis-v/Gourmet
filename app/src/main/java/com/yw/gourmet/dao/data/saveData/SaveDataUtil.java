@@ -1,8 +1,7 @@
-package com.yw.gourmet.dao.data;
+package com.yw.gourmet.dao.data.saveData;
 
 import android.util.Log;
 
-import com.yw.gourmet.App;
 import com.yw.gourmet.Constant;
 import com.yw.gourmet.dao.GreenDaoManager;
 import com.yw.gourmet.dao.gen.SaveDataDao;
