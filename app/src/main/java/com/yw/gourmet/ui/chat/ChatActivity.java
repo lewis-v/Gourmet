@@ -399,7 +399,6 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
         messageListData.setType(MessageListData.IMG).setImg(path)
                 .setPut_id(put_id).setGet_id(get_id).setImg_header(Constant.userData.getImg_header())
                 .setSendStatus(MessageListData.SENDING);
-        Log.e(TAG,put_id+";"+get_id);
         listData.add(messageListData);
         final int position = listData.size() -1;
         adapter.notifyItemInserted(position);

@@ -19,7 +19,7 @@ import org.greenrobot.greendao.annotation.Generated;
  */
 @Entity
 public class SaveData {
-    @Id
+    @Id(autoincrement = true)
     private long _id;
     private int type;//分享类型
     private long change_time;//最后修改时间

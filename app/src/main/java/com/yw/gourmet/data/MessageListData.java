@@ -18,7 +18,8 @@ public class MessageListData {
     public final static int SEND_SUCCESS = 4;//发送成功
     public final static int SEND_FAIL = 5;//发送失败
 
-    @Id
+    @Id(autoincrement = true)
+    private Long _id;//数据库id
     private Long cli_id;//客户端id
     private String user_id;//存储的用户id
     private String id;
@@ -40,11 +41,13 @@ public class MessageListData {
     }
 
 
-    @Generated(hash = 874256519)
-    public MessageListData(Long cli_id, String user_id, String id, String put_id,
-            String get_id, String nickname, String content, String put_time,
-            String img_header, int type, String title, String cover, String img,
-            int sendStatus, int is_read, int un_read_num) {
+    @Generated(hash = 386150179)
+    public MessageListData(Long _id, Long cli_id, String user_id, String id,
+            String put_id, String get_id, String nickname, String content,
+            String put_time, String img_header, int type, String title,
+            String cover, String img, int sendStatus, int is_read,
+            int un_read_num) {
+        this._id = _id;
         this.cli_id = cli_id;
         this.user_id = user_id;
         this.id = id;
@@ -246,5 +249,15 @@ public class MessageListData {
                 ", is_read=" + is_read +
                 ", un_read_num=" + un_read_num +
                 '}';
+    }
+
+
+    public Long get_id() {
+        return this._id;
+    }
+
+
+    public void set_id(Long _id) {
+        this._id = _id;
     }
 }
