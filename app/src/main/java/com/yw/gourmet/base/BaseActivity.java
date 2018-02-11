@@ -18,6 +18,7 @@ import android.view.WindowManager;
 import com.yw.gourmet.Constant;
 import com.yw.gourmet.R;
 import com.yw.gourmet.dialog.MyDialogLoadFragment;
+import com.yw.gourmet.push.PushManager;
 import com.yw.gourmet.rxbus.EventSticky;
 import com.yw.gourmet.rxbus.RxBus;
 import com.yw.gourmet.utils.SPUtils;
@@ -271,8 +272,7 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
             return;
         }
         isReLogining = true;
-//        PushManager.getInstance().clearAllNotification().clearTag();
-//        IMManager.getInstance().clearUser();
+        PushManager.getInstance().clearAllNotification(this).setTag(this,PushManager.NOMAL_ALIAS,PushManager.NOMAL_TAG);
         RxBus.getDefault().postSticky(new EventSticky("out"));
         Constant.userData = null;
         onFail(msg);

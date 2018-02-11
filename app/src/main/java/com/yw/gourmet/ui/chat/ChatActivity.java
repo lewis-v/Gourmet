@@ -28,6 +28,7 @@ import com.yw.gourmet.dialog.MyDialogPhotoChooseFragment;
 import com.yw.gourmet.dialog.MyDialogPhotoShowFragment;
 import com.yw.gourmet.ui.share.common.CommonShareActivity;
 import com.yw.gourmet.utils.ToastUtils;
+import com.yw.gourmet.widget.YWRecyclerView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -49,7 +50,7 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
     private final static int VOICE = 1;//发送语音模式
 
     private ImageView img_back,img_type,img_add,img_emoticon;
-    private RecyclerView recycler_chat;
+    private YWRecyclerView recycler_chat;
     private EditText et_chat;
     private TextView tv_voice,tv_tool,tv_send;
     private int sendMode = 0;//发送的模式,默认为文本
@@ -58,6 +59,7 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
     private String get_id,put_id;//接收者id与发送者id
     private IMessageGet iMessageGet;
     private LinearLayout ll_take_photo,ll_img,ll_add_other;
+    private boolean isLoadHistory = false;//是否在加载历史中
 
     @Override
     protected int getLayoutId() {
@@ -87,8 +89,9 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
         img_back.setOnClickListener(this);
         img_type.setOnClickListener(this);
 
-        recycler_chat = (RecyclerView) findViewById(R.id.recycler_chat);
+        recycler_chat = findViewById(R.id.recycler_chat);
         recycler_chat.setItemAnimator(new DefaultItemAnimator());
+
         recycler_chat.setLayoutManager(new LinearLayoutManager(this));
         adapter = new ChatAdapter(this, listData);
         recycler_chat.setAdapter(adapter);
@@ -96,6 +99,19 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
             @Override
             public void onClick(View view, int position) {
                 new MyDialogPhotoShowFragment().addImgString(listData.get(position).getImg()).show(getSupportFragmentManager(),"img");
+            }
+        });
+        recycler_chat.setOnScrollListener(new YWRecyclerView.OnScrollListener() {
+            @Override
+            public void onLoadFirst() {
+                if (!isLoadHistory && listData.size()>0 && listData.get(0).getCli_id()>0){
+                    getHistory(put_id,get_id,listData.get(0).getCli_id());
+                }
+            }
+
+            @Override
+            public void onLoadLast() {
+
             }
         });
 
@@ -158,7 +174,7 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
         put_id = getIntent().getStringExtra("put_id");
         get_id = getIntent().getStringExtra("get_id");
 
-        mPresenter.getHistory(put_id,get_id,0);
+        getHistory(put_id,get_id,0);
 
         iMessageGet = new IMessageGet() {
             @Override
@@ -220,6 +236,17 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
                 .addFormDataPart("content",data.getContent());
         mPresenter.sendMessage(builder.build().parts(),listData.size()-1);
 
+    }
+
+    /**
+     * 加载历史记录
+     * @param put_id
+     * @param get_id
+     * @param startId
+     */
+    public void getHistory(String put_id,String get_id,int startId){
+        isLoadHistory = true;
+        mPresenter.getHistory(put_id,get_id,startId);
     }
 
     @Override
@@ -293,14 +320,18 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
                         listData.add(0, messageListData);
                         adapter.notifyItemInserted(0);
                     }
-                    recycler_chat.scrollToPosition(listData.size() - 1);
+                    if (listData.size() == model.size()) {
+                        recycler_chat.scrollToPosition(listData.size() - 1);
+                    }
                 }
             });
         }
+        isLoadHistory = false;
     }
 
     @Override
     public void onGetHistoryFail(final String msg) {
+        isLoadHistory = false;
         runOnUiThread(new Runnable() {
             @Override
             public void run() {

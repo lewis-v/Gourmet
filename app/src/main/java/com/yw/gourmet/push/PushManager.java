@@ -50,8 +50,8 @@ public class PushManager {
             for (String str : tags) {
                 set.add(str);
             }
-            JPushInterface.setTags(context,100, set);//设置标签
-            JPushInterface.setAlias(context, 100, alias);//设置别名
+            JPushInterface.setTags(context,0, set);//设置标签
+            JPushInterface.setAlias(context, 0, alias);//设置别名
         return this;
     }
 
@@ -86,8 +86,8 @@ public class PushManager {
     /**
      * 消除通知栏通知
      */
-    public PushManager clearAllNotification(){
-
+    public PushManager clearAllNotification(Context context){
+        JPushInterface.clearAllNotifications(context);
         return this;
     }
 
@@ -103,8 +103,8 @@ public class PushManager {
     /**
      * 清除所有标记
      */
-    public PushManager clearTag(){
-
+    public PushManager clearTag(Context context){
+        JPushInterface.deleteAlias(context,0);
         return this;
     }
 }

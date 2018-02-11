@@ -41,7 +41,7 @@
         android:background="@mipmap/dev"
         android:layout_width="match_parent"
         android:layout_height="1dp" />
-    <android.support.v7.widget.RecyclerView
+    <com.yw.gourmet.widget.YWRecyclerView
         android:id="@+id/recycler_chat"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"

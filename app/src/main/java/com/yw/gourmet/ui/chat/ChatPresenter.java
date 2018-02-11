@@ -1,5 +1,7 @@
 package com.yw.gourmet.ui.chat;
 
+import android.util.Log;
+
 import com.yw.gourmet.api.Api;
 import com.yw.gourmet.base.rx.RxApiCallback;
 import com.yw.gourmet.base.rx.RxSubscriberCallBack;
