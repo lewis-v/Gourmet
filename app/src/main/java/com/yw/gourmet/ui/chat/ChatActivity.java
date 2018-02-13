@@ -234,7 +234,7 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
                 .addFormDataPart("get_id",get_id)
                 .addFormDataPart("type",String.valueOf(TEXT))
                 .addFormDataPart("content",data.getContent());
-        mPresenter.sendMessage(builder.build().parts(),listData.size()-1);
+        mPresenter.sendMessage(builder.build().parts(),data,listData.size()-1);
 
     }
 
@@ -253,6 +253,7 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
     public void onSendSuccess(int position) {
         listData.get(position).setSendStatus(MessageListData.SEND_SUCCESS);
         adapter.notifyItemChanged(position);
+        mPresenter.updataDB(listData.get(position));
     }
 
     @Override
@@ -260,6 +261,7 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
         Log.e(TAG,msg);
         listData.get(position).setSendStatus(MessageListData.SEND_FAIL);
         adapter.notifyItemChanged(position);
+        mPresenter.updataDB(listData.get(position));
     }
 
     @Override
@@ -288,7 +290,8 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
                 .addFormDataPart("get_id",get_id)
                 .addFormDataPart("type",String.valueOf(MessageListData.IMG))
                 .addFormDataPart("img",model.getData());
-        mPresenter.sendMessage(builder.build().parts(),position);
+        listData.get(position).setImg(model.getData());
+        mPresenter.sendMessage(builder.build().parts(),listData.get(position),position);
     }
 
     @Override
@@ -296,6 +299,7 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
         super.onFail(msg);
         listData.get(position).setSendStatus(MessageListData.SEND_FAIL);
         adapter.notifyItemChanged(position);
+        mPresenter.updataDB(listData.get(position));
     }
 
     @Override

@@ -1,10 +1,14 @@
 package com.yw.gourmet.ui.chat;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import com.yw.gourmet.api.Api;
 import com.yw.gourmet.base.rx.RxApiCallback;
 import com.yw.gourmet.base.rx.RxSubscriberCallBack;
+import com.yw.gourmet.center.MessageCenter;
+import com.yw.gourmet.center.event.IMessageSendEvent;
 import com.yw.gourmet.dao.data.messageData.MessageDataUtil;
 import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.data.MessageListData;
@@ -21,29 +25,61 @@ import okhttp3.MultipartBody;
 
 public class ChatPresenter extends ChatContract.Presenter {
     private ExecutorService executors;
+    private IMessageSendEvent iMessageSendEvent;
 
     public ChatPresenter(){
         super();
         executors = Executors.newSingleThreadExecutor();
+        iMessageSendEvent = new IMessageSendEvent() {
+            @Override
+            public boolean onSendMessageResult(final BaseData message, MessageListData MessageListData, final int position) {
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (message.getStatus() == 0) {
+                            mView.onSendSuccess(position);
+                        }else {
+                            mView.onSendFail(message.getMessage(),position);
+                        }
+                    }
+                });
+
+                return true;
+            }
+
+            @Override
+            public boolean onSendMessageFail(MessageListData message, final int position, final String msg) {
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mView.onSendFail(msg,position);
+                    }
+                });
+                return true;
+            }
+        };
+        MessageCenter.getInstance().addMessageHandleTop(iMessageSendEvent);
     }
 
     @Override
-    void sendMessage(List<MultipartBody.Part> parts, final int position) {
-        mRxManager.add(Api.getInstance().SendMessage(parts),new RxSubscriberCallBack<BaseData>(new RxApiCallback<BaseData>() {
-            @Override
-            public void onSuccess(BaseData model) {
-                if (model.getStatus() == 0){
-                    mView.onSendSuccess(position);
-                }else {
-                    mView.onSendFail(model.getMessage(),position);
-                }
-            }
-
-            @Override
-            public void onFailure(int code, String msg) {
-                mView.onSendFail(msg,position);
-            }
-        }));
+    void sendMessage(List<MultipartBody.Part> parts,MessageListData messageListData, final int position) {
+        MessageCenter.getInstance().sendMessage(parts,messageListData,position);
+//
+//        mRxManager.add(Api.getInstance().SendMessage(parts),new RxSubscriberCallBack<BaseData>(new RxApiCallback<BaseData>() {
+//            @Override
+//            public void onSuccess(BaseData model) {
+//                if (model.getStatus() == 0){
+//                    mView.onSendSuccess(position);
+//                }else {
+//                    mView.onSendFail(model.getMessage(),position);
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(int code, String msg) {
+//                mView.onSendFail(msg,position);
+//            }
+//        }));
     }
 
     @Override
@@ -129,8 +165,27 @@ public class ChatPresenter extends ChatContract.Presenter {
     }
 
     @Override
+    void updataDB(final MessageListData messageListData){
+        executors.execute(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    MessageDataUtil.updata(messageListData);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
-        executors.shutdownNow();
+        if (executors != null) {
+            executors.shutdownNow();
+        }
+        if (iMessageSendEvent != null){
+            MessageCenter.getInstance().removeMessageHandle(iMessageSendEvent);
+        }
     }
 }

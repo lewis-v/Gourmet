@@ -1,6 +1,11 @@
 package com.yw.gourmet.ui.flash;
 
+import android.animation.IntEvaluator;
+import android.animation.ValueAnimator;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
+import android.widget.ProgressBar;
 
 import com.yw.gourmet.Constant;
 import com.yw.gourmet.R;
@@ -17,18 +22,37 @@ import java.util.List;
 import okhttp3.MultipartBody;
 
 public class FlashActivity extends BaseActivity<FlashPresenter> implements FlashConstract.View {
+    private long TIME = 3000;//3秒的最少停留时间
+    private volatile boolean isFinish = false;
+    private ProgressBar progress;
+    private ValueAnimator valueAnimator;
 
     /**
      * 初始化UI
      */
     @Override
     protected void initView() {
-        try {//todo 模拟停留
-            Thread.sleep(200);
-        } catch (InterruptedException e) {
-            return;
-        }
+        progress = findViewById(R.id.progress);
+
         mPresenter.Init();
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                isFinish = true;
+            }
+        },TIME);
+        valueAnimator = ValueAnimator.ofInt(1,100);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            private IntEvaluator mEvaluator = new IntEvaluator();
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float fraction = animation.getAnimatedFraction();
+                progress.setProgress(mEvaluator.evaluate(fraction,0,100));
+            }
+        });
+        valueAnimator.setDuration(1000).setRepeatCount(-1);
+        valueAnimator.setRepeatMode(ValueAnimator.REVERSE);
+        valueAnimator.start();
     }
 
     /**
@@ -40,12 +64,19 @@ public class FlashActivity extends BaseActivity<FlashPresenter> implements Flash
     }
 
     @Override
-    public void onLoginSuccess(BaseData<UserData> model) {
-        SPUtils.setSharedStringData(getApplicationContext(),"token",model.getData().getToken());
-        Constant.userData = model.getData();
-        PushManager.getInstance().setTag(this,Constant.userData.getUser_id(),PushManager.NOMAL_TAG);
-        startActivity(new Intent(this, MainActivity.class));
-        finish();
+    public void onLoginSuccess(final BaseData<UserData> model) {
+        Thread thread = new WaitThread(new Runnable() {
+            @Override
+            public void run() {
+                SPUtils.setSharedStringData(getApplicationContext(),"token",model.getData().getToken());
+                Constant.userData = model.getData();
+                PushManager.getInstance().setTag(FlashActivity.this,Constant.userData.getUser_id(),PushManager.NOMAL_TAG);
+                startActivity(new Intent(FlashActivity.this, MainActivity.class));
+                finish();
+            }
+        });
+        threadList.add(thread);
+        thread.start();
     }
 
     @Override
@@ -60,8 +91,15 @@ public class FlashActivity extends BaseActivity<FlashPresenter> implements Flash
         String token = null;
         token = SPUtils.getSharedStringData(getApplicationContext(),"token");
         if (token == null || token.length() == 0) {
-            startActivity(new Intent(this, MainActivity.class));
-            finish();
+            Thread thread = new WaitThread(new Runnable() {
+                @Override
+                public void run() {
+                    startActivity(new Intent(FlashActivity.this, MainActivity.class));
+                    finish();
+                }
+            });
+            threadList.add(thread);
+            thread.start();
         }else {
             MultipartBody.Builder builder = new MultipartBody.Builder()
                     .setType(MultipartBody.FORM)
@@ -77,10 +115,48 @@ public class FlashActivity extends BaseActivity<FlashPresenter> implements Flash
 
     @Override
     public void onFail(String msg) {
-        PushManager.getInstance().setTag(getApplicationContext(),PushManager.NOMAL_ALIAS,PushManager.NOMAL_TAG);
-        startActivity(new Intent(this, MainActivity.class));
-        finish();
+        Thread thread = new WaitThread(new Runnable() {
+            @Override
+            public void run() {
+                PushManager.getInstance().setTag(getApplicationContext(),PushManager.NOMAL_ALIAS,PushManager.NOMAL_TAG);
+                startActivity(new Intent(FlashActivity.this, MainActivity.class));
+                finish();
+            }
+        });
+        threadList.add(thread);
+        thread.start();
+
+    }
+
+    /**
+     * 等待结束线程
+     */
+    private class WaitThread extends Thread{
+        private Runnable runnable;
+
+        public WaitThread(Runnable runnable) {
+            this.runnable = runnable;
+        }
+
+        @Override
+        public void run() {
+            while (!isFinish){
+                try {
+                    sleep(100);
+                } catch (InterruptedException e) {
+                    return;
+                }
+            }
+            runnable.run();
+        }
     }
 
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (valueAnimator != null && valueAnimator.isRunning()){
+            valueAnimator.cancel();
+        }
+    }
 }

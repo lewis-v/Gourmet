@@ -33,7 +33,7 @@ public class MessageListData {
     private String title;//特殊分享类型标题
     private String cover;//特殊分享类型封面
     private String img;
-    private int sendStatus = SEND_SUCCESS;//消息发送状态,默认为成功
+    private int sendStatus;//消息发送状态,默认为成功
     private int is_read;//是否已读
     private int un_read_num;//未读数量
 

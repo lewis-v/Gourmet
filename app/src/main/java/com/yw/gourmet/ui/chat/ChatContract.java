@@ -25,11 +25,12 @@ public interface ChatContract {
     }
 
     abstract class Presenter extends BasePresenter<View>{
-        abstract void sendMessage(List<MultipartBody.Part> parts,int position);
+        abstract void sendMessage(List<MultipartBody.Part> parts,MessageListData messageListData,int position);
         abstract void getMessageDetail(List<MultipartBody.Part> parts);
         abstract void setMessageRead(List<MultipartBody.Part> parts);
         abstract void upImg(List<MultipartBody.Part> parts,int position);
         abstract void getHistory(String put_id,String get_id,int startId);
         abstract void insertDB(MessageListData messageListData);
+        abstract void updataDB(MessageListData messageListData);
     }
 }
