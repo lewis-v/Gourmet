@@ -206,4 +206,8 @@ public class Api {
     public  Observable<BaseData> Registered(List<MultipartBody.Part> parts){
         return service.Registered(parts);
     }
+
+    public Observable<BaseData> Complaint(List<MultipartBody.Part> parts){
+        return service.Complaint(parts);
+    }
 }

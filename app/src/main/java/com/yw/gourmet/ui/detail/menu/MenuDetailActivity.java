@@ -38,6 +38,7 @@ import com.yw.gourmet.data.CommentData;
 import com.yw.gourmet.data.MenuDetailData;
 import com.yw.gourmet.data.MenuPracticeData;
 import com.yw.gourmet.data.ShareListData;
+import com.yw.gourmet.dialog.MyDialogComplaintFragment;
 import com.yw.gourmet.dialog.MyDialogMoreFragment;
 import com.yw.gourmet.dialog.MyDialogPhotoShowFragment;
 import com.yw.gourmet.utils.ToastUtils;
@@ -281,6 +282,23 @@ public class MenuDetailActivity extends BaseActivity<MenuDetailPresenter> implem
                         + shareListData.getId() + "&type=" + shareListData.getType())
                         .show(getSupportFragmentManager(),"share");
                 break;
+            case R.id.tv_complaint:
+                if (Constant.userData == null){
+                    ToastUtils.showSingleToast("请登陆后在进行操作");
+                }else {
+                    new MyDialogComplaintFragment().setOnEnterListener(new MyDialogComplaintFragment.OnEnterListener() {
+                        @Override
+                        public void onEnter(String edit, String Tag) {
+                            mPresenter.complaint(new MultipartBody.Builder().setType(MultipartBody.FORM)
+                                    .addFormDataPart("user_id",Constant.userData.getUser_id())
+                                    .addFormDataPart("act_id",shareListData.getId())
+                                    .addFormDataPart("type", String.valueOf(shareListData.getType()))
+                                    .addFormDataPart("content",edit)
+                                    .build().parts());
+                        }
+                    }).show(getSupportFragmentManager(),"complaint");
+                }
+                break;
         }
     }
 
@@ -513,6 +531,7 @@ public class MenuDetailActivity extends BaseActivity<MenuDetailPresenter> implem
         //设置各个控件的点击响应
         TextView tv_collect = (TextView)contentView.findViewById(R.id.tv_collect);
         TextView tv_share = (TextView)contentView.findViewById(R.id.tv_share);
+        contentView.findViewById(R.id.tv_complaint).setOnClickListener(this);
         tv_collect.setOnClickListener(this);
         tv_share.setOnClickListener(this);
         mPopWindow.showAsDropDown(img_other,-55,0);

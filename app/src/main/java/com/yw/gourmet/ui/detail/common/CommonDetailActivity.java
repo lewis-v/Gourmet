@@ -1,6 +1,5 @@
 package com.yw.gourmet.ui.detail.common;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.support.constraint.ConstraintLayout;
@@ -17,7 +16,6 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -35,6 +33,7 @@ import com.yw.gourmet.base.BaseActivity;
 import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.data.CommentData;
 import com.yw.gourmet.data.ShareListData;
+import com.yw.gourmet.dialog.MyDialogComplaintFragment;
 import com.yw.gourmet.dialog.MyDialogMoreFragment;
 import com.yw.gourmet.dialog.MyDialogPhotoShowFragment;
 import com.yw.gourmet.listener.OnItemClickListener;
@@ -396,6 +395,23 @@ public class CommonDetailActivity extends BaseActivity<CommonDetailPresenter> im
             case R.id.tv_share:
 
                 break;
+            case R.id.tv_complaint:
+                if (Constant.userData == null){
+                    ToastUtils.showSingleToast("请登陆后在进行操作");
+                }else {
+                    new MyDialogComplaintFragment().setOnEnterListener(new MyDialogComplaintFragment.OnEnterListener() {
+                        @Override
+                        public void onEnter(String edit, String Tag) {
+                            mPresenter.complaint(new MultipartBody.Builder().setType(MultipartBody.FORM)
+                                    .addFormDataPart("user_id",Constant.userData.getUser_id())
+                                    .addFormDataPart("act_id",listShareListData.getId())
+                                    .addFormDataPart("type", String.valueOf(listShareListData.getType()))
+                                    .addFormDataPart("content",edit)
+                                    .build().parts());
+                        }
+                    }).show(getSupportFragmentManager(),"complaint");
+                }
+                break;
             case R.id.img_header:
             case R.id.tv_nickname:
                 Intent intent = new Intent(this, PersonalActivity.class);
@@ -414,7 +430,7 @@ public class CommonDetailActivity extends BaseActivity<CommonDetailPresenter> im
             return;
         }
         isAnimShowingInput = true;
-        Animation animationBottom ;
+        Animation animationBottom;
         if (isInput){
             animationBottom = AnimationUtils.loadAnimation(this, R.anim.anim_view_enter_bottom);
         }else {
@@ -521,6 +537,7 @@ public class CommonDetailActivity extends BaseActivity<CommonDetailPresenter> im
         //设置各个控件的点击响应
         TextView tv_collect = (TextView)contentView.findViewById(R.id.tv_collect);
         TextView tv_share = (TextView)contentView.findViewById(R.id.tv_share);
+        contentView.findViewById(R.id.tv_complaint).setOnClickListener(this);
         tv_share.setVisibility(View.GONE);
         tv_collect.setOnClickListener(this);
         tv_share.setOnClickListener(this);

@@ -96,4 +96,23 @@ public class RaidersDetailPresenter extends RaidersDetailContract.Presenter {
             }
         }));
     }
+
+    @Override
+    void complaint(List<MultipartBody.Part> parts) {
+        mRxManager.add(Api.getInstance().Complaint(parts),new RxSubscriberCallBack<BaseData>(new RxApiCallback<BaseData>() {
+            @Override
+            public void onSuccess(BaseData model) {
+                if (model.getStatus() == 0){
+                    mView.onSuccess(model.getMessage());
+                }else {
+                    mView.onFail(model.getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(int code, String msg) {
+                mView.onFail(msg);
+            }
+        }));
+    }
 }

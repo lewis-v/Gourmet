@@ -33,5 +33,6 @@ public interface MenuDetailContract {
         abstract void getComment(List<MultipartBody.Part> parts);
         abstract void sendComment(List<MultipartBody.Part> parts);
         abstract void reMark(List<MultipartBody.Part> parts);
+        abstract void complaint(List<MultipartBody.Part> parts);
     }
 }
