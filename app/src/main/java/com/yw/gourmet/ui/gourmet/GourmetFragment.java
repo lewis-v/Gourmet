@@ -28,6 +28,7 @@ import com.yw.gourmet.ui.detail.diary.DiaryDetailActivity;
 import com.yw.gourmet.ui.detail.menu.MenuDetailActivity;
 import com.yw.gourmet.ui.detail.raiders.RaidersDetailActivity;
 import com.yw.gourmet.utils.ToastUtils;
+import com.yw.gourmet.widget.YWRecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,11 +40,12 @@ import okhttp3.MultipartBody;
  */
 
 public class GourmetFragment extends BaseFragment<GourmetPresenter> implements GourmetContract.View
-        ,OnRefreshListener,OnLoadMoreListener{
-    private RecyclerView swipe_target;
+        ,OnRefreshListener{
+    private YWRecyclerView swipe_target;
     private SwipeToLoadLayout swipeToLoadLayout;
     private List<ShareListData<List<String>>> listData = new ArrayList<>();
     private ShareListAdapter adapter;
+    private boolean isLoadMore = false;//是否在加载更多中
 
     /**
      * 初始化UI
@@ -53,13 +55,37 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
         toolbar = (Toolbar)view.findViewById(R.id.toolbar);
 
         swipeToLoadLayout = (SwipeToLoadLayout)view.findViewById(R.id.swipeToLoadLayout);
-        swipe_target = (RecyclerView)view.findViewById(R.id.swipe_target);
+        swipe_target = view.findViewById(R.id.swipe_target);
         swipe_target.setLayoutManager(new LinearLayoutManager(getContext()));
         swipe_target.setItemAnimator(new DefaultItemAnimator());
         adapter = new ShareListAdapter(getContext(),listData,getFragmentManager());
         swipe_target.setAdapter(adapter);
         swipeToLoadLayout.setOnRefreshListener(this);
-        swipeToLoadLayout.setOnLoadMoreListener(this);
+        swipe_target.setOnScrollListener(new YWRecyclerView.OnScrollListener() {
+            @Override
+            public void onLoadFirst() {
+
+            }
+
+            @Override
+            public void onLoadLast() {
+                if (!adapter.isEnd()) {
+                    isLoadMore = true;
+                    MultipartBody.Builder builder = new MultipartBody.Builder()
+                            .setType(MultipartBody.FORM)
+                            .addFormDataPart("token", Constant.userData == null ? "0" : Constant.userData.getToken());
+                    if (listData.size() > 0) {
+                        builder.addFormDataPart("time_flag", listData.get(listData.size() - 1).getTime_flag())
+                                .addFormDataPart("act", "-1");
+                    }
+
+                    if (Constant.userData != null) {
+                        builder.addFormDataPart("user_id", Constant.userData.getUser_id());
+                    }
+                    mPresenter.load(builder.build().parts(), LoadEnum.LOADMORE);
+                }
+            }
+        });
         adapter.setListener(new OnItemClickListener() {
             @Override
             public void OnClick(View v, int position) {
@@ -215,6 +241,7 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
                 swipe_target.smoothScrollToPosition(0);
             }
         }else {
+            isLoadMore = false;
             if (model.getData() == null || model.getData().size() == 0){
                 ToastUtils.showSingleToast("没有更多啦");
                 adapter.setEnd(true);
@@ -244,6 +271,7 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
         if (flag == LoadEnum.REFRESH) {
             swipeToLoadLayout.setRefreshing(false);
         }else {
+            isLoadMore = false;
             swipeToLoadLayout.setLoadingMore(false);
         }
     }
@@ -252,22 +280,6 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
     public void onReMarkSuccess(BaseData<ShareListData<List<String>>> model,int position) {
         listData.set(position,model.getData());
         adapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onLoadMore() {
-        MultipartBody.Builder builder = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart("token", Constant.userData == null?"0":Constant.userData.getToken());
-        if (listData.size()>0){
-            builder.addFormDataPart("time_flag",listData.get(listData.size()-1).getTime_flag())
-                    .addFormDataPart("act","-1");
-        }
-
-        if (Constant.userData != null){
-            builder.addFormDataPart("user_id",Constant.userData.getUser_id());
-        }
-        mPresenter.load(builder.build().parts(),LoadEnum.LOADMORE);
     }
 
     @Override

@@ -38,16 +38,11 @@
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:gravity="center"/>
-        <android.support.v7.widget.RecyclerView
+        <com.yw.gourmet.widget.YWRecyclerView
             android:id="@+id/swipe_target"
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
-        <com.yw.gourmet.swipAnim.LoadMoreFooterView
-            android:id="@+id/swipe_load_more_footer"
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:gravity="center"/>
     </com.aspsine.swipetoloadlayout.SwipeToLoadLayout>
 
 </LinearLayout>

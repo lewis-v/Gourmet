@@ -71,6 +71,10 @@ public class ShareListAdapter extends RecyclerView.Adapter<ShareListAdapter.MyVi
         return this;
     }
 
+    public boolean isEnd() {
+        return isEnd;
+    }
+
     public ShareListAdapter(Context context, List<ShareListData<List<String>>> listData, FragmentManager fragmentManager){
         this.context = context;
         this.listData = listData;

@@ -2,9 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.yw.gourmet">
+
     <permission
         android:name="com.yw.gourmet.permission.JPUSH_MESSAGE"
         android:protectionLevel="signature" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -176,18 +178,20 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
-        <!--搜索-->
-        <activity android:name=".ui.search.keySearch.KeySearchActivity"
+        <!-- 搜索 -->
+        <activity
+            android:name=".ui.search.keySearch.KeySearchActivity"
             android:screenOrientation="portrait" />
-        <!--注册-->
-        <activity android:name=".ui.registered.RegisteredActivity"
-            android:screenOrientation="portrait"/>
-        <!--推送服务-->
+        <!-- 注册 -->
+        <activity
+            android:name=".ui.registered.RegisteredActivity"
+            android:screenOrientation="portrait" />
+        <!-- 推送服务 -->
         <service
             android:name=".service.MessageService"
             android:enabled="true"
-            android:exported="true"/>
-        <!--极光广播-->
+            android:exported="true" />
+        <!-- 极光广播 -->
         <receiver
             android:name=".push.PushReceiver"
             android:enabled="true"
@@ -201,6 +205,8 @@
                 <category android:name="com.yw.gourmet" />
             </intent-filter>
         </receiver>
+
+        <activity android:name=".ui.passwordChange.PasswordChangeActivity"></activity>
     </application>
 
 </manifest>

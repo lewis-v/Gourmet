@@ -120,4 +120,7 @@
     <string name="girl">女</string>
     <string name="flash_name">\@Lewis_v</string>
     <string name="complaint">投诉</string>
+    <string name="change">修改</string>
+    <string name="input_old_password">请输入原密码</string>
+    <string name="re_get_code">重新获取验证码(60s)</string>
 </resources>
