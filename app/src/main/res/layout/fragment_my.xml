@@ -305,6 +305,7 @@
                 android:layout_height="1px"/>
 
             <LinearLayout
+                android:id="@+id/ll_customer_service"
                 android:background="@drawable/ll_back_change"
                 android:padding="8dp"
                 android:gravity="center_vertical"

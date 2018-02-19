@@ -6,22 +6,28 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.yw.gourmet.App;
 import com.yw.gourmet.Constant;
 import com.yw.gourmet.R;
+import com.yw.gourmet.dialog.MyDialogFeedBackFragment;
 import com.yw.gourmet.dialog.MyDialogLoadFragment;
 import com.yw.gourmet.push.PushManager;
 import com.yw.gourmet.rxbus.EventSticky;
 import com.yw.gourmet.rxbus.RxBus;
 import com.yw.gourmet.utils.SPUtils;
+import com.yw.gourmet.utils.ShakeUtils;
 import com.yw.gourmet.utils.ToastUtils;
 
 import java.lang.reflect.Field;
@@ -234,6 +240,29 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
     @Override
     protected void onResume() {
         super.onResume();
+        ShakeUtils.getInstance(this).setOnShakeListener(new ShakeUtils.OnShakeListener() {
+            @Override
+            public void onShake() {
+                Log.e("---sha", String.valueOf(MyDialogFeedBackFragment.getInstance().isShow()));
+                if (!MyDialogFeedBackFragment.getInstance().isShow()) {
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (!MyDialogFeedBackFragment.getInstance().isShow()) {
+                                MyDialogFeedBackFragment.getInstance().show(getSupportFragmentManager(), "");
+                            }
+                        }
+                    });
+                }
+            }
+        });
+        ShakeUtils.getInstance(this).onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ShakeUtils.getInstance(this).onPause();
     }
 
     @Override

@@ -10,8 +10,10 @@ import android.widget.TextView;
 import com.yw.gourmet.Constant;
 import com.yw.gourmet.R;
 import com.yw.gourmet.base.BaseActivity;
+import com.yw.gourmet.dialog.MyDialogFeedBackFragment;
 import com.yw.gourmet.dialog.MyDialogTipFragment;
 import com.yw.gourmet.ui.about.AboutActivity;
+import com.yw.gourmet.ui.chat.ChatActivity;
 import com.yw.gourmet.ui.passwordChange.PasswordChangeActivity;
 import com.yw.gourmet.utils.SizeChangeUtils;
 import com.yw.gourmet.utils.ToastUtils;
@@ -19,7 +21,7 @@ import com.yw.gourmet.utils.ToastUtils;
 import java.io.File;
 
 public class SetActivity extends BaseActivity<SetPresenter> implements View.OnClickListener,SetContract.View{
-    private LinearLayout ll_back,ll_clear,ll_about,ll_change_password;
+    private LinearLayout ll_back,ll_clear,ll_about,ll_change_password,ll_customer_service,ll_feedback;
     private TextView tv_out;
     private final static String path = Environment.getExternalStorageDirectory().getPath() + "/data/gourmet/";//存储目录
 
@@ -35,6 +37,10 @@ public class SetActivity extends BaseActivity<SetPresenter> implements View.OnCl
         ll_back = (LinearLayout)findViewById(R.id.ll_back);
         ll_clear = (LinearLayout)findViewById(R.id.ll_clear);
         ll_change_password = findViewById(R.id.ll_change_password);
+        ll_customer_service = findViewById(R.id.ll_customer_service);
+        ll_feedback = findViewById(R.id.ll_feedback);
+        ll_feedback.setOnClickListener(this);
+        ll_customer_service.setOnClickListener(this);
         ll_change_password.setOnClickListener(this);
         ll_clear.setOnClickListener(this);
         ll_back.setOnClickListener(this);
@@ -84,6 +90,20 @@ public class SetActivity extends BaseActivity<SetPresenter> implements View.OnCl
                 }else {
                     startActivity(new Intent(this, PasswordChangeActivity.class));
                 }
+                break;
+            case R.id.ll_customer_service:
+                if (Constant.userData == null){
+                    ToastUtils.showSingleToast("请登陆后再操作");
+                }else {
+                    Intent intent1 = new Intent(this, ChatActivity.class);
+                    String put_id = Constant.userData.getUser_id();
+                    intent1.putExtra("put_id", put_id);
+                    intent1.putExtra("get_id", "0");
+                    startActivity(intent1);
+                }
+                break;
+            case R.id.ll_feedback:
+                MyDialogFeedBackFragment.getInstance().show(getSupportFragmentManager(),"");
                 break;
         }
     }

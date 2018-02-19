@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginTop="-25dp"
+    android:background="@color/ui_back"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
@@ -81,6 +82,16 @@
 
     </android.support.design.widget.AppBarLayout>
     <include layout="@layout/content_scroll"/>
+    <TextView
+        android:id="@+id/tv_send"
+        android:text="@string/send_message"
+        android:gravity="center"
+        android:background="@color/colorAccent"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:layout_gravity="bottom"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/float_action_header"
         app:layout_anchorGravity="bottom|right"

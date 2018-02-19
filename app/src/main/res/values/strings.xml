@@ -123,4 +123,6 @@
     <string name="change">修改</string>
     <string name="input_old_password">请输入原密码</string>
     <string name="re_get_code">重新获取验证码(60s)</string>
+    <string name="send_message">发送消息</string>
+    <string name="feedback_tip">填写您的意见或建议,谢谢您的大力支持</string>
 </resources>

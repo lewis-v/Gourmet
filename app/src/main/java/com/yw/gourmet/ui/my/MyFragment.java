@@ -19,6 +19,7 @@ import com.yw.gourmet.rxbus.EventSticky;
 import com.yw.gourmet.rxbus.RxBus;
 import com.yw.gourmet.rxbus.RxBusSubscriber;
 import com.yw.gourmet.rxbus.RxSubscriptions;
+import com.yw.gourmet.ui.chat.ChatActivity;
 import com.yw.gourmet.ui.draft.DraftActivity;
 import com.yw.gourmet.ui.collection.CollectionActivity;
 import com.yw.gourmet.ui.commentMy.CommentMyActivity;
@@ -28,6 +29,7 @@ import com.yw.gourmet.ui.personal.PersonalActivity;
 import com.yw.gourmet.ui.registered.RegisteredActivity;
 import com.yw.gourmet.ui.set.SetActivity;
 import com.yw.gourmet.ui.setTop.SetTopActivity;
+import com.yw.gourmet.utils.ToastUtils;
 import com.yw.gourmet.widget.GlideCircleTransform;
 
 import rx.Observable;
@@ -40,7 +42,8 @@ import rx.functions.Func1;
  */
 
 public class MyFragment extends BaseFragment implements View.OnClickListener,MyContract.View{
-    private LinearLayout ll_set,ll_share,ll_menu,ll_diary,ll_raiders,ll_comment,ll_collection,ll_draft;
+    private LinearLayout ll_set,ll_share,ll_menu,ll_diary,ll_raiders,ll_comment,ll_collection,ll_draft
+            ,ll_customer_service;
     private ScrollView scroll_my;
     private TextView tv_nickname,tv_set,tv_diary,tv_menu,tv_raiders,tv_share;
     private Button bt_login,bt_register;
@@ -65,6 +68,8 @@ public class MyFragment extends BaseFragment implements View.OnClickListener,MyC
         ll_set = (LinearLayout)view.findViewById(R.id.ll_set);
         ll_comment = view.findViewById(R.id.ll_comment);
         ll_top = view.findViewById(R.id.ll_top);
+        ll_customer_service = view.findViewById(R.id.ll_customer_service);
+        ll_customer_service.setOnClickListener(this);
         ll_top.setOnClickListener(this);
         ll_set.setOnClickListener(this);
         ll_menu.setOnClickListener(this);
@@ -174,6 +179,17 @@ public class MyFragment extends BaseFragment implements View.OnClickListener,MyC
                 break;
             case R.id.ll_top:
                 intent = new Intent(getContext(), SetTopActivity.class);
+                break;
+            case R.id.ll_customer_service:
+                if (Constant.userData == null){
+                    ToastUtils.showSingleToast("请登陆后再操作");
+                }else {
+                    Intent intent1 = new Intent(getContext(), ChatActivity.class);
+                    String put_id = Constant.userData.getUser_id();
+                    intent1.putExtra("put_id", put_id);
+                    intent1.putExtra("get_id", "0");
+                    startActivity(intent1);
+                }
                 break;
         }
         if (intent != null){

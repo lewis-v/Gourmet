@@ -34,6 +34,7 @@ import com.yw.gourmet.listener.OnItemClickListener;
 import com.yw.gourmet.listener.OnMoreListener;
 import com.yw.gourmet.listener.OnReMarkListener;
 import com.yw.gourmet.ui.changeDetail.ChangeDetailActivity;
+import com.yw.gourmet.ui.chat.ChatActivity;
 import com.yw.gourmet.ui.detail.common.CommonDetailActivity;
 import com.yw.gourmet.ui.detail.diary.DiaryDetailActivity;
 import com.yw.gourmet.ui.detail.menu.MenuDetailActivity;
@@ -59,7 +60,7 @@ public class PersonalActivity extends BaseActivity<PersonalPresenter> implements
     private AppBarLayout app_bar;
     private LinearLayout ll_tool,ll_change_detail,ll_change_bottom,ll_change_top;
     private AnimatorSet animatorSetToolBarShow,animatorSetToolBarHide;//toolbar的显示隐藏动画
-    private TextView tv_nickname,tv_sex,tv_address,tv_introduction,tv_change_back,tv_more,tv_nothing;
+    private TextView tv_nickname,tv_sex,tv_address,tv_introduction,tv_change_back,tv_more,tv_nothing,tv_send;
     private FloatingActionButton float_action_header;
     private ImageView img_tool_back,img_header;
     private LinearLayout ll_nothing;
@@ -84,6 +85,8 @@ public class PersonalActivity extends BaseActivity<PersonalPresenter> implements
         tv_change_back = (TextView)findViewById(R.id.tv_change_back);
         tv_more = findViewById(R.id.tv_more);
         tv_nothing = findViewById(R.id.tv_nothing);
+        tv_send = findViewById(R.id.tv_send);
+        tv_send.setOnClickListener(this);
         tv_more.setOnClickListener(this);
         tv_change_back.setOnClickListener(this);
 
@@ -306,11 +309,13 @@ public class PersonalActivity extends BaseActivity<PersonalPresenter> implements
             ll_change_detail.setVisibility(View.GONE);
             ll_change_bottom.setVisibility(View.GONE);
             ll_change_top.setVisibility(View.GONE);
+            tv_send.setVisibility(View.VISIBLE);
             mPresenter.getUserInfo(new MultipartBody.Builder().setType(MultipartBody.FORM)
                     .addFormDataPart("id",id).build().parts());
         }else {//查看自身信息
             userData = Constant.userData;
             id = Constant.userData.getUser_id();
+            tv_send.setVisibility(View.GONE);
             ll_change_detail.setVisibility(View.VISIBLE);
             ll_change_bottom.setVisibility(View.VISIBLE);
             ll_change_top.setVisibility(View.VISIBLE);
@@ -364,7 +369,17 @@ public class PersonalActivity extends BaseActivity<PersonalPresenter> implements
                 intent.putExtra("id",userData.getId());
                 startActivity(intent);
                 break;
-
+            case R.id.tv_send:
+                if (Constant.userData == null){
+                    ToastUtils.showSingleToast("请登陆后再操作");
+                }else {
+                    Intent intent1 = new Intent(this, ChatActivity.class);
+                    String put_id = Constant.userData.getUser_id();
+                    intent1.putExtra("put_id", put_id);
+                    intent1.putExtra("get_id", id);
+                    startActivity(intent1);
+                }
+                break;
         }
     }
 
