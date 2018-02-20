@@ -10,9 +10,19 @@ import com.bumptech.glide.Glide;
 import com.yw.gourmet.center.MessageCenter;
 import com.yw.gourmet.push.PushManager;
 
+import org.acra.ACRA;
+import org.acra.ReportingInteractionMode;
+import org.acra.annotation.ReportsCrashes;
+
 /**
  * Created by yw on 2017/10/21.
  */
+@ReportsCrashes(
+        mode = ReportingInteractionMode.TOAST,
+        resToastText = R.string.app_error,
+        // 更换默认的发送器
+        reportSenderFactoryClasses = {com.yw.gourmet.acra.CrashSenderFactory.class}
+)
 public class App extends MultiDexApplication {
     private static final String TAG = "APP";
 
@@ -22,6 +32,7 @@ public class App extends MultiDexApplication {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
+        ACRA.init(this);
         MultiDex.install(this);
     }
 
