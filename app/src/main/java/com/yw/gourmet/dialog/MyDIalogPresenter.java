@@ -15,10 +15,29 @@ import okhttp3.MultipartBody;
  * time: 2018/1/20.
  */
 
-public class MyDIalogPresenter extends MyDialogContract.Persenter {
+public class MyDIalogPresenter extends MyDialogContract.Presenter {
     @Override
     void collection(List<MultipartBody.Part> parts) {
         mRxManager.add(Api.getInstance().Collection(parts),new RxSubscriberCallBack<BaseData>(new RxApiCallback<BaseData>() {
+            @Override
+            public void onSuccess(BaseData model) {
+                if (model.getStatus() == 0){
+                    mView.onSuccess(model.getMessage());
+                }else {
+                    mView.onFail(model.getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(int code, String msg) {
+                mView.onFail(msg);
+            }
+        }));
+    }
+
+    @Override
+    void feedback(List<MultipartBody.Part> parts) {
+        mRxManager.add(Api.getInstance().Feedback(parts),new RxSubscriberCallBack<BaseData>(new RxApiCallback<BaseData>() {
             @Override
             public void onSuccess(BaseData model) {
                 if (model.getStatus() == 0){

@@ -16,7 +16,8 @@ public interface MyDialogContract {
     interface View extends BaseView{
 
     }
-    abstract class Persenter extends BasePresenter<View>{
+    abstract class Presenter extends BasePresenter<View>{
         abstract void collection(List<MultipartBody.Part> parts);
+        abstract void feedback(List<MultipartBody.Part> parts);
     }
 }

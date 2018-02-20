@@ -15,7 +15,7 @@ public class ShakeUtils implements SensorEventListener {
     private static ShakeUtils instance;
     private SensorManager mSensorManager = null;
     private OnShakeListener mOnShakeListener = null;
-    private static final int SENSOR_VALUE = 14;
+    private static final int SENSOR_VALUE = 19;
 
     public static ShakeUtils getInstance(Context context){
         if (instance == null){
@@ -54,7 +54,7 @@ public class ShakeUtils implements SensorEventListener {
         float[] values = event.values;
         if (sensorType == Sensor.TYPE_ACCELEROMETER){
             //这里可以调节摇一摇的灵敏度
-            if ((Math.abs(values[0]) > SENSOR_VALUE || Math.abs(values[1]) > SENSOR_VALUE || Math.abs(values[2]) > SENSOR_VALUE)){
+            if ((Math.abs(values[0]) > SENSOR_VALUE || Math.abs(values[1]) > SENSOR_VALUE )){
                 System.out.println("sensor value == " + " " + values[ 0 ] + " " + values[ 1 ] + " " +  values[ 2 ] );
                 if( null != mOnShakeListener ){
                     mOnShakeListener.onShake( );

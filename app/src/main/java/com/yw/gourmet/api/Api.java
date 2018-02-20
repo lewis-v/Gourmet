@@ -210,4 +210,8 @@ public class Api {
     public Observable<BaseData> Complaint(List<MultipartBody.Part> parts){
         return service.Complaint(parts);
     }
+
+    public Observable<BaseData> Feedback(List<MultipartBody.Part> parts){
+        return service.Feedback(parts);
+    }
 }

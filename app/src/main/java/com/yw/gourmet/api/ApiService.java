@@ -184,4 +184,9 @@ public interface ApiService {
     @Multipart
     @POST("/User/Complaint")
     Observable<BaseData> Complaint(@Part List<MultipartBody.Part> parts);
+
+    //反馈
+    @Multipart
+    @POST("/User/Feedback")
+    Observable<BaseData> Feedback(@Part List<MultipartBody.Part> parts);
 }

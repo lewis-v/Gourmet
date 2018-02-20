@@ -243,16 +243,17 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
         ShakeUtils.getInstance(this).setOnShakeListener(new ShakeUtils.OnShakeListener() {
             @Override
             public void onShake() {
-                Log.e("---sha", String.valueOf(MyDialogFeedBackFragment.getInstance().isShow()));
-                if (!MyDialogFeedBackFragment.getInstance().isShow()) {
-                    new Handler(Looper.getMainLooper()).post(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (!MyDialogFeedBackFragment.getInstance().isShow()) {
-                                MyDialogFeedBackFragment.getInstance().show(getSupportFragmentManager(), "");
+                if (Constant.userData != null) {//登录后才可反馈信息
+                    if (!MyDialogFeedBackFragment.getInstance().isShow()) {
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (!MyDialogFeedBackFragment.getInstance().isShow()) {
+                                    MyDialogFeedBackFragment.getInstance().show(getSupportFragmentManager(), "");
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
                 }
             }
         });

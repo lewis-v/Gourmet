@@ -125,4 +125,6 @@
     <string name="re_get_code">重新获取验证码(60s)</string>
     <string name="send_message">发送消息</string>
     <string name="feedback_tip">填写您的意见或建议,谢谢您的大力支持</string>
+    <string name="feedback_enter">反馈</string>
+    <string name="app_error">程序出了点小问题,已告知程序员了哟~</string>
 </resources>

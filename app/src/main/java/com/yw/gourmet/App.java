@@ -1,23 +1,18 @@
 package com.yw.gourmet;
 
-import android.app.Activity;
-import android.app.Application;
+import android.app.ActivityManager;
 import android.content.Context;
-import android.os.Bundle;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.bumptech.glide.Glide;
 import com.yw.gourmet.center.MessageCenter;
-import com.yw.gourmet.dialog.MyDialogFeedBackFragment;
 import com.yw.gourmet.push.PushManager;
-import com.yw.gourmet.utils.ShakeUtils;
 
 /**
  * Created by yw on 2017/10/21.
  */
-
 public class App extends MultiDexApplication {
     private static final String TAG = "APP";
 
@@ -34,10 +29,19 @@ public class App extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         context = this;
-        //初始化百度地图
-        SDKInitializer.initialize(getApplicationContext());
-        initPush();
-        MessageCenter.getInstance().init(this);
+        int pid = android.os.Process.myPid();
+        ActivityManager manager = (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningAppProcessInfo process: manager.getRunningAppProcesses()) {
+            if(process.pid == pid)
+            {
+               if (process.processName.equals(getPackageName())){//主进程
+                   //初始化百度地图
+                   SDKInitializer.initialize(getApplicationContext());
+                   initPush();
+                   MessageCenter.getInstance().init(this);
+               }
+            }
+        }
 
     }
 
