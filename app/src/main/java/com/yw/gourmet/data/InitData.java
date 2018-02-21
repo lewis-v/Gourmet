@@ -9,6 +9,7 @@ public class InitData {
     private int area_version;
     private String flash_cover;
     private long time;
+    private String android_version;
 
     public int getArea_version() {
         return area_version;
@@ -37,12 +38,22 @@ public class InitData {
         return this;
     }
 
+    public String getAndroid_version() {
+        return android_version;
+    }
+
+    public InitData setAndroid_version(String android_version) {
+        this.android_version = android_version;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "InitData{" +
                 "area_version=" + area_version +
                 ", flash_cover='" + flash_cover + '\'' +
                 ", time=" + time +
+                ", android_version='" + android_version + '\'' +
                 '}';
     }
 }

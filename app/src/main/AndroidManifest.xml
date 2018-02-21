@@ -206,7 +206,12 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".ui.passwordChange.PasswordChangeActivity"></activity>
+        <activity android:name=".ui.passwordChange.PasswordChangeActivity" />
+
+        <service
+            android:name=".service.UpdateService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

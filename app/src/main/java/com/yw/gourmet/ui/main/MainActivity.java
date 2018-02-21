@@ -1,6 +1,7 @@
 package com.yw.gourmet.ui.main;
 
 import android.Manifest;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -16,6 +17,7 @@ import com.yw.gourmet.adapter.MyFragmentAdapter;
 import com.yw.gourmet.base.BaseActivity;
 import com.yw.gourmet.listener.MyAction;
 import com.yw.gourmet.rxbus.RxBus;
+import com.yw.gourmet.service.UpdateService;
 import com.yw.gourmet.ui.gourmet.GourmetFragment;
 import com.yw.gourmet.ui.message.MessageFragment;
 import com.yw.gourmet.ui.my.MyFragment;
@@ -83,6 +85,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         viewpager.setCurrentItem(0);
         viewpager.setPageTransformer(true,new DepthPageTransformer());
         initPermission();
+        startService(new Intent(this, UpdateService.class));
     }
 
     public void initPermission() {
