@@ -2,9 +2,12 @@ package com.yw.gourmet.service;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Icon;
 import android.os.Binder;
@@ -13,6 +16,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import com.bumptech.glide.load.Transformation;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -31,15 +35,17 @@ import com.yw.gourmet.center.event.IMessageSendEvent;
 import com.yw.gourmet.dao.data.messageData.MessageDataUtil;
 import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.data.MessageListData;
+import com.yw.gourmet.ui.chat.ChatActivity;
 import com.yw.gourmet.utils.ToastUtils;
 
 import java.util.List;
 
 import okhttp3.MultipartBody;
 
+import static com.yw.gourmet.Constant.NORMAL_PUSH_ID;
+
 public class MessageService extends Service {
     public static final String TAG = "MessageService";
-    public static final int NORMAL_PUSH_ID = 49573;
     private NotificationManager notifyManager ;
     private IMessageGet iMessageGet;
     private IMessageSendEvent iMessageSendEvent;
@@ -77,6 +83,8 @@ public class MessageService extends Service {
         Notification notification = new NotificationCompat
                 .Builder(MessageService.this,String.valueOf(NORMAL_PUSH_ID))
                 .setSmallIcon(R.mipmap.dialog_back)
+                .setContentIntent(getDefalutIntent(Notification.FLAG_AUTO_CANCEL
+                        ,messageListData.getGet_id(),messageListData.getPut_id()))
                 .setContentTitle("有一条消息发送失败")
                 .setAutoCancel(true).build();
         notifyManager.notify(NORMAL_PUSH_ID,notification);
@@ -113,6 +121,8 @@ public class MessageService extends Service {
                                     }
                                     Notification notification = new NotificationCompat
                                             .Builder(MessageService.this,String.valueOf(id))
+                                            .setContentIntent(getDefalutIntent(Notification.FLAG_AUTO_CANCEL
+                                                    ,message.getPut_id(),message.getGet_id()))
                                             .setSmallIcon(R.mipmap.dialog_back)
                                             .setLargeIcon(resource)
                                             .setContentText(message.getContent())
@@ -130,6 +140,20 @@ public class MessageService extends Service {
             MessageCenter.getInstance().addMessageHandle(iMessageGet);
         }
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    /**
+     * 点击消息
+     * @param flags
+     * @return
+     */
+    public PendingIntent getDefalutIntent(int flags,String putId,String getId){
+        Intent myintent = new Intent(this, ChatActivity.class);
+        myintent.putExtra("put_id",putId);
+        myintent.putExtra("get_id",getId);
+        Log.e("---touch",putId+getId);
+        PendingIntent pendingIntent= PendingIntent.getActivity(this, 0, myintent, flags);
+        return pendingIntent;
     }
 
     @Override
@@ -165,5 +189,11 @@ public class MessageService extends Service {
         if (rxManager != null) {
             rxManager.clear();
         }
+    }
+
+    @Override
+    public void onTaskRemoved(Intent rootIntent) {
+        super.onTaskRemoved(rootIntent);
+        notifyManager.cancelAll();
     }
 }

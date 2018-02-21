@@ -23,6 +23,10 @@ import com.yw.gourmet.listener.OnItemClickListener;
 import com.yw.gourmet.listener.OnMoreListener;
 import com.yw.gourmet.listener.OnReMarkListener;
 import com.yw.gourmet.myenum.LoadEnum;
+import com.yw.gourmet.rxbus.EventSticky;
+import com.yw.gourmet.rxbus.RxBus;
+import com.yw.gourmet.rxbus.RxBusSubscriber;
+import com.yw.gourmet.rxbus.RxSubscriptions;
 import com.yw.gourmet.ui.detail.common.CommonDetailActivity;
 import com.yw.gourmet.ui.detail.diary.DiaryDetailActivity;
 import com.yw.gourmet.ui.detail.menu.MenuDetailActivity;
@@ -34,6 +38,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.MultipartBody;
+import rx.Observable;
+import rx.Subscription;
+import rx.functions.Action1;
+import rx.functions.Func1;
 
 /**
  * Created by Administrator on 2017/10/22.
@@ -46,6 +54,7 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
     private List<ShareListData<List<String>>> listData = new ArrayList<>();
     private ShareListAdapter adapter;
     private boolean isLoadMore = false;//是否在加载更多中
+    private Subscription mRxSubSticky;
 
     /**
      * 初始化UI
@@ -205,6 +214,7 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
             builder.addFormDataPart("user_id",Constant.userData.getUser_id());
         }
         mPresenter.load(builder.build().parts(), LoadEnum.REFRESH);
+        setRxBus();
     }
 
     /**
@@ -284,6 +294,13 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
 
     @Override
     public void onRefresh() {
+       refresh();
+    }
+
+    /**
+     * 刷新
+     */
+    public void refresh(){
         MultipartBody.Builder builder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("token", Constant.userData == null?"0":Constant.userData.getToken());
@@ -291,5 +308,48 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
             builder.addFormDataPart("user_id",Constant.userData.getUser_id());
         }
         mPresenter.load(builder.build().parts(), LoadEnum.REFRESH);
+    }
+
+    public void setRxBus(){
+        if (mRxSubSticky != null && !mRxSubSticky.isUnsubscribed()) {
+            RxSubscriptions.remove(mRxSubSticky);
+        } else {
+            EventSticky s = RxBus.getDefault().getStickyEvent(EventSticky.class);
+            Log.i("FFF", "获取到StickyEvent--->" + s);
+
+            mRxSubSticky = RxBus.getDefault().toObservableSticky(EventSticky.class)
+                    .flatMap(new Func1<EventSticky, Observable<EventSticky>>() {
+                        @Override
+                        public Observable<EventSticky> call(EventSticky eventSticky) {
+                            return Observable.just(eventSticky)
+                                    .map(new Func1<EventSticky, EventSticky>() {
+                                        @Override
+                                        public EventSticky call(EventSticky eventSticky) {
+                                            // 这里模拟产生 Error
+                                            return eventSticky;
+                                        }
+                                    })
+                                    .doOnError(new Action1<Throwable>() {
+                                        @Override
+                                        public void call(Throwable throwable) {
+                                            Log.e("FFF", "onError--Sticky");
+                                        }
+                                    })
+                                    .onErrorResumeNext(Observable.<EventSticky>empty());
+                        }
+                    })
+                    .subscribe(new RxBusSubscriber<EventSticky>() {
+                        @Override
+                        protected void onEvent(EventSticky eventSticky) {
+                            Log.i("FFF", "onNext--Sticky-->" + eventSticky.event);
+                            switch (eventSticky.event){
+                                case "out":
+                                   refresh();
+                                    break;
+                            }
+                        }
+                    });
+            RxSubscriptions.add(mRxSubSticky);
+        }
     }
 }

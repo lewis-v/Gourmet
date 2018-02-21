@@ -127,4 +127,5 @@
     <string name="feedback_tip">填写您的意见或建议,谢谢您的大力支持</string>
     <string name="feedback_enter">反馈</string>
     <string name="app_error">程序出了点小问题,已告知程序员了哟~</string>
+    <string name="update_notification_tip">下载更新中.....</string>
 </resources>

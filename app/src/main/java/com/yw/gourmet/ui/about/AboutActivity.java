@@ -56,7 +56,6 @@ public class AboutActivity extends BaseActivity<AboutPresenter> implements About
                     @Override
                     public void OnEnter(String Tag) {
                         Intent intent = new Intent(AboutActivity.this, UpdateService.class);
-                        intent.putExtra("downloadUpdate",true);
                         startService(intent);
                     }
                 }).setShowText("有新版本是否更新?").setTextEnter("更新").show(getSupportFragmentManager(),"downloadUpdate");

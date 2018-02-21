@@ -2,6 +2,8 @@ package com.yw.gourmet.ui.main;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -15,14 +17,19 @@ import android.widget.LinearLayout;
 import com.yw.gourmet.R;
 import com.yw.gourmet.adapter.MyFragmentAdapter;
 import com.yw.gourmet.base.BaseActivity;
+import com.yw.gourmet.data.BaseData;
+import com.yw.gourmet.data.InitData;
+import com.yw.gourmet.dialog.MyDialogTipFragment;
 import com.yw.gourmet.listener.MyAction;
 import com.yw.gourmet.rxbus.RxBus;
 import com.yw.gourmet.service.UpdateService;
+import com.yw.gourmet.ui.about.AboutActivity;
 import com.yw.gourmet.ui.gourmet.GourmetFragment;
 import com.yw.gourmet.ui.message.MessageFragment;
 import com.yw.gourmet.ui.my.MyFragment;
 import com.yw.gourmet.ui.search.SearchFragment;
 import com.yw.gourmet.utils.DisplayUtils;
+import com.yw.gourmet.utils.ToastUtils;
 import com.yw.gourmet.utils.WindowUtil;
 import com.yw.gourmet.widget.DepthPageTransformer;
 import com.yw.gourmet.widget.MyViewPager;
@@ -85,7 +92,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         viewpager.setCurrentItem(0);
         viewpager.setPageTransformer(true,new DepthPageTransformer());
         initPermission();
-        startService(new Intent(this, UpdateService.class));
+        mPresenter.getVersion();
     }
 
     public void initPermission() {
@@ -245,6 +252,29 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         }).commit();
 
     }
+
+    @Override
+    public void onGetVersionSuccess(BaseData<InitData> model) {
+        PackageInfo packageInfo = null;
+        try {
+            packageInfo = getApplicationContext()
+                    .getPackageManager()
+                    .getPackageInfo(getPackageName(), 0);
+            String localVersion = packageInfo.versionName;
+            if (!localVersion.equals(model.getData().getAndroid_version())){
+                new MyDialogTipFragment().setOnEnterListener(new MyDialogTipFragment.OnEnterListener() {
+                    @Override
+                    public void OnEnter(String Tag) {
+                        Intent intent = new Intent(MainActivity.this, UpdateService.class);
+                        startService(intent);
+                    }
+                }).setShowText("有新版本是否更新?").setTextEnter("更新").show(getSupportFragmentManager(),"downloadUpdate");
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     @Override
     protected void onResume() {

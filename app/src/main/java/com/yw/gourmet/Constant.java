@@ -33,4 +33,9 @@ public class Constant {
     public static long serviceTime = 0;
 
     public final static String COUNTRY_CODE ="86";//国家手机号码,目前仅支持86中国
+
+    //推送默认id
+    public static final int NORMAL_PUSH_ID = 49573;
+    //更新id
+    public static final int UPDATE_ID = 34974;
 }

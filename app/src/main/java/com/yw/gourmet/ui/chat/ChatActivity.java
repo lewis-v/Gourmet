@@ -277,8 +277,8 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
         recycler_chat.scrollToPosition(listData.size() - 1);
         MultipartBody.Builder builder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                .addFormDataPart("put_id",get_id)
-                .addFormDataPart("get_id",put_id);//此处的接收者和发送者位置对换,因为要设置我接受的信息已读
+                .addFormDataPart("put_id",get_id.equals(Constant.userData.getUser_id())?put_id:get_id)
+                .addFormDataPart("get_id",Constant.userData.getUser_id());
         mPresenter.setMessageRead(builder.build().parts());
     }
 
