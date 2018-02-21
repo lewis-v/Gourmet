@@ -10,6 +10,7 @@ public class InitData {
     private String flash_cover;
     private long time;
     private String android_version;
+    private String update_path;
 
     public int getArea_version() {
         return area_version;
@@ -47,6 +48,15 @@ public class InitData {
         return this;
     }
 
+    public String getUpdatePath() {
+        return update_path;
+    }
+
+    public InitData setUpdatePath(String updatePath) {
+        this.update_path = updatePath;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "InitData{" +
@@ -54,6 +64,7 @@ public class InitData {
                 ", flash_cover='" + flash_cover + '\'' +
                 ", time=" + time +
                 ", android_version='" + android_version + '\'' +
+                ", updatePath='" + update_path + '\'' +
                 '}';
     }
 }

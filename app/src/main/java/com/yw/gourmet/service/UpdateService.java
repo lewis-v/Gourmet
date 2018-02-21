@@ -4,21 +4,32 @@ import android.app.Service;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.PixelFormat;
 import android.os.IBinder;
-import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
+import com.yw.gourmet.R;
 import com.yw.gourmet.api.Api;
 import com.yw.gourmet.base.rx.RxApiCallback;
 import com.yw.gourmet.base.rx.RxSubscriberCallBack;
 import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.data.InitData;
 import com.yw.gourmet.utils.ToastUtils;
+import com.yw.gourmet.utils.WindowUtil;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class UpdateService extends Service {
     public InitData initData;
+    private WindowManager.LayoutParams layoutParams;
+    private WindowManager windowManager;
+    private RelativeLayout window;
 
     public UpdateService() {
     }
@@ -52,14 +63,13 @@ public class UpdateService extends Service {
                                     .getPackageManager()
                                     .getPackageInfo(getPackageName(), 0);
                             String localVersion = packageInfo.versionName;
-                            Log.e("---version",localVersion);
                             if (localVersion.equals(initData.getAndroid_version())){
                                 //最新版本
                             }else {
-                                if (intent.getBooleanExtra("update",false)){//直接更新
-
+                                if (intent.getBooleanExtra("downloadUpdate",false)){//直接更新
+                                    downloadUpdate(initData.getUpdatePath());
                                 }else {
-                                    //todo 提示是否要更新
+                                    showUpdateTip(initData);
                                 }
                             }
                         } catch (PackageManager.NameNotFoundException e) {
@@ -78,7 +88,47 @@ public class UpdateService extends Service {
      * 提示需要更新
      * @param initData
      */
-    public void showUpdateTip(InitData initData){
+    public void showUpdateTip(final InitData initData){
+        layoutParams = new WindowManager.LayoutParams();
+        windowManager = (WindowManager)getApplicationContext()
+                .getSystemService(WINDOW_SERVICE);
+        layoutParams.type = WindowManager.LayoutParams.TYPE_TOAST ;
+        layoutParams.format = PixelFormat.RGBA_8888;
+        layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+
+        layoutParams.width = WindowUtil.width;
+        layoutParams.height = WindowUtil.height;
+        LayoutInflater inflater = LayoutInflater.from(this);
+        window = (RelativeLayout) inflater.inflate(R.layout.fragment_my_dialog_tip,null);
+        RelativeLayout rl = (RelativeLayout) window.findViewById(R.id.rl);
+        rl.setGravity(Gravity.CENTER);
+        TextView tv_enter = window.findViewById(R.id.tv_enter);
+        TextView tv_cancel = window.findViewById(R.id.tv_cancel);
+        tv_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //取消
+                windowManager.removeViewImmediate(window);
+            }
+        });
+        tv_enter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //更新
+                windowManager.removeViewImmediate(window);
+                downloadUpdate(initData.getUpdatePath());
+            }
+        });
+        windowManager.addView(window,layoutParams);
+        window.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+                , View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+    }
+
+    /**
+     * 下载更新程序
+     * @param path
+     */
+    public void downloadUpdate(String path){
 
     }
 }
