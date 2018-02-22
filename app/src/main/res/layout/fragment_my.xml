@@ -312,7 +312,8 @@
                 android:layout_height="wrap_content">
                 <ImageView
                     android:layout_marginRight="10dp"
-                    android:src="@mipmap/my_good"
+                    android:background="@drawable/reject_back"
+                    android:src="@drawable/reject"
                     android:layout_width="30dp"
                     android:layout_height="30dp" />
                 <TextView

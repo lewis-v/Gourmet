@@ -14,6 +14,7 @@ import com.yw.gourmet.R;
 import com.yw.gourmet.base.BaseFragment;
 import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.data.FlowData;
+import com.yw.gourmet.data.HotSearch;
 import com.yw.gourmet.ui.search.keySearch.KeySearchActivity;
 import com.yw.gourmet.utils.BDUtil;
 import com.yw.gourmet.utils.ToastUtils;
@@ -76,6 +77,7 @@ public class SearchFragment extends BaseFragment<SearchPresenter> implements Sea
 
     }
 
+
     /**
      * 设置布局文件
      */
@@ -113,6 +115,7 @@ public class SearchFragment extends BaseFragment<SearchPresenter> implements Sea
     public void onResume() {
         super.onResume();
         flow_view.resume();
+        mPresenter.getHotSearch();
     }
 
     @Override
@@ -139,5 +142,10 @@ public class SearchFragment extends BaseFragment<SearchPresenter> implements Sea
                 }
             }).start(getContext(),true);
         }
+    }
+
+    @Override
+    public void onGetHotSearchSuccess(BaseData<List<HotSearch>> model) {
+        tv_search.setText(model.getData().get(0).getTitle());
     }
 }

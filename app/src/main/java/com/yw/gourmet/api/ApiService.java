@@ -4,6 +4,7 @@ package com.yw.gourmet.api;
 import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.data.CommentData;
 import com.yw.gourmet.data.FlowData;
+import com.yw.gourmet.data.HotSearch;
 import com.yw.gourmet.data.InitData;
 import com.yw.gourmet.data.MenuDetailData;
 import com.yw.gourmet.data.MenuPracticeData;
@@ -189,4 +190,23 @@ public interface ApiService {
     @Multipart
     @POST("/User/Feedback")
     Observable<BaseData> Feedback(@Part List<MultipartBody.Part> parts);
+
+    //申诉
+    @Multipart
+    @POST("/User/Appeal")
+    Observable<BaseData> Appeal(@Part List<MultipartBody.Part> parts);
+
+    //获取被拒绝分享
+    @Multipart
+    @POST("/ShareList/Reject")
+    Observable<BaseData<List<ShareListData<List<String>>>>> GetReject(@Part List<MultipartBody.Part> parts);
+
+    //删除被拒绝分享
+    @Multipart
+    @POST("/Reject/Delete")
+    Observable<BaseData> RejectDelete(@Part List<MultipartBody.Part> parts);
+
+    //获取热搜
+    @GET("/HotSearch/Get")
+    Observable<BaseData<List<HotSearch>>> GetHotSearch();
 }

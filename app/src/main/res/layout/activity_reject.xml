@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
+    android:background="@android:color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.yw.gourmet.ui.reject.RejectActivity">
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         app:contentInsetStart="0dp"
-        android:background="@android:color/white"
         android:layout_width="match_parent"
         android:layout_height="40dp">
         <RelativeLayout
@@ -19,7 +19,7 @@
             <TextView
                 android:gravity="center"
                 android:textSize="16sp"
-                android:text="@string/my_top"
+                android:text="@string/reject_share"
                 android:textColor="@color/word_black"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
@@ -31,6 +31,7 @@
                 android:layout_height="40dp" />
             <TextView
                 android:id="@+id/tv_clear"
+                android:background="@drawable/ll_back_change"
                 android:text="@string/clear_all"
                 android:gravity="center"
                 android:textColor="@color/close"
@@ -45,25 +46,34 @@
         android:background="@mipmap/dev"
         android:layout_width="match_parent"
         android:layout_height="1dp"/>
-
-    <com.aspsine.swipetoloadlayout.SwipeToLoadLayout
-        android:id="@+id/swipeToLoadLayout"
+    <RelativeLayout
+        android:background="@color/ui_back"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <com.yw.gourmet.swipAnim.RefreshHeaderView
-            android:id="@+id/swipe_refresh_header"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <com.aspsine.swipetoloadlayout.SwipeToLoadLayout
+            android:id="@+id/swipeToLoadLayout"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:gravity="center"/>
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/swipe_target"
-            android:gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <com.yw.gourmet.swipAnim.LoadMoreFooterView
-            android:id="@+id/swipe_load_more_footer"
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:gravity="center"/>
-    </com.aspsine.swipetoloadlayout.SwipeToLoadLayout>
+            android:layout_height="wrap_content">
+            <com.yw.gourmet.swipAnim.RefreshHeaderView
+                android:id="@+id/swipe_refresh_header"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:gravity="center"/>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/swipe_target"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <com.yw.gourmet.swipAnim.LoadMoreFooterView
+                android:id="@+id/swipe_load_more_footer"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:gravity="center"/>
+        </com.aspsine.swipetoloadlayout.SwipeToLoadLayout>
+
+        <include
+            layout="@layout/layout_nothing"/>
+    </RelativeLayout>
+
 </LinearLayout>

@@ -107,15 +107,15 @@
                     android:id="@+id/ll_img"
                     android:gravity="center"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp">
+                    android:layout_height="200dp"
+                    android:layout_margin="10dp">
 
                     <ImageView
                         android:id="@+id/img_share"
                         android:scaleType="fitCenter"
                         android:layout_width="match_parent"
-                        android:layout_height="200dp"
-                        android:layout_gravity="center"
-                        android:layout_margin="10dp" />
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center" />
                 </LinearLayout>
 
 

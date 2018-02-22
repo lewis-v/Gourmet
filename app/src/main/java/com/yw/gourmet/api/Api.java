@@ -5,6 +5,7 @@ import com.yw.gourmet.Constant;
 import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.data.CommentData;
 import com.yw.gourmet.data.FlowData;
+import com.yw.gourmet.data.HotSearch;
 import com.yw.gourmet.data.InitData;
 import com.yw.gourmet.data.MenuDetailData;
 import com.yw.gourmet.data.MenuPracticeData;
@@ -216,4 +217,21 @@ public class Api {
     public Observable<BaseData> Feedback(List<MultipartBody.Part> parts){
         return service.Feedback(parts);
     }
+
+    public Observable<BaseData> Appeal(List<MultipartBody.Part> parts){
+        return service.Appeal(parts);
+    }
+
+    public Observable<BaseData<List<ShareListData<List<String>>>>> GetReject(List<MultipartBody.Part> parts){
+        return service.GetReject(parts);
+    }
+
+    public  Observable<BaseData> RejectDelete(List<MultipartBody.Part> parts){
+        return service.RejectDelete(parts);
+    }
+
+    public Observable<BaseData<List<HotSearch>>> GetHotSearch(){
+        return service.GetHotSearch();
+    }
+
 }

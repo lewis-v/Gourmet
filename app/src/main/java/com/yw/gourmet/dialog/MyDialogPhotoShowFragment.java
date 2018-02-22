@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.github.chrisbanes.photoview.PhotoView;
+import com.yw.gourmet.GlideApp;
 import com.yw.gourmet.R;
 import com.yw.gourmet.adapter.MyImgViewPagerAdapter;
 import com.yw.gourmet.base.BaseDialogFragment;
@@ -62,7 +63,7 @@ public class MyDialogPhotoShowFragment extends BaseDialogFragment implements Vie
         if (imgString != null && imgString.size()>0){
             for (String path : imgString){
                 PhotoView photoView = new PhotoView(getContext());
-                Glide.with(this).load(path).into(photoView);
+                GlideApp.with(this).load(path).error(R.mipmap.load_fail).into(photoView);
                 photoView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

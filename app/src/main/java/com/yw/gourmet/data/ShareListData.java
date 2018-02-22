@@ -28,6 +28,7 @@ public class ShareListData<T> {
     private String good_act;//点赞情况,1/0,空则没有
     private String is_comment;//是否评论,长度大于0则评论
     private String user_id;//发布者id
+    private String cause;//被拒绝原因
 
     public String getId() {
         return id;
@@ -236,6 +237,15 @@ public class ShareListData<T> {
         return this;
     }
 
+    public String getCause() {
+        return cause;
+    }
+
+    public ShareListData setCause(String cause) {
+        this.cause = cause;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "ShareListData{" +
@@ -262,6 +272,7 @@ public class ShareListData<T> {
                 ", good_act='" + good_act + '\'' +
                 ", is_comment='" + is_comment + '\'' +
                 ", user_id='" + user_id + '\'' +
+                ", cause='" + cause + '\'' +
                 '}';
     }
 }

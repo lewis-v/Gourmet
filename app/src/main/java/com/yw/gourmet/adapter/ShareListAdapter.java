@@ -92,7 +92,7 @@ public class ShareListAdapter extends RecyclerView.Adapter<ShareListAdapter.MyVi
         if (position == listData.size()){
             holder.constraint_item.setVisibility(View.GONE);
             holder.tv_bottom.setVisibility(View.VISIBLE);
-            if (isEnd) {
+            if (isEnd && listData.size() > 0) {
                 holder.tv_bottom.setText(R.string.is_end);
             }else{
                 holder.tv_bottom.setText("");

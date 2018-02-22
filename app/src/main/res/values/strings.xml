@@ -130,4 +130,6 @@
     <string name="update_notification_tip">下载更新中.....</string>
     <string name="reject_share">被拒绝分享</string>
     <string name="clear_all">清空</string>
+    <string name="appeal">申诉</string>
+    <string name="appeal_cause">申诉原因</string>
 </resources>
