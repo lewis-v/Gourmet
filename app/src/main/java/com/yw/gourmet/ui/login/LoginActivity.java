@@ -12,6 +12,7 @@ import com.yw.gourmet.base.BaseActivity;
 import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.data.UserData;
 import com.yw.gourmet.push.PushManager;
+import com.yw.gourmet.utils.SHA;
 import com.yw.gourmet.utils.SPUtils;
 import com.yw.gourmet.utils.ToastUtils;
 import com.yw.gourmet.widget.GlideCircleTransform;
@@ -58,7 +59,7 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
                     MultipartBody.Builder builder = new MultipartBody.Builder()
                             .setType(MultipartBody.FORM)
                             .addFormDataPart("id", et_id.getText().toString())
-                            .addFormDataPart("password", et_password.getText().toString());
+                            .addFormDataPart("password", SHA.encryptToSHA(et_password.getText().toString()));
                     mPresenter.login(builder.build().parts());
                 }
                 break;

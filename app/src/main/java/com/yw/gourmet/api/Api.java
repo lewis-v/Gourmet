@@ -13,6 +13,7 @@ import com.yw.gourmet.data.RaidersDetailData;
 import com.yw.gourmet.data.RaidersListData;
 import com.yw.gourmet.data.ShareListData;
 import com.yw.gourmet.data.UserData;
+import com.yw.gourmet.utils.MD5;
 
 import java.io.IOException;
 import java.util.List;
@@ -35,7 +36,7 @@ import rx.Observable;
  */
 
 public class Api {
-    public final static String API_BASE_URL = "http://39.108.236.30:47423";//这里是服务器连接的接口的固定部分 39.108.236.30
+    public final static String API_BASE_URL = "http://192.168.80.114:47423";//这里是服务器连接的接口的固定部分 39.108.236.30
     public static Api instance;//单例
     private ApiService service;//声明apiservier,下面要通过这个调用与服务器交互的方法
     private OkHttpClient okHttpClient;
@@ -45,11 +46,12 @@ public class Api {
         @Override
         public Response intercept(Chain chain) throws IOException {
             Request original = chain.request();
-            String head = "head";//头部
+            String time = String.valueOf(System.currentTimeMillis()+ Constant.serviceTime);//时间戳
+            String head = MD5.getMd5("head:"+time);//头部
             //这里添加头部,这里可以用addHeader来添加多个头部,如果使用header方法就只能添加一个头部
             Request.Builder requestBuilder = original.newBuilder()//添加头部信息
                     .addHeader("head", head)
-                    .addHeader("time",String.valueOf(System.currentTimeMillis()+ Constant.serviceTime));
+                    .addHeader("time",time);
             Request request = requestBuilder.build();//用设置好的requestBuilder建立一个新的request
             return chain.proceed(request);
         }

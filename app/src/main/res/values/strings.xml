@@ -128,4 +128,6 @@
     <string name="feedback_enter">反馈</string>
     <string name="app_error">程序出了点小问题,已告知程序员了哟~</string>
     <string name="update_notification_tip">下载更新中.....</string>
+    <string name="reject_share">被拒绝分享</string>
+    <string name="clear_all">清空</string>
 </resources>

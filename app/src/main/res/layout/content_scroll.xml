@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="50dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.yw.gourmet.ui.personal.PersonalActivity"
     tools:showIn="@layout/activity_personal">
@@ -208,7 +207,7 @@
         </LinearLayout>
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_top"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="70dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
         <include

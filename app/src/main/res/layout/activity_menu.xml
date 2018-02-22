@@ -81,6 +81,7 @@
                 android:layout_height="wrap_content" />
             <TextView
                 android:id="@+id/tv_power"
+                android:visibility="gone"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintLeft_toRightOf="@+id/et_title"
                 app:layout_constraintRight_toRightOf="parent"
