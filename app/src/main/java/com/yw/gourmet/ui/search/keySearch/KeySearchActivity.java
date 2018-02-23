@@ -106,6 +106,7 @@ public class KeySearchActivity extends BaseActivity<KeySearchPresenter> implemen
                         ToastUtils.showSingleToast("请输入搜索关键字");
                     }else {
                         MultipartBody.Builder builder = new MultipartBody.Builder()
+                                .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                                 .setType(MultipartBody.FORM)
                                 .addFormDataPart("key",et_search.getText().toString());
                         if (Constant.userData != null){
@@ -241,6 +242,7 @@ public class KeySearchActivity extends BaseActivity<KeySearchPresenter> implemen
                 }else {
                     setLoadDialog(true);
                     MultipartBody.Builder builder = new MultipartBody.Builder()
+                            .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                             .setType(MultipartBody.FORM)
                             .addFormDataPart("id", Constant.userData.getUser_id())
                             .addFormDataPart("type",shareListData.get(position).getType()+"")
@@ -257,6 +259,7 @@ public class KeySearchActivity extends BaseActivity<KeySearchPresenter> implemen
                 }else {
                     setLoadDialog(true);
                     MultipartBody.Builder builder = new MultipartBody.Builder()
+                            .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                             .setType(MultipartBody.FORM)
                             .addFormDataPart("id", Constant.userData.getUser_id())
                             .addFormDataPart("type",shareListData.get(position).getType()+"")

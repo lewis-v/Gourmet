@@ -240,6 +240,8 @@ public class CommonShareActivity extends BaseActivity<CommonSharePresenter> impl
                                                 }
                                             }
                                             MultipartBody.Builder builder = new MultipartBody.Builder()
+                                                    .setType(MultipartBody.FORM)
+                                                    .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                                                     .addFormDataPart("id",Constant.userData.getUser_id())
                                                     .addFormDataPart("status",String.valueOf(status));
                                             if (et_content.getText().toString().trim().length() != 0){
@@ -310,6 +312,7 @@ public class CommonShareActivity extends BaseActivity<CommonSharePresenter> impl
                                 isUpLoad = true;
                                 mPresenter.upImg(new MultipartBody.Builder()
                                         .setType(MultipartBody.FORM)
+                                        .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                                         .addFormDataPart("id", Constant.userData.getUser_id())
                                         .addFormDataPart("path", file.getName(), RequestBody.create(MediaType.parse("multipart/form-data"), file))
                                         .build().parts(), position);

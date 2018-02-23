@@ -23,6 +23,9 @@ public class PasswordChangePresenter extends PasswordChangeContract.Presenter {
             @Override
             public void onSuccess(BaseData<UserData> model) {
                 mView.setLoadDialog(false);
+                if (isReLoginFail(model)){
+                    return;
+                }
                 if (model.getStatus() == 0){
                     mView.onChangeSuccess(model);
                 }else if (model.getStatus() == 1){

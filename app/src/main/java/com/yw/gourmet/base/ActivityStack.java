@@ -32,6 +32,22 @@ public class ActivityStack {
         }
     }
 
+    /**
+     * 任务栈长度
+     * @return
+     */
+    public int stackSize(){
+        return mActivityStack.size();
+    }
+
+    /**
+     * 获取栈顶activity
+     * @return
+     */
+    public Activity getTopActivity(){
+        return mActivityStack.get(0);
+    }
+
     // 将当前Activity推入栈中
     public void pushActivity(Activity activity) {
         mActivityStack.add(activity);

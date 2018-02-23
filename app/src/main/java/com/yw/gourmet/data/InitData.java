@@ -11,6 +11,7 @@ public class InitData {
     private long time;
     private String android_version;
     private String update_path;
+    private String update_content;
 
     public int getArea_version() {
         return area_version;
@@ -57,6 +58,15 @@ public class InitData {
         return this;
     }
 
+    public String getUpdate_content() {
+        return update_content;
+    }
+
+    public InitData setUpdate_content(String update_content) {
+        this.update_content = update_content;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "InitData{" +
@@ -64,7 +74,8 @@ public class InitData {
                 ", flash_cover='" + flash_cover + '\'' +
                 ", time=" + time +
                 ", android_version='" + android_version + '\'' +
-                ", updatePath='" + update_path + '\'' +
+                ", update_path='" + update_path + '\'' +
+                ", update_content='" + update_content + '\'' +
                 '}';
     }
 }

@@ -61,6 +61,7 @@ public class MyKeyStoreFactory implements ReportSender {
         content = content + "------------end-----------------\n";
         final MultipartBody.Builder requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
+                .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                 .addFormDataPart("content",content)
                 .addFormDataPart("time",String.valueOf(System.currentTimeMillis()+ Constant.serviceTime));
         if (Constant.userData != null){

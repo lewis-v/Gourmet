@@ -19,6 +19,9 @@ public class DiaryPresenter extends DiaryContract.Presenter {
         mRxManager.add(Api.getInstance().UpImg(parts),new RxSubscriberCallBack<BaseData<String>>(new RxApiCallback<BaseData<String>>() {
             @Override
             public void onSuccess(BaseData<String> model) {
+                if (isReLoginFail(model)){
+                    return;
+                }
                 if (model.getStatus() == 0) {
                     mView.onUpImgSuccess(model);
                 }else if (model.getStatus() == 1){
@@ -38,6 +41,9 @@ public class DiaryPresenter extends DiaryContract.Presenter {
         mRxManager.add(Api.getInstance().ShareDiary(parts),new RxSubscriberCallBack<BaseData>(new RxApiCallback<BaseData>() {
             @Override
             public void onSuccess(BaseData model) {
+                if (isReLoginFail(model)){
+                    return;
+                }
                 if (model.getStatus() == 0){
                     mView.onPutSuccess(model);
                 }else if (model.getStatus() == 1){

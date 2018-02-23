@@ -209,6 +209,7 @@ public class DiaryActivity extends BaseActivity<DiaryPresenter> implements View.
                         MultipartBody.Builder builder = new MultipartBody.Builder()
                                 .setType(MultipartBody.FORM)
                                 .addFormDataPart("id",Constant.userData.getUser_id())
+                                .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                                 .addFormDataPart("time",tv_time.getText().toString())
                                 .addFormDataPart("title",et_title.getText().toString())
                                 .addFormDataPart("content",content)
@@ -316,6 +317,7 @@ public class DiaryActivity extends BaseActivity<DiaryPresenter> implements View.
                     public void accept(File file) throws Exception {
                         MultipartBody.Builder builder = new MultipartBody.Builder()
                                 .setType(MultipartBody.FORM)
+                                .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                                 .addFormDataPart("id",Constant.userData.getUser_id())
                                 .addFormDataPart("path",file.getName(), RequestBody.create(MediaType.parse("multipart/form-data"),file));
                         mPresenter.upImg(builder.build().parts());

@@ -20,6 +20,9 @@ public class LoginPresenter extends LoginContract.Presenter{
         mRxManager.add(Api.getInstance().Login(parts),new RxSubscriberCallBack<BaseData<UserData>>(new RxApiCallback<BaseData<UserData>>() {
             @Override
             public void onSuccess(BaseData<UserData> model) {
+                if (isReLoginFail(model)){
+                    return;
+                }
                 if (model.getStatus() == 1){
                     mView.onFail(model.getMessage());
                 }else if (model.getStatus() == 0){

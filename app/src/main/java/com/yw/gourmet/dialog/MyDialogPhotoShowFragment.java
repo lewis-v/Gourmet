@@ -63,7 +63,8 @@ public class MyDialogPhotoShowFragment extends BaseDialogFragment implements Vie
         if (imgString != null && imgString.size()>0){
             for (String path : imgString){
                 PhotoView photoView = new PhotoView(getContext());
-                GlideApp.with(this).load(path).error(R.mipmap.load_fail).into(photoView);
+                GlideApp.with(this).load(path).error(R.mipmap.load_fail)
+                        .placeholder(R.mipmap.loading).into(photoView);
                 photoView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

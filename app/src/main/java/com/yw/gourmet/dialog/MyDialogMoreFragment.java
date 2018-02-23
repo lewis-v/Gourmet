@@ -97,6 +97,7 @@ public class MyDialogMoreFragment extends BaseDialogFragment<MyDIalogPresenter>
                 }
                 MultipartBody.Builder builder = new MultipartBody.Builder()
                         .setType(MultipartBody.FORM)
+                        .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                         .addFormDataPart("act",isCollected?"-1":"1")
                         .addFormDataPart("act_id",id)
                         .addFormDataPart("type",String.valueOf(type))

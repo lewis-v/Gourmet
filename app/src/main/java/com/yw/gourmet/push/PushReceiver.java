@@ -12,6 +12,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.yw.gourmet.center.MessageCenter;
 import com.yw.gourmet.data.MessageListData;
+import com.yw.gourmet.ui.flash.FlashActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -61,9 +62,9 @@ public class PushReceiver extends BroadcastReceiver {
 
             } else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent.getAction())) {
                 Log.d(TAG, "[MyReceiver] 用户点击打开了通知");
-                Intent intent1 = new Intent();
+                Intent intent1 = new Intent(Intent.ACTION_MAIN);
                 intent1.addCategory(Intent.CATEGORY_LAUNCHER);
-                intent1.setAction(Intent.ACTION_MAIN);
+                intent1.setClass(context, FlashActivity.class);
                 intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
                 context.startActivity(intent1);
             } else if (JPushInterface.ACTION_RICHPUSH_CALLBACK.equals(intent.getAction())) {

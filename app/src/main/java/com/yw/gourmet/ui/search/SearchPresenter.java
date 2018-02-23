@@ -20,6 +20,9 @@ public class SearchPresenter extends SearchContract.Presenter {
         mRxManager.add(Api.getInstance().GetFlow(),new RxSubscriberCallBack<BaseData<List<FlowData>>>(new RxApiCallback<BaseData<List<FlowData>>>() {
             @Override
             public void onSuccess(BaseData<List<FlowData>> model) {
+                if (isReLoginFail(model)){
+                    return;
+                }
                 if (model.getStatus() == 0){
                     mView.onGetFlowSuccess(model);
                 }else {
@@ -39,6 +42,9 @@ public class SearchPresenter extends SearchContract.Presenter {
         mRxManager.add(Api.getInstance().GetHotSearch(),new RxSubscriberCallBack<BaseData<List<HotSearch>>>(new RxApiCallback<BaseData<List<HotSearch>>>() {
             @Override
             public void onSuccess(BaseData<List<HotSearch>> model) {
+                if (isReLoginFail(model)){
+                    return;
+                }
                 if (model.getStatus() == 0){
                     mView.onGetHotSearchSuccess(model);
                 }else {

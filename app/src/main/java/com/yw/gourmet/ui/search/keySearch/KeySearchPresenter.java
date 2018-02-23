@@ -21,6 +21,9 @@ public class KeySearchPresenter extends KeySearchContract.Presenter {
         mRxManager.add(Api.getInstance().Search(parts),new RxSubscriberCallBack<BaseData<List<ShareListData<List<String>>>>>(new RxApiCallback<BaseData<List<ShareListData<List<String>>>>>() {
             @Override
             public void onSuccess(BaseData<List<ShareListData<List<String>>>> model) {
+                if (isReLoginFail(model)){
+                    return;
+                }
                 if (model.getStatus() == 0){
                     mView.onSearchSuccess(model);
                 }else {
@@ -40,6 +43,9 @@ public class KeySearchPresenter extends KeySearchContract.Presenter {
         mRxManager.add(Api.getInstance().Search(parts),new RxSubscriberCallBack<BaseData<List<ShareListData<List<String>>>>>(new RxApiCallback<BaseData<List<ShareListData<List<String>>>>>() {
             @Override
             public void onSuccess(BaseData<List<ShareListData<List<String>>>> model) {
+                if (isReLoginFail(model)){
+                    return;
+                }
                 if (model.getStatus() == 0){
                     mView.onSearchUserSuccess(model);
                 }else {
@@ -60,6 +66,9 @@ public class KeySearchPresenter extends KeySearchContract.Presenter {
         mRxManager.add(Api.getInstance().PutReMark(parts),new RxSubscriberCallBack<BaseData<ShareListData<List<String>>>>(new RxApiCallback<BaseData<ShareListData<List<String>>>>() {
             @Override
             public void onSuccess(BaseData<ShareListData<List<String>>> model) {
+                if (isReLoginFail(model)){
+                    return;
+                }
                 if (model.getStatus() == 0){
                     mView.onReMarkSuccess(model,position);
                 }else if (model.getStatus() == 1){

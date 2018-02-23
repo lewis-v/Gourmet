@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -249,6 +250,10 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
                             @Override
                             public void run() {
                                 if (!MyDialogFeedBackFragment.getInstance().isShow()) {
+                                    Vibrator vibrator = (Vibrator)getSystemService(VIBRATOR_SERVICE);
+                                    if (vibrator != null) {
+                                        vibrator.vibrate(500);
+                                    }
                                     MyDialogFeedBackFragment.getInstance().show(getSupportFragmentManager(), "");
                                 }
                             }

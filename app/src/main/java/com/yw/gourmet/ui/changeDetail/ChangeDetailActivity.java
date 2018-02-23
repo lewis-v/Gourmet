@@ -103,6 +103,7 @@ public class ChangeDetailActivity extends BaseActivity<ChangeDetailPresenter> im
     public void onUpSuccess(BaseData<String> model) {
         mPresenter.changeDetail(new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
+                .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                 .addFormDataPart("id",Constant.userData.getUser_id())
                 .addFormDataPart("img_header",model.getData()).build().parts());
     }
@@ -135,6 +136,7 @@ public class ChangeDetailActivity extends BaseActivity<ChangeDetailPresenter> im
                     public void onChoose(int position, String tag) {
                         MultipartBody.Builder builder = new MultipartBody.Builder()
                                 .setType(MultipartBody.FORM)
+                                .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                                 .addFormDataPart("id",Constant.userData.getUser_id())
                                 .addFormDataPart("sex",listSex.get(position));
                         mPresenter.changeDetail(builder.build().parts());
@@ -150,6 +152,7 @@ public class ChangeDetailActivity extends BaseActivity<ChangeDetailPresenter> im
                             public void onChoose(int position, String tag) {
                                 MultipartBody.Builder builder = new MultipartBody.Builder()
                                         .setType(MultipartBody.FORM)
+                                        .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                                         .addFormDataPart("id",Constant.userData.getUser_id())
                                         .addFormDataPart("address",Constant.areaList.get(position));
                                 mPresenter.changeDetail(builder.build().parts());
@@ -174,12 +177,14 @@ public class ChangeDetailActivity extends BaseActivity<ChangeDetailPresenter> im
             case "nickname":
                 mPresenter.changeDetail(new MultipartBody.Builder()
                         .setType(MultipartBody.FORM)
+                        .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                         .addFormDataPart("id",Constant.userData.getUser_id())
                         .addFormDataPart("nickname",edit).build().parts());
                 break;
             case "introduction":
                 mPresenter.changeDetail(new MultipartBody.Builder()
                         .setType(MultipartBody.FORM)
+                        .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                         .addFormDataPart("id",Constant.userData.getUser_id())
                         .addFormDataPart("introduction",edit).build().parts());
                 break;
@@ -198,6 +203,7 @@ public class ChangeDetailActivity extends BaseActivity<ChangeDetailPresenter> im
                         RequestBody imageBody = RequestBody.create(MediaType.parse("multipart/form-data"), file);
                         MultipartBody.Builder builder = new MultipartBody.Builder()
                                 .setType(MultipartBody.FORM)
+                                .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                                 .addFormDataPart("id",Constant.userData.getUser_id())
                                 .addFormDataPart("path",file.getName(),imageBody);
                         mPresenter.upImg(builder.build().parts());
@@ -217,6 +223,7 @@ public class ChangeDetailActivity extends BaseActivity<ChangeDetailPresenter> im
 //                        Log.i("---length---",file.length()+"");
 //                        MultipartBody.Builder builder = new MultipartBody.Builder()
 //                                .setType(MultipartBody.FORM)
+//                .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
 //                                .addFormDataPart("id",Constant.userData.getUser_id())
 //                                .addFormDataPart("path",file.getName(), RequestBody.create(MediaType.parse("multipart/form-data"), file));
 //                        mPresenter.upImg(builder.build().parts());

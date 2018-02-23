@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.TextView;
 
+import com.yw.gourmet.Constant;
 import com.yw.gourmet.R;
 import com.yw.gourmet.adapter.MyFragmentAdapter;
 import com.yw.gourmet.base.BaseActivity;
@@ -118,6 +119,7 @@ public class RegisteredActivity extends BaseActivity<RegisteredPresenter> implem
         this.phone = phone;
         mPresenter.Check(new MultipartBody.Builder()
         .setType(MultipartBody.FORM)
+                .addFormDataPart("token", Constant.userData == null?"0":Constant.userData.getToken())
         .addFormDataPart("accout_number",phone).build().parts());
     }
 
@@ -143,6 +145,7 @@ public class RegisteredActivity extends BaseActivity<RegisteredPresenter> implem
     public void registered(String password,String sex){
         MultipartBody.Builder builder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
+                .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                 .addFormDataPart("accout_number",phone)
                 .addFormDataPart("password",password)
                 .addFormDataPart("sex",sex)

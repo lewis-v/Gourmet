@@ -155,6 +155,7 @@ public class SetTopActivity extends BaseActivity<SetTopPresenter> implements Set
                 setLoadDialog(true);
                 mPresenter.setTop(new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
+                        .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                 .addFormDataPart("id",Constant.userData.getUser_id())
                 .addFormDataPart("type", String.valueOf(data.get(position).getType()))
                 .addFormDataPart("act_id",data.get(position).getId())
@@ -167,6 +168,7 @@ public class SetTopActivity extends BaseActivity<SetTopPresenter> implements Set
                 setLoadDialog(true);
                 mPresenter.setTop(new MultipartBody.Builder()
                         .setType(MultipartBody.FORM)
+                        .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                         .addFormDataPart("id",Constant.userData.getUser_id())
                         .addFormDataPart("type", String.valueOf(data.get(position).getType()))
                         .addFormDataPart("act_id",data.get(position).getId())
@@ -179,6 +181,7 @@ public class SetTopActivity extends BaseActivity<SetTopPresenter> implements Set
                 setLoadDialog(true);
                 mPresenter.setTop(new MultipartBody.Builder()
                         .setType(MultipartBody.FORM)
+                        .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                         .addFormDataPart("id",Constant.userData.getUser_id())
                         .addFormDataPart("type", String.valueOf(data.get(position).getType()))
                         .addFormDataPart("act_id",data.get(position).getId())
@@ -273,6 +276,7 @@ public class SetTopActivity extends BaseActivity<SetTopPresenter> implements Set
      */
     public void refresh(){
         mPresenter.getTop(new MultipartBody.Builder().setType(MultipartBody.FORM)
+                .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                 .addFormDataPart("id", Constant.userData.getUser_id()).build().parts());
     }
 

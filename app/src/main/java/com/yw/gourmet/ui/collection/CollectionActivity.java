@@ -161,6 +161,7 @@ public class CollectionActivity extends BaseActivity<CollectionPresenter> implem
                     ToastUtils.showSingleToast("请登陆后再进行操作");
                 }else {
                     MultipartBody.Builder builder = new MultipartBody.Builder()
+                            .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                             .setType(MultipartBody.FORM)
                             .addFormDataPart("id", Constant.userData.getUser_id())
                             .addFormDataPart("type",listData.get(position).getType()+"")
@@ -177,6 +178,7 @@ public class CollectionActivity extends BaseActivity<CollectionPresenter> implem
                 }else {
                     MultipartBody.Builder builder = new MultipartBody.Builder()
                             .setType(MultipartBody.FORM)
+                            .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                             .addFormDataPart("id", Constant.userData.getUser_id())
                             .addFormDataPart("type",listData.get(position).getType()+"")
                             .addFormDataPart("act_id",listData.get(position).getId())

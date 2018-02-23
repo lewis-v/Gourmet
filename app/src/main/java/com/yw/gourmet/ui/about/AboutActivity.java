@@ -58,7 +58,7 @@ public class AboutActivity extends BaseActivity<AboutPresenter> implements About
                         Intent intent = new Intent(AboutActivity.this, UpdateService.class);
                         startService(intent);
                     }
-                }).setShowText("有新版本是否更新?").setTextEnter("更新").show(getSupportFragmentManager(),"downloadUpdate");
+                }).setShowText("有新版本 "+model.getData().getAndroid_version()+" \n更新内容:\n"+model.getData().getUpdate_content()).setTextEnter("更新").show(getSupportFragmentManager(),"downloadUpdate");
             }
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();

@@ -225,6 +225,7 @@ public class RaidersActivity extends BaseActivity<RaidersPresenter> implements V
                                 setLoadDialog(true);
                                 MultipartBody.Builder builder = new MultipartBody.Builder()
                                         .setType(MultipartBody.FORM)
+                                        .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                                         .addFormDataPart("id",Constant.userData.getUser_id())
                                         .addFormDataPart("status",String.valueOf(status))
                                         .addFormDataPart("title",et_title.getText().toString())
@@ -295,6 +296,7 @@ public class RaidersActivity extends BaseActivity<RaidersPresenter> implements V
                     public void accept(File file) throws Exception {
                         MultipartBody.Builder builder = new MultipartBody.Builder()
                                 .setType(MultipartBody.FORM)
+                                .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                                 .addFormDataPart("id", Constant.userData.getUser_id())
                                 .addFormDataPart("path", file.getName(), RequestBody.create(MediaType.parse("multipart/form-data"), file));
                         mPresenter.upImg(builder.build().parts(), position);

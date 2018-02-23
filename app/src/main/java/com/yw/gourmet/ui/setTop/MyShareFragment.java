@@ -103,6 +103,7 @@ public class MyShareFragment extends BaseFragment<MySharePresenter> implements S
                     public void OnEnter(String Tag) {
                         ((BaseActivity)getActivity()).setLoadDialog(true);
                         mPresenter.setTop(new MultipartBody.Builder().setType(MultipartBody.FORM)
+                                .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                         .addFormDataPart("id",Constant.userData.getUser_id())
                         .addFormDataPart("act_id",listData.get(position).getId())
                         .addFormDataPart("type", String.valueOf(listData.get(position).getType()))

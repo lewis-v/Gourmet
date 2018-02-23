@@ -19,6 +19,9 @@ public class MessagePresenter extends MessageContract.Presenter {
         mRxManager.add(Api.getInstance().LoadMessageList(parts),new RxSubscriberCallBack<BaseData<List<MessageListData>>>(new RxApiCallback<BaseData<List<MessageListData>>>() {
             @Override
             public void onSuccess(BaseData<List<MessageListData>> model) {
+                if (isReLoginFail(model)){
+                    return;
+                }
                 if (model.getStatus() == 1){
                     mView.onFail(model.getMessage());
                 }else if (model.getStatus() == 0){

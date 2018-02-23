@@ -35,12 +35,20 @@ import com.yw.gourmet.center.event.IMessageSendEvent;
 import com.yw.gourmet.dao.data.messageData.MessageDataUtil;
 import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.data.MessageListData;
+import com.yw.gourmet.rxbus.EventSticky;
+import com.yw.gourmet.rxbus.RxBus;
+import com.yw.gourmet.rxbus.RxBusSubscriber;
+import com.yw.gourmet.rxbus.RxSubscriptions;
 import com.yw.gourmet.ui.chat.ChatActivity;
 import com.yw.gourmet.utils.ToastUtils;
 
 import java.util.List;
 
 import okhttp3.MultipartBody;
+import rx.Observable;
+import rx.Subscription;
+import rx.functions.Action1;
+import rx.functions.Func1;
 
 import static com.yw.gourmet.Constant.NORMAL_PUSH_ID;
 
@@ -50,6 +58,7 @@ public class MessageService extends Service {
     private IMessageGet iMessageGet;
     private IMessageSendEvent iMessageSendEvent;
     private RxManager rxManager;
+    private Subscription mRxSubSticky;
 
     public MessageService() {
         rxManager = new RxManager();
@@ -81,13 +90,15 @@ public class MessageService extends Service {
         messageListData.setSendStatus(MessageListData.SEND_FAIL);
         MessageDataUtil.updata(messageListData);
         Notification notification = new NotificationCompat
-                .Builder(MessageService.this,String.valueOf(NORMAL_PUSH_ID))
+                .Builder(MessageService.this,messageListData.getGet_id())
                 .setSmallIcon(R.mipmap.dialog_back)
                 .setContentIntent(getDefalutIntent(Notification.FLAG_AUTO_CANCEL
                         ,messageListData.getGet_id(),messageListData.getPut_id()))
                 .setContentTitle("有一条消息发送失败")
-                .setAutoCancel(true).build();
-        notifyManager.notify(NORMAL_PUSH_ID,notification);
+                .setDefaults(Notification.DEFAULT_SOUND|Notification.DEFAULT_VIBRATE|Notification.DEFAULT_LIGHTS)
+                .setAutoCancel(true).setFullScreenIntent(getDefalutIntent(Notification.FLAG_AUTO_CANCEL
+                        ,messageListData.getGet_id(),messageListData.getPut_id()),true).build();
+        notifyManager.notify(Integer.parseInt(messageListData.getGet_id()),notification);
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
@@ -125,9 +136,13 @@ public class MessageService extends Service {
                                                     ,message.getPut_id(),message.getGet_id()))
                                             .setSmallIcon(R.mipmap.dialog_back)
                                             .setLargeIcon(resource)
+                                            .setDefaults(Notification.DEFAULT_SOUND|Notification.DEFAULT_VIBRATE
+                                                    |Notification.DEFAULT_LIGHTS)
                                             .setContentText(message.getContent())
                                             .setContentTitle(message.getNickname())
-                                            .setAutoCancel(true).build();
+                                            .setAutoCancel(true)
+                                            .setAutoCancel(true).setFullScreenIntent(getDefalutIntent(Notification.FLAG_AUTO_CANCEL
+                                                    ,message.getGet_id(),message.getPut_id()),true).build();
                                         notifyManager.notify(id,notification);
 
                                 }
@@ -174,6 +189,55 @@ public class MessageService extends Service {
                     MessageCenter.getInstance().pushSendMessageFail(messageListData,position,msg);
                 }
             }));
+        }
+    }
+
+
+    public void setRxBus(){
+        if (mRxSubSticky != null && !mRxSubSticky.isUnsubscribed()) {
+            RxSubscriptions.remove(mRxSubSticky);
+        } else {
+            EventSticky s = RxBus.getDefault().getStickyEvent(EventSticky.class);
+            Log.i("FFF", "获取到StickyEvent--->" + s);
+
+            mRxSubSticky = RxBus.getDefault().toObservableSticky(EventSticky.class)
+                    .flatMap(new Func1<EventSticky, Observable<EventSticky>>() {
+                        @Override
+                        public Observable<EventSticky> call(EventSticky eventSticky) {
+                            return Observable.just(eventSticky)
+                                    .map(new Func1<EventSticky, EventSticky>() {
+                                        @Override
+                                        public EventSticky call(EventSticky eventSticky) {
+                                            // 这里模拟产生 Error
+                                            return eventSticky;
+                                        }
+                                    })
+                                    .doOnError(new Action1<Throwable>() {
+                                        @Override
+                                        public void call(Throwable throwable) {
+                                            Log.e("FFF", "onError--Sticky");
+                                        }
+                                    })
+                                    .onErrorResumeNext(Observable.<EventSticky>empty());
+                        }
+                    })
+                    .subscribe(new RxBusSubscriber<EventSticky>() {
+                        @Override
+                        protected void onEvent(EventSticky eventSticky) {
+                            Log.i("FFF", "onNext--Sticky-->" + eventSticky.event);
+                            if (eventSticky.event.startsWith("notification:")){
+                                String[] strings = eventSticky.event.split(":");
+                                if (strings.length==2 && notifyManager != null){
+                                    try {
+                                        notifyManager.cancel(Integer.parseInt(strings[1]));
+                                    }catch (Exception e){
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+                        }
+                    });
+            RxSubscriptions.add(mRxSubSticky);
         }
     }
 

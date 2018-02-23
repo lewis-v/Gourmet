@@ -144,6 +144,7 @@ public class MessageFragment extends BaseFragment<MessagePresenter> implements M
     public void refresh(){
         if (Constant.userData != null) {
             MultipartBody.Builder builder = new MultipartBody.Builder()
+                    .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                     .setType(MultipartBody.FORM)
                     .addFormDataPart("id", Constant.userData.getUser_id());
             mPresenter.LoadMessageList(builder.build().parts());

@@ -26,6 +26,8 @@ import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.data.MessageListData;
 import com.yw.gourmet.dialog.MyDialogPhotoChooseFragment;
 import com.yw.gourmet.dialog.MyDialogPhotoShowFragment;
+import com.yw.gourmet.rxbus.EventSticky;
+import com.yw.gourmet.rxbus.RxBus;
 import com.yw.gourmet.ui.share.common.CommonShareActivity;
 import com.yw.gourmet.utils.ToastUtils;
 import com.yw.gourmet.widget.YWRecyclerView;
@@ -192,6 +194,7 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
                             recycler_chat.smoothScrollToPosition(listData.size()-1);
                             MultipartBody.Builder builder1 = new MultipartBody.Builder()
                                     .setType(MultipartBody.FORM)
+                                    .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                                     .addFormDataPart("id",message.getId());
                             mPresenter.setMessageRead(builder1.build().parts());
                         }
@@ -202,6 +205,7 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
             }
         };
         MessageCenter.getInstance().addMessageHandleTop(iMessageGet);
+        RxBus.getDefault().postSticky(new EventSticky("notification:"+put_id));
     }
 
     /**
@@ -229,7 +233,7 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
         mPresenter.insertDB(data);
         MultipartBody.Builder builder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                .addFormDataPart("token",Constant.userData.getToken())
+                .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                 .addFormDataPart("put_id",put_id)
                 .addFormDataPart("get_id",get_id)
                 .addFormDataPart("type",String.valueOf(TEXT))
@@ -277,6 +281,7 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
         recycler_chat.scrollToPosition(listData.size() - 1);
         MultipartBody.Builder builder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
+                .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                 .addFormDataPart("put_id",get_id.equals(Constant.userData.getUser_id())?put_id:get_id)
                 .addFormDataPart("get_id",Constant.userData.getUser_id());
         mPresenter.setMessageRead(builder.build().parts());
@@ -285,7 +290,8 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
     @Override
     public void onUpImgSuccess(BaseData<String> model, int position) {
         MultipartBody.Builder builder = new MultipartBody.Builder()
-                .addFormDataPart("token",Constant.userData.getToken())
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                 .addFormDataPart("put_id",put_id)
                 .addFormDataPart("get_id",get_id)
                 .addFormDataPart("type",String.valueOf(MessageListData.IMG))
@@ -307,7 +313,7 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
         if (listData.size() == 0){
             MultipartBody.Builder builder = new MultipartBody.Builder()
                     .setType(MultipartBody.FORM)
-                    .addFormDataPart("token", Constant.userData.getToken())
+                    .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                     .addFormDataPart("put_id", put_id)
                     .addFormDataPart("get_id", get_id);
             if (model.size() > 0){//有记录时获取未获取的新消息,无历史记录时获取所有新的消息
@@ -450,6 +456,7 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
 
                         mPresenter.upImg(new MultipartBody.Builder()
                                 .setType(MultipartBody.FORM)
+                                .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                                 .addFormDataPart("id", Constant.userData.getUser_id())
                                 .addFormDataPart("path", file.getName(), RequestBody.create(MediaType.parse("multipart/form-data"), file))
                                 .build().parts(), position);

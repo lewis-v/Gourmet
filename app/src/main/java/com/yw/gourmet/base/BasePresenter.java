@@ -3,6 +3,7 @@ package com.yw.gourmet.base;
 import android.content.Context;
 
 import com.yw.gourmet.base.rx.RxManager;
+import com.yw.gourmet.data.BaseData;
 
 
 /**
@@ -30,5 +31,13 @@ public class BasePresenter<V> {
         mRxManager.clear();
     }
 
-
+    public boolean isReLoginFail(BaseData model){
+        if (model.getStatus() == -2){//重新登录
+            if (mView instanceof BaseView){
+                ((BaseView)mView).onReLoginFail(model.getMessage());
+                return true;
+            }
+        }
+        return false;
+    }
 }

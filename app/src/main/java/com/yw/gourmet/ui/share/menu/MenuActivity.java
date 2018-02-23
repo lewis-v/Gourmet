@@ -201,6 +201,7 @@ public class MenuActivity extends BaseActivity<MenuPresenter> implements View.On
                                             public void accept(File file) throws Exception {
                                                 MultipartBody.Builder builder = new MultipartBody.Builder()
                                                         .setType(MultipartBody.FORM)
+                                                        .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                                                         .addFormDataPart("id",Constant.userData.getUser_id())
                                                         .addFormDataPart("path",file.getName(),RequestBody.create(MediaType.parse("multipart/form-data"),file));
                                                 mPresenter.upImg(builder.build().parts(),position);
@@ -336,6 +337,7 @@ public class MenuActivity extends BaseActivity<MenuPresenter> implements View.On
                             public void OnEnter(String Tag) {
                                 MultipartBody.Builder builder = new MultipartBody.Builder()
                                         .setType(MultipartBody.FORM)
+                                        .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                                         .addFormDataPart("id",Constant.userData.getUser_id())
                                         .addFormDataPart("status",String.valueOf(status))
                                         .addFormDataPart("title",et_title.getText().toString())
@@ -372,6 +374,7 @@ public class MenuActivity extends BaseActivity<MenuPresenter> implements View.On
                             public void run() {
                                 MultipartBody.Builder builder =new MultipartBody.Builder()
                                         .setType(MultipartBody.FORM)
+                                        .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                                         .addFormDataPart("id", Constant.userData.getUser_id())
                                         .addFormDataPart("path",file.getName()
                                                 , RequestBody.create(MediaType.parse("multipart/form-data"),file));

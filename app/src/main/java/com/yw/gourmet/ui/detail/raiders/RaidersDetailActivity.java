@@ -146,6 +146,7 @@ public class RaidersDetailActivity extends BaseActivity<RaidersDetailPresenter> 
 
         MultipartBody.Builder builder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
+                .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                 .addFormDataPart("id",getIntent().getStringExtra("id"));
         if (Constant.userData != null){
             builder.addFormDataPart("user_id",Constant.userData.getUser_id());
@@ -164,6 +165,7 @@ public class RaidersDetailActivity extends BaseActivity<RaidersDetailPresenter> 
 
         MultipartBody.Builder builderComment = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
+                .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                 .addFormDataPart("id",getIntent().getStringExtra("id"))
                 .addFormDataPart("type",getIntent().getStringExtra("type"));
         mPresenter.getComment(builderComment.build().parts());
@@ -318,6 +320,7 @@ public class RaidersDetailActivity extends BaseActivity<RaidersDetailPresenter> 
                 if (Constant.userData != null) {
                     MultipartBody.Builder builderGood = new MultipartBody.Builder()
                             .setType(MultipartBody.FORM)
+                            .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                             .addFormDataPart("id", Constant.userData.getUser_id())
                             .addFormDataPart("type",String.valueOf(data.getType()))
                             .addFormDataPart("act_id",data.getId())
@@ -331,6 +334,7 @@ public class RaidersDetailActivity extends BaseActivity<RaidersDetailPresenter> 
                 if (Constant.userData != null) {
                     MultipartBody.Builder builderGood = new MultipartBody.Builder()
                             .setType(MultipartBody.FORM)
+                            .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                             .addFormDataPart("id", Constant.userData.getUser_id())
                             .addFormDataPart("type",String.valueOf(data.getType()))
                             .addFormDataPart("act_id",data.getId())
@@ -362,6 +366,7 @@ public class RaidersDetailActivity extends BaseActivity<RaidersDetailPresenter> 
                         @Override
                         public void onEnter(String edit, String Tag) {
                             mPresenter.complaint(new MultipartBody.Builder().setType(MultipartBody.FORM)
+                                    .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                                     .addFormDataPart("user_id",Constant.userData.getUser_id())
                                     .addFormDataPart("act_id",data.getId())
                                     .addFormDataPart("type", String.valueOf(data.getType()))
@@ -389,7 +394,7 @@ public class RaidersDetailActivity extends BaseActivity<RaidersDetailPresenter> 
         hideSoftInput(et_input);
         MultipartBody.Builder builder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                .addFormDataPart("token",Constant.userData.getToken())
+                .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                 .addFormDataPart("user_id",Constant.userData.getUser_id())
                 .addFormDataPart("act_id",data.getId())
                 .addFormDataPart("type",getIntent().getStringExtra("type"))

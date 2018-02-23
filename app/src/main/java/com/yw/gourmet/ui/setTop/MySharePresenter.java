@@ -22,6 +22,9 @@ public class MySharePresenter extends SetTopContract.Presenter{
         mRxManager.add(Api.getInstance().PutTop(parts),new RxSubscriberCallBack<BaseData>(new RxApiCallback<BaseData>() {
             @Override
             public void onSuccess(BaseData model) {
+                if (isReLoginFail(model)){
+                    return;
+                }
                 if (model.getStatus() == 0) {
                     mView.onSetTopSuccess(model.getMessage(), position);
                 }else {
@@ -41,6 +44,9 @@ public class MySharePresenter extends SetTopContract.Presenter{
         mRxManager.add(Api.getInstance().LoadShareList(parts),new RxSubscriberCallBack<BaseData<List<ShareListData<List<String>>>>>(new RxApiCallback<BaseData<List<ShareListData<List<String>>>>>() {
             @Override
             public void onSuccess(BaseData<List<ShareListData<List<String>>>> model) {
+                if (isReLoginFail(model)){
+                    return;
+                }
                 if (model.getStatus() == 0){
                     mView.onGetListSuccess(model,flag);
                 }else if (model.getStatus() == 1){

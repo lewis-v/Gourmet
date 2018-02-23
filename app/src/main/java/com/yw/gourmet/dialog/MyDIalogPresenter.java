@@ -21,6 +21,9 @@ public class MyDIalogPresenter extends MyDialogContract.Presenter {
         mRxManager.add(Api.getInstance().Collection(parts),new RxSubscriberCallBack<BaseData>(new RxApiCallback<BaseData>() {
             @Override
             public void onSuccess(BaseData model) {
+                if (isReLoginFail(model)){
+                    return;
+                }
                 if (model.getStatus() == 0){
                     mView.onSuccess(model.getMessage());
                 }else {
@@ -40,6 +43,9 @@ public class MyDIalogPresenter extends MyDialogContract.Presenter {
         mRxManager.add(Api.getInstance().Feedback(parts),new RxSubscriberCallBack<BaseData>(new RxApiCallback<BaseData>() {
             @Override
             public void onSuccess(BaseData model) {
+                if (isReLoginFail(model)){
+                    return;
+                }
                 if (model.getStatus() == 0){
                     mView.onSuccess(model.getMessage());
                 }else {
@@ -59,6 +65,9 @@ public class MyDIalogPresenter extends MyDialogContract.Presenter {
         mRxManager.add(Api.getInstance().Appeal(parts),new RxSubscriberCallBack<BaseData>(new RxApiCallback<BaseData>() {
             @Override
             public void onSuccess(BaseData model) {
+                if (isReLoginFail(model)){
+                    return;
+                }
                 if (model.getStatus() == 0){
                     mView.onSuccess(model.getMessage());
                 }else {

@@ -87,6 +87,9 @@ public class ChatPresenter extends ChatContract.Presenter {
         mRxManager.add(Api.getInstance().GetMessageDetail(parts),new RxSubscriberCallBack<BaseData<List<MessageListData>>>(new RxApiCallback<BaseData<List<MessageListData>>>() {
             @Override
             public void onSuccess(BaseData<List<MessageListData>> model) {
+                if (isReLoginFail(model)){
+                    return;
+                }
                 if (model.getStatus() == 0){
                     mView.onGetDetailSuccess(model);
                 }else {
@@ -106,6 +109,9 @@ public class ChatPresenter extends ChatContract.Presenter {
         mRxManager.add(Api.getInstance().SetMessageRead(parts),new RxSubscriberCallBack<BaseData>(new RxApiCallback<BaseData>() {
             @Override
             public void onSuccess(BaseData model) {
+                if (isReLoginFail(model)){
+                    return;
+                }
 
             }
 
@@ -121,6 +127,9 @@ public class ChatPresenter extends ChatContract.Presenter {
         mRxManager.add(Api.getInstance().UpImg(parts),new RxSubscriberCallBack<BaseData<String>>(new RxApiCallback<BaseData<String>>() {
             @Override
             public void onSuccess(BaseData<String> model) {
+                if (isReLoginFail(model)){
+                    return;
+                }
                 if (model.getStatus() == 0){
                     mView.onUpImgSuccess(model,position);
                 }else if (model.getStatus() == 1){

@@ -183,6 +183,7 @@ public class PersonalActivity extends BaseActivity<PersonalPresenter> implements
             adapter = new ShareListAdapter(this, listTop, getSupportFragmentManager());
             recycler_top.setAdapter(adapter);
             mPresenter.getTop(new MultipartBody.Builder().setType(MultipartBody.FORM)
+                    .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                     .addFormDataPart("id", id).build().parts());
             adapter.setListener(new OnItemClickListener() {
                 @Override
@@ -247,6 +248,7 @@ public class PersonalActivity extends BaseActivity<PersonalPresenter> implements
                         ToastUtils.showSingleToast("请登陆后再进行操作");
                     }else {
                         MultipartBody.Builder builder = new MultipartBody.Builder()
+                                .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                                 .setType(MultipartBody.FORM)
                                 .addFormDataPart("id", Constant.userData.getUser_id())
                                 .addFormDataPart("type",listTop.get(position).getType()+"")
@@ -262,6 +264,7 @@ public class PersonalActivity extends BaseActivity<PersonalPresenter> implements
                         ToastUtils.showSingleToast("请登陆后再进行操作");
                     }else {
                         MultipartBody.Builder builder = new MultipartBody.Builder()
+                                .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                                 .setType(MultipartBody.FORM)
                                 .addFormDataPart("id", Constant.userData.getUser_id())
                                 .addFormDataPart("type",listTop.get(position).getType()+"")
@@ -311,6 +314,7 @@ public class PersonalActivity extends BaseActivity<PersonalPresenter> implements
             ll_change_top.setVisibility(View.GONE);
             tv_send.setVisibility(View.VISIBLE);
             mPresenter.getUserInfo(new MultipartBody.Builder().setType(MultipartBody.FORM)
+                    .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                     .addFormDataPart("id",id).build().parts());
         }else {//查看自身信息
             userData = Constant.userData;
@@ -435,6 +439,7 @@ public class PersonalActivity extends BaseActivity<PersonalPresenter> implements
                     @Override
                     public void accept(File file) throws Exception {
                         MultipartBody.Builder builder = new MultipartBody.Builder()
+                                .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                                 .setType(MultipartBody.FORM)
                                 .addFormDataPart("id",Constant.userData.getUser_id())
                                 .addFormDataPart("path",file.getName(), RequestBody.create(MediaType.parse(""),file));
@@ -446,6 +451,7 @@ public class PersonalActivity extends BaseActivity<PersonalPresenter> implements
     @Override
     public void onUpImgSuccess(BaseData<String> model) {
         MultipartBody.Builder builder = new MultipartBody.Builder()
+                .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("id",Constant.userData.getUser_id())
                 .addFormDataPart("personal_back",model.getData());

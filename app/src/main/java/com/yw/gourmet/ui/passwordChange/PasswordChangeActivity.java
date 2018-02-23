@@ -53,6 +53,7 @@ public class PasswordChangeActivity extends BaseActivity<PasswordChangePresenter
                 if (et_new_password.getText().toString().equals(et_new_password2.getText().toString())){
                     MultipartBody.Builder builder = new MultipartBody.Builder()
                             .setType(MultipartBody.FORM)
+                            .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                             .addFormDataPart("id", Constant.userData.getUser_id())
                             .addFormDataPart("old_password",et_old_password.getText().toString())
                             .addFormDataPart("new_password",et_new_password.getText().toString());

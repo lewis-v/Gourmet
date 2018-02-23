@@ -185,6 +185,7 @@ public class MenuDetailActivity extends BaseActivity<MenuDetailPresenter> implem
 
         MultipartBody.Builder builder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
+                .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                 .addFormDataPart("id",getIntent().getStringExtra("id"));
         if (Constant.userData != null){
             builder.addFormDataPart("user_id",Constant.userData.getUser_id());
@@ -200,6 +201,7 @@ public class MenuDetailActivity extends BaseActivity<MenuDetailPresenter> implem
 
         MultipartBody.Builder builderComment = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
+                .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                 .addFormDataPart("id",getIntent().getStringExtra("id"))
                 .addFormDataPart("type",getIntent().getStringExtra("type"));
         mPresenter.getComment(builderComment.build().parts());
@@ -246,6 +248,7 @@ public class MenuDetailActivity extends BaseActivity<MenuDetailPresenter> implem
                 if (Constant.userData != null) {
                     MultipartBody.Builder builderGood = new MultipartBody.Builder()
                             .setType(MultipartBody.FORM)
+                            .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                             .addFormDataPart("id", Constant.userData.getUser_id())
                             .addFormDataPart("type",String.valueOf(shareListData.getType()))
                             .addFormDataPart("act_id",shareListData.getId())
@@ -259,6 +262,7 @@ public class MenuDetailActivity extends BaseActivity<MenuDetailPresenter> implem
                 if (Constant.userData != null) {
                     MultipartBody.Builder builderGood = new MultipartBody.Builder()
                             .setType(MultipartBody.FORM)
+                            .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                             .addFormDataPart("id", Constant.userData.getUser_id())
                             .addFormDataPart("type",String.valueOf(shareListData.getType()))
                             .addFormDataPart("act_id",shareListData.getId())
@@ -290,6 +294,7 @@ public class MenuDetailActivity extends BaseActivity<MenuDetailPresenter> implem
                         @Override
                         public void onEnter(String edit, String Tag) {
                             mPresenter.complaint(new MultipartBody.Builder().setType(MultipartBody.FORM)
+                                    .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                                     .addFormDataPart("user_id",Constant.userData.getUser_id())
                                     .addFormDataPart("act_id",shareListData.getId())
                                     .addFormDataPart("type", String.valueOf(shareListData.getType()))
@@ -486,7 +491,7 @@ public class MenuDetailActivity extends BaseActivity<MenuDetailPresenter> implem
         hideSoftInput(et_input);
         MultipartBody.Builder builder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                .addFormDataPart("token",Constant.userData.getToken())
+                .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                 .addFormDataPart("user_id",Constant.userData.getUser_id())
                 .addFormDataPart("act_id",shareListData.getId())
                 .addFormDataPart("type",getIntent().getStringExtra("type"))

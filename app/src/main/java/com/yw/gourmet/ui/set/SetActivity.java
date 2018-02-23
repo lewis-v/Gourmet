@@ -103,7 +103,11 @@ public class SetActivity extends BaseActivity<SetPresenter> implements View.OnCl
                 }
                 break;
             case R.id.ll_feedback:
-                MyDialogFeedBackFragment.getInstance().show(getSupportFragmentManager(),"");
+                if (Constant.userData == null){
+                    ToastUtils.showSingleToast("请登陆后再操作");
+                }else {
+                    MyDialogFeedBackFragment.getInstance().show(getSupportFragmentManager(), "");
+                }
                 break;
         }
     }

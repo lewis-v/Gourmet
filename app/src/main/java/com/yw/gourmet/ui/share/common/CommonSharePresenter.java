@@ -19,6 +19,9 @@ public class CommonSharePresenter extends CommonShareContract.Presenter{
         mRxManager.add(Api.getInstance().UpImg(parts),new RxSubscriberCallBack<BaseData<String>>(new RxApiCallback<BaseData<String>>() {
             @Override
             public void onSuccess(BaseData<String> model) {
+                if (isReLoginFail(model)){
+                    return;
+                }
                 if (model.getStatus() == 0){
                     mView.onUpImgSuccess(model,position);
                 }else if (model.getStatus() == 1){
@@ -38,6 +41,9 @@ public class CommonSharePresenter extends CommonShareContract.Presenter{
         mRxManager.add(Api.getInstance().ShareCommon(parts),new RxSubscriberCallBack<BaseData>(new RxApiCallback<BaseData>() {
             @Override
             public void onSuccess(BaseData model) {
+                if (isReLoginFail(model)){
+                    return;
+                }
                 if (model.getStatus() == 0) {
                     mView.onShareSuccess(model);
                 }else if (model.getStatus() == 1){

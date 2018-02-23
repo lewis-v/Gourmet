@@ -23,6 +23,9 @@ public class RaidersPresenter extends RaidersContract.Presenter{
         mRxManager.add(Api.getInstance().UpImg(parts),new RxSubscriberCallBack<BaseData<String>>(new RxApiCallback<BaseData<String>>() {
             @Override
             public void onSuccess(BaseData<String> model) {
+                if (isReLoginFail(model)){
+                    return;
+                }
                 if (model.getStatus() == 0) {
                     mView.onUpImgSuccess(model,position);
                 }else{
@@ -43,6 +46,9 @@ public class RaidersPresenter extends RaidersContract.Presenter{
                 (new RxApiCallback<BaseData<RaidersDetailData<List<RaidersListData<List<String>>>, List<String>>>>() {
             @Override
             public void onSuccess(BaseData<RaidersDetailData<List<RaidersListData<List<String>>>, List<String>>> model) {
+                if (isReLoginFail(model)){
+                    return;
+                }
                 if (model.getStatus() == 0) {
                     mView.onShareSuccess(model.getMessage());
                 }else{

@@ -22,6 +22,9 @@ public class ChangeDetailPresenter extends ChangeDetailContract.Presenter{
             @Override
             public void onSuccess(BaseData<UserData> model) {
                 mView.setLoadDialog(false);
+                if (isReLoginFail(model)){
+                    return;
+                }
                 if (model.getStatus() == 0){
                     mView.onChangeSuccess(model);
                 }else if (model.getStatus() == 1){
@@ -44,6 +47,9 @@ public class ChangeDetailPresenter extends ChangeDetailContract.Presenter{
             @Override
             public void onSuccess(BaseData<String> model) {
                 mView.setLoadDialog(false);
+                if (isReLoginFail(model)){
+                    return;
+                }
                 if (model.getStatus() == 0){
                     mView.onUpSuccess(model);
                 }else if (model.getStatus() == 1){

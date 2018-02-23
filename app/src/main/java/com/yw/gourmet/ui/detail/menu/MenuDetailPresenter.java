@@ -23,6 +23,9 @@ public class MenuDetailPresenter extends MenuDetailContract.Presenter{
         mRxManager.add(Api.getInstance().GetMenuDetail(parts),new RxSubscriberCallBack<BaseData<MenuDetailData<List<MenuPracticeData<List<String>>>,List<String>>>>(new RxApiCallback<BaseData<MenuDetailData<List<MenuPracticeData<List<String>>>,List<String>>>>() {
             @Override
             public void onSuccess(BaseData<MenuDetailData<List<MenuPracticeData<List<String>>>,List<String>>> model) {
+                if (isReLoginFail(model)){
+                    return;
+                }
                 if (model.getStatus() == 0){
                     mView.onGetDetailSuccess(model);
                 }else {
@@ -42,6 +45,9 @@ public class MenuDetailPresenter extends MenuDetailContract.Presenter{
         mRxManager.add(Api.getInstance().GetComment(parts),new RxSubscriberCallBack<BaseData<List<CommentData>>>(new RxApiCallback<BaseData<List<CommentData>>>() {
             @Override
             public void onSuccess(BaseData<List<CommentData>> model) {
+                if (isReLoginFail(model)){
+                    return;
+                }
                 if (model.getStatus() == 0){
                     mView.onGetCommentSuccess(model);
                 }else {
@@ -61,6 +67,9 @@ public class MenuDetailPresenter extends MenuDetailContract.Presenter{
         mRxManager.add(Api.getInstance().PutComment(parts),new RxSubscriberCallBack<BaseData<List<CommentData>>>(new RxApiCallback<BaseData<List<CommentData>>>() {
             @Override
             public void onSuccess(BaseData<List<CommentData>> model) {
+                if (isReLoginFail(model)){
+                    return;
+                }
                 if (model.getStatus() == 0){
                     mView.onSendCommentSuccess(model);
                 }else {
@@ -80,6 +89,9 @@ public class MenuDetailPresenter extends MenuDetailContract.Presenter{
         mRxManager.add(Api.getInstance().PutReMark(parts),new RxSubscriberCallBack<BaseData<ShareListData>>(new RxApiCallback<BaseData<ShareListData>>() {
             @Override
             public void onSuccess(BaseData<ShareListData> model) {
+                if (isReLoginFail(model)){
+                    return;
+                }
                 if (model.getStatus() == 0){
                     mView.onRemarkSuccess(model);
                 }else if (model.getStatus() == 1){
@@ -99,6 +111,9 @@ public class MenuDetailPresenter extends MenuDetailContract.Presenter{
         mRxManager.add(Api.getInstance().Complaint(parts),new RxSubscriberCallBack<BaseData>(new RxApiCallback<BaseData>() {
             @Override
             public void onSuccess(BaseData model) {
+                if (isReLoginFail(model)){
+                    return;
+                }
                 if (model.getStatus() == 0){
                     mView.onSuccess(model.getMessage());
                 }else {

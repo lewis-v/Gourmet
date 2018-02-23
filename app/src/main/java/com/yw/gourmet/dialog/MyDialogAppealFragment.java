@@ -54,6 +54,7 @@ public class MyDialogAppealFragment extends BaseDialogFragment<MyDIalogPresenter
                 }else {
                     MultipartBody.Builder builder = new MultipartBody.Builder()
                             .setType(MultipartBody.FORM)
+                            .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                             .addFormDataPart("id", Constant.userData.getUser_id())
                             .addFormDataPart("act_id",actId)
                             .addFormDataPart("type",type)

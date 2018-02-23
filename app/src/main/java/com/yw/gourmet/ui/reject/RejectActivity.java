@@ -103,6 +103,7 @@ public class RejectActivity extends BaseActivity<RejectPresenter> implements Rej
                             @Override
                             public void OnEnter(String Tag) {
                                 mPresenter.rejectDelete(new MultipartBody.Builder().setType(MultipartBody.FORM)
+                                        .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                                         .addFormDataPart("id",Constant.userData.getUser_id())
                                         .addFormDataPart("type", String.valueOf(listData.get(position).getType()))
                                         .addFormDataPart("act_id",listData.get(position).getId())
@@ -258,6 +259,7 @@ public class RejectActivity extends BaseActivity<RejectPresenter> implements Rej
                         @Override
                         public void OnEnter(String Tag) {
                             mPresenter.rejectDelete(new MultipartBody.Builder().setType(MultipartBody.FORM)
+                                    .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                                     .addFormDataPart("id", Constant.userData.getUser_id())
                                     .addFormDataPart("type", "all").build().parts(), -1);
                         }
@@ -278,6 +280,7 @@ public class RejectActivity extends BaseActivity<RejectPresenter> implements Rej
     public void onLoadMore() {
         MultipartBody.Builder builder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
+                .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                 .addFormDataPart("id", Constant.userData.getUser_id())
                 .addFormDataPart("user_id",Constant.userData.getUser_id())
                 .addFormDataPart("status","0");
@@ -294,6 +297,7 @@ public class RejectActivity extends BaseActivity<RejectPresenter> implements Rej
     public void refresh(){
         MultipartBody.Builder builder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
+                .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                 .addFormDataPart("id", Constant.userData.getUser_id())
                 .addFormDataPart("user_id",Constant.userData.getUser_id())
                 .addFormDataPart("status","0");

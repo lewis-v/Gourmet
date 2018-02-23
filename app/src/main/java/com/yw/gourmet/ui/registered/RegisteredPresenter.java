@@ -79,6 +79,9 @@ public class RegisteredPresenter extends RegisteredContract.Presenter{
         mRxManager.add(Api.getInstance().Check(parts),new RxSubscriberCallBack<BaseData>(new RxApiCallback<BaseData>() {
             @Override
             public void onSuccess(BaseData model) {
+                if (isReLoginFail(model)){
+                    return;
+                }
                 if (model.getStatus() == 0){
                     mView.onCheckSuccess(model);
                 }else {
@@ -98,6 +101,9 @@ public class RegisteredPresenter extends RegisteredContract.Presenter{
         mRxManager.add(Api.getInstance().Registered(parts),new RxSubscriberCallBack<BaseData>(new RxApiCallback<BaseData>() {
             @Override
             public void onSuccess(BaseData model) {
+                if (isReLoginFail(model)){
+                    return;
+                }
                 if (model.getStatus() == 0){
                     mView.onRegisteredSuccess(model);
                 }else {

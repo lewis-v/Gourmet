@@ -22,6 +22,9 @@ public class FlashPresenter extends FlashConstract.Presenter {
         mRxManager.add(Api.getInstance().Login(parts),new RxSubscriberCallBack<BaseData<UserData>>(new RxApiCallback<BaseData<UserData>>() {
             @Override
             public void onSuccess(BaseData<UserData> model) {
+                if (isReLoginFail(model)){
+                    return;
+                }
                 if (model.getStatus() == 0){
                     mView.onLoginSuccess(model);
                 }else if (model.getStatus() == 1){
@@ -41,6 +44,9 @@ public class FlashPresenter extends FlashConstract.Presenter {
         mRxManager.add(Api.getInstance().Init(),new RxSubscriberCallBack<BaseData<InitData>>(new RxApiCallback<BaseData<InitData>>() {
             @Override
             public void onSuccess(BaseData<InitData> model) {
+                if (isReLoginFail(model)){
+                    return;
+                }
                 if (model.getStatus() == 0){
                     mView.onInitSuccess(model);
                 }else {
@@ -60,6 +66,9 @@ public class FlashPresenter extends FlashConstract.Presenter {
         mRxManager.add(Api.getInstance().GetAreaDetail(),new RxSubscriberCallBack<BaseData<List<String>>>(new RxApiCallback<BaseData<List<String>>>() {
             @Override
             public void onSuccess(BaseData<List<String>> model) {
+                if (isReLoginFail(model)){
+                    return;
+                }
                 if (model.getStatus() == 0){
                     mView.onGetAreaSuccess(model);
                 }else {

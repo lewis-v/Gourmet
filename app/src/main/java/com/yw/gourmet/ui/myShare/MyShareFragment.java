@@ -128,6 +128,7 @@ public class MyShareFragment extends BaseFragment<MySharePresenter> implements M
                 }else {
                     MultipartBody.Builder builder = new MultipartBody.Builder()
                             .setType(MultipartBody.FORM)
+                            .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                             .addFormDataPart("id", Constant.userData.getUser_id())
                             .addFormDataPart("type",listData.get(position).getType()+"")
                             .addFormDataPart("act_id",listData.get(position).getId())
@@ -143,6 +144,7 @@ public class MyShareFragment extends BaseFragment<MySharePresenter> implements M
                 }else {
                     MultipartBody.Builder builder = new MultipartBody.Builder()
                             .setType(MultipartBody.FORM)
+                            .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                             .addFormDataPart("id", Constant.userData.getUser_id())
                             .addFormDataPart("type",listData.get(position).getType()+"")
                             .addFormDataPart("act_id",listData.get(position).getId())

@@ -159,6 +159,7 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
                 }else {
                     MultipartBody.Builder builder = new MultipartBody.Builder()
                             .setType(MultipartBody.FORM)
+                            .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                             .addFormDataPart("id", Constant.userData.getUser_id())
                             .addFormDataPart("type",listData.get(position).getType()+"")
                             .addFormDataPart("act_id",listData.get(position).getId())
@@ -174,6 +175,7 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
                 }else {
                     MultipartBody.Builder builder = new MultipartBody.Builder()
                             .setType(MultipartBody.FORM)
+                            .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                             .addFormDataPart("id", Constant.userData.getUser_id())
                             .addFormDataPart("type",listData.get(position).getType()+"")
                             .addFormDataPart("act_id",listData.get(position).getId())
@@ -350,6 +352,14 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
                         }
                     });
             RxSubscriptions.add(mRxSubSticky);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mRxSubSticky != null) {
+            mRxSubSticky.unsubscribe();
         }
     }
 }

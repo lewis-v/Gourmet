@@ -17,6 +17,9 @@ public class AboutPresenter extends AboutContract.Presenter {
         mRxManager.add(Api.getInstance().Init(),new RxSubscriberCallBack<BaseData<InitData>>(new RxApiCallback<BaseData<InitData>>() {
             @Override
             public void onSuccess(BaseData<InitData> model) {
+                if (isReLoginFail(model)){
+                    return;
+                }
                 if (model.getStatus() == 0){
                     mView.onGetVersionSuccess(model);
                 }else {

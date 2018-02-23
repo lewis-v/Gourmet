@@ -73,6 +73,9 @@ public class MyDialogFeedBackFragment extends BaseDialogFragment<MyDIalogPresent
         switch (v.getId()){
             case R.id.tv_cancel:
                 isShow = false;
+                if (et != null){
+                    et.setText("");
+                }
                 dismiss();
                 break;
             case R.id.tv_enter:
@@ -81,10 +84,14 @@ public class MyDialogFeedBackFragment extends BaseDialogFragment<MyDIalogPresent
                 }else {
                     MultipartBody.Builder builder = new MultipartBody.Builder()
                             .setType(MultipartBody.FORM)
+                            .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                             .addFormDataPart("id", Constant.userData.getUser_id())
                             .addFormDataPart("content",et.getText().toString());
                     mPresenter.feedback(builder.build().parts());
                     isShow = false;
+                    if (et != null){
+                        et.setText("");
+                    }
                     dismiss();
                 }
                 break;
@@ -94,6 +101,9 @@ public class MyDialogFeedBackFragment extends BaseDialogFragment<MyDIalogPresent
     @Override
     public void onBack() {
         isShow = false;
+        if (et != null){
+            et.setText("");
+        }
         super.onBack();
     }
 

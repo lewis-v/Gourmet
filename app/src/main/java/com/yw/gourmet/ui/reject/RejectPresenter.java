@@ -22,6 +22,9 @@ public class RejectPresenter extends RejectContract.Presenter {
         mRxManager.add(Api.getInstance().GetReject(parts),new RxSubscriberCallBack<BaseData<List<ShareListData<List<String>>>>>(new RxApiCallback<BaseData<List<ShareListData<List<String>>>>>() {
             @Override
             public void onSuccess(BaseData<List<ShareListData<List<String>>>> model) {
+                if (isReLoginFail(model)){
+                    return;
+                }
                 if (model.getStatus() == 0){
                     mView.onGetRejectSuccess(model,flag);
                 }else if (model.getStatus() == 1){
@@ -41,6 +44,9 @@ public class RejectPresenter extends RejectContract.Presenter {
         mRxManager.add(Api.getInstance().RejectDelete(parts),new RxSubscriberCallBack<BaseData>(new RxApiCallback<BaseData>() {
             @Override
             public void onSuccess(BaseData model) {
+                if (isReLoginFail(model)){
+                    return;
+                }
                 if (model.getStatus() == 0){
                     mView.onRejectDeleteSuccess(model,position);
                 }else {
