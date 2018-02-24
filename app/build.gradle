@@ -127,4 +127,8 @@ dependencies {
     // 此处以JCore 1.1.9 版本为例。
     //分包
     compile 'com.android.support:multidex:1.0.2'
+    //内存泄漏检测
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
+    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
+
 }

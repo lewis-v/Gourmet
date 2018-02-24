@@ -7,6 +7,7 @@ import android.support.multidex.MultiDexApplication;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.bumptech.glide.Glide;
+import com.squareup.leakcanary.LeakCanary;
 import com.yw.gourmet.center.MessageCenter;
 import com.yw.gourmet.push.PushManager;
 
@@ -46,6 +47,10 @@ public class App extends MultiDexApplication {
             if(process.pid == pid)
             {
                if (process.processName.equals(getPackageName())){//主进程
+                   if (!LeakCanary.isInAnalyzerProcess(this)) {
+                       LeakCanary.install(this);
+                   }
+
                    //初始化百度地图
                    SDKInitializer.initialize(getApplicationContext());
                    initPush();
