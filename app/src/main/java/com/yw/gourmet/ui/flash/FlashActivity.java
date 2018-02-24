@@ -15,6 +15,7 @@ import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.data.InitData;
 import com.yw.gourmet.data.UserData;
 import com.yw.gourmet.push.PushManager;
+import com.yw.gourmet.ui.channel.ChannelActivity;
 import com.yw.gourmet.ui.chat.ChatActivity;
 import com.yw.gourmet.ui.main.MainActivity;
 import com.yw.gourmet.utils.SPUtils;
@@ -80,7 +81,7 @@ public class FlashActivity extends BaseActivity<FlashPresenter> implements Flash
                     {
                         startActivity(new Intent(FlashActivity.this, MainActivity.class));
                     }else{
-                        startActivity(new Intent(FlashActivity.this, ChatActivity.class));
+                        startActivity(new Intent(FlashActivity.this, ChannelActivity.class));
                     }
                 } catch (PackageManager.NameNotFoundException e) {
                     e.printStackTrace();
@@ -141,7 +142,7 @@ public class FlashActivity extends BaseActivity<FlashPresenter> implements Flash
                     {
                         startActivity(new Intent(FlashActivity.this, MainActivity.class));
                     }else{
-                        startActivity(new Intent(FlashActivity.this, ChatActivity.class));
+                        startActivity(new Intent(FlashActivity.this, ChannelActivity.class));
                     }
                 } catch (PackageManager.NameNotFoundException e) {
                     e.printStackTrace();
@@ -179,6 +180,10 @@ public class FlashActivity extends BaseActivity<FlashPresenter> implements Flash
         }
     }
 
+    @Override
+    public boolean isFeedBack() {
+        return false;
+    }
 
     @Override
     protected void onDestroy() {

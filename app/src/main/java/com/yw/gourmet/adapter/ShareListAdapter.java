@@ -71,6 +71,21 @@ public class ShareListAdapter extends RecyclerView.Adapter<ShareListAdapter.MyVi
         return this;
     }
 
+    /**
+     * 通过类型及id获取位置,不存在时返回-1
+     * @param type
+     * @param id
+     * @return
+     */
+    public int getPosition(int type,String id){
+        for (int len = listData.size(),num = 0;num < len;num++){
+            if (type == listData.get(num).getType() && id.equals(listData.get(num).getId())){
+                return num;
+            }
+        }
+        return -1;
+    }
+
     public boolean isEnd() {
         return isEnd;
     }

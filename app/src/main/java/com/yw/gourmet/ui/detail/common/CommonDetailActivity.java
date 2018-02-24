@@ -37,6 +37,8 @@ import com.yw.gourmet.dialog.MyDialogComplaintFragment;
 import com.yw.gourmet.dialog.MyDialogMoreFragment;
 import com.yw.gourmet.dialog.MyDialogPhotoShowFragment;
 import com.yw.gourmet.listener.OnItemClickListener;
+import com.yw.gourmet.rxbus.EventSticky;
+import com.yw.gourmet.rxbus.RxBus;
 import com.yw.gourmet.ui.personal.PersonalActivity;
 import com.yw.gourmet.utils.ToastUtils;
 import com.yw.gourmet.utils.WindowUtil;
@@ -303,6 +305,9 @@ public class CommonDetailActivity extends BaseActivity<CommonDetailPresenter> im
         recycler_comment.smoothScrollToPosition(commentDataList.size());
         img_comment.setImageResource(R.drawable.comment_ic);
         tv_comment.setTextColor(ContextCompat.getColor(this,R.color.colorAccent));
+        EventSticky eventSticky = new EventSticky("refresh_comment",listShareListData.getType()
+                ,listShareListData.getId(),commentDataList.size(),Constant.CommentType.COMMENT);
+        RxBus.getDefault().postSticky(eventSticky);
     }
 
     @Override
@@ -324,16 +329,30 @@ public class CommonDetailActivity extends BaseActivity<CommonDetailPresenter> im
         if (listShareListData.getComment_num() > 0){
             tv_comment.setText(String.valueOf(listShareListData.getComment_num()));
         }
+        EventSticky eventSticky = new EventSticky("refresh_one",model.getData().getType()
+                ,model.getData().getId(),model.getData().getGood_num(),model.getData().getBad_num()
+                ,model.getData().getComment_num());
         String goodAct = model.getData().getGood_act();
         if (goodAct != null){
             if (goodAct.equals("0")){
+                eventSticky.setAct(Constant.CommentType.BAD);
                 img_bad.setImageResource(R.drawable.bad_ic);
                 tv_bad.setTextColor(ContextCompat.getColor(this,R.color.colorAccent));
             }else if (goodAct.equals("1")){
                 img_good.setImageResource(R.drawable.good_ic);
                 tv_good.setTextColor(ContextCompat.getColor(this,R.color.colorAccent));
+                eventSticky.setAct(Constant.CommentType.GOOD);
             }
         }
+        if (model.getData().getComment_num() != commentDataList.size()){//评论数量与服务器不一致,进行刷新
+            MultipartBody.Builder builderComment = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
+                    .addFormDataPart("id",getIntent().getStringExtra("id"))
+                    .addFormDataPart("type",getIntent().getStringExtra("type"));
+            mPresenter.getComment(builderComment.build().parts());
+        }
+        RxBus.getDefault().postSticky(eventSticky);
     }
 
     @Override

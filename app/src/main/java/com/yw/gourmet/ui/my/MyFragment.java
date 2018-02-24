@@ -116,10 +116,10 @@ public class MyFragment extends BaseFragment implements View.OnClickListener,MyC
      * 设置个人信息参数显示
      */
     public void setData(){
-        tv_nickname.setText(Constant.userData.getNickname());
         GlideApp.with(this).load(Constant.userData.getImg_header()).error(R.mipmap.load_fail)
                 .placeholder(R.mipmap.loading)
                 .transform(new GlideCircleTransform(getContext())).into(img_header);
+        tv_nickname.setText(Constant.userData.getNickname());
         tv_raiders.setText(String.valueOf(Constant.userData.getRaiders_num()));
         tv_menu.setText(String.valueOf(Constant.userData.getMenu_num()));
         tv_diary.setText(String.valueOf(Constant.userData.getDiary_num()));
@@ -259,6 +259,11 @@ public class MyFragment extends BaseFragment implements View.OnClickListener,MyC
                                         scroll_my.setVisibility(View.VISIBLE);
                                         setData();
                                         constraint_my.setVisibility(View.GONE);
+                                    }
+                                    break;
+                                case "change_detail":
+                                    if (Constant.userData != null) {
+                                        setData();
                                     }
                                     break;
                             }

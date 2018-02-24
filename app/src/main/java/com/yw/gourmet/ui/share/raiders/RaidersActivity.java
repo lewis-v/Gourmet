@@ -27,6 +27,8 @@ import com.yw.gourmet.listener.OnCancelClickListener;
 import com.yw.gourmet.listener.OnDeleteListener;
 import com.yw.gourmet.listener.OnEditDialogEnterClickListener;
 import com.yw.gourmet.listener.OnItemClickListener;
+import com.yw.gourmet.rxbus.EventSticky;
+import com.yw.gourmet.rxbus.RxBus;
 import com.yw.gourmet.utils.ToastUtils;
 
 import org.json.JSONArray;
@@ -272,6 +274,7 @@ public class RaidersActivity extends BaseActivity<RaidersPresenter> implements V
                 SaveDataUtil.delete(saveData.get_id());
             }
         }catch (Exception e){}
+        RxBus.getDefault().postSticky(new EventSticky("gourmet_refresh"));
         finish();
     }
 

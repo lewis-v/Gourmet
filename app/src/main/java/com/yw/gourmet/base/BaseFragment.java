@@ -5,6 +5,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +15,18 @@ import com.yw.gourmet.dialog.MyDialogLoadFragment;
 import com.yw.gourmet.push.PushManager;
 import com.yw.gourmet.rxbus.EventSticky;
 import com.yw.gourmet.rxbus.RxBus;
+import com.yw.gourmet.rxbus.RxBusSubscriber;
+import com.yw.gourmet.rxbus.RxSubscriptions;
 import com.yw.gourmet.utils.ToastUtils;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
+
+import rx.Observable;
+import rx.Subscription;
+import rx.functions.Action1;
+import rx.functions.Func1;
 
 /**
  * Created by yw on 2017-08-07.
@@ -32,6 +40,7 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment {
     private MyDialogLoadFragment myDialogLoadFragment;
     protected List<Thread> threadList = new ArrayList<>();
     private boolean isReLogining = false;
+    private Subscription mRxSubSticky;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -119,6 +128,55 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment {
         }
     }
 
+
+    /**
+     * 设置事件总线
+     */
+    public void setRxBus(){
+        if (mRxSubSticky != null && !mRxSubSticky.isUnsubscribed()) {
+            RxSubscriptions.remove(mRxSubSticky);
+        } else {
+            EventSticky s = RxBus.getDefault().getStickyEvent(EventSticky.class);
+            Log.i("FFF", "获取到StickyEvent--->" + s);
+
+            mRxSubSticky = RxBus.getDefault().toObservableSticky(EventSticky.class)
+                    .flatMap(new Func1<EventSticky, Observable<EventSticky>>() {
+                        @Override
+                        public Observable<EventSticky> call(EventSticky eventSticky) {
+                            return Observable.just(eventSticky)
+                                    .map(new Func1<EventSticky, EventSticky>() {
+                                        @Override
+                                        public EventSticky call(EventSticky eventSticky) {
+                                            // 这里模拟产生 Error
+                                            return eventSticky;
+                                        }
+                                    })
+                                    .doOnError(new Action1<Throwable>() {
+                                        @Override
+                                        public void call(Throwable throwable) {
+                                            Log.e("FFF", "onError--Sticky");
+                                        }
+                                    })
+                                    .onErrorResumeNext(Observable.<EventSticky>empty());
+                        }
+                    })
+                    .subscribe(new RxBusSubscriber<EventSticky>() {
+                        @Override
+                        protected void onEvent(EventSticky eventSticky) {
+                            Log.i("FFF", "onNext--Sticky-->" + eventSticky.event);
+                            onGetEvent(eventSticky);
+                        }
+                    });
+            RxSubscriptions.add(mRxSubSticky);
+        }
+    }
+
+    /**
+     * 接收到事件
+     * @param eventSticky
+     */
+    public void onGetEvent(EventSticky eventSticky){}
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -126,6 +184,9 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment {
             mPresenter.onDestroy();
         }
         clearThread();
+        if (mRxSubSticky != null){
+            mRxSubSticky.unsubscribe();
+        }
     }
 
     public void clearThread(){

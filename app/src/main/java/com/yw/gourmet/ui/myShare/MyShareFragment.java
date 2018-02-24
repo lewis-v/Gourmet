@@ -22,6 +22,7 @@ import com.yw.gourmet.listener.OnItemClickListener;
 import com.yw.gourmet.listener.OnMoreListener;
 import com.yw.gourmet.listener.OnReMarkListener;
 import com.yw.gourmet.myenum.LoadEnum;
+import com.yw.gourmet.rxbus.EventSticky;
 import com.yw.gourmet.ui.detail.common.CommonDetailActivity;
 import com.yw.gourmet.ui.detail.diary.DiaryDetailActivity;
 import com.yw.gourmet.ui.detail.menu.MenuDetailActivity;
@@ -32,6 +33,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.MultipartBody;
+
+import static com.yw.gourmet.Constant.CommentType.BAD;
+import static com.yw.gourmet.Constant.CommentType.COMMENT;
+import static com.yw.gourmet.Constant.CommentType.GOOD;
 
 /**
  * auth: lewis-v
@@ -179,6 +184,7 @@ public class MyShareFragment extends BaseFragment<MySharePresenter> implements M
             }
         });
         refresh();
+        setRxBus();
     }
 
 
@@ -295,6 +301,37 @@ public class MyShareFragment extends BaseFragment<MySharePresenter> implements M
             builder.addFormDataPart("user_id",id);
         }
         mPresenter.getShareList(builder.build().parts(), LoadEnum.REFRESH);
+    }
+
+
+    @Override
+    public void onGetEvent(EventSticky eventSticky) {
+        super.onGetEvent(eventSticky);
+        switch (eventSticky.event){
+            case "refresh_one"://刷新点赞评价
+                int pos = adapter.getPosition(eventSticky.type,eventSticky.id);
+                if (pos > -1){
+                    listData.get(pos).setGood_num(eventSticky.good).setBad_num(eventSticky.bad)
+                            .setComment_num(eventSticky.comment);
+                    if (eventSticky.act == GOOD){
+                        listData.get(pos).setGood_act("1");
+                    }else if(eventSticky.act == BAD){
+                        listData.get(pos).setGood_act("0");
+                    }
+                    adapter.notifyItemChanged(pos);
+                }
+                break;
+            case "refresh_comment"://刷新评论
+                int position = adapter.getPosition(eventSticky.type,eventSticky.id);
+                if (position > -1){
+                    listData.get(position).setComment_num(eventSticky.comment);
+                    if (eventSticky.act == COMMENT){
+                        listData.get(position).setIs_comment("ok");
+                    }
+                    adapter.notifyItemChanged(position);
+                }
+                break;
+        }
     }
 
     /**

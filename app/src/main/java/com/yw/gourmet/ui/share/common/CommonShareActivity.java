@@ -25,6 +25,8 @@ import com.yw.gourmet.listener.OnAddListener;
 import com.yw.gourmet.listener.OnCancelClickListener;
 import com.yw.gourmet.listener.OnDeleteListener;
 import com.yw.gourmet.listener.OnItemClickListener;
+import com.yw.gourmet.rxbus.EventSticky;
+import com.yw.gourmet.rxbus.RxBus;
 import com.yw.gourmet.utils.ThreadUtils;
 import com.yw.gourmet.utils.ToastUtils;
 
@@ -364,6 +366,7 @@ public class CommonShareActivity extends BaseActivity<CommonSharePresenter> impl
                 SaveDataUtil.delete(saveData.get_id());
             }
         }catch (Exception e){}
+        RxBus.getDefault().postSticky(new EventSticky("gourmet_refresh"));
         finish();
     }
 

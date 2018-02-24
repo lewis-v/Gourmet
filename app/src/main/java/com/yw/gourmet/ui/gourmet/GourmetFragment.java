@@ -43,6 +43,10 @@ import rx.Subscription;
 import rx.functions.Action1;
 import rx.functions.Func1;
 
+import static com.yw.gourmet.Constant.CommentType.BAD;
+import static com.yw.gourmet.Constant.CommentType.COMMENT;
+import static com.yw.gourmet.Constant.CommentType.GOOD;
+
 /**
  * Created by Administrator on 2017/10/22.
  */
@@ -296,7 +300,7 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
 
     @Override
     public void onRefresh() {
-       refresh();
+        refresh();
     }
 
     /**
@@ -346,7 +350,32 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
                             Log.i("FFF", "onNext--Sticky-->" + eventSticky.event);
                             switch (eventSticky.event){
                                 case "out":
-                                   refresh();
+                                case "change_detail"://修改个人信息
+                                case "gourmet_refresh"://刷新分享全部
+                                    refresh();
+                                    break;
+                                case "refresh_one"://刷新点赞评价
+                                    int pos = adapter.getPosition(eventSticky.type,eventSticky.id);
+                                    if (pos > -1){
+                                        listData.get(pos).setGood_num(eventSticky.good).setBad_num(eventSticky.bad)
+                                                .setComment_num(eventSticky.comment);
+                                        if (eventSticky.act == GOOD){
+                                            listData.get(pos).setGood_act("1");
+                                        }else if(eventSticky.act == BAD){
+                                            listData.get(pos).setGood_act("0");
+                                        }
+                                        adapter.notifyItemChanged(pos);
+                                    }
+                                    break;
+                                case "refresh_comment"://刷新评论
+                                    int position = adapter.getPosition(eventSticky.type,eventSticky.id);
+                                    if (position > -1){
+                                        listData.get(position).setComment_num(eventSticky.comment);
+                                        if (eventSticky.act == COMMENT){
+                                            listData.get(position).setIs_comment("ok");
+                                        }
+                                        adapter.notifyItemChanged(position);
+                                    }
                                     break;
                             }
                         }

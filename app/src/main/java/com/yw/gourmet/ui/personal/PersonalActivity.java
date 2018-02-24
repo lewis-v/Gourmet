@@ -33,6 +33,7 @@ import com.yw.gourmet.dialog.MyDialogPhotoShowFragment;
 import com.yw.gourmet.listener.OnItemClickListener;
 import com.yw.gourmet.listener.OnMoreListener;
 import com.yw.gourmet.listener.OnReMarkListener;
+import com.yw.gourmet.rxbus.EventSticky;
 import com.yw.gourmet.ui.changeDetail.ChangeDetailActivity;
 import com.yw.gourmet.ui.chat.ChatActivity;
 import com.yw.gourmet.ui.detail.common.CommonDetailActivity;
@@ -53,6 +54,10 @@ import io.reactivex.schedulers.Schedulers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+
+import static com.yw.gourmet.Constant.CommentType.BAD;
+import static com.yw.gourmet.Constant.CommentType.COMMENT;
+import static com.yw.gourmet.Constant.CommentType.GOOD;
 
 public class PersonalActivity extends BaseActivity<PersonalPresenter> implements PersonalContract.View
         ,View.OnClickListener, MyDialogPhotoChooseFragment.OnCropListener {
@@ -300,6 +305,7 @@ public class PersonalActivity extends BaseActivity<PersonalPresenter> implements
                 }
             });
         }
+        setRxBus();
     }
 
     /**
@@ -335,6 +341,41 @@ public class PersonalActivity extends BaseActivity<PersonalPresenter> implements
                     .into(img_header);
             GlideApp.with(this).load(Constant.userData.getPersonal_back())
                     .placeholder(R.mipmap.loading).error(R.mipmap.load_fail).into(img_tool_back);
+        }
+    }
+
+    @Override
+    public void onGetEvent(EventSticky eventSticky) {
+        super.onGetEvent(eventSticky);
+        switch (eventSticky.event){
+            case "change_detail"://修改了个人信息,这里刷新置顶列表就可以了
+                mPresenter.getTop(new MultipartBody.Builder().setType(MultipartBody.FORM)
+                        .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
+                        .addFormDataPart("id", id).build().parts());
+                break;
+            case "refresh_one"://刷新点赞评价
+                int pos = adapter.getPosition(eventSticky.type,eventSticky.id);
+                if (pos > -1){
+                    listTop.get(pos).setGood_num(eventSticky.good).setBad_num(eventSticky.bad)
+                            .setComment_num(eventSticky.comment);
+                    if (eventSticky.act == GOOD){
+                        listTop.get(pos).setGood_act("1");
+                    }else if(eventSticky.act == BAD){
+                        listTop.get(pos).setGood_act("0");
+                    }
+                    adapter.notifyItemChanged(pos);
+                }
+                break;
+            case "refresh_comment"://刷新评论
+                int position = adapter.getPosition(eventSticky.type,eventSticky.id);
+                if (position > -1){
+                    listTop.get(position).setComment_num(eventSticky.comment);
+                    if (eventSticky.act == COMMENT){
+                        listTop.get(position).setIs_comment("ok");
+                    }
+                    adapter.notifyItemChanged(position);
+                }
+                break;
         }
     }
 

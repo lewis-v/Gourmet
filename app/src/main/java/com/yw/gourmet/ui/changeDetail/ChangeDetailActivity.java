@@ -19,6 +19,8 @@ import com.yw.gourmet.dialog.MyDialogChooseListFragment;
 import com.yw.gourmet.dialog.MyDialogEditFragment;
 import com.yw.gourmet.dialog.MyDialogPhotoChooseFragment;
 import com.yw.gourmet.listener.OnEditDialogEnterClickListener;
+import com.yw.gourmet.rxbus.EventSticky;
+import com.yw.gourmet.rxbus.RxBus;
 import com.yw.gourmet.utils.SPUtils;
 import com.yw.gourmet.utils.ToastUtils;
 import com.yw.gourmet.widget.GlideCircleTransform;
@@ -97,6 +99,7 @@ public class ChangeDetailActivity extends BaseActivity<ChangeDetailPresenter> im
         Constant.userData = model.getData();
         SPUtils.setSharedStringData(getApplicationContext(),"img_header",model.getData().getImg_header());
         setData();
+        RxBus.getDefault().postSticky(new EventSticky("change_detail"));
     }
 
     @Override

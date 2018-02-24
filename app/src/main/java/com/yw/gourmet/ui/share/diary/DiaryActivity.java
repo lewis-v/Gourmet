@@ -28,6 +28,8 @@ import com.yw.gourmet.dialog.MyDialogTipFragment;
 import com.yw.gourmet.listener.MyAction;
 import com.yw.gourmet.listener.OnCancelClickListener;
 import com.yw.gourmet.listener.OnToolClickListener;
+import com.yw.gourmet.rxbus.EventSticky;
+import com.yw.gourmet.rxbus.RxBus;
 import com.yw.gourmet.ui.share.ToolFragment;
 import com.yw.gourmet.ui.share.ToolType;
 import com.yw.gourmet.utils.ToastUtils;
@@ -338,6 +340,7 @@ public class DiaryActivity extends BaseActivity<DiaryPresenter> implements View.
                 SaveDataUtil.delete(saveData.get_id());
             }
         }catch (Exception e){}
+        RxBus.getDefault().postSticky(new EventSticky("gourmet_refresh"));
         finish();
     }
 

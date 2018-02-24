@@ -27,6 +27,8 @@ import com.yw.gourmet.dialog.MyDialogLoadFragment;
 import com.yw.gourmet.push.PushManager;
 import com.yw.gourmet.rxbus.EventSticky;
 import com.yw.gourmet.rxbus.RxBus;
+import com.yw.gourmet.rxbus.RxBusSubscriber;
+import com.yw.gourmet.rxbus.RxSubscriptions;
 import com.yw.gourmet.utils.SPUtils;
 import com.yw.gourmet.utils.ShakeUtils;
 import com.yw.gourmet.utils.ToastUtils;
@@ -36,6 +38,11 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
+
+import rx.Observable;
+import rx.Subscription;
+import rx.functions.Action1;
+import rx.functions.Func1;
 
 
 /**
@@ -49,6 +56,7 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
     protected Toolbar toolbar;
     protected View view_parent;
     private boolean isReLogining = false;
+    private Subscription mRxSubSticky;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -241,34 +249,46 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
     @Override
     protected void onResume() {
         super.onResume();
-        ShakeUtils.getInstance(getApplication().getApplicationContext()).setOnShakeListener(new ShakeUtils.OnShakeListener() {
-            @Override
-            public void onShake() {
-                if (Constant.userData != null) {//登录后才可反馈信息
-                    if (!MyDialogFeedBackFragment.getInstance().isShow()) {
-                        new Handler(Looper.getMainLooper()).post(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (!MyDialogFeedBackFragment.getInstance().isShow()) {
-                                    Vibrator vibrator = (Vibrator)getSystemService(VIBRATOR_SERVICE);
-                                    if (vibrator != null) {
-                                        vibrator.vibrate(500);
+        if (isFeedBack()) {
+            ShakeUtils.getInstance(getApplication().getApplicationContext()).setOnShakeListener(new ShakeUtils.OnShakeListener() {
+                @Override
+                public void onShake() {
+                    if (Constant.userData != null) {//登录后才可反馈信息
+                        if (!MyDialogFeedBackFragment.getInstance().isShow()) {
+                            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (!MyDialogFeedBackFragment.getInstance().isShow()) {
+                                        Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+                                        if (vibrator != null) {
+                                            vibrator.vibrate(500);
+                                        }
+                                        MyDialogFeedBackFragment.getInstance().show(getSupportFragmentManager(), "");
                                     }
-                                    MyDialogFeedBackFragment.getInstance().show(getSupportFragmentManager(), "");
                                 }
-                            }
-                        });
+                            });
+                        }
                     }
                 }
-            }
-        });
-        ShakeUtils.getInstance(getApplication().getApplicationContext()).onResume();
+            });
+            ShakeUtils.getInstance(getApplication().getApplicationContext()).onResume();
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        ShakeUtils.getInstance(getApplication().getApplicationContext()).onPause();
+        if (isFeedBack()) {
+            ShakeUtils.getInstance(getApplication().getApplicationContext()).onPause();
+        }
+    }
+
+    /**
+     * 是否开启摇一摇反馈功能,默认开启
+     * @return
+     */
+    public boolean isFeedBack(){
+        return true;
     }
 
     @Override
@@ -279,7 +299,58 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
         }
         clearThread();
         ActivityStack.getScreenManager().popActivity(this);
+        if (mRxSubSticky != null){
+            mRxSubSticky.unsubscribe();
+        }
     }
+
+    /**
+     * 设置事件总线
+     */
+    public void setRxBus(){
+        if (mRxSubSticky != null && !mRxSubSticky.isUnsubscribed()) {
+            RxSubscriptions.remove(mRxSubSticky);
+        } else {
+            EventSticky s = RxBus.getDefault().getStickyEvent(EventSticky.class);
+            Log.i("FFF", "获取到StickyEvent--->" + s);
+
+            mRxSubSticky = RxBus.getDefault().toObservableSticky(EventSticky.class)
+                    .flatMap(new Func1<EventSticky, Observable<EventSticky>>() {
+                        @Override
+                        public Observable<EventSticky> call(EventSticky eventSticky) {
+                            return Observable.just(eventSticky)
+                                    .map(new Func1<EventSticky, EventSticky>() {
+                                        @Override
+                                        public EventSticky call(EventSticky eventSticky) {
+                                            // 这里模拟产生 Error
+                                            return eventSticky;
+                                        }
+                                    })
+                                    .doOnError(new Action1<Throwable>() {
+                                        @Override
+                                        public void call(Throwable throwable) {
+                                            Log.e("FFF", "onError--Sticky");
+                                        }
+                                    })
+                                    .onErrorResumeNext(Observable.<EventSticky>empty());
+                        }
+                    })
+                    .subscribe(new RxBusSubscriber<EventSticky>() {
+                        @Override
+                        protected void onEvent(EventSticky eventSticky) {
+                            Log.i("FFF", "onNext--Sticky-->" + eventSticky.event);
+                            onGetEvent(eventSticky);
+                        }
+                    });
+            RxSubscriptions.add(mRxSubSticky);
+        }
+    }
+
+    /**
+     * 接收到事件
+     * @param eventSticky
+     */
+    public void onGetEvent(EventSticky eventSticky){}
 
     public void clearThread(){
         for (Thread thread: threadList){
