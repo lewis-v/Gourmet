@@ -16,27 +16,32 @@
         android:padding="30dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-    <EditText
-        android:id="@+id/et_code"
-        android:hint="@string/code"
-        android:background="@null"
-        android:inputType="number"
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/tl_code"
         app:layout_constraintTop_toBottomOf="@+id/tv_tip"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/tv_re_get"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="20dp"
-        android:textSize="18sp"
         android:layout_width="0dp"
+        android:layout_height="wrap_content">
+    <EditText
+        android:id="@+id/et_code"
+        android:hint="@string/code"
+        android:background="@null"
+        android:inputType="number"
+        android:textSize="18sp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+    </android.support.design.widget.TextInputLayout>
     <TextView
         android:id="@+id/tv_re_get"
         android:text="@string/re_get_code"
         android:textColor="@color/close"
-        app:layout_constraintLeft_toRightOf="@+id/et_code"
+        app:layout_constraintLeft_toRightOf="@+id/tl_code"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/et_code"
-        app:layout_constraintBottom_toBottomOf="@+id/et_code"
+        app:layout_constraintTop_toTopOf="@+id/tl_code"
+        app:layout_constraintBottom_toBottomOf="@+id/tl_code"
         android:padding="10dp"
         android:layout_marginRight="10dp"
         android:layout_width="wrap_content"
@@ -44,9 +49,9 @@
     <View
         android:id="@+id/dev"
         android:background="@color/dev"
-        app:layout_constraintTop_toBottomOf="@+id/et_code"
-        app:layout_constraintLeft_toLeftOf="@+id/et_code"
-        app:layout_constraintRight_toRightOf="@+id/et_code"
+        app:layout_constraintTop_toBottomOf="@+id/tl_code"
+        app:layout_constraintLeft_toLeftOf="@+id/tl_code"
+        app:layout_constraintRight_toRightOf="@+id/tl_code"
         android:layout_width="0dp"
         android:layout_height="1px"/>
     <Button

@@ -241,7 +241,7 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
     @Override
     protected void onResume() {
         super.onResume();
-        ShakeUtils.getInstance(this).setOnShakeListener(new ShakeUtils.OnShakeListener() {
+        ShakeUtils.getInstance(getApplication().getApplicationContext()).setOnShakeListener(new ShakeUtils.OnShakeListener() {
             @Override
             public void onShake() {
                 if (Constant.userData != null) {//登录后才可反馈信息
@@ -262,13 +262,13 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
                 }
             }
         });
-        ShakeUtils.getInstance(this).onResume();
+        ShakeUtils.getInstance(getApplication().getApplicationContext()).onResume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        ShakeUtils.getInstance(this).onPause();
+        ShakeUtils.getInstance(getApplication().getApplicationContext()).onPause();
     }
 
     @Override

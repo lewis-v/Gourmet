@@ -166,6 +166,9 @@ public class MyShareFragment extends BaseFragment<MySharePresenter> implements S
         ((SetTopContract.TopView)getActivity()).addTop(listData.get(position),position);
         if (listData.size() == 0){
             ll_nothing.setVisibility(View.VISIBLE);
+        }else{
+            listData.remove(position);
+            adapter.notifyItemRemoved(position);
         }
     }
 

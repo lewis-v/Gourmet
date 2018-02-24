@@ -173,7 +173,8 @@ public class SetTopActivity extends BaseActivity<SetTopPresenter> implements Set
                         .addFormDataPart("type", String.valueOf(data.get(position).getType()))
                         .addFormDataPart("act_id",data.get(position).getId())
                         .addFormDataPart("top_num", String.valueOf(position+1))
-                        .addFormDataPart("top_num2", String.valueOf(position+1)).build().parts(),position,position);
+                        .addFormDataPart("top_num2", String.valueOf(position+1))
+                        .build().parts(),position,position);
             }
 
             @Override
@@ -235,6 +236,9 @@ public class SetTopActivity extends BaseActivity<SetTopPresenter> implements Set
             adapter.notifyItemMoved(position,endPosition);
         }
         adapter.setMove(endPosition);
+        if (shareFragment != null) {
+            shareFragment.refresh();
+        }
     }
 
     @Override

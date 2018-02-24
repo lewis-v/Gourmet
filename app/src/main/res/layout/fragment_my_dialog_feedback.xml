@@ -11,20 +11,24 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+        <android.support.design.widget.TextInputLayout
+            android:layout_marginTop="60dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
         <EditText
             android:id="@+id/et"
             android:hint="@string/feedback_tip"
             android:maxLines="6"
             android:inputType="text"
             android:imeOptions="actionDone"
-            android:layout_marginTop="60dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
             android:background="@null"
             android:textColor="@color/word_black"
             android:textSize="16sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+        </android.support.design.widget.TextInputLayout>
         <LinearLayout
             android:background="@color/dev"
             android:layout_marginLeft="18dp"

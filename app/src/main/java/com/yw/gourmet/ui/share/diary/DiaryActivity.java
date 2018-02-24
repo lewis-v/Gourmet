@@ -5,6 +5,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateFormat;
@@ -48,7 +49,7 @@ public class DiaryActivity extends BaseActivity<DiaryPresenter> implements View.
     private EditText et_title;
     private TextView tv_address,tv_time,tv_auth,tv_cancel,tv_send,tv_power;
     private RichEditor richeditor_diary;
-    private ImageView img_tool;
+    private FloatingActionButton fb_tool;
     private FrameLayout fl_tool;
     private String content = "";
     private boolean isShowTool = false;//工具栏是否显示
@@ -87,8 +88,8 @@ public class DiaryActivity extends BaseActivity<DiaryPresenter> implements View.
         tv_send.setOnClickListener(this);
         tv_power.setOnClickListener(this);
 
-        img_tool = (ImageView)findViewById(R.id.img_tool);
-        img_tool.setOnClickListener(this);
+        fb_tool = findViewById(R.id.fb_tool);
+        fb_tool.setOnClickListener(this);
 
         if (Constant.userData != null){
             tv_auth.setText("作者:"+Constant.userData.getNickname());
@@ -183,8 +184,8 @@ public class DiaryActivity extends BaseActivity<DiaryPresenter> implements View.
             case R.id.tv_time:
                 setTime();
                 break;
-            case R.id.img_tool:
-                addFragmentFunction(!isShowTool,null);
+            case R.id.fb_tool:
+                addFragmentFunction(!isShowTool);
                 break;
             case R.id.tv_cancel:
                 back();
@@ -236,7 +237,7 @@ public class DiaryActivity extends BaseActivity<DiaryPresenter> implements View.
                 "})()");
     }
 
-    public void addFragmentFunction(final boolean isShow, final MyAction action){
+    public void addFragmentFunction(final boolean isShow){
         if (toolShowing){
             return;
         }
@@ -249,24 +250,20 @@ public class DiaryActivity extends BaseActivity<DiaryPresenter> implements View.
                 toolFragment = new ToolFragment().setOnToolClickListener(this).setType(type);
             }
             fragmentTransaction.add(R.id.fl_tool,toolFragment);
-            objectAnimator = ObjectAnimator.ofFloat(img_tool,"rotation",0,-45);//加号的旋转动画
+            objectAnimator = ObjectAnimator.ofFloat(fb_tool,"rotation",0,-45);//加号的旋转动画
         }else {
             if (toolFragment != null) {
                 fragmentTransaction.remove(toolFragment);
-                objectAnimator = ObjectAnimator.ofFloat(img_tool,"rotation",-45,0);//加号的旋转动画
+                objectAnimator = ObjectAnimator.ofFloat(fb_tool,"rotation",-45,0);//加号的旋转动画
             }
         }
         fragmentTransaction.runOnCommit(new Runnable() {
             @Override
             public void run() {
-                if (action != null) {
-                    action.Action0();
-                }
                 isShowTool = isShow;
                 toolShowing = false;
             }
-        });
-        fragmentTransaction.commit();
+        }).commit();
         if (objectAnimator != null) {
             AnimatorSet animatorSet = new AnimatorSet();
             animatorSet.play(objectAnimator);

@@ -11,17 +11,27 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <EditText
-            android:id="@+id/et"
-            android:maxLines="6"
+        <android.support.design.widget.TextInputLayout
             android:layout_marginTop="60dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <EditText
+            android:id="@+id/et"
+            android:maxLines="6"
             android:background="@null"
             android:textColor="@color/word_black"
             android:textSize="16sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+        </android.support.design.widget.TextInputLayout>
+        <View
+            android:background="@color/dev"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="1px"/>
         <LinearLayout
             android:orientation="horizontal"
             android:layout_gravity="end"

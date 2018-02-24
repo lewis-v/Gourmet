@@ -4,6 +4,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -110,7 +111,7 @@ public class MenuActivity extends BaseActivity<MenuPresenter> implements View.On
 
         recycler_ingredient = (RecyclerView)findViewById(R.id.recycler_ingredient);
         recycler_ingredient.setItemAnimator(new DefaultItemAnimator());
-        recycler_ingredient.setLayoutManager(new GridLayoutManager(this,2));
+        recycler_ingredient.setLayoutManager(new StaggeredGridLayoutManager(3,StaggeredGridLayoutManager.HORIZONTAL));
         adapterIngredient = new IngredientAdapter(this,listIngredient);
         recycler_ingredient.setAdapter(adapterIngredient);
         recycler_ingredient.setNestedScrollingEnabled(false);//禁止滑动

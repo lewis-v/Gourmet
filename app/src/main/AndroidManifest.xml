@@ -206,15 +206,17 @@
                 <category android:name="com.yw.gourmet" />
             </intent-filter>
         </receiver>
-
-        <activity android:name=".ui.passwordChange.PasswordChangeActivity" />
-
+        <!--更改密码-->
+        <activity android:name=".ui.passwordChange.PasswordChangeActivity"
+            android:screenOrientation="portrait"/>
+        <!--更新APP-->
         <service
             android:name=".service.UpdateService"
             android:enabled="true"
             android:exported="true" />
-
-        <activity android:name=".ui.reject.RejectActivity"></activity>
+        <!--被拒绝分享-->
+        <activity android:name=".ui.reject.RejectActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

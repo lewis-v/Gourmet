@@ -132,4 +132,5 @@
     <string name="clear_all">清空</string>
     <string name="appeal">申诉</string>
     <string name="appeal_cause">申诉原因</string>
+    <string name="account">账号/手机号</string>
 </resources>

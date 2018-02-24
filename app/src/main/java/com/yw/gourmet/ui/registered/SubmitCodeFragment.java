@@ -60,16 +60,19 @@ public class SubmitCodeFragment extends BaseFragment {
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
-                waitTime--;
-                if (waitTime == 0){
-                    tv_re_get.setText("重新获取验证码");
-                    tv_re_get.setTextColor(ContextCompat.getColor(getContext(),R.color.colorAccent));
-                }else {
-                    tv_re_get.setText("重新获取验证码(" + (waitTime) + "s)");
-                    tv_re_get.setTextColor(ContextCompat.getColor(getContext(),R.color.close));
-                    setWaitTime();
-                }
+                try {
+                    waitTime--;
+                    if (waitTime == 0) {
+                        tv_re_get.setText("重新获取验证码");
+                        tv_re_get.setTextColor(ContextCompat.getColor(getContext(), R.color.colorAccent));
+                    } else {
+                        tv_re_get.setText("重新获取验证码(" + (waitTime) + "s)");
+                        tv_re_get.setTextColor(ContextCompat.getColor(getContext(), R.color.close));
+                        setWaitTime();
+                    }
+                }catch (Exception e){}
             }
         },1000);
     }
+
 }
