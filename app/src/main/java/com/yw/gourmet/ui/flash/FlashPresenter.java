@@ -27,7 +27,7 @@ public class FlashPresenter extends FlashConstract.Presenter {
                 }
                 if (model.getStatus() == 0){
                     mView.onLoginSuccess(model);
-                }else if (model.getStatus() == 1){
+                }else{
                     mView.onFail(model.getMessage());
                 }
             }

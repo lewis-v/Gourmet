@@ -26,6 +26,7 @@ import com.yw.gourmet.GlideApp;
 import com.yw.gourmet.GlideRequest;
 import com.yw.gourmet.R;
 import com.yw.gourmet.api.Api;
+import com.yw.gourmet.base.ActivityStack;
 import com.yw.gourmet.base.rx.RxApiCallback;
 import com.yw.gourmet.base.rx.RxManager;
 import com.yw.gourmet.base.rx.RxSubscriberCallBack;
@@ -35,11 +36,13 @@ import com.yw.gourmet.center.event.IMessageSendEvent;
 import com.yw.gourmet.dao.data.messageData.MessageDataUtil;
 import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.data.MessageListData;
+import com.yw.gourmet.push.PushManager;
 import com.yw.gourmet.rxbus.EventSticky;
 import com.yw.gourmet.rxbus.RxBus;
 import com.yw.gourmet.rxbus.RxBusSubscriber;
 import com.yw.gourmet.rxbus.RxSubscriptions;
 import com.yw.gourmet.ui.chat.ChatActivity;
+import com.yw.gourmet.utils.SPUtils;
 import com.yw.gourmet.utils.ToastUtils;
 
 import java.util.List;
@@ -65,6 +68,18 @@ public class MessageService extends Service {
         iMessageSendEvent = new IMessageSendEvent() {
             @Override
             public boolean onSendMessageResult(final BaseData message,MessageListData messageListData, int position) {
+                if (message.getStatus() == -2){
+                    PushManager.getInstance().clearAllNotification(MessageService.this)
+                            .setTag(MessageService.this,PushManager.NOMAL_ALIAS,PushManager.NOMAL_TAG);
+                    RxBus.getDefault().postSticky(new EventSticky("out"));
+                    Constant.userData = null;
+                    SPUtils.setSharedStringData(getApplicationContext(),"token","");
+                    Intent i = getPackageManager().getLaunchIntentForPackage(getPackageName());
+                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(i);
+                    ActivityStack.getScreenManager().clearAllActivity();
+                    return true;
+                }
                 if (message.getStatus() == 0){
                     messageListData.setSendStatus(MessageListData.SEND_SUCCESS);
                     MessageDataUtil.updata(messageListData);

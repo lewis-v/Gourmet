@@ -145,6 +145,11 @@ public class SearchFragment extends BaseFragment<SearchPresenter> implements Sea
     }
 
     @Override
+    public void onFail(String msg) {
+
+    }
+
+    @Override
     public void onGetHotSearchSuccess(BaseData<List<HotSearch>> model) {
         tv_search.setText(model.getData().get(0).getTitle());
     }

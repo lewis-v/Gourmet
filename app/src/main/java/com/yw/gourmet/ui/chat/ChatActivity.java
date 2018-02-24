@@ -135,7 +135,9 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
                     if (ll_add_other.getVisibility() == View.VISIBLE){
                         setAddViewShow(false);
                     }
-                    recycler_chat.smoothScrollToPosition(listData.size()-1);
+                    if (listData.size() > 0) {
+                        recycler_chat.smoothScrollToPosition(listData.size() - 1);
+                    }
                 }
             }
         });
@@ -205,6 +207,11 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
             }
         };
         MessageCenter.getInstance().addMessageHandleTop(iMessageGet);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         RxBus.getDefault().postSticky(new EventSticky("notification:"+put_id));
     }
 

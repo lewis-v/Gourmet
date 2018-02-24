@@ -23,10 +23,10 @@ public class LoginPresenter extends LoginContract.Presenter{
                 if (isReLoginFail(model)){
                     return;
                 }
-                if (model.getStatus() == 1){
-                    mView.onFail(model.getMessage());
-                }else if (model.getStatus() == 0){
+                if (model.getStatus() == 0){
                     mView.onLoginSuccess(model);
+                }else{
+                    mView.onFail(model.getMessage());
                 }
             }
 
