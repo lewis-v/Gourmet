@@ -1,10 +1,6 @@
 package com.yw.gourmet.ui.share;
 
-import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -26,13 +22,17 @@ import static com.yw.gourmet.ui.share.ToolType.RIGHT;
  */
 
 public class ToolFragment extends BaseFragment implements View.OnClickListener{
+    private static final String TAG = "ToolFragment";
     private LinearLayout ll_tool;
     private OnToolClickListener onToolClickListener;
     private ImageView img_choose,img_bold,img_italic,img_left,img_center,img_right;
     private ToolType type;
+    private HorizontalScrollView scroll_tool;
 
     @Override
     protected void initView() {
+        scroll_tool = view.findViewById(R.id.scroll_tool);
+
         ll_tool = (LinearLayout)view.findViewById(R.id.ll_tool);
 
         img_choose = (ImageView) view.findViewById(R.id.img_choose);
@@ -66,14 +66,29 @@ public class ToolFragment extends BaseFragment implements View.OnClickListener{
     }
 
     @Override
-    public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
+    public Animation onCreateAnimation(int transit, final boolean enter, int nextAnim) {
         Animation anim;
         if (enter){//进入动画
             anim = loadAnimation(getActivity(), R.anim.anim_view_enter_right);
         }else {//退出动画
             anim = loadAnimation(getActivity(), R.anim.anim_view_exit_right);
         }
-        ll_tool.setVisibility(View.VISIBLE);
+        anim.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                Log.e(TAG,"start"+(scroll_tool.getVisibility()==View.VISIBLE));
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                Log.e(TAG,"end"+(scroll_tool.getVisibility()==View.VISIBLE));
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+                Log.e(TAG,"repeat");
+            }
+        });
         return anim;
     }
 

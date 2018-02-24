@@ -254,6 +254,7 @@ public class DiaryActivity extends BaseActivity<DiaryPresenter> implements View.
         }else {
             if (toolFragment != null) {
                 fragmentTransaction.remove(toolFragment);
+                toolFragment = null;
                 objectAnimator = ObjectAnimator.ofFloat(fb_tool,"rotation",-45,0);//加号的旋转动画
             }
         }

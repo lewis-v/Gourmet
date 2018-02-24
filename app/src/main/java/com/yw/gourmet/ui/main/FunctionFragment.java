@@ -58,64 +58,62 @@ public class FunctionFragment extends BaseFragment implements View.OnClickListen
 
     @Override
     public void onClick(View view) {
+        Intent intent = null;
         switch (view.getId()) {
             case R.id.ll_text:
                 if (Constant.userData == null){
                     ToastUtils.showSingleToast("请登录后在操作");
                     return;
                 }
-                Intent intent0 = new Intent(getContext(), CommonShareActivity.class);
-                intent0.putExtra("type","new");
-                startActivity(intent0);
+                intent = new Intent(getContext(), CommonShareActivity.class);
+                intent.putExtra("type","new");
                 break;
             case R.id.ll_photo:
                 if (Constant.userData == null){
                     ToastUtils.showSingleToast("请登录后在操作");
                     return;
                 }
-                Intent intent = new Intent(getContext(),CommonShareActivity.class);
+                intent = new Intent(getContext(),CommonShareActivity.class);
                 intent.putExtra("type","photo");
-                startActivity(intent);
                 break;
             case R.id.ll_take_photo:
                 if (Constant.userData == null){
                     ToastUtils.showSingleToast("请登录后在操作");
                     return;
                 }
-                Intent intent1 = new Intent(getContext(),CommonShareActivity.class);
-                intent1.putExtra("type","take_photo");
-                startActivity(intent1);
+                intent = new Intent(getContext(),CommonShareActivity.class);
+                intent.putExtra("type","take_photo");
                 break;
             case R.id.ll_diary:
                 if (Constant.userData == null){
                     ToastUtils.showSingleToast("请登录后在操作");
                     return;
                 }
-                Intent intent2 = new Intent(getContext(),DiaryActivity.class);
-                intent2.putExtra("type","new");
-                startActivity(intent2);
+                intent = new Intent(getContext(),DiaryActivity.class);
+                intent.putExtra("type","new");
                 break;
             case R.id.ll_menu:
                 if (Constant.userData == null){
                     ToastUtils.showSingleToast("请登录后在操作");
                     return;
                 }
-                Intent intent3 = new Intent(getContext(), MenuActivity.class);
-                intent3.putExtra("type","new");
-                startActivity(intent3);
+                intent = new Intent(getContext(), MenuActivity.class);
+                intent.putExtra("type","new");
                 break;
             case R.id.ll_raiders:
                 if (Constant.userData == null){
                     ToastUtils.showSingleToast("请登录后在操作");
                     return;
                 }
-                Intent intent4 = new Intent(getContext(), RaidersActivity.class);
-                intent4.putExtra("type","new");
-                startActivity(intent4);
+                intent = new Intent(getContext(), RaidersActivity.class);
+                intent.putExtra("type","new");
                 break;
             case R.id.ll_close:
                 ((MainContract.View) getActivity()).addFragmentFunction(false);
                 break;
+        }
+        if (intent != null){
+            startActivity(intent);
         }
     }
 
@@ -180,7 +178,7 @@ public class FunctionFragment extends BaseFragment implements View.OnClickListen
     }
 
     /**
-     * 获取进入时的动画
+     * 获取进入时的动画,已不使用
      * @param view 动画控件
      * @return
      */

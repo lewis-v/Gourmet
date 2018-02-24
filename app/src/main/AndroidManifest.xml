@@ -18,7 +18,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:name=".App"
@@ -206,17 +206,20 @@
                 <category android:name="com.yw.gourmet" />
             </intent-filter>
         </receiver>
-        <!--更改密码-->
-        <activity android:name=".ui.passwordChange.PasswordChangeActivity"
-            android:screenOrientation="portrait"/>
-        <!--更新APP-->
+        <!-- 更改密码 -->
+        <activity
+            android:name=".ui.passwordChange.PasswordChangeActivity"
+            android:screenOrientation="portrait" />
+        <!-- 更新APP -->
         <service
             android:name=".service.UpdateService"
             android:enabled="true"
             android:exported="true" />
-        <!--被拒绝分享-->
-        <activity android:name=".ui.reject.RejectActivity"
-            android:screenOrientation="portrait"/>
+        <!-- 被拒绝分享 -->
+        <activity
+            android:name=".ui.reject.RejectActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.channel.ChannelActivity"></activity>
     </application>
 
 </manifest>

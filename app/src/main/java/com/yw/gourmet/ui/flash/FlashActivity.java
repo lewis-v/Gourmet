@@ -3,6 +3,7 @@ package com.yw.gourmet.ui.flash;
 import android.animation.IntEvaluator;
 import android.animation.ValueAnimator;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.Looper;
 import android.widget.ProgressBar;
@@ -14,6 +15,7 @@ import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.data.InitData;
 import com.yw.gourmet.data.UserData;
 import com.yw.gourmet.push.PushManager;
+import com.yw.gourmet.ui.chat.ChatActivity;
 import com.yw.gourmet.ui.main.MainActivity;
 import com.yw.gourmet.utils.SPUtils;
 
@@ -65,13 +67,26 @@ public class FlashActivity extends BaseActivity<FlashPresenter> implements Flash
 
     @Override
     public void onLoginSuccess(final BaseData<UserData> model) {
+        SPUtils.setSharedStringData(getApplicationContext(),"token",model.getData().getToken());
+        Constant.userData = model.getData();
         Thread thread = new WaitThread(new Runnable() {
             @Override
             public void run() {
-                SPUtils.setSharedStringData(getApplicationContext(),"token",model.getData().getToken());
-                Constant.userData = model.getData();
-                PushManager.getInstance().setTag(FlashActivity.this,Constant.userData.getUser_id(),PushManager.NOMAL_TAG);
-                startActivity(new Intent(FlashActivity.this, MainActivity.class));
+                PushManager.getInstance().setTag(FlashActivity.this
+                        ,Constant.userData.getUser_id(),PushManager.NOMAL_TAG);
+                try {
+                    if (SPUtils.getSharedBooleanData(FlashActivity.this
+                            ,getPackageManager().getPackageInfo(getPackageName(),0).versionName))
+                    {
+                        startActivity(new Intent(FlashActivity.this, MainActivity.class));
+                    }else{
+                        startActivity(new Intent(FlashActivity.this, ChatActivity.class));
+                    }
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                    //出错了不进入引导
+                    startActivity(new Intent(FlashActivity.this, MainActivity.class));
+                }
                 finish();
             }
         });
@@ -118,8 +133,21 @@ public class FlashActivity extends BaseActivity<FlashPresenter> implements Flash
         Thread thread = new WaitThread(new Runnable() {
             @Override
             public void run() {
-                PushManager.getInstance().setTag(getApplicationContext(),PushManager.NOMAL_ALIAS,PushManager.NOMAL_TAG);
-                startActivity(new Intent(FlashActivity.this, MainActivity.class));
+                PushManager.getInstance().setTag(getApplicationContext()
+                        ,PushManager.NOMAL_ALIAS,PushManager.NOMAL_TAG);
+                try {
+                    if (SPUtils.getSharedBooleanData(FlashActivity.this
+                            ,getPackageManager().getPackageInfo(getPackageName(),0).versionName))
+                    {
+                        startActivity(new Intent(FlashActivity.this, MainActivity.class));
+                    }else{
+                        startActivity(new Intent(FlashActivity.this, ChatActivity.class));
+                    }
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                    //出错了不进入引导
+                    startActivity(new Intent(FlashActivity.this, MainActivity.class));
+                }
                 finish();
             }
         });

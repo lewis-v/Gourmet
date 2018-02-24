@@ -91,7 +91,7 @@ public class SPUtils {
         if (sp == null) {
             init(context);
         }
-        return sp.getBoolean(key, true);
+        return sp.getBoolean(key, false);
     }
 
     public static void setSharedStringData(Context context, String key, String value) {

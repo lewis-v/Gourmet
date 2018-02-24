@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scroll_tool"
     android:background="@drawable/circle_back_tool"
     android:layout_gravity="center"
     android:gravity="center_vertical"
