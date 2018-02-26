@@ -133,13 +133,35 @@ public class ChatPresenter extends ChatContract.Presenter {
                 if (model.getStatus() == 0){
                     mView.onUpImgSuccess(model,position);
                 }else if (model.getStatus() == 1){
-                    mView.onFail(model.getMessage());
+                    mView.onUpImgFail(model.getMessage(),position);
                 }
             }
 
             @Override
             public void onFailure(int code, String msg) {
                 mView.onUpImgFail(msg,position);
+            }
+        }));
+    }
+
+    @Override
+    void upAudio(List<MultipartBody.Part> parts, final int position) {
+        mRxManager.add(Api.getInstance().UpAudio(parts),new RxSubscriberCallBack<BaseData<String>>(new RxApiCallback<BaseData<String>>() {
+            @Override
+            public void onSuccess(BaseData<String> model) {
+                if (isReLoginFail(model)){
+                    return;
+                }
+                if (model.getStatus() == 0){
+                    mView.onUpAudioSuccess(model,position);
+                }else if (model.getStatus() == 1){
+                    mView.onUpAudioFail(model.getMessage(),position);
+                }
+            }
+
+            @Override
+            public void onFailure(int code, String msg) {
+                mView.onUpAudioFail(msg,position);
             }
         }));
     }

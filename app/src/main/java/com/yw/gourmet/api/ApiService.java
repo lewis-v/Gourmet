@@ -72,6 +72,10 @@ public interface ApiService {
     @POST("/Img/Up")
     Observable<BaseData<String>> UpImg(@Part List<MultipartBody.Part> parts);
 
+    @Multipart
+    @POST("/Img/Up")
+    Observable<BaseData<String>> UpAudio(@Part List<MultipartBody.Part> parts);
+
     //普通分享
     @Multipart
     @POST("/Share/Common/Put")

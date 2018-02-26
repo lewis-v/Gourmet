@@ -104,11 +104,14 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                         == PERMISSION_DENIED ||
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
-                        == PERMISSION_DENIED ) {
+                        == PERMISSION_DENIED ||
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
+                        == PERMISSION_DENIED) {
             ActivityCompat.requestPermissions(this
                     , new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE
                             , Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA
-                            ,Manifest.permission.READ_PHONE_STATE}, 0);
+                            ,Manifest.permission.READ_PHONE_STATE
+                            ,Manifest.permission.RECORD_AUDIO}, 0);
 
         }
     }

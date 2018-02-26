@@ -20,6 +20,8 @@ public interface ChatContract {
         void onGetDetailSuccess(BaseData<List<MessageListData>> model);
         void onUpImgSuccess(BaseData<String> model,int position);
         void onUpImgFail(String msg,int position);
+        void onUpAudioSuccess(BaseData<String> model,int position);
+        void onUpAudioFail(String msg,int position);
         void onGetHistorySuccess(List<MessageListData> model);
         void onGetHistoryFail(String msg);
     }
@@ -29,6 +31,7 @@ public interface ChatContract {
         abstract void getMessageDetail(List<MultipartBody.Part> parts);
         abstract void setMessageRead(List<MultipartBody.Part> parts);
         abstract void upImg(List<MultipartBody.Part> parts,int position);
+        abstract void upAudio(List<MultipartBody.Part> parts,int position);
         abstract void getHistory(String put_id,String get_id,int startId);
         abstract void insertDB(MessageListData messageListData);
         abstract void updataDB(MessageListData messageListData);

@@ -123,6 +123,10 @@ public class Api {
         return service.UpImg(parts);
     }
 
+    public Observable<BaseData<String>> UpAudio(@Part List<MultipartBody.Part> parts){
+        return service.UpAudio(parts);
+    }
+
     public Observable<BaseData> ShareCommon(List<MultipartBody.Part> parts){
         return service.ShareCommon(parts);
     }

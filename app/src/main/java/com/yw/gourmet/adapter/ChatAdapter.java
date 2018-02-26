@@ -17,6 +17,7 @@ import com.yw.gourmet.Constant;
 import com.yw.gourmet.GlideApp;
 import com.yw.gourmet.R;
 import com.yw.gourmet.data.MessageListData;
+import com.yw.gourmet.listener.OnItemClickListener;
 import com.yw.gourmet.listener.OnRefreshListener;
 import com.yw.gourmet.widget.GlideCircleTransform;
 
@@ -31,6 +32,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
     private List<MessageListData> list;
     private OnRefreshListener onRefreshListener;
     private OnImgClickListener onImgClickListener;
+    private OnVoiceClickListener onVoiceClickListener;
 
     public ChatAdapter(Context context, List<MessageListData> list) {
         this.context = context;
@@ -55,14 +57,29 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
                 switch (list.get(position).getType()) {
                     case MessageListData.TEXT:
                         holder.tv_myself.setVisibility(View.VISIBLE);
+                        holder.ll_text_my.setVisibility(View.VISIBLE);
                         holder.img_myself.setVisibility(View.GONE);
                         holder.tv_myself.setText(list.get(position).getContent());
+                        holder.img_voice_my.setVisibility(View.GONE);
                         break;
                     case MessageListData.VOICE:
-
+                        holder.ll_text_my.setVisibility(View.VISIBLE);
+                        holder.tv_myself.setVisibility(View.VISIBLE);
+                        holder.img_myself.setVisibility(View.GONE);
+                        holder.tv_myself.setText("");
+                        holder.img_voice_my.setVisibility(View.VISIBLE);
+                        if (onVoiceClickListener != null){
+                            holder.ll_text_my.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    onVoiceClickListener.onVoiceClick(v,holder.getLayoutPosition());
+                                }
+                            });
+                        }
                         break;
                     case MessageListData.IMG:
                         holder.tv_myself.setVisibility(View.GONE);
+                        holder.ll_text_my.setVisibility(View.GONE);
                         holder.img_myself.setVisibility(View.VISIBLE);
                         GlideApp.with(context).load(list.get(position).getImg())
                                 .placeholder(R.mipmap.loading).error(R.mipmap.load_fail)
@@ -114,14 +131,29 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
                 switch (list.get(position).getType()) {
                     case MessageListData.TEXT:
                         holder.tv_other.setVisibility(View.VISIBLE);
+                        holder.ll_text_other.setVisibility(View.VISIBLE);
                         holder.img_other.setVisibility(View.GONE);
                         holder.tv_other.setText(list.get(position).getContent());
+                        holder.img_voice_other.setVisibility(View.GONE);
                         break;
                     case MessageListData.VOICE:
-
+                        holder.ll_text_other.setVisibility(View.VISIBLE);
+                        holder.tv_other.setVisibility(View.VISIBLE);
+                        holder.img_other.setVisibility(View.GONE);
+                        holder.tv_other.setText("");
+                        holder.img_voice_other.setVisibility(View.VISIBLE);
+                        if (onVoiceClickListener != null){
+                            holder.ll_text_other.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    onVoiceClickListener.onVoiceClick(v,holder.getLayoutPosition());
+                                }
+                            });
+                        }
                         break;
                     case MessageListData.IMG:
                         holder.tv_other.setVisibility(View.GONE);
+                        holder.ll_text_other.setVisibility(View.GONE);
                         holder.img_other.setVisibility(View.VISIBLE);
                         GlideApp.with(context).load(list.get(position).getImg())
                                 .placeholder(R.mipmap.loading).error(R.mipmap.load_fail)
@@ -181,14 +213,23 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
         return this;
     }
 
+    public ChatAdapter setOnVoiceClickListener(OnVoiceClickListener onVoiceClickListener) {
+        this.onVoiceClickListener = onVoiceClickListener;
+        return this;
+    }
+
     public interface OnImgClickListener{
         void onClick(View view,int position);
     }
 
+    public interface OnVoiceClickListener{
+        void onVoiceClick(View view,int position);
+    }
+
     class MyViewHolder extends RecyclerView.ViewHolder {
-        LinearLayout ll_item;
+        LinearLayout ll_item,ll_text_my,ll_text_other;
         LinearLayout ll_other,ll_myself;
-        ImageView img_header_other,img_header_myself,img_other,img_myself;
+        ImageView img_header_other,img_header_myself,img_other,img_myself,img_voice_my,img_voice_other;
         TextView tv_nickname,tv_other,tv_myself;
         FrameLayout fl_sending_other,fl_sending_myself;
 
@@ -197,10 +238,14 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
             ll_item = itemView.findViewById(R.id.ll_item);
             ll_myself = itemView.findViewById(R.id.ll_myself);
             ll_other = itemView.findViewById(R.id.ll_other);
+            ll_text_my = itemView.findViewById(R.id.ll_text_my);
+            ll_text_other = itemView.findViewById(R.id.ll_text_other);
             img_header_myself = itemView.findViewById(R.id.img_header_myself);
             img_header_other = itemView.findViewById(R.id.img_header_other);
             img_other = itemView.findViewById(R.id.img_other);//发送的图像
             img_myself = itemView.findViewById(R.id.img_myself);
+            img_voice_my = itemView.findViewById(R.id.img_voice_my);
+            img_voice_other = itemView.findViewById(R.id.img_voice_other);
             tv_myself = itemView.findViewById(R.id.tv_myself);
             tv_nickname = itemView.findViewById(R.id.tv_nickname);
             tv_other = itemView.findViewById(R.id.tv_other);

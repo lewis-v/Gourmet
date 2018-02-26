@@ -20,7 +20,8 @@
             android:layout_height="40dp" />
         <LinearLayout
             android:orientation="vertical"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content">
             <TextView
                 android:id="@+id/tv_name"
@@ -34,19 +35,29 @@
                 app:layout_constraintLeft_toRightOf="@+id/img_header_other"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
-            <TextView
-                android:id="@+id/tv_other"
-                app:layout_constraintLeft_toRightOf="@+id/img_header_other"
-                app:layout_constraintTop_toBottomOf="@+id/tv_name"
-                app:layout_constraintBottom_toBottomOf="parent"
+            <LinearLayout
+                android:id="@+id/ll_text_other"
+                android:orientation="horizontal"
                 android:layout_marginTop="10dp"
                 android:gravity="center_vertical"
-                android:maxWidth="240dp"
                 android:minHeight="40dp"
                 android:background="@drawable/chat_other"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/img_voice_other"
+                    android:visibility="gone"
+                    android:layout_marginLeft="10dp"
+                    android:src="@drawable/voice_item"
+                    android:rotation="90"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/tv_other"
                 android:text="@string/test_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
+            </LinearLayout>
             <ImageView
                 android:id="@+id/img_other"
                 app:layout_constraintLeft_toRightOf="@+id/img_header_other"
@@ -82,19 +93,31 @@
             android:layout_margin="10dp"
             android:layout_width="30dp"
             android:layout_height="30dp"/>
-        <TextView
-            android:id="@+id/tv_myself"
-            app:layout_constraintRight_toLeftOf="@+id/img_header_myself"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+        <LinearLayout
+            android:id="@+id/ll_text_my"
             android:layout_marginTop="10dp"
-            android:gravity="center_vertical"
             android:maxWidth="240dp"
             android:minHeight="40dp"
+            android:gravity="center_vertical"
             android:background="@drawable/chat_myself"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/tv_myself"
             android:text="@string/test_text"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content" />
+            <ImageView
+                android:id="@+id/img_voice_my"
+                android:visibility="gone"
+                android:layout_marginRight="10dp"
+                android:rotation="-90"
+                android:src="@drawable/voice_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
         <ImageView
             android:id="@+id/img_myself"
             app:layout_constraintRight_toLeftOf="@+id/img_header_myself"

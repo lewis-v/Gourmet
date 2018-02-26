@@ -41,18 +41,48 @@
         android:background="@mipmap/dev"
         android:layout_width="match_parent"
         android:layout_height="1dp" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
     <com.yw.gourmet.widget.YWRecyclerView
         android:id="@+id/recycler_chat"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_height="match_parent"/>
+        <RelativeLayout
+            android:id="@+id/rl_voice"
+            android:visibility="gone"
+            android:layout_gravity="center"
+            android:background="@drawable/back_voice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/img_voice"
+                android:src="@drawable/voice_0"
+                android:layout_margin="10dp"
+                android:layout_centerHorizontal="true"
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
+            <TextView
+                android:id="@+id/tv_voice_tip"
+                android:layout_below="@+id/img_voice"
+                android:layout_margin="10dp"
+                android:text="@string/test_text"
+                android:textSize="16sp"
+                android:textColor="@android:color/white"
+                android:layout_centerHorizontal="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+    </FrameLayout>
     <TextView
         android:background="@mipmap/dev"
         android:layout_width="match_parent"
         android:layout_height="1dp" />
     <LinearLayout
+        android:id="@+id/ll_bottom"
         android:background="@android:color/white"
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -86,6 +116,7 @@
             <TextView
                 android:id="@+id/tv_voice"
                 android:visibility="gone"
+                android:background="@drawable/ll_back_change"
                 android:gravity="center"
                 android:text="@string/touch_say"
                 android:layout_width="match_parent"
