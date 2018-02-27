@@ -1,7 +1,5 @@
 package com.yw.gourmet.ui.chat;
 
-import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -21,9 +19,13 @@ import android.widget.TextView;
 import com.yw.gourmet.Constant;
 import com.yw.gourmet.R;
 import com.yw.gourmet.adapter.ChatAdapter;
-import com.yw.gourmet.audio.AudioRecoderData;
-import com.yw.gourmet.audio.AudioRecoderListener;
-import com.yw.gourmet.audio.AudioRecoderManager;
+import com.yw.gourmet.audio.play.AudioPlayImp;
+import com.yw.gourmet.audio.play.AudioPlayListener;
+import com.yw.gourmet.audio.play.AudioPlayManager;
+import com.yw.gourmet.audio.play.AudioPlayStatus;
+import com.yw.gourmet.audio.recoder.AudioRecoderData;
+import com.yw.gourmet.audio.recoder.AudioRecoderListener;
+import com.yw.gourmet.audio.recoder.AudioRecoderManager;
 import com.yw.gourmet.base.BaseActivity;
 import com.yw.gourmet.center.MessageCenter;
 import com.yw.gourmet.center.event.IMessageGet;
@@ -34,14 +36,12 @@ import com.yw.gourmet.dialog.MyDialogPhotoChooseFragment;
 import com.yw.gourmet.dialog.MyDialogPhotoShowFragment;
 import com.yw.gourmet.rxbus.EventSticky;
 import com.yw.gourmet.rxbus.RxBus;
-import com.yw.gourmet.ui.channel.ChannelActivity;
 import com.yw.gourmet.utils.SoftInputUtils;
 import com.yw.gourmet.utils.ToastUtils;
 import com.yw.gourmet.utils.WindowUtil;
 import com.yw.gourmet.widget.YWRecyclerView;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -113,21 +113,7 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
         adapter.setOnVoiceClickListener(new ChatAdapter.OnVoiceClickListener() {
             @Override
             public void onVoiceClick(View view, int position) {
-                final MediaPlayer mediaPlayer = new MediaPlayer();
-                try {
-                    mediaPlayer.setDataSource(listData.get(position).getImg());
-                    mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                    mediaPlayer.prepareAsync();
-                    mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                        @Override
-                        public void onPrepared(MediaPlayer mp) {
-                            // 装载完毕回调
-                            mediaPlayer.start();
-                        }
-                    });
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                AudioPlayManager.getInstance().play(listData.get(position).getImg());
             }
         });
         adapter.setOnImgClickListener(new ChatAdapter.OnImgClickListener() {
@@ -248,6 +234,7 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
             }
         };
         MessageCenter.getInstance().addMessageHandleTop(iMessageGet);
+        //初始化录音
         AudioRecoderManager.getInstance().setAudioRecoderListener(new AudioRecoderListener() {
             @Override
             public void onStart() {
@@ -286,6 +273,33 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
                 }else {
                     img_voice.setImageResource(R.drawable.voice_4);
                 }
+            }
+        });
+        //初始化音频播放
+        AudioPlayManager.getInstance().setPlayListener(new AudioPlayListener() {
+            @Override
+            public void onPlay(String audioPath) {
+
+            }
+
+            @Override
+            public void onProgress(int progress, int maxSize) {
+
+            }
+
+            @Override
+            public void onPause() {
+                Log.e(TAG,"pause");
+            }
+
+            @Override
+            public void onStop() {
+                Log.e(TAG,"stop");
+            }
+
+            @Override
+            public void onFail(Exception e, String msg) {
+                e.printStackTrace();
             }
         });
     }
@@ -437,8 +451,8 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
                 .addFormDataPart("get_id",get_id)
                 .addFormDataPart("type",String.valueOf(MessageListData.VOICE))
                 .addFormDataPart("img",model.getData());
-        listData.get(position).setImg(model.getData());
-        adapter.notifyItemChanged(position);
+//        listData.get(position).setImg(model.getData());
+//        adapter.notifyItemChanged(position);
         mPresenter.sendMessage(builder.build().parts(),listData.get(position),position);
     }
 
