@@ -36,17 +36,18 @@ public class MessageListData {
     private int sendStatus;//消息发送状态,默认为成功
     private int is_read;//是否已读
     private int un_read_num;//未读数量
+    private int length;//音频时间
 
     public MessageListData() {
     }
 
 
-    @Generated(hash = 1778411488)
+    @Generated(hash = 717509237)
     public MessageListData(Long _id, int cli_id, String user_id, String id,
             String put_id, String get_id, String nickname, String content,
             String put_time, String img_header, int type, String title,
-            String cover, String img, int sendStatus, int is_read,
-            int un_read_num) {
+            String cover, String img, int sendStatus, int is_read, int un_read_num,
+            int length) {
         this._id = _id;
         this.cli_id = cli_id;
         this.user_id = user_id;
@@ -64,6 +65,7 @@ public class MessageListData {
         this.sendStatus = sendStatus;
         this.is_read = is_read;
         this.un_read_num = un_read_num;
+        this.length = length;
     }
 
 
@@ -229,10 +231,20 @@ public class MessageListData {
         return this;
     }
 
+    public int getLength() {
+        return length;
+    }
+
+    public MessageListData setLength(int length) {
+        this.length = length;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "MessageListData{" +
-                "cli_id='" + cli_id + '\'' +
+                "_id=" + _id +
+                ", cli_id=" + cli_id +
                 ", user_id='" + user_id + '\'' +
                 ", id='" + id + '\'' +
                 ", put_id='" + put_id + '\'' +
@@ -248,6 +260,7 @@ public class MessageListData {
                 ", sendStatus=" + sendStatus +
                 ", is_read=" + is_read +
                 ", un_read_num=" + un_read_num +
+                ", length=" + length +
                 '}';
     }
 

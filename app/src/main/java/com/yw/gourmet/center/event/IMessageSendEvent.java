@@ -9,6 +9,6 @@ import com.yw.gourmet.data.MessageListData;
  */
 
 public interface IMessageSendEvent extends IEvent {
-    boolean onSendMessageResult(BaseData message,MessageListData MessageListData, int position);
+    boolean onSendMessageResult(BaseData<MessageListData> message,MessageListData MessageListData, int position);
     boolean onSendMessageFail(MessageListData message,int position,String msg);
 }

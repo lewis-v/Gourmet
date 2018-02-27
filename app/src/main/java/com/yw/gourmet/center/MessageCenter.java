@@ -187,7 +187,7 @@ public class MessageCenter {
      * @param message
      * @return
      */
-    public MessageCenter pushSendMessageResult(final BaseData message, final MessageListData MessageListData, final int position){
+    public MessageCenter pushSendMessageResult(final BaseData<MessageListData> message, final MessageListData MessageListData, final int position){
         executorService.execute(new Runnable() {
             @Override
             public void run() {

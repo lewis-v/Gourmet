@@ -323,8 +323,10 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
         MessageListData data = new MessageListData();
         data.setContent(et_chat.getText().toString());
         data.setType(TEXT);
+        data.setUser_id(Constant.userData.getUser_id());
         data.setPut_id(put_id);
-        data.setGet_id(get_id);
+        data.setGet_id(get_id).setIs_read(0)
+                .setCli_id(listData.size() == 0?0:listData.get(listData.size()-1).getCli_id()+1);
         data.setImg_header(Constant.userData.getImg_header());
         data.setSendStatus(MessageListData.SENDING);
         data.setNickname(Constant.userData.getNickname());
@@ -387,8 +389,9 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
     }
 
     @Override
-    public void onSendSuccess(int position) {
-        listData.get(position).setSendStatus(MessageListData.SEND_SUCCESS);
+    public void onSendSuccess(MessageListData messageListData,int position) {
+        listData.get(position).setSendStatus(MessageListData.SEND_SUCCESS)
+        .setId(messageListData.getId());
         adapter.notifyItemChanged(position);
         mPresenter.updataDB(listData.get(position));
     }
@@ -443,12 +446,13 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
     }
 
     @Override
-    public void onUpAudioSuccess(BaseData<String> model, int position) {
+    public void onUpAudioSuccess(BaseData<String> model, int position,AudioRecoderData data) {
         MultipartBody.Builder builder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                 .addFormDataPart("put_id",put_id)
                 .addFormDataPart("get_id",get_id)
+                .addFormDataPart("length", String.valueOf(data.getEndTime()-data.getStartTime()))
                 .addFormDataPart("type",String.valueOf(MessageListData.VOICE))
                 .addFormDataPart("img",model.getData());
 //        listData.get(position).setImg(model.getData());
@@ -467,6 +471,7 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
     @Override
     public void onGetHistorySuccess(final List<MessageListData> model) {
         if (listData.size() == 0){
+            Log.e(TAG, String.valueOf(listData.size()));
             MultipartBody.Builder builder = new MultipartBody.Builder()
                     .setType(MultipartBody.FORM)
                     .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
@@ -591,8 +596,10 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
      */
     public void sendImgMessage(final String path){
         MessageListData messageListData = new MessageListData();
-        messageListData.setType(MessageListData.IMG).setImg(path)
+        messageListData.setType(MessageListData.IMG).setImg(path).setIs_read(0)
+                .setCli_id(listData.size() == 0?0:listData.get(listData.size()-1).getCli_id()+1)
                 .setPut_id(put_id).setGet_id(get_id).setImg_header(Constant.userData.getImg_header())
+                .setUser_id(Constant.userData.getUser_id())
                 .setSendStatus(MessageListData.SENDING);
         listData.add(messageListData);
         mPresenter.insertDB(messageListData);
@@ -625,6 +632,10 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
         MessageListData messageListData = new MessageListData();
         messageListData.setType(MessageListData.VOICE).setImg(audioRecoderData.getFilePath())
                 .setPut_id(put_id).setGet_id(get_id).setImg_header(Constant.userData.getImg_header())
+                .setLength((int) (audioRecoderData.getEndTime()-audioRecoderData.getStartTime()))
+                .setUser_id(Constant.userData.getUser_id())
+                .setIs_read(0)
+                .setCli_id(listData.size() == 0?0:listData.get(listData.size()-1).getCli_id()+1)
                 .setSendStatus(MessageListData.SENDING);
         listData.add(messageListData);
         mPresenter.insertDB(messageListData);
@@ -640,7 +651,7 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
                 .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                 .addFormDataPart("id", Constant.userData.getUser_id())
                 .addFormDataPart("path", file.getName(), RequestBody.create(MediaType.parse("multipart/form-data"), file))
-                .build().parts(), position);
+                .build().parts(), position,audioRecoderData);
     }
 
     @Override

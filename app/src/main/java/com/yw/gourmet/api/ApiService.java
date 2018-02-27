@@ -105,7 +105,7 @@ public interface ApiService {
     //发送聊天信息
     @Multipart
     @POST("/Message/Put")
-    Observable<BaseData> SendMessage(@Part List<MultipartBody.Part> parts);
+    Observable<BaseData<MessageListData>> SendMessage(@Part List<MultipartBody.Part> parts);
 
     //设置消息已读
     @Multipart

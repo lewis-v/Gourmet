@@ -24,7 +24,8 @@ public class MessageDataUtil {
      * 插入数据
      */
     public static void insert(MessageListData data){
-        GreenDaoManager.getInstance().getmDaoSession().getMessageListDataDao().insert(data);
+        Log.e("db_insert",data.toString());
+        Log.e("size:", String.valueOf(GreenDaoManager.getInstance().getmDaoSession().getMessageListDataDao().insert(data)));
     }
 
     /**

@@ -67,7 +67,7 @@ public class MessageService extends Service {
         rxManager = new RxManager();
         iMessageSendEvent = new IMessageSendEvent() {
             @Override
-            public boolean onSendMessageResult(final BaseData message,MessageListData messageListData, int position) {
+            public boolean onSendMessageResult(final BaseData<MessageListData> message,MessageListData messageListData, int position) {
                 if (message.getStatus() == -2){
                     PushManager.getInstance().clearAllNotification(MessageService.this)
                             .setTag(MessageService.this,PushManager.NOMAL_ALIAS,PushManager.NOMAL_TAG);
@@ -81,6 +81,10 @@ public class MessageService extends Service {
                     return true;
                 }
                 if (message.getStatus() == 0){
+                    messageListData.setId(message.getData().getId());
+                    if (message.getData().getType() == MessageListData.IMG){
+                        messageListData.setImg(message.getData().getImg());
+                    }
                     messageListData.setSendStatus(MessageListData.SEND_SUCCESS);
                     MessageDataUtil.updata(messageListData);
                 }else {
@@ -95,6 +99,7 @@ public class MessageService extends Service {
                 return false;
             }
         };
+        MessageCenter.getInstance().addMessageHandle(iMessageSendEvent);
     }
 
     /**
@@ -193,9 +198,10 @@ public class MessageService extends Service {
 
     public class MyBind extends Binder {
         public void sendMessage(final List<MultipartBody.Part> parts, final MessageListData messageListData, final int position){
-            rxManager.add(Api.getInstance().SendMessage(parts),new RxSubscriberCallBack<BaseData>(new RxApiCallback<BaseData>() {
+            rxManager.add(Api.getInstance().SendMessage(parts),new RxSubscriberCallBack<BaseData<MessageListData>>(new RxApiCallback<BaseData<MessageListData>>() {
                 @Override
-                public void onSuccess(BaseData model) {
+                public void onSuccess(BaseData<MessageListData> model) {
+                    Log.e(TAG,model.getData().toString());
                     MessageCenter.getInstance().pushSendMessageResult(model,messageListData,position);
                 }
 

@@ -5,6 +5,7 @@ import android.os.Looper;
 import android.util.Log;
 
 import com.yw.gourmet.api.Api;
+import com.yw.gourmet.audio.recoder.AudioRecoderData;
 import com.yw.gourmet.base.rx.RxApiCallback;
 import com.yw.gourmet.base.rx.RxSubscriberCallBack;
 import com.yw.gourmet.center.MessageCenter;
@@ -32,12 +33,12 @@ public class ChatPresenter extends ChatContract.Presenter {
         executors = Executors.newSingleThreadExecutor();
         iMessageSendEvent = new IMessageSendEvent() {
             @Override
-            public boolean onSendMessageResult(final BaseData message, MessageListData MessageListData, final int position) {
+            public boolean onSendMessageResult(final BaseData<MessageListData> message, MessageListData MessageListData, final int position) {
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
                         if (message.getStatus() == 0) {
-                            mView.onSendSuccess(position);
+                            mView.onSendSuccess(message.getData(),position);
                         }else {
                             mView.onSendFail(message.getMessage(),position);
                         }
@@ -145,7 +146,7 @@ public class ChatPresenter extends ChatContract.Presenter {
     }
 
     @Override
-    void upAudio(List<MultipartBody.Part> parts, final int position) {
+    void upAudio(List<MultipartBody.Part> parts, final int position, final AudioRecoderData data) {
         mRxManager.add(Api.getInstance().UpAudio(parts),new RxSubscriberCallBack<BaseData<String>>(new RxApiCallback<BaseData<String>>() {
             @Override
             public void onSuccess(BaseData<String> model) {
@@ -153,7 +154,7 @@ public class ChatPresenter extends ChatContract.Presenter {
                     return;
                 }
                 if (model.getStatus() == 0){
-                    mView.onUpAudioSuccess(model,position);
+                    mView.onUpAudioSuccess(model,position,data);
                 }else if (model.getStatus() == 1){
                     mView.onUpAudioFail(model.getMessage(),position);
                 }

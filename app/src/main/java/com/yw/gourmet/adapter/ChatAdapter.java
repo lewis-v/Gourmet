@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import com.yw.gourmet.R;
 import com.yw.gourmet.data.MessageListData;
 import com.yw.gourmet.listener.OnItemClickListener;
 import com.yw.gourmet.listener.OnRefreshListener;
+import com.yw.gourmet.utils.WindowUtil;
 import com.yw.gourmet.widget.GlideCircleTransform;
 
 import java.util.List;
@@ -29,6 +31,7 @@ import java.util.List;
 
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
     private Context context;
+    private int VoiceMaxLength = WindowUtil.width/2;
     private List<MessageListData> list;
     private OnRefreshListener onRefreshListener;
     private OnImgClickListener onImgClickListener;
@@ -66,8 +69,12 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
                         holder.ll_text_my.setVisibility(View.VISIBLE);
                         holder.tv_myself.setVisibility(View.VISIBLE);
                         holder.img_myself.setVisibility(View.GONE);
-                        holder.tv_myself.setText("");
+                        holder.tv_myself.setVisibility(View.GONE);
                         holder.img_voice_my.setVisibility(View.VISIBLE);
+                        LinearLayout.LayoutParams paramsV = (LinearLayout.LayoutParams) holder.img_voice_my.getLayoutParams();
+                        paramsV.setMargins(VoiceMaxLength*list.get(position).getLength()/60000
+                                ,paramsV.topMargin,paramsV.rightMargin,paramsV.bottomMargin);
+                        holder.img_voice_my.setLayoutParams(paramsV);
                         if (onVoiceClickListener != null){
                             holder.ll_text_my.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -140,8 +147,12 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
                         holder.ll_text_other.setVisibility(View.VISIBLE);
                         holder.tv_other.setVisibility(View.VISIBLE);
                         holder.img_other.setVisibility(View.GONE);
-                        holder.tv_other.setText("");
+                        holder.tv_other.setVisibility(View.GONE);
                         holder.img_voice_other.setVisibility(View.VISIBLE);
+                        LinearLayout.LayoutParams paramsV = (LinearLayout.LayoutParams) holder.img_voice_other.getLayoutParams();
+                        paramsV.setMargins(VoiceMaxLength*list.get(position).getLength()/60000
+                                ,paramsV.topMargin,paramsV.rightMargin,paramsV.bottomMargin);
+                        holder.img_voice_other.setLayoutParams(paramsV);
                         if (onVoiceClickListener != null){
                             holder.ll_text_other.setOnClickListener(new View.OnClickListener() {
                                 @Override
