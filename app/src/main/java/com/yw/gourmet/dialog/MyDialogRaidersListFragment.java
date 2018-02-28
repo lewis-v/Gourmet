@@ -36,6 +36,8 @@ import com.yw.gourmet.listener.OnAddListener;
 import com.yw.gourmet.listener.OnDeleteListener;
 import com.yw.gourmet.listener.OnEditDialogEnterClickListener;
 import com.yw.gourmet.utils.BDUtil;
+import com.yw.gourmet.utils.SoftInputUtils;
+import com.yw.gourmet.utils.StringHandleUtils;
 import com.yw.gourmet.utils.ToastUtils;
 import com.yw.gourmet.utils.WindowUtil;
 
@@ -131,7 +133,7 @@ public class MyDialogRaidersListFragment extends BaseDialogFragment implements V
                     new MyDialogEditFragment().setEtHint("请输入标签、类型").setOnEditDialogEnterClickListener(new OnEditDialogEnterClickListener() {
                         @Override
                         public void OnClick(String edit, String tag) {
-                            raidersData.getType().add(edit);
+                            raidersData.getType().add(StringHandleUtils.deleteEnter(edit.trim()));
                             adapter.notifyItemInserted(position);
                         }
                     }).show(getFragmentManager(), "type");
@@ -267,20 +269,26 @@ public class MyDialogRaidersListFragment extends BaseDialogFragment implements V
                 }
                 break;
             case R.id.tv_cancel:
+                SoftInputUtils.hideSoftInput(et_address);
+                SoftInputUtils.hideSoftInput(et_introduction);
+                SoftInputUtils.hideSoftInput(et_title);
                 dismiss();
                 break;
             case R.id.tv_enter:
                 if (isEmpty()){
                     break;
                 }
-                raidersData.setAddress(et_address.getText().toString());
-                raidersData.setTitle(et_title.getText().toString());
-                raidersData.setIntroduction(et_introduction.getText().toString());
+                raidersData.setAddress(StringHandleUtils.deleteEnter(et_address.getText().toString().trim()));
+                raidersData.setTitle(StringHandleUtils.deleteEnter(et_title.getText().toString().trim()));
+                raidersData.setIntroduction(StringHandleUtils.deleteEnter(et_introduction.getText().toString().trim()));
                 raidersData.setLat(latLng.latitude);
                 raidersData.setLng(latLng.longitude);
                 if (onEnterListener != null){
                     onEnterListener.onEnter(raidersData,getTag());
                 }
+                SoftInputUtils.hideSoftInput(et_address);
+                SoftInputUtils.hideSoftInput(et_introduction);
+                SoftInputUtils.hideSoftInput(et_title);
                 dismiss();
                 break;
             case R.id.img_address_search:

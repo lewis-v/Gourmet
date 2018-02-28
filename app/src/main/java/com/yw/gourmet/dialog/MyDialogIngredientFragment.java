@@ -7,6 +7,7 @@ import android.widget.TextView;
 import com.yw.gourmet.R;
 import com.yw.gourmet.base.BaseDialogFragment;
 import com.yw.gourmet.listener.OnCancelClickListener;
+import com.yw.gourmet.utils.SoftInputUtils;
 import com.yw.gourmet.utils.ToastUtils;
 
 /**
@@ -100,6 +101,8 @@ public class MyDialogIngredientFragment extends BaseDialogFragment implements Vi
                 if (onCancelClickListener != null){
                     onCancelClickListener.OnCancel(getTag());
                 }
+                SoftInputUtils.hideSoftInput(et_left);
+                SoftInputUtils.hideSoftInput(et_right);
                 dismiss();
                 break;
             case R.id.tv_enter:
@@ -120,6 +123,8 @@ public class MyDialogIngredientFragment extends BaseDialogFragment implements Vi
                     if (onEnterListener != null) {
                         onEnterListener.OnEnter(et_left.getText().toString() + "&&" + et_right.getText().toString(), position, getTag());
                     }
+                    SoftInputUtils.hideSoftInput(et_left);
+                    SoftInputUtils.hideSoftInput(et_right);
                 }
                 dismiss();
                 break;

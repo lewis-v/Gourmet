@@ -6,6 +6,7 @@ import android.widget.TextView;
 
 import com.yw.gourmet.R;
 import com.yw.gourmet.base.BaseDialogFragment;
+import com.yw.gourmet.utils.SoftInputUtils;
 import com.yw.gourmet.utils.ToastUtils;
 
 /**
@@ -52,9 +53,11 @@ public class MyDialogComplaintFragment extends BaseDialogFragment implements Vie
                 if (onEnterListener != null){
                     onEnterListener.onEnter(et.getText().toString().trim(),getTag());
                 }
+                SoftInputUtils.hideSoftInput(et);
                 dismiss();
                 break;
             case R.id.tv_cancel:
+                SoftInputUtils.hideSoftInput(et);
                 dismiss();
                 break;
         }

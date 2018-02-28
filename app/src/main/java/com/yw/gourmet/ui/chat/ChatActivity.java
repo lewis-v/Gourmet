@@ -37,6 +37,7 @@ import com.yw.gourmet.dialog.MyDialogPhotoShowFragment;
 import com.yw.gourmet.rxbus.EventSticky;
 import com.yw.gourmet.rxbus.RxBus;
 import com.yw.gourmet.utils.SoftInputUtils;
+import com.yw.gourmet.utils.StringHandleUtils;
 import com.yw.gourmet.utils.ToastUtils;
 import com.yw.gourmet.utils.WindowUtil;
 import com.yw.gourmet.widget.YWRecyclerView;
@@ -321,7 +322,7 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
         hideSoftInput(et_chat);
         //发送文本信息
         MessageListData data = new MessageListData();
-        data.setContent(et_chat.getText().toString());
+        data.setContent(StringHandleUtils.deleteEnter(et_chat.getText().toString().trim()));
         data.setType(TEXT);
         data.setUser_id(Constant.userData.getUser_id());
         data.setPut_id(put_id);

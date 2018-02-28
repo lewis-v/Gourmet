@@ -40,6 +40,7 @@ import com.yw.gourmet.listener.OnItemClickListener;
 import com.yw.gourmet.rxbus.EventSticky;
 import com.yw.gourmet.rxbus.RxBus;
 import com.yw.gourmet.ui.personal.PersonalActivity;
+import com.yw.gourmet.utils.StringHandleUtils;
 import com.yw.gourmet.utils.ToastUtils;
 import com.yw.gourmet.utils.WindowUtil;
 import com.yw.gourmet.widget.GlideCircleTransform;
@@ -430,7 +431,7 @@ public class CommonDetailActivity extends BaseActivity<CommonDetailPresenter> im
                                     .addFormDataPart("user_id",Constant.userData.getUser_id())
                                     .addFormDataPart("act_id",listShareListData.getId())
                                     .addFormDataPart("type", String.valueOf(listShareListData.getType()))
-                                    .addFormDataPart("content",edit)
+                                    .addFormDataPart("content", StringHandleUtils.deleteEnter(edit.trim()))
                                     .build().parts());
                         }
                     }).show(getSupportFragmentManager(),"complaint");

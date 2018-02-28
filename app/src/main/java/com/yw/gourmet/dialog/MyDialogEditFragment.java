@@ -8,6 +8,7 @@ import com.yw.gourmet.R;
 import com.yw.gourmet.base.BaseDialogFragment;
 import com.yw.gourmet.listener.OnCancelClickListener;
 import com.yw.gourmet.listener.OnEditDialogEnterClickListener;
+import com.yw.gourmet.utils.SoftInputUtils;
 import com.yw.gourmet.utils.ToastUtils;
 
 /**
@@ -46,6 +47,7 @@ public class MyDialogEditFragment extends BaseDialogFragment implements View.OnC
                 if (onCancelListener != null){
                     onCancelListener.OnCancel(getTag());
                 }
+                SoftInputUtils.hideSoftInput(et);
                 dismiss();
                 break;
             case R.id.tv_enter:
@@ -55,6 +57,7 @@ public class MyDialogEditFragment extends BaseDialogFragment implements View.OnC
                     if (onEditDialogEnterClickListener != null){
                         onEditDialogEnterClickListener.OnClick(et.getText().toString(),getTag());
                     }
+                    SoftInputUtils.hideSoftInput(et);
                     dismiss();
                 }
                 break;

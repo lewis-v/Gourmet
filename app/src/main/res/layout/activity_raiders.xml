@@ -148,10 +148,8 @@
             <EditText
                 android:id="@+id/et_introduction"
                 android:textSize="14sp"
-                android:maxLength="5"
+                android:maxLines="5"
                 android:minLines="2"
-                android:inputType="text"
-                android:imeOptions="actionDone"
                 android:hint="@string/raiders_introduction_tip"
                 android:layout_margin="10dp"
                 android:background="@null"

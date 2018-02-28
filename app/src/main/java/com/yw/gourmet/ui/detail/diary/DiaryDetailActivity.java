@@ -35,6 +35,7 @@ import com.yw.gourmet.dialog.MyDialogComplaintFragment;
 import com.yw.gourmet.dialog.MyDialogMoreFragment;
 import com.yw.gourmet.rxbus.EventSticky;
 import com.yw.gourmet.rxbus.RxBus;
+import com.yw.gourmet.utils.StringHandleUtils;
 import com.yw.gourmet.utils.ToastUtils;
 import com.yw.gourmet.utils.WindowUtil;
 
@@ -187,7 +188,7 @@ public class DiaryDetailActivity extends BaseActivity<DiaryDetailPresenter> impl
         tv_auth.setText("作者:"+shareListData.getNickname());
         richeditor_diary.setHtml(shareListData.getContent());
         shoViewTop(tv_title,true);
-        shoViewTop(tv_address,true);
+//        shoViewTop(tv_address,true);
         shoViewTop(tv_time,true);
         shoViewTop(tv_auth,true);
         shoViewTop(richeditor_diary,true);
@@ -382,7 +383,7 @@ public class DiaryDetailActivity extends BaseActivity<DiaryDetailPresenter> impl
                                     .addFormDataPart("user_id",Constant.userData.getUser_id())
                                     .addFormDataPart("act_id",shareListData.getId())
                                     .addFormDataPart("type", String.valueOf(shareListData.getType()))
-                                    .addFormDataPart("content",edit)
+                                    .addFormDataPart("content", StringHandleUtils.deleteEnter(edit.trim()))
                                     .build().parts());
                         }
                     }).show(getSupportFragmentManager(),"complaint");

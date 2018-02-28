@@ -29,6 +29,7 @@ import com.yw.gourmet.listener.OnEditDialogEnterClickListener;
 import com.yw.gourmet.listener.OnItemClickListener;
 import com.yw.gourmet.rxbus.EventSticky;
 import com.yw.gourmet.rxbus.RxBus;
+import com.yw.gourmet.utils.StringHandleUtils;
 import com.yw.gourmet.utils.ToastUtils;
 
 import org.json.JSONArray;
@@ -91,7 +92,7 @@ public class RaidersActivity extends BaseActivity<RaidersPresenter> implements V
                 new MyDialogEditFragment().setEtHint("请输入标签、类型").setOnEditDialogEnterClickListener(new OnEditDialogEnterClickListener() {
                     @Override
                     public void OnClick(String edit, String tag) {
-                        tagList.add(edit);
+                        tagList.add(StringHandleUtils.deleteEnter(edit.trim()));
                         tagAdapter.notifyItemInserted(position);
                     }
                 }).show(getSupportFragmentManager(),"type");
@@ -116,7 +117,7 @@ public class RaidersActivity extends BaseActivity<RaidersPresenter> implements V
                     public void onEnter(RaidersListData<List<String>> raidersListData, String Tag) {
                         RaidersActivity.this.raidersListData.add(raidersListData);
                         raidersListAdapter.notifyItemInserted(RaidersActivity.this.raidersListData.size()-1);
-                        if (RaidersActivity.this.raidersListData.size() == 2){
+                        if (RaidersActivity.this.raidersListData.size() >= 2){
                             raidersListAdapter.notifyItemChanged(RaidersActivity.this.raidersListData.size()-2);
                         }
                         if (!raidersListData.getImg_cover().startsWith("http")) {
@@ -220,7 +221,7 @@ public class RaidersActivity extends BaseActivity<RaidersPresenter> implements V
                 if (isEmtry()){
                     break;
                 }
-                new MyDialogTipFragment().setShowText("是否分享您的日记")
+                new MyDialogTipFragment().setShowText("是否分享您的攻略")
                         .setOnEnterListener(new MyDialogTipFragment.OnEnterListener() {
                             @Override
                             public void OnEnter(String Tag) {
@@ -230,10 +231,10 @@ public class RaidersActivity extends BaseActivity<RaidersPresenter> implements V
                                         .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                                         .addFormDataPart("id",Constant.userData.getUser_id())
                                         .addFormDataPart("status",String.valueOf(status))
-                                        .addFormDataPart("title",et_title.getText().toString())
+                                        .addFormDataPart("title", StringHandleUtils.deleteEnter(et_title.getText().toString().trim()))
                                         .addFormDataPart("cover",raidersListData.get(0).getImg_cover())
                                         .addFormDataPart("raiders_type",new JSONArray(tagList).toString())
-                                        .addFormDataPart("introduction",et_introduction.getText().toString())
+                                        .addFormDataPart("introduction",StringHandleUtils.deleteEnter(et_introduction.getText().toString().trim()))
                                         .addFormDataPart("raiders_content", new Gson().toJson(raidersListData));
                                 mPresenter.shareRaiders(builder.build().parts());
                             }

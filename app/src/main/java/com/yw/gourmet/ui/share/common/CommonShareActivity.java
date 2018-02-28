@@ -27,6 +27,7 @@ import com.yw.gourmet.listener.OnDeleteListener;
 import com.yw.gourmet.listener.OnItemClickListener;
 import com.yw.gourmet.rxbus.EventSticky;
 import com.yw.gourmet.rxbus.RxBus;
+import com.yw.gourmet.utils.StringHandleUtils;
 import com.yw.gourmet.utils.ThreadUtils;
 import com.yw.gourmet.utils.ToastUtils;
 
@@ -247,7 +248,7 @@ public class CommonShareActivity extends BaseActivity<CommonSharePresenter> impl
                                                     .addFormDataPart("id",Constant.userData.getUser_id())
                                                     .addFormDataPart("status",String.valueOf(status));
                                             if (et_content.getText().toString().trim().length() != 0){
-                                                builder.addFormDataPart("content",et_content.getText().toString());
+                                                builder.addFormDataPart("content", StringHandleUtils.deleteEnter(et_content.getText().toString().trim()));
                                             }
                                             if (upImg.size() > 0){
                                                 builder.addFormDataPart("img",new JSONArray(upImg).toString());

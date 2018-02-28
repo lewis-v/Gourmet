@@ -22,6 +22,7 @@ import com.yw.gourmet.listener.OnEditDialogEnterClickListener;
 import com.yw.gourmet.rxbus.EventSticky;
 import com.yw.gourmet.rxbus.RxBus;
 import com.yw.gourmet.utils.SPUtils;
+import com.yw.gourmet.utils.StringHandleUtils;
 import com.yw.gourmet.utils.ToastUtils;
 import com.yw.gourmet.widget.GlideCircleTransform;
 
@@ -182,14 +183,14 @@ public class ChangeDetailActivity extends BaseActivity<ChangeDetailPresenter> im
                         .setType(MultipartBody.FORM)
                         .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                         .addFormDataPart("id",Constant.userData.getUser_id())
-                        .addFormDataPart("nickname",edit).build().parts());
+                        .addFormDataPart("nickname", StringHandleUtils.deleteEnter(edit.trim())).build().parts());
                 break;
             case "introduction":
                 mPresenter.changeDetail(new MultipartBody.Builder()
                         .setType(MultipartBody.FORM)
                         .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                         .addFormDataPart("id",Constant.userData.getUser_id())
-                        .addFormDataPart("introduction",edit).build().parts());
+                        .addFormDataPart("introduction",StringHandleUtils.deleteEnter(edit.trim())).build().parts());
                 break;
         }
     }

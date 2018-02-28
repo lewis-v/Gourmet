@@ -8,6 +8,7 @@ import android.widget.TextView;
 import com.yw.gourmet.Constant;
 import com.yw.gourmet.R;
 import com.yw.gourmet.base.BaseDialogFragment;
+import com.yw.gourmet.utils.SoftInputUtils;
 import com.yw.gourmet.utils.ToastUtils;
 
 import okhttp3.MultipartBody;
@@ -76,6 +77,7 @@ public class MyDialogFeedBackFragment extends BaseDialogFragment<MyDIalogPresent
                 if (et != null){
                     et.setText("");
                 }
+                SoftInputUtils.hideSoftInput(et);
                 dismiss();
                 break;
             case R.id.tv_enter:
@@ -92,6 +94,7 @@ public class MyDialogFeedBackFragment extends BaseDialogFragment<MyDIalogPresent
                     if (et != null){
                         et.setText("");
                     }
+                    SoftInputUtils.hideSoftInput(et);
                     dismiss();
                 }
                 break;

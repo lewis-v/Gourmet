@@ -71,6 +71,7 @@
         android:layout_height="wrap_content">
         <TextView
             android:id="@+id/tv_address"
+            android:visibility="gone"
             android:background="@drawable/circle_back"
             android:padding="5dp"
             android:textSize="12sp"

@@ -32,6 +32,7 @@ import com.yw.gourmet.listener.OnDeleteListener;
 import com.yw.gourmet.listener.OnItemClickListener;
 import com.yw.gourmet.rxbus.EventSticky;
 import com.yw.gourmet.rxbus.RxBus;
+import com.yw.gourmet.utils.StringHandleUtils;
 import com.yw.gourmet.utils.ToastUtils;
 
 import org.json.JSONArray;
@@ -338,16 +339,19 @@ public class MenuActivity extends BaseActivity<MenuPresenter> implements View.On
                         .setOnEnterListener(new MyDialogTipFragment.OnEnterListener() {
                             @Override
                             public void OnEnter(String Tag) {
+                                for (MenuPracticeData<List<String>> data : listPractice){
+                                    data.setContent(StringHandleUtils.deleteEnter(data.getContent()));
+                                }
                                 MultipartBody.Builder builder = new MultipartBody.Builder()
                                         .setType(MultipartBody.FORM)
                                         .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                                         .addFormDataPart("id",Constant.userData.getUser_id())
                                         .addFormDataPart("status",String.valueOf(status))
-                                        .addFormDataPart("title",et_title.getText().toString())
+                                        .addFormDataPart("title", StringHandleUtils.deleteEnter(et_title.getText().toString().trim()))
                                         .addFormDataPart("cover",coverPath)
                                         .addFormDataPart("difficult_level",String.valueOf(difficultLevel))
                                         .addFormDataPart("play_time",et_time_hour.getText().toString()+","+et_time_min.getText().toString())
-                                        .addFormDataPart("introduction",et_introduction.getText().toString())
+                                        .addFormDataPart("introduction",StringHandleUtils.deleteEnter(et_introduction.getText().toString().trim()))
                                         .addFormDataPart("practice",listPractice.toString())
                                         .addFormDataPart("create_time",String.valueOf(create_time))
                                         .addFormDataPart("ingredient",new JSONArray(listIngredient).toString());
@@ -416,6 +420,12 @@ public class MenuActivity extends BaseActivity<MenuPresenter> implements View.On
 
     @Override
     public void OnEnter(String edit,int position, String tag) {
+        String[] cache = edit.split("&&");
+        if (cache.length ==2){
+            cache[0] = StringHandleUtils.deleteEnter(cache[0]);
+            cache[1] = StringHandleUtils.deleteEnter(cache[1]);
+            edit = cache[0]+"&&"+cache[1];
+        }
         if (tag.equals("add")){
             listIngredient.add(edit);
             adapterIngredient.notifyItemInserted(position);

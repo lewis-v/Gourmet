@@ -32,6 +32,7 @@ import com.yw.gourmet.rxbus.EventSticky;
 import com.yw.gourmet.rxbus.RxBus;
 import com.yw.gourmet.ui.share.ToolFragment;
 import com.yw.gourmet.ui.share.ToolType;
+import com.yw.gourmet.utils.StringHandleUtils;
 import com.yw.gourmet.utils.ToastUtils;
 
 import java.io.File;
@@ -214,8 +215,8 @@ public class DiaryActivity extends BaseActivity<DiaryPresenter> implements View.
                                 .addFormDataPart("id",Constant.userData.getUser_id())
                                 .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
                                 .addFormDataPart("time",tv_time.getText().toString())
-                                .addFormDataPart("title",et_title.getText().toString())
-                                .addFormDataPart("content",content)
+                                .addFormDataPart("title", StringHandleUtils.deleteEnter(et_title.getText().toString().trim()))
+                                .addFormDataPart("content",StringHandleUtils.deleteEnter(content.trim()))
                                 .addFormDataPart("create_time",Long.toString(create_time))
                                 .addFormDataPart("status",Integer.toString(status));
                         mPresenter.putDiary(builder.build().parts());

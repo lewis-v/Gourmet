@@ -50,6 +50,21 @@ public class PasswordChangeActivity extends BaseActivity<PasswordChangePresenter
                 if (isEmpty()){
                     break;
                 }
+                if (et_old_password.getText().toString().contains("\r") || et_old_password.getText().toString().contains("\n")){
+                    ToastUtils.showSingleToast("请勿出入非法字符");
+                    et_old_password.requestFocus();
+                    return;
+                }
+                if (et_new_password.getText().toString().contains("\r") || et_new_password.getText().toString().contains("\n")){
+                    ToastUtils.showSingleToast("请勿出入非法字符");
+                    et_new_password.requestFocus();
+                    return;
+                }
+                if (et_new_password2.getText().toString().contains("\r") || et_new_password2.getText().toString().contains("\n")){
+                    ToastUtils.showSingleToast("请勿出入非法字符");
+                    et_new_password2.requestFocus();
+                    return;
+                }
                 if (et_new_password.getText().toString().equals(et_new_password2.getText().toString())){
                     MultipartBody.Builder builder = new MultipartBody.Builder()
                             .setType(MultipartBody.FORM)

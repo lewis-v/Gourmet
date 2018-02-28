@@ -130,7 +130,6 @@
             android:textSize="14sp"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
-            android:inputType="text"
             android:imeOptions="actionDone"
             android:hint="@string/introduction"
             android:maxLines="4"

@@ -44,6 +44,7 @@ import com.yw.gourmet.dialog.MyDialogMoreFragment;
 import com.yw.gourmet.dialog.MyDialogPhotoShowFragment;
 import com.yw.gourmet.rxbus.EventSticky;
 import com.yw.gourmet.rxbus.RxBus;
+import com.yw.gourmet.utils.StringHandleUtils;
 import com.yw.gourmet.utils.ToastUtils;
 import com.yw.gourmet.utils.WindowUtil;
 
@@ -301,7 +302,7 @@ public class MenuDetailActivity extends BaseActivity<MenuDetailPresenter> implem
                                     .addFormDataPart("user_id",Constant.userData.getUser_id())
                                     .addFormDataPart("act_id",shareListData.getId())
                                     .addFormDataPart("type", String.valueOf(shareListData.getType()))
-                                    .addFormDataPart("content",edit)
+                                    .addFormDataPart("content", StringHandleUtils.deleteEnter(edit.trim()))
                                     .build().parts());
                         }
                     }).show(getSupportFragmentManager(),"complaint");
