@@ -127,6 +127,12 @@ public class FlashActivity extends BaseActivity<FlashPresenter> implements Flash
     @Override
     public void onInitFail(String msg) {
         super.onFail(msg);
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mPresenter.Init();
+            }
+        },1000);//失败后每1000ms重试一次
     }
 
     @Override

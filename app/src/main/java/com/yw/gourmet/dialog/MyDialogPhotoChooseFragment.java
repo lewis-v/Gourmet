@@ -38,7 +38,7 @@ public class MyDialogPhotoChooseFragment extends BaseDialogFragment implements V
     public final static int TAKE_PHOTO = 2;//拍照
 
     private final static int REQUEST_CODE_CAPTURE_CAMEIA = 888;
-    private final static String path = Environment.getExternalStorageDirectory().getPath() + "/data/gourmet/";//存储目录
+    private final static String path = Environment.getExternalStorageDirectory().getPath() + "/data/gourmet/Img/";//存储目录
 
     private TextView tv_take,tv_choose,tv_cancel;
     private OnCancelClickListener onCancelClickListener;
@@ -177,7 +177,7 @@ public class MyDialogPhotoChooseFragment extends BaseDialogFragment implements V
                     }
                 }
                 if (isCrop){
-                    String cropPath = Environment.getExternalStorageDirectory().getPath() + "/data/gourmet/"+new Date()+".jpg";
+                    String cropPath = path+new Date()+".jpg";
                     UCrop uCrop = UCrop.of(Uri.fromFile(new File(list.get(0))),Uri.fromFile(new File(cropPath)));
                     if (ratio != 0){
                         uCrop.withAspectRatio(1,ratio);

@@ -30,7 +30,7 @@ public class AudioPlayManager {
     }
 
     private AudioPlayManager() {
-        iAudioPlay = new AudioPlayImp();
+        iAudioPlay = new AudioPlayCacheImp();
         playThread = new PlayThread();
         playThread.start();
     }
@@ -116,7 +116,7 @@ public class AudioPlayManager {
                 }
             }
             if (((IAudioInfo)iAudioPlay).getStatus() != AudioPlayStatus.FREE ){
-                stop();
+                iAudioPlay.stop();
             }
             iAudioPlay.play(audioPath);
         }

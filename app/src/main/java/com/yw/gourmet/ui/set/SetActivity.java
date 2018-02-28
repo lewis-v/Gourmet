@@ -19,11 +19,14 @@ import com.yw.gourmet.utils.SizeChangeUtils;
 import com.yw.gourmet.utils.ToastUtils;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 
 public class SetActivity extends BaseActivity<SetPresenter> implements View.OnClickListener,SetContract.View{
     private LinearLayout ll_back,ll_clear,ll_about,ll_change_password,ll_customer_service,ll_feedback;
     private TextView tv_out;
-    private final static String path = Environment.getExternalStorageDirectory().getPath() + "/data/gourmet/";//存储目录
+    private final static String path = Environment.getExternalStorageDirectory().getPath() + "/data/gourmet/Img/";//图片存储目录
+    private List<File> clearFiles = Arrays.asList(new File(path));//可以清理的文件目录
 
     /**
      * 初始化UI
@@ -79,7 +82,7 @@ public class SetActivity extends BaseActivity<SetPresenter> implements View.OnCl
                 break;
             case R.id.ll_clear:
                 setLoadDialog(true);
-                mPresenter.clearFile(new File(path));
+                mPresenter.clearFile(clearFiles);
                 break;
             case R.id.ll_about:
                 startActivity(new Intent(this, AboutActivity.class));

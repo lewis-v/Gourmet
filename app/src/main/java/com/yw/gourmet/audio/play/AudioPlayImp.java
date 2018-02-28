@@ -5,6 +5,7 @@ import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 
 /**
  * auth: lewis-v
@@ -43,18 +44,15 @@ public class AudioPlayImp implements IAudioPlay,IAudioInfo{
         try {
             Log.e(TAG,audioFile);
             this.audioPath = audioFile;
-            if (mPlayer != null){
-                stop();
-            }
-            mPlayer = getmPlayer();
-            File file = new File(audioFile);
-            FileInputStream fis = new FileInputStream(file);
-            mPlayer.setDataSource(fis.getFD());
-            mPlayer.prepare();
-            mPlayer.start();
             if (audioPlayListener != null){
                 audioPlayListener.onPlay(audioFile);
             }
+            if (mPlayer != null){
+                stop();
+            }
+            mPlayer = readyPlay(audioFile);
+            mPlayer.prepare();
+            mPlayer.start();
         }catch (Exception e){
             e.printStackTrace();
             status = AudioPlayStatus.FREE;
@@ -109,10 +107,10 @@ public class AudioPlayImp implements IAudioPlay,IAudioInfo{
     }
 
     /**
-     * 获取播放对象
+     * 准备播放对象
      * @return
      */
-    public MediaPlayer getmPlayer(){
+    protected MediaPlayer readyPlay(String audioFile) throws IOException {
         MediaPlayer mPlayer = new MediaPlayer();
         mPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
             @Override
@@ -129,7 +127,24 @@ public class AudioPlayImp implements IAudioPlay,IAudioInfo{
                 stop();
             }
         });
+        audioFile = handlePlayPath(audioFile);
+        if (audioFile.startsWith("http")) {
+            mPlayer.setDataSource(audioFile);
+        }else {
+            File file = new File(audioFile);
+            FileInputStream fis = new FileInputStream(file);
+            mPlayer.setDataSource(fis.getFD());
+        }
         return mPlayer;
+    }
+
+    /**
+     * 对audioPath地址进行处理
+     * @param audioPath
+     * @return
+     */
+    protected String handlePlayPath(String audioPath){
+        return audioPath;
     }
 
     public void setAudioPlayListener(AudioPlayListener audioPlayListener) {
