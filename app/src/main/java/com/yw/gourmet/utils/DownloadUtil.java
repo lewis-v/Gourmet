@@ -58,14 +58,18 @@ public class DownloadUtil {
                 try {
                     is = response.body().byteStream();
                     long total = response.body().contentLength();
-                    File file = new File(savePath, getNameFromUrl(url));
+                    File file = new File(savePath, "gourmet_"+System.currentTimeMillis()+".apk");
                     fos = new FileOutputStream(file);
                     long sum = 0;
+                    int oldProgress = 0;
                     while ((len = is.read(buf)) != -1) {
                         fos.write(buf, 0, len);
                         sum += len;
                         int progress = (int) (sum * 1.0f / total * 100); // 下载中
-                        listener.onDownloading(progress);
+                        if (oldProgress != progress){
+                            oldProgress = progress;
+                            listener.onDownloading(progress);
+                        }
                         if (isPause){
                             listener.onDownloadFailed(new RuntimeException("下载中断"));
                             call.cancel();

@@ -118,22 +118,36 @@ public class UpdateService extends Service {
 
     /**
      * 下载更新程序
-     * @param path
+     * @param downPath
      */
-    public synchronized void downloadUpdate(String path,String version){
+    public synchronized void downloadUpdate(final String downPath, final String version){
         if (isUpdating){
             removeNotification();
             initUpdateNotification();
             return;
         }
         isUpdating = true;
-        DownloadUtil.get().download(path, "/data/gourmet/update", new DownloadUtil.OnDownloadListener() {
+        DownloadUtil.get().download(downPath, "/data/gourmet/update", new DownloadUtil.OnDownloadListener() {
             @Override
             public void onDownloadSuccess(String path) {
                 isUpdating = false;
                 Log.i("---update","success");
-                install(path);
-                removeNotification();
+                File file = new File(path);
+                if (file.length() > 100) {
+                    install(path);
+                    removeNotification();
+                }else if (downPath.equals(initData.getUpdate_path())){//网盘下载链接出问题时,使用git链接
+                    downloadUpdate(initData.getUpdate_path_reserve(),version);
+                }else{
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            ToastUtils.showSingleToast("下载更新失败,请重试");
+                        }
+                    });
+                    removeNotification();
+                    initUpdateErrNotification();
+                }
             }
 
             @Override
