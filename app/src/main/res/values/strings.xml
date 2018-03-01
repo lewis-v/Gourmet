@@ -47,8 +47,8 @@
     <string name="put">发布</string>
     <string name="share_tip">享你所想</string>
 
-    <string name="test_num">123</string>
-    <string name="test_text">测试文字阿双方尽快收到回复is倒海翻江可</string>
+    <string name="test_num"> </string>
+    <string name="test_text"> </string>
     <string name="private_type">私有</string>
     <string name="public_type">公开</string>
     <string name="diary_title_tip">请输入日记标题</string>
