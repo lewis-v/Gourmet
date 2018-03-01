@@ -1,5 +1,7 @@
 package com.yw.gourmet.audio.play;
 
+import android.content.Context;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.util.Log;
 
@@ -23,7 +25,7 @@ public class AudioPlayImp implements IAudioPlay,IAudioInfo{
 
     }
 
-    public void play(String audioFile) {
+    public void play(String audioFile,AudioPlayMode mode) {
         if (status == AudioPlayStatus.PLAYING){
             if (audioPlayListener != null){
                 audioPlayListener.onFail(new RuntimeException("is Playing"),"播放中");
@@ -51,6 +53,7 @@ public class AudioPlayImp implements IAudioPlay,IAudioInfo{
                 stop();
             }
             mPlayer = readyPlay(audioFile);
+            setPlayMode(mPlayer,mode);
             mPlayer.prepare();
             mPlayer.start();
         }catch (Exception e){
@@ -106,6 +109,16 @@ public class AudioPlayImp implements IAudioPlay,IAudioInfo{
         }
     }
 
+    @Override
+    public void putERR(Exception e, String msg) {
+        if (status == AudioPlayStatus.PLAYING){
+            stop();
+        }
+        if (audioPlayListener != null){
+            audioPlayListener.onFail(e,msg);
+        }
+    }
+
     /**
      * 准备播放对象
      * @return
@@ -136,6 +149,21 @@ public class AudioPlayImp implements IAudioPlay,IAudioInfo{
             mPlayer.setDataSource(fis.getFD());
         }
         return mPlayer;
+    }
+
+    /**
+     * 设置播放模式
+     * @param mediaPlayer
+     * @param mode
+     * @return
+     */
+    protected MediaPlayer setPlayMode(MediaPlayer mediaPlayer,AudioPlayMode mode){
+        if (mode == AudioPlayMode.RECEIVER) {
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_VOICE_CALL);
+        }else {
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        }
+        return mediaPlayer;
     }
 
     /**

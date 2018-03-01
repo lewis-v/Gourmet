@@ -1,8 +1,16 @@
 package com.yw.gourmet.audio.play;
 
+import android.Manifest;
+import android.content.Context;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.support.v4.app.ActivityCompat;
+
+import com.yw.gourmet.utils.ToastUtils;
+
+import static android.support.v4.content.PermissionChecker.PERMISSION_DENIED;
 
 /**
  * auth: lewis-v
@@ -45,15 +53,21 @@ public class AudioPlayManager {
      * @param audioPath
      * @return
      */
-   public AudioPlayManager play(String audioPath){
-        if (((IAudioInfo)iAudioPlay).getStatus() == AudioPlayStatus.PLAYING && ((IAudioInfo)iAudioPlay).getAudioPath().equals(audioPath)){
-            stop();
-        }else {
-            Message message = new Message();
-            message.what = PLAY;
-            message.obj = audioPath;
-            playThread.handler.sendMessage(message);
-        }
+   public AudioPlayManager play(String audioPath ,Context context, AudioPlayMode mode){
+       if (isPermission(context)) {
+           if (((IAudioInfo) iAudioPlay).getStatus() == AudioPlayStatus.PLAYING && ((IAudioInfo) iAudioPlay).getAudioPath().equals(audioPath)) {
+               stop();
+           } else {
+               Message message = new Message();
+               message.what = PLAY;
+               message.obj = audioPath;
+               message.arg1 = mode.getTypeName();
+               playThread.handler.sendMessage(message);
+           }
+       }else {
+           ToastUtils.showSingleToast("无读取权限");
+           iAudioPlay.putERR(new RuntimeException("no permission"),"无读取权限");
+       }
         return this;
    }
 
@@ -85,7 +99,7 @@ public class AudioPlayManager {
                     switch (msg.what){
                         case PLAY:
                             if (msg.obj != null) {
-                                play(msg.obj.toString());
+                                play(msg.obj.toString(),AudioPlayMode.getByTypeName(msg.arg1));
                             }
                             break;
                         case PAUSE:
@@ -106,7 +120,7 @@ public class AudioPlayManager {
             };
             Looper.loop();
         }
-        private void play(String audioPath){
+        private void play(String audioPath,AudioPlayMode mode){
             while (((IAudioInfo)iAudioPlay).getStatus() == AudioPlayStatus.STOPING){
                 try {
                     Thread.sleep(10);
@@ -118,7 +132,7 @@ public class AudioPlayManager {
             if (((IAudioInfo)iAudioPlay).getStatus() != AudioPlayStatus.FREE ){
                 iAudioPlay.stop();
             }
-            iAudioPlay.play(audioPath);
+            iAudioPlay.play(audioPath,mode);
         }
 
         private void stopPLay(){
@@ -135,5 +149,19 @@ public class AudioPlayManager {
             playThread.interrupt();
         }
 
+    }
+
+    /**
+     * 检测是否有权限
+     * @param context
+     * @return
+     */
+    public boolean isPermission(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
+                && ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE)
+                == PERMISSION_DENIED ) {
+            return false;
+        }
+        return true;
     }
 }

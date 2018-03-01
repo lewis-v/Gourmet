@@ -218,6 +218,16 @@ public class AudioRecoderImp implements IAudioRecoder ,IAudioRecoderSetting{
         }
     }
 
+    @Override
+    public void putERR(Exception e, String msg) {
+        if (status == AudioRecoderStatus.RECODERING) {
+            stop();
+        }
+        if (audioRecoderListener != null){
+            audioRecoderListener.onFail(e,msg);
+        }
+    }
+
 
     //获取录音分贝
     private class AudioRecoderThread implements Runnable{

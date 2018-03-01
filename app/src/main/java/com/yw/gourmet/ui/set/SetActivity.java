@@ -2,19 +2,23 @@ package com.yw.gourmet.ui.set;
 
 import android.content.Intent;
 import android.os.Environment;
+import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.yw.gourmet.Constant;
 import com.yw.gourmet.R;
+import com.yw.gourmet.audio.play.AudioPlayMode;
 import com.yw.gourmet.base.BaseActivity;
 import com.yw.gourmet.dialog.MyDialogFeedBackFragment;
 import com.yw.gourmet.dialog.MyDialogTipFragment;
 import com.yw.gourmet.ui.about.AboutActivity;
 import com.yw.gourmet.ui.chat.ChatActivity;
 import com.yw.gourmet.ui.passwordChange.PasswordChangeActivity;
+import com.yw.gourmet.utils.SPUtils;
 import com.yw.gourmet.utils.SizeChangeUtils;
 import com.yw.gourmet.utils.ToastUtils;
 
@@ -25,6 +29,7 @@ import java.util.List;
 public class SetActivity extends BaseActivity<SetPresenter> implements View.OnClickListener,SetContract.View{
     private LinearLayout ll_back,ll_clear,ll_about,ll_change_password,ll_customer_service,ll_feedback;
     private TextView tv_out;
+    private SwitchCompat switch_audio;
     private final static String path = Environment.getExternalStorageDirectory().getPath() + "/data/gourmet/Img/";//图片存储目录
     private List<File> clearFiles = Arrays.asList(new File(path));//可以清理的文件目录
 
@@ -51,6 +56,24 @@ public class SetActivity extends BaseActivity<SetPresenter> implements View.OnCl
 
         tv_out = (TextView)findViewById(R.id.tv_out);
         tv_out.setOnClickListener(this);
+
+        switch_audio = findViewById(R.id.switch_audio);
+        AudioPlayMode audioMode = AudioPlayMode.getByTypeName(SPUtils.getSharedIntData(this,"audio_play_mode"));
+        if (audioMode == AudioPlayMode.RECEIVER){
+            switch_audio.setChecked(true);
+        }else {
+            switch_audio.setChecked(false);
+        }
+        switch_audio.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    SPUtils.setSharedIntData(SetActivity.this,"audio_play_mode",AudioPlayMode.RECEIVER.getTypeName());
+                }else {
+                    SPUtils.setSharedIntData(SetActivity.this,"audio_play_mode",AudioPlayMode.MEGAPHONE.getTypeName());
+                }
+            }
+        });
     }
 
     /**

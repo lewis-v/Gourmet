@@ -1,5 +1,8 @@
 package com.yw.gourmet.ui.chat;
 
+import android.Manifest;
+import android.os.Build;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -22,6 +25,7 @@ import com.yw.gourmet.adapter.ChatAdapter;
 import com.yw.gourmet.audio.play.AudioPlayImp;
 import com.yw.gourmet.audio.play.AudioPlayListener;
 import com.yw.gourmet.audio.play.AudioPlayManager;
+import com.yw.gourmet.audio.play.AudioPlayMode;
 import com.yw.gourmet.audio.play.AudioPlayStatus;
 import com.yw.gourmet.audio.recoder.AudioRecoderData;
 import com.yw.gourmet.audio.recoder.AudioRecoderListener;
@@ -34,8 +38,11 @@ import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.data.MessageListData;
 import com.yw.gourmet.dialog.MyDialogPhotoChooseFragment;
 import com.yw.gourmet.dialog.MyDialogPhotoShowFragment;
+import com.yw.gourmet.listener.OnRefreshListener;
 import com.yw.gourmet.rxbus.EventSticky;
 import com.yw.gourmet.rxbus.RxBus;
+import com.yw.gourmet.ui.channel.ChannelActivity;
+import com.yw.gourmet.utils.SPUtils;
 import com.yw.gourmet.utils.SoftInputUtils;
 import com.yw.gourmet.utils.StringHandleUtils;
 import com.yw.gourmet.utils.ToastUtils;
@@ -74,6 +81,7 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
     private RelativeLayout rl_voice;
     private boolean isLoadHistory = false;//是否在加载历史中
     private boolean isCancelVoice = false;//是否取消语音
+    private AudioPlayMode audioPlayMode = AudioPlayMode.MEGAPHONE;//语音播放模式,默认扩音器
 
     @Override
     protected int getLayoutId() {
@@ -111,10 +119,16 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
         recycler_chat.setLayoutManager(new LinearLayoutManager(this));
         adapter = new ChatAdapter(this, listData);
         recycler_chat.setAdapter(adapter);
+        adapter.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void OnRefresh(View view, int position) {
+                reSendMessage(position);
+            }
+        });
         adapter.setOnVoiceClickListener(new ChatAdapter.OnVoiceClickListener() {
             @Override
             public void onVoiceClick(View view, int position) {
-                AudioPlayManager.getInstance().play(listData.get(position).getImg());
+                AudioPlayManager.getInstance().play(listData.get(position).getImg(), ChatActivity.this,audioPlayMode);
             }
         });
         adapter.setOnImgClickListener(new ChatAdapter.OnImgClickListener() {
@@ -254,6 +268,9 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
             public void onFail(Exception e,String msg) {
                 e.printStackTrace();
                 rl_voice.setVisibility(View.GONE);
+                if (msg.equals("无录音/读写权限")){
+                    getPermission();
+                }
             }
 
             @Override
@@ -301,8 +318,25 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
             @Override
             public void onFail(Exception e, String msg) {
                 e.printStackTrace();
+                if (msg.equals("无读取权限")){
+                    getPermission();
+                }
             }
         });
+        audioPlayMode = AudioPlayMode.getByTypeName(SPUtils.getSharedIntData(this,"audio_play_mode"));
+    }
+
+    public void getPermission(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            ActivityCompat.requestPermissions(this
+                    , new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE
+                            , Manifest.permission.READ_EXTERNAL_STORAGE
+                            ,Manifest.permission.RECORD_AUDIO}, 0);
+        }else {
+            ActivityCompat.requestPermissions(this
+                    , new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE
+                            ,Manifest.permission.RECORD_AUDIO}, 0);
+        }
     }
 
     @Override
@@ -311,41 +345,6 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
         RxBus.getDefault().postSticky(new EventSticky("notification:"+put_id));
     }
 
-    /**
-     * 发送文本消息
-     */
-    public void sendTextMessage(){
-        if (et_chat.getText().toString().trim().length() == 0){
-            ToastUtils.showSingleToast("请输入发送的内容");
-            return;
-        }
-        hideSoftInput(et_chat);
-        //发送文本信息
-        MessageListData data = new MessageListData();
-        data.setContent(StringHandleUtils.deleteEnter(et_chat.getText().toString().trim()));
-        data.setType(TEXT);
-        data.setUser_id(Constant.userData.getUser_id());
-        data.setPut_id(put_id);
-        data.setGet_id(get_id).setIs_read(0)
-                .setCli_id(listData.size() == 0?0:listData.get(listData.size()-1).getCli_id()+1);
-        data.setImg_header(Constant.userData.getImg_header());
-        data.setSendStatus(MessageListData.SENDING);
-        data.setNickname(Constant.userData.getNickname());
-        listData.add(data);
-        adapter.notifyItemChanged(listData.size() - 1);
-        recycler_chat.smoothScrollToPosition(listData.size() - 1);
-        et_chat.setText("");
-        mPresenter.insertDB(data);
-        MultipartBody.Builder builder = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
-                .addFormDataPart("put_id",put_id)
-                .addFormDataPart("get_id",get_id)
-                .addFormDataPart("type",String.valueOf(TEXT))
-                .addFormDataPart("content",data.getContent());
-        mPresenter.sendMessage(builder.build().parts(),data,listData.size()-1);
-
-    }
 
     /**
      * 加载历史记录
@@ -367,7 +366,7 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
         switch (event.getAction()){
             case MotionEvent.ACTION_DOWN:
                 isCancelVoice = false;
-                AudioRecoderManager.getInstance().start();
+                AudioRecoderManager.getInstance().start(this);
                 return true;
             case MotionEvent.ACTION_MOVE:
                 if (WindowUtil.height - event.getRawY() > ll_bottom.getHeight()){
@@ -380,9 +379,9 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
                 return true;
             case MotionEvent.ACTION_UP:
                 if (isCancelVoice){
-                    AudioRecoderManager.getInstance().cancel();
+                    AudioRecoderManager.getInstance().cancel(this);
                 }else {
-                    AudioRecoderManager.getInstance().stop();
+                    AudioRecoderManager.getInstance().stop(this);
                 }
                 return true;
         }
@@ -392,7 +391,7 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
     @Override
     public void onSendSuccess(MessageListData messageListData,int position) {
         listData.get(position).setSendStatus(MessageListData.SEND_SUCCESS)
-        .setId(messageListData.getId());
+                .setId(messageListData.getId());
         adapter.notifyItemChanged(position);
         mPresenter.updataDB(listData.get(position));
     }
@@ -456,8 +455,6 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
                 .addFormDataPart("length", String.valueOf(data.getEndTime()-data.getStartTime()))
                 .addFormDataPart("type",String.valueOf(MessageListData.VOICE))
                 .addFormDataPart("img",model.getData());
-//        listData.get(position).setImg(model.getData());
-//        adapter.notifyItemChanged(position);
         mPresenter.sendMessage(builder.build().parts(),listData.get(position),position);
     }
 
@@ -591,13 +588,52 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
         }
     }
 
+
+    /**
+     * 发送文本消息
+     */
+    public synchronized void sendTextMessage(){
+        if (et_chat.getText().toString().trim().length() == 0){
+            ToastUtils.showSingleToast("请输入发送的内容");
+            return;
+        }
+        hideSoftInput(et_chat);
+        //发送文本信息
+        MessageListData data = new MessageListData();
+        data.setContent(StringHandleUtils.deleteEnter(et_chat.getText().toString().trim()));
+        data.setType(TEXT);
+        data.set_id(System.currentTimeMillis());
+        data.setUser_id(Constant.userData.getUser_id());
+        data.setPut_id(put_id);
+        data.setGet_id(get_id).setIs_read(0)
+                .setCli_id(listData.size() == 0?0:listData.get(listData.size()-1).getCli_id()+1);
+        data.setImg_header(Constant.userData.getImg_header());
+        data.setSendStatus(MessageListData.SENDING);
+        data.setNickname(Constant.userData.getNickname());
+        listData.add(data);
+        adapter.notifyItemChanged(listData.size() - 1);
+        recycler_chat.smoothScrollToPosition(listData.size() - 1);
+        et_chat.setText("");
+        mPresenter.insertDB(data);
+        MultipartBody.Builder builder = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
+                .addFormDataPart("put_id",put_id)
+                .addFormDataPart("get_id",get_id)
+                .addFormDataPart("type",String.valueOf(TEXT))
+                .addFormDataPart("content",data.getContent());
+        mPresenter.sendMessage(builder.build().parts(),data,listData.size()-1);
+
+    }
+
     /**
      * 发送图片信息
      * @param path
      */
-    public void sendImgMessage(final String path){
+    public synchronized void sendImgMessage(final String path){
         MessageListData messageListData = new MessageListData();
         messageListData.setType(MessageListData.IMG).setImg(path).setIs_read(0)
+                .set_id(System.currentTimeMillis())
                 .setCli_id(listData.size() == 0?0:listData.get(listData.size()-1).getCli_id()+1)
                 .setPut_id(put_id).setGet_id(get_id).setImg_header(Constant.userData.getImg_header())
                 .setUser_id(Constant.userData.getUser_id())
@@ -629,9 +665,10 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
      * 发送语音信息
      * @param audioRecoderData
      */
-    public void sendVoiceMessage(AudioRecoderData audioRecoderData){
+    public synchronized void sendVoiceMessage(AudioRecoderData audioRecoderData){
         MessageListData messageListData = new MessageListData();
         messageListData.setType(MessageListData.VOICE).setImg(audioRecoderData.getFilePath())
+                .set_id(System.currentTimeMillis())
                 .setPut_id(put_id).setGet_id(get_id).setImg_header(Constant.userData.getImg_header())
                 .setLength((int) (audioRecoderData.getEndTime()-audioRecoderData.getStartTime()))
                 .setUser_id(Constant.userData.getUser_id())
@@ -655,6 +692,74 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
                 .build().parts(), position,audioRecoderData);
     }
 
+    /**
+     * 重新发送消息
+     * @param position
+     */
+    public synchronized void reSendMessage(final int position){
+        MessageListData data = listData.get(position);
+        data.setSendStatus(MessageListData.SENDING);
+        mPresenter.updataDB(data);
+        adapter.notifyItemChanged(position);
+        MultipartBody.Builder builder = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
+                .addFormDataPart("put_id",put_id)
+                .addFormDataPart("get_id",get_id);
+        switch (data.getType()){
+            case MessageListData.TEXT:
+                builder.addFormDataPart("type",String.valueOf(TEXT))
+                        .addFormDataPart("content",data.getContent());
+                mPresenter.sendMessage(builder.build().parts(),data,position);
+                break;
+            case MessageListData.IMG:
+                if (data.getImg().startsWith("http")){//图片已上传,直接重发
+                    builder.addFormDataPart("type",String.valueOf(MessageListData.IMG))
+                            .addFormDataPart("img",data.getImg());
+                    mPresenter.sendMessage(builder.build().parts(),data,position);
+                }else {
+                    new Compressor(this)
+                            .compressToFileAsFlowable(new File(data.getImg()))
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(Schedulers.io())
+                            .subscribe(new Consumer<File>() {
+                                @Override
+                                public void accept(File file) throws Exception {
+
+                                    mPresenter.upImg(new MultipartBody.Builder()
+                                            .setType(MultipartBody.FORM)
+                                            .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
+                                            .addFormDataPart("id", Constant.userData.getUser_id())
+                                            .addFormDataPart("path", file.getName(), RequestBody.create(MediaType.parse("multipart/form-data"), file))
+                                            .build().parts(), position);
+                                }
+                            });
+                }
+                break;
+            case MessageListData.VOICE:
+                if (data.getImg().startsWith("http")){//音频已上传,直接重发
+                            builder.addFormDataPart("length", String.valueOf(data.getLength()))
+                            .addFormDataPart("type",String.valueOf(MessageListData.VOICE))
+                            .addFormDataPart("img",data.getImg());
+                    mPresenter.sendMessage(builder.build().parts(),data,position);
+                }else {
+                    File file = new File(data.getImg());
+                    AudioRecoderData audioRecoderData = new AudioRecoderData();
+                    audioRecoderData.setFilePath(data.getImg());
+                    audioRecoderData.setStartTime(0);
+                    audioRecoderData.setEndTime(data.getLength());
+                    mPresenter.upAudio(new MultipartBody.Builder()
+                            .setType(MultipartBody.FORM)
+                            .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
+                            .addFormDataPart("id", Constant.userData.getUser_id())
+                            .addFormDataPart("path", file.getName(), RequestBody.create(MediaType.parse("multipart/form-data"), file))
+                            .build().parts(), position,audioRecoderData);
+                }
+                break;
+        }
+
+    }
+
     @Override
     public void onBackPressed() {
         if (ll_add_other.getVisibility() == View.VISIBLE){
@@ -670,6 +775,6 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
         if (iMessageGet != null){
             MessageCenter.getInstance().removeMessageHandle(iMessageGet);
         }
-        AudioRecoderManager.getInstance().destroy();
+        AudioRecoderManager.getInstance().destroy(this);
     }
 }

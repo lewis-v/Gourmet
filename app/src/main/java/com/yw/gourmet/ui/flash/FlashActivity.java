@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.widget.ProgressBar;
 
 import com.yw.gourmet.Constant;
@@ -25,7 +26,9 @@ import java.util.List;
 import okhttp3.MultipartBody;
 
 public class FlashActivity extends BaseActivity<FlashPresenter> implements FlashConstract.View {
-    private long TIME = 3000;//3秒的最少停留时间
+    private final static String TAG = "FlashActivity";
+
+    private final long TIME = 3000;//3秒的最少停留时间
     private volatile boolean isFinish = false;
     private ProgressBar progress;
     private ValueAnimator valueAnimator;
@@ -73,21 +76,7 @@ public class FlashActivity extends BaseActivity<FlashPresenter> implements Flash
         Thread thread = new WaitThread(new Runnable() {
             @Override
             public void run() {
-                PushManager.getInstance().setTag(FlashActivity.this
-                        ,Constant.userData.getUser_id(),PushManager.NOMAL_TAG);
-                try {
-                    if (SPUtils.getSharedBooleanData(FlashActivity.this
-                            ,getPackageManager().getPackageInfo(getPackageName(),0).versionName))
-                    {
-                        startActivity(new Intent(FlashActivity.this, MainActivity.class));
-                    }else{
-                        startActivity(new Intent(FlashActivity.this, ChannelActivity.class));
-                    }
-                } catch (PackageManager.NameNotFoundException e) {
-                    e.printStackTrace();
-                    //出错了不进入引导
-                    startActivity(new Intent(FlashActivity.this, MainActivity.class));
-                }
+                toChannelOrMain();
                 finish();
             }
         });
@@ -110,7 +99,7 @@ public class FlashActivity extends BaseActivity<FlashPresenter> implements Flash
             Thread thread = new WaitThread(new Runnable() {
                 @Override
                 public void run() {
-                    startActivity(new Intent(FlashActivity.this, MainActivity.class));
+                    toChannelOrMain();
                     finish();
                 }
             });
@@ -140,27 +129,33 @@ public class FlashActivity extends BaseActivity<FlashPresenter> implements Flash
         Thread thread = new WaitThread(new Runnable() {
             @Override
             public void run() {
-                PushManager.getInstance().setTag(getApplicationContext()
-                        ,PushManager.NOMAL_ALIAS,PushManager.NOMAL_TAG);
-                try {
-                    if (SPUtils.getSharedBooleanData(FlashActivity.this
-                            ,getPackageManager().getPackageInfo(getPackageName(),0).versionName))
-                    {
-                        startActivity(new Intent(FlashActivity.this, MainActivity.class));
-                    }else{
-                        startActivity(new Intent(FlashActivity.this, ChannelActivity.class));
-                    }
-                } catch (PackageManager.NameNotFoundException e) {
-                    e.printStackTrace();
-                    //出错了不进入引导
-                    startActivity(new Intent(FlashActivity.this, MainActivity.class));
-                }
+                toChannelOrMain();
                 finish();
             }
         });
         threadList.add(thread);
         thread.start();
+    }
 
+    /**
+     * 进入引导或者主界面
+     */
+    public void toChannelOrMain(){
+        PushManager.getInstance().setTag(getApplicationContext()
+                ,PushManager.NOMAL_ALIAS,PushManager.NOMAL_TAG);
+        try {
+            if (SPUtils.getSharedBooleanData(FlashActivity.this
+                    ,getPackageManager().getPackageInfo(getPackageName(),0).versionName))
+            {
+                startActivity(new Intent(FlashActivity.this, MainActivity.class));
+            }else{
+                startActivity(new Intent(FlashActivity.this, ChannelActivity.class));
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            //出错了不进入引导
+            startActivity(new Intent(FlashActivity.this, MainActivity.class));
+        }
     }
 
     /**

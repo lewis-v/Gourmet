@@ -270,7 +270,8 @@ public class MessageListData {
     }
 
 
-    public void set_id(Long _id) {
+    public MessageListData set_id(Long _id) {
         this._id = _id;
+        return this;
     }
 }

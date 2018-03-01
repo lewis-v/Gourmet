@@ -10,4 +10,5 @@ public interface IAudioRecoder {
     void stop();
     void cancel();
     void destroy();
+    void putERR(Exception e,String msg);
 }
