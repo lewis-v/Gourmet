@@ -2,6 +2,7 @@ package com.yw.gourmet.push;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.yw.gourmet.service.MessageService;
 
@@ -45,13 +46,13 @@ public class PushManager {
      * @param tags 标签(用于用户分组)
      */
     public PushManager setTag(Context context,String alias,String[] tags){
-            //建议添加tag标签，发送消息的之后就可以指定tag标签来发送了
-            Set<String> set = new HashSet<>();
-            for (String str : tags) {
-                set.add(str);
-            }
-            JPushInterface.setTags(context,0, set);//设置标签
-            JPushInterface.setAlias(context, 0, alias);//设置别名
+        //建议添加tag标签，发送消息的之后就可以指定tag标签来发送了
+        Set<String> set = new HashSet<>();
+        for (String str : tags) {
+            set.add(str);
+        }
+        JPushInterface.setTags(context,0, set);//设置标签
+        JPushInterface.setAlias(context, 0, alias);//设置别名
         return this;
     }
 

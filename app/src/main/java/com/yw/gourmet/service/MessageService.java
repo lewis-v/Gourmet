@@ -113,11 +113,14 @@ public class MessageService extends Service {
                 .Builder(MessageService.this,messageListData.getGet_id())
                 .setSmallIcon(R.mipmap.dialog_back)
                 .setContentIntent(getDefalutIntent(Notification.FLAG_AUTO_CANCEL
-                        ,messageListData.getGet_id(),messageListData.getPut_id()))
+                        ,messageListData.getPut_id(),messageListData.getGet_id()))
                 .setContentTitle("有一条消息发送失败")
-                .setDefaults(Notification.DEFAULT_SOUND|Notification.DEFAULT_VIBRATE|Notification.DEFAULT_LIGHTS)
-                .setAutoCancel(true).setFullScreenIntent(getDefalutIntent(Notification.FLAG_AUTO_CANCEL
-                        ,messageListData.getGet_id(),messageListData.getPut_id()),true).build();
+                .setTicker("有一条消息发送失败")
+                .setDefaults(Notification.DEFAULT_ALL)
+                .setAutoCancel(true)
+//                .setFullScreenIntent(getDefalutIntent(Notification.FLAG_AUTO_CANCEL
+//                        ,messageListData.getPut_id(),messageListData.getGet_id()),false)
+                .build();
         notifyManager.notify(Integer.parseInt(messageListData.getGet_id()),notification);
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
@@ -152,17 +155,20 @@ public class MessageService extends Service {
                                     }
                                     Notification notification = new NotificationCompat
                                             .Builder(MessageService.this,String.valueOf(id))
-                                            .setContentIntent(getDefalutIntent(Notification.FLAG_AUTO_CANCEL
-                                                    ,message.getPut_id(),message.getGet_id()))
                                             .setSmallIcon(R.mipmap.dialog_back)
                                             .setLargeIcon(resource)
-                                            .setDefaults(Notification.DEFAULT_SOUND|Notification.DEFAULT_VIBRATE
-                                                    |Notification.DEFAULT_LIGHTS)
+                                            .setDefaults(Notification.DEFAULT_ALL)
+                                            .setTicker("你有一条新消息")
                                             .setContentText(message.getContent())
                                             .setContentTitle(message.getNickname())
                                             .setAutoCancel(true)
-                                            .setAutoCancel(true).setFullScreenIntent(getDefalutIntent(Notification.FLAG_AUTO_CANCEL
-                                                    ,message.getGet_id(),message.getPut_id()),true).build();
+                                            //todo 显示横幅有BUG
+//                                            .setFullScreenIntent(getDefalutIntent(Notification.FLAG_AUTO_CANCEL
+//                                                    ,message.getGet_id(),message.getPut_id()),false)
+                                            .setContentIntent(getDefalutIntent(Notification.FLAG_AUTO_CANCEL
+                                                    ,message.getGet_id(),message.getPut_id()))
+                                            .setPriority(Notification.PRIORITY_HIGH)
+                                            .build();
                                         notifyManager.notify(id,notification);
 
                                 }

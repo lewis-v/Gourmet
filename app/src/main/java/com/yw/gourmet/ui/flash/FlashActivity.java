@@ -142,7 +142,8 @@ public class FlashActivity extends BaseActivity<FlashPresenter> implements Flash
      */
     public void toChannelOrMain(){
         PushManager.getInstance().setTag(getApplicationContext()
-                ,PushManager.NOMAL_ALIAS,PushManager.NOMAL_TAG);
+                ,Constant.userData == null?PushManager.NOMAL_ALIAS:Constant.userData.getUser_id()
+                ,PushManager.NOMAL_TAG);
         try {
             if (SPUtils.getSharedBooleanData(FlashActivity.this
                     ,getPackageManager().getPackageInfo(getPackageName(),0).versionName))

@@ -219,6 +219,11 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
 
         put_id = getIntent().getStringExtra("put_id");
         get_id = getIntent().getStringExtra("get_id");
+        if (get_id.equals(Constant.userData.getUser_id())){//确保发送者一定是自己
+            String cache = get_id;
+            get_id = put_id;
+            put_id = cache;
+        }
 
         getHistory(put_id,get_id,0);
 
