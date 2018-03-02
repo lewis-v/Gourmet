@@ -254,8 +254,10 @@ public class CommentMyFragment extends BaseFragment<CommentMyPresenter> implemen
 
     @Override
     public void onReMarkSuccess(BaseData<ShareListData<List<String>>> model,int position) {
+        int pos = adapter.getPosition(model.getData().getType(),model.getData().getId());
+        position = pos;
         listData.set(position,model.getData());
-        adapter.notifyDataSetChanged();
+        adapter.notifyItemChanged(position);
     }
 
     @Override

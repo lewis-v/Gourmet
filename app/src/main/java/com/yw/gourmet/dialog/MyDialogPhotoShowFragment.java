@@ -1,9 +1,13 @@
 package com.yw.gourmet.dialog;
 
+import android.animation.ObjectAnimator;
+import android.app.Dialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
 import com.github.chrisbanes.photoview.PhotoView;
@@ -25,6 +29,7 @@ import java.util.List;
 public class MyDialogPhotoShowFragment extends BaseDialogFragment implements View.OnClickListener{
     private MyViewPager viewpager_photo;
     private MyImgViewPagerAdapter<PhotoView> adapter;
+    private LinearLayout ll_dialog;
     private List<String> imgString = new ArrayList<>(2);
     private List<PhotoView> list = new ArrayList<>(2);
     private int position = 0;//默认显示位置,0
@@ -33,6 +38,14 @@ public class MyDialogPhotoShowFragment extends BaseDialogFragment implements Vie
     public void onStart() {
         super.onStart();
         getDialog().getWindow().setLayout((int) (WindowUtil.width), ViewGroup.LayoutParams.WRAP_CONTENT);
+    }
+
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Dialog dialog = new Dialog(getActivity());
+        dialog.getWindow().getAttributes().windowAnimations = R.style.ImgDialog;
+        return dialog;
     }
 
     @Override

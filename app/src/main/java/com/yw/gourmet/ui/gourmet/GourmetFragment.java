@@ -261,7 +261,7 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
             if (model.getData() == null || model.getData().size() == 0){
                 ToastUtils.showSingleToast("没有更多啦");
                 adapter.setEnd(true);
-                adapter.notifyDataSetChanged();
+                adapter.notifyItemRangeChanged(listData.size()-1,adapter.getItemCount() - listData.size()-1);
             }else {
                 if (model.getData().size() < 10){
                     adapter.setEnd(true);
@@ -294,8 +294,10 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
 
     @Override
     public void onReMarkSuccess(BaseData<ShareListData<List<String>>> model,int position) {
+        int pos = adapter.getPosition(model.getData().getType(),model.getData().getId());
+        position = pos;
         listData.set(position,model.getData());
-        adapter.notifyDataSetChanged();
+        adapter.notifyItemChanged(position);
     }
 
     @Override

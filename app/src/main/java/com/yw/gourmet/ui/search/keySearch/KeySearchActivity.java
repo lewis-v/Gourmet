@@ -83,8 +83,10 @@ public class KeySearchActivity extends BaseActivity<KeySearchPresenter> implemen
     @Override
     public void onReMarkSuccess(BaseData<ShareListData<List<String>>> model, int position) {
         setLoadDialog(false);
+        int pos = shareListAdapter.getPosition(model.getData().getType(),model.getData().getId());
+        position = pos;
         shareListData.set(position,model.getData());
-        shareListAdapter.notifyDataSetChanged();
+        shareListAdapter.notifyItemChanged(position);
     }
 
     @Override

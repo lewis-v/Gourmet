@@ -25,7 +25,15 @@ public class AudioPlayImp implements IAudioPlay,IAudioInfo{
 
     }
 
-    public void play(String audioFile,AudioPlayMode mode) {
+    @Override
+    public void init(Context context) {
+        AudioManager am = (AudioManager) context.getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
+        if (am != null) {
+            am.setSpeakerphoneOn(false);
+        }
+    }
+
+    public void play(String audioFile, AudioPlayMode mode) {
         if (status == AudioPlayStatus.PLAYING){
             if (audioPlayListener != null){
                 audioPlayListener.onFail(new RuntimeException("is Playing"),"播放中");
@@ -160,8 +168,10 @@ public class AudioPlayImp implements IAudioPlay,IAudioInfo{
     protected MediaPlayer setPlayMode(MediaPlayer mediaPlayer,AudioPlayMode mode){
         if (mode == AudioPlayMode.RECEIVER) {
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_VOICE_CALL);
+            Log.e(TAG,"RECEIVER");
         }else {
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            Log.e(TAG,"MUSIC");
         }
         return mediaPlayer;
     }

@@ -2,6 +2,7 @@ package com.yw.gourmet.audio.play;
 
 import android.Manifest;
 import android.content.Context;
+import android.media.AudioManager;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -41,6 +42,11 @@ public class AudioPlayManager {
         iAudioPlay = new AudioPlayCacheImp();
         playThread = new PlayThread();
         playThread.start();
+    }
+
+    public AudioPlayManager init(Context context){
+        iAudioPlay.init(context);
+        return this;
     }
 
     public AudioPlayManager setPlayListener(AudioPlayListener audioPlayListener){

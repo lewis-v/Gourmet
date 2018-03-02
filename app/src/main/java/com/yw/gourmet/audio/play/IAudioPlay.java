@@ -8,6 +8,7 @@ import android.content.Context;
  */
 
 public interface IAudioPlay {
+    void init(Context context);
     void play(String audioPath,AudioPlayMode mode);
     void pause();
     void continuePlay();

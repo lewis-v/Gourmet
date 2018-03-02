@@ -13,6 +13,7 @@ import com.yw.gourmet.center.event.IMessageSendEvent;
 import com.yw.gourmet.dao.data.messageData.MessageDataUtil;
 import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.data.MessageListData;
+import com.yw.gourmet.data.UserData;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -195,6 +196,29 @@ public class ChatPresenter extends ChatContract.Presenter {
             }
         });
     }
+
+    @Override
+    void getUserInfo(List<MultipartBody.Part> parts) {
+        mRxManager.add(Api.getInstance().GetUserInfo(parts),new RxSubscriberCallBack<BaseData<UserData>>(new RxApiCallback<BaseData<UserData>>() {
+            @Override
+            public void onSuccess(BaseData<UserData> model) {
+                if (isReLoginFail(model)){
+                    return;
+                }
+                if (model.getStatus() == 0){
+                    mView.onGetUserInfoSuccess(model.getData());
+                }else {
+                    mView.onFail(model.getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(int code, String msg) {
+                mView.onFail(msg);
+            }
+        }));
+    }
+
 
     @Override
     void updataDB(final MessageListData messageListData){

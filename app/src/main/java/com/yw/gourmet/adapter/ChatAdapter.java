@@ -18,6 +18,7 @@ import com.yw.gourmet.Constant;
 import com.yw.gourmet.GlideApp;
 import com.yw.gourmet.R;
 import com.yw.gourmet.data.MessageListData;
+import com.yw.gourmet.data.UserData;
 import com.yw.gourmet.listener.OnItemClickListener;
 import com.yw.gourmet.listener.OnRefreshListener;
 import com.yw.gourmet.utils.WindowUtil;
@@ -36,6 +37,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
     private OnRefreshListener onRefreshListener;
     private OnImgClickListener onImgClickListener;
     private OnVoiceClickListener onVoiceClickListener;
+    private UserData getUserData;//获取者的信息(左边)
 
     public ChatAdapter(Context context, List<MessageListData> list) {
         this.context = context;
@@ -53,7 +55,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
             if (Constant.userData.getUser_id().equals(list.get(position).getPut_id())){//自己发送的
                 holder.ll_other.setVisibility(View.GONE);
                 holder.ll_myself.setVisibility(View.VISIBLE);
-                GlideApp.with(context).load(list.get(position).getImg_header())
+                GlideApp.with(context).load(Constant.userData.getImg_header())
                         .placeholder(R.mipmap.loading).error(R.mipmap.load_fail)
                         .transform(new GlideCircleTransform(context))
                         .into(holder.img_header_myself);
@@ -131,7 +133,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
             }else {//别人发送的
                 holder.ll_other.setVisibility(View.VISIBLE);
                 holder.ll_myself.setVisibility(View.GONE);
-                GlideApp.with(context).load(list.get(position).getImg_header())
+                GlideApp.with(context).load(getUserData == null?list.get(position).getImg_header():getUserData.getImg_header())
                         .placeholder(R.mipmap.loading).error(R.mipmap.load_fail)
                         .transform(new GlideCircleTransform(context))
                         .into(holder.img_header_other);
@@ -226,6 +228,15 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
 
     public ChatAdapter setOnVoiceClickListener(OnVoiceClickListener onVoiceClickListener) {
         this.onVoiceClickListener = onVoiceClickListener;
+        return this;
+    }
+
+    public UserData getGetUserData() {
+        return getUserData;
+    }
+
+    public ChatAdapter setGetUserData(UserData getUserData) {
+        this.getUserData = getUserData;
         return this;
     }
 

@@ -23,12 +23,11 @@ public class MessageListData {
     private int cli_id;//客户端id
     private String user_id;//存储的用户id
     private String id;
-    private String put_id;
     private String get_id;
-    private String nickname;
+    private String nickname;//发送者昵称
     private String content;
     private String put_time;
-    private String img_header;
+    private String img_header;//发送者头像
     private int type;//消息类型,文字,图片,其他特殊分享类型
     private String title;//特殊分享类型标题
     private String cover;//特殊分享类型封面
@@ -37,22 +36,24 @@ public class MessageListData {
     private int is_read;//是否已读
     private int un_read_num;//未读数量
     private int length;//音频时间
+    private String put_id;
+
+
 
     public MessageListData() {
     }
 
 
-    @Generated(hash = 717509237)
+    @Generated(hash = 842244495)
     public MessageListData(Long _id, int cli_id, String user_id, String id,
-            String put_id, String get_id, String nickname, String content,
-            String put_time, String img_header, int type, String title,
-            String cover, String img, int sendStatus, int is_read, int un_read_num,
-            int length) {
+            String get_id, String nickname, String content, String put_time,
+            String img_header, int type, String title, String cover, String img,
+            int sendStatus, int is_read, int un_read_num, int length,
+            String put_id) {
         this._id = _id;
         this.cli_id = cli_id;
         this.user_id = user_id;
         this.id = id;
-        this.put_id = put_id;
         this.get_id = get_id;
         this.nickname = nickname;
         this.content = content;
@@ -66,6 +67,7 @@ public class MessageListData {
         this.is_read = is_read;
         this.un_read_num = un_read_num;
         this.length = length;
+        this.put_id = put_id;
     }
 
 

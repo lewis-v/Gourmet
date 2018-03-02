@@ -250,8 +250,10 @@ public class MyShareFragment extends BaseFragment<MySharePresenter> implements M
 
     @Override
     public void onReMarkSuccess(BaseData<ShareListData<List<String>>> model,int position) {
+        int pos = adapter.getPosition(model.getData().getType(),model.getData().getId());
+        position = pos;
         listData.set(position,model.getData());
-        adapter.notifyDataSetChanged();
+        adapter.notifyItemChanged(position);
     }
 
     @Override
@@ -298,7 +300,7 @@ public class MyShareFragment extends BaseFragment<MySharePresenter> implements M
             ToastUtils.showSingleToast("请登陆后再进行操作");
         }
         if (Constant.userData != null){
-            builder.addFormDataPart("user_id",id);
+            builder.addFormDataPart("user_id",Constant.userData.getUser_id());
         }
         mPresenter.getShareList(builder.build().parts(), LoadEnum.REFRESH);
     }

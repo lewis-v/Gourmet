@@ -187,9 +187,13 @@ public class PersonalActivity extends BaseActivity<PersonalPresenter> implements
             recycler_top.setLayoutManager(new LinearLayoutManager(this));
             adapter = new ShareListAdapter(this, listTop, getSupportFragmentManager());
             recycler_top.setAdapter(adapter);
-            mPresenter.getTop(new MultipartBody.Builder().setType(MultipartBody.FORM)
+            MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM)
                     .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
-                    .addFormDataPart("id", id).build().parts());
+                    .addFormDataPart("id", id);
+            if (Constant.userData != null){
+                builder.addFormDataPart("user_id",Constant.userData.getUser_id());
+            }
+            mPresenter.getTop(builder.build().parts());
             adapter.setListener(new OnItemClickListener() {
                 @Override
                 public void OnClick(View v, int position) {
@@ -394,7 +398,7 @@ public class PersonalActivity extends BaseActivity<PersonalPresenter> implements
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.app_bar:
-                if (userData.getId().equals(Constant.userData.getUser_id())) {
+                if (Constant.userData != null && userData.getId().equals(Constant.userData.getUser_id())) {
                     setBackChangeShow();
                 }
                 break;
@@ -527,8 +531,10 @@ public class PersonalActivity extends BaseActivity<PersonalPresenter> implements
 
     @Override
     public void onReMarkSuccess(BaseData<ShareListData<List<String>>> model,int position) {
+        int pos = adapter.getPosition(model.getData().getType(),model.getData().getId());
+        position = pos;
         listTop.set(position,model.getData());
-        adapter.notifyDataSetChanged();
+        adapter.notifyItemChanged(position);
     }
 
     @Override

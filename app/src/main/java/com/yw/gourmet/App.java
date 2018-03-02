@@ -7,6 +7,7 @@ import android.support.multidex.MultiDexApplication;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.bumptech.glide.Glide;
+import com.yw.gourmet.audio.play.AudioPlayManager;
 import com.yw.gourmet.center.MessageCenter;
 import com.yw.gourmet.push.PushManager;
 
@@ -54,6 +55,7 @@ public class App extends MultiDexApplication {
                    SDKInitializer.initialize(getApplicationContext());
                    initPush();
                    MessageCenter.getInstance().init(this);
+                   AudioPlayManager.getInstance().init(this);
                }
             }
         }

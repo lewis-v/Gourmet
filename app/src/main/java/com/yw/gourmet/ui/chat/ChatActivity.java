@@ -36,6 +36,7 @@ import com.yw.gourmet.center.event.IMessageGet;
 import com.yw.gourmet.dao.data.messageData.MessageDataUtil;
 import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.data.MessageListData;
+import com.yw.gourmet.data.UserData;
 import com.yw.gourmet.dialog.MyDialogPhotoChooseFragment;
 import com.yw.gourmet.dialog.MyDialogPhotoShowFragment;
 import com.yw.gourmet.listener.OnRefreshListener;
@@ -224,7 +225,9 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
             get_id = put_id;
             put_id = cache;
         }
-
+        mPresenter.getUserInfo(new MultipartBody.Builder().setType(MultipartBody.FORM)
+                .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
+                .addFormDataPart("id",get_id).build().parts());
         getHistory(put_id,get_id,0);
 
         iMessageGet = new IMessageGet() {
@@ -512,6 +515,14 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
                 ToastUtils.showSingleToast(msg);
             }
         });
+    }
+
+    @Override
+    public void onGetUserInfoSuccess(UserData model) {
+        if (adapter != null){
+            adapter.setGetUserData(model);
+            adapter.notifyDataSetChanged();
+        }
     }
 
     @Override

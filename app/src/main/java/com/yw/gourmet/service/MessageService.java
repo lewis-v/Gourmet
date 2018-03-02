@@ -118,8 +118,6 @@ public class MessageService extends Service {
                 .setTicker("有一条消息发送失败")
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setAutoCancel(true)
-//                .setFullScreenIntent(getDefalutIntent(Notification.FLAG_AUTO_CANCEL
-//                        ,messageListData.getPut_id(),messageListData.getGet_id()),false)
                 .build();
         notifyManager.notify(Integer.parseInt(messageListData.getGet_id()),notification);
         new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -162,9 +160,6 @@ public class MessageService extends Service {
                                             .setContentText(message.getContent())
                                             .setContentTitle(message.getNickname())
                                             .setAutoCancel(true)
-                                            //todo 显示横幅有BUG
-//                                            .setFullScreenIntent(getDefalutIntent(Notification.FLAG_AUTO_CANCEL
-//                                                    ,message.getGet_id(),message.getPut_id()),false)
                                             .setContentIntent(getDefalutIntent(Notification.FLAG_AUTO_CANCEL
                                                     ,message.getGet_id(),message.getPut_id()))
                                             .setPriority(Notification.PRIORITY_HIGH)

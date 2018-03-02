@@ -5,6 +5,7 @@ import com.yw.gourmet.base.BasePresenter;
 import com.yw.gourmet.base.BaseView;
 import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.data.MessageListData;
+import com.yw.gourmet.data.UserData;
 
 import java.util.List;
 
@@ -25,6 +26,7 @@ public interface ChatContract {
         void onUpAudioFail(String msg,int position);
         void onGetHistorySuccess(List<MessageListData> model);
         void onGetHistoryFail(String msg);
+        void  onGetUserInfoSuccess(UserData model);
     }
 
     abstract class Presenter extends BasePresenter<View>{
@@ -36,5 +38,6 @@ public interface ChatContract {
         abstract void getHistory(String put_id,String get_id,int startId);
         abstract void insertDB(MessageListData messageListData);
         abstract void updataDB(MessageListData messageListData);
+        abstract void getUserInfo(List<MultipartBody.Part> parts);
     }
 }

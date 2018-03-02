@@ -174,7 +174,6 @@ public class ShareListAdapter extends RecyclerView.Adapter<ShareListAdapter.MyVi
                 holder.tv_comment.setTextColor(ContextCompat.getColor(context, R.color.close));
             }
 
-
             if (listData.get(position).getType() == Constant.TypeFlag.SHARE) {//普通分享
                 holder.ll_other.setVisibility(View.GONE);
                 holder.ll_content.setVisibility(View.VISIBLE);
@@ -195,8 +194,9 @@ public class ShareListAdapter extends RecyclerView.Adapter<ShareListAdapter.MyVi
                                     .getImg()).show(fragmentManager, "imgShow");
                         }
                     });
-                } else if (listData.size() > 1) {//多张图片
+                } else if (listData.get(position).getImg().size() > 1) {//多张图片
                     ImgAdapter adapter = new ImgAdapter(context, listData.get(position).getImg());
+                    Log.e("share",listData.get(position).getImg().toString());
                     holder.ll_img.setVisibility(View.GONE);
                     holder.recycler_share.setVisibility(View.VISIBLE);
                     holder.recycler_share.setLayoutManager(new StaggeredGridLayoutManager(3
