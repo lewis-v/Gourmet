@@ -368,6 +368,7 @@ public class CommonShareActivity extends BaseActivity<CommonSharePresenter> impl
             }
         }catch (Exception e){}
         RxBus.getDefault().postSticky(new EventSticky("gourmet_refresh"));
+        RxBus.getDefault().postSticky(new EventSticky("share_common"));
         finish();
     }
 

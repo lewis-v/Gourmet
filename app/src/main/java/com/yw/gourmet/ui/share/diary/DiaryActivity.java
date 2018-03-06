@@ -342,6 +342,7 @@ public class DiaryActivity extends BaseActivity<DiaryPresenter> implements View.
             }
         }catch (Exception e){}
         RxBus.getDefault().postSticky(new EventSticky("gourmet_refresh"));
+        RxBus.getDefault().postSticky(new EventSticky("share_diary"));
         finish();
     }
 

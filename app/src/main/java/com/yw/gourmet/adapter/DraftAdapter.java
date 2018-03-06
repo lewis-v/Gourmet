@@ -60,6 +60,10 @@ public class DraftAdapter extends RecyclerView.Adapter<DraftAdapter.MyViewHolder
                 holder.tv_title.setText(data.get(position).getTitle());
                 break;
         }
+        if (data.get(position).getType() >= Constant.TypeFlag.OTHER){
+            holder.tv_type.setText("不支持类型");
+            holder.tv_title.setText("此版本不支持此类型,请更新APP");
+        }
         holder.tv_time.setText(new SimpleDateFormat("yy-MM-dd HH:mm:ss").format(new Date(data.get(position).getChange_time())));
         if (onItemClickListener != null){
             holder.constraint_item.setOnClickListener(new View.OnClickListener() {

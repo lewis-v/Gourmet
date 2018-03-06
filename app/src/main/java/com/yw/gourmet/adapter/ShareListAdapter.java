@@ -234,6 +234,10 @@ public class ShareListAdapter extends RecyclerView.Adapter<ShareListAdapter.MyVi
                         holder.tv_title.setBackgroundResource(R.drawable.raiders_back);
                         break;
                 }
+                if (listData.get(position).getType() >= Constant.TypeFlag.OTHER){
+                    holder.tv_title.setBackgroundResource(R.color.transparent);
+                    holder.tv_title.setText("此版本不支持此类型,请更新APP");
+                }
             }
 
             if (listener != null) {

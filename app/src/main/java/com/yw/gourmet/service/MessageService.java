@@ -53,6 +53,7 @@ import rx.Subscription;
 import rx.functions.Action1;
 import rx.functions.Func1;
 
+import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
 import static com.yw.gourmet.Constant.NORMAL_PUSH_ID;
 
 public class MessageService extends Service {
@@ -112,7 +113,7 @@ public class MessageService extends Service {
         Notification notification = new NotificationCompat
                 .Builder(MessageService.this,messageListData.getGet_id())
                 .setSmallIcon(R.mipmap.dialog_back)
-                .setContentIntent(getDefalutIntent(Notification.FLAG_AUTO_CANCEL
+                .setContentIntent(getDefalutIntent(FLAG_UPDATE_CURRENT
                         ,messageListData.getPut_id(),messageListData.getGet_id()))
                 .setContentTitle("有一条消息发送失败")
                 .setTicker("有一条消息发送失败")
@@ -160,7 +161,7 @@ public class MessageService extends Service {
                                             .setContentText(message.getContent())
                                             .setContentTitle(message.getNickname())
                                             .setAutoCancel(true)
-                                            .setContentIntent(getDefalutIntent(Notification.FLAG_AUTO_CANCEL
+                                            .setContentIntent(getDefalutIntent(FLAG_UPDATE_CURRENT
                                                     ,message.getGet_id(),message.getPut_id()))
                                             .setPriority(Notification.PRIORITY_HIGH)
                                             .build();
@@ -180,14 +181,13 @@ public class MessageService extends Service {
 
     /**
      * 点击消息
-     * @param flags
+     * @param flags 设置为FLAG_UPDATE_CURRENT才可以传入新的intent值
      * @return
      */
     public PendingIntent getDefalutIntent(int flags,String putId,String getId){
         Intent myintent = new Intent(this, ChatActivity.class);
         myintent.putExtra("put_id",putId);
         myintent.putExtra("get_id",getId);
-        Log.e("---touch",putId+getId);
         PendingIntent pendingIntent= PendingIntent.getActivity(this, 0, myintent, flags);
         return pendingIntent;
     }

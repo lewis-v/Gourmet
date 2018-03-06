@@ -266,6 +266,23 @@ public class MyFragment extends BaseFragment implements View.OnClickListener,MyC
                                         setData();
                                     }
                                     break;
+                                case "share_common":
+                                    Constant.userData.setCommon_num(Constant.userData.getCommon_num()+1);
+                                    tv_share.setText(String.valueOf(Constant.userData.getCommon_num()));
+                                    break;
+                                case "share_diary":
+                                    Constant.userData.setDiary_num(Constant.userData.getDiary_num()+1);
+                                    tv_diary.setText(String.valueOf(Constant.userData.getDiary_num()));
+                                    break;
+                                case "share_menu":
+                                    Constant.userData.setMenu_num(Constant.userData.getMenu_num()+1);
+                                    tv_menu.setText(String.valueOf(Constant.userData.getMenu_num()));
+                                    break;
+                                case "share_raider":
+                                    Constant.userData.setRaiders_num(Constant.userData.getRaiders_num()+1);
+                                    tv_raiders.setText(String.valueOf(Constant.userData.getRaiders_num()));
+                                    break;
+
                             }
                         }
                     });

@@ -103,6 +103,13 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
                         }
                         break;
                 }
+                if (list.get(position).getType() > MessageListData.OTHER){
+                    holder.tv_myself.setVisibility(View.VISIBLE);
+                    holder.ll_text_my.setVisibility(View.VISIBLE);
+                    holder.img_myself.setVisibility(View.GONE);
+                    holder.tv_myself.setText("此版本不支持此类型消息,请更新APP");
+                    holder.img_voice_my.setVisibility(View.GONE);
+                }
                 holder.fl_sending_myself.removeAllViews();
                 switch (list.get(position).getSendStatus()) {
                     case MessageListData.SENDING:
@@ -180,6 +187,13 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
                             });
                         }
                         break;
+                }
+                if (list.get(position).getType() > MessageListData.OTHER){
+                    holder.tv_other.setVisibility(View.VISIBLE);
+                    holder.ll_text_other.setVisibility(View.VISIBLE);
+                    holder.img_other.setVisibility(View.GONE);
+                    holder.tv_other.setText("此版本不支持此类型消息,请更新APP");
+                    holder.img_voice_other.setVisibility(View.GONE);
                 }
                 holder.fl_sending_other.removeAllViews();
                 switch (list.get(position).getSendStatus()) {

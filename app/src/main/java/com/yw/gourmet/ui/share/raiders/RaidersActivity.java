@@ -276,6 +276,7 @@ public class RaidersActivity extends BaseActivity<RaidersPresenter> implements V
             }
         }catch (Exception e){}
         RxBus.getDefault().postSticky(new EventSticky("gourmet_refresh"));
+        RxBus.getDefault().postSticky(new EventSticky("share_raider"));
         finish();
     }
 

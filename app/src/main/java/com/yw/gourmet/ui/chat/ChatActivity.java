@@ -523,6 +523,7 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
             adapter.setGetUserData(model);
             adapter.notifyDataSetChanged();
         }
+        tv_tool.setText(model.getNickname());
     }
 
     @Override
