@@ -236,11 +236,12 @@ public class AudioRecoderImp implements IAudioRecoder ,IAudioRecoderSetting{
         public void run() {
             if (mMediaRecorder != null){
                 int ratio = mMediaRecorder.getMaxAmplitude()/600;
+                int DB = 0;
                 if (ratio > 1) {
-                    int DB = (int)(20 * Math.log10(ratio));//分贝
-                    if (audioRecoderListener != null){
-                        audioRecoderListener.onSoundSize(DB);
-                    }
+                    DB = (int)(20 * Math.log10(ratio));//分贝
+                }
+                if (audioRecoderListener != null){
+                    audioRecoderListener.onSoundSize(DB);
                 }
                 synchronized (lock) {
                     audioRecoderThread = new AudioRecoderThread();

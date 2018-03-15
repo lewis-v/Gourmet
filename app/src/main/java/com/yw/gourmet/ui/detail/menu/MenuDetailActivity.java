@@ -1,8 +1,11 @@
 package com.yw.gourmet.ui.detail.menu;
 
+import android.app.ActivityOptions;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.app.SharedElementCallback;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -44,12 +47,16 @@ import com.yw.gourmet.dialog.MyDialogMoreFragment;
 import com.yw.gourmet.dialog.MyDialogPhotoShowFragment;
 import com.yw.gourmet.rxbus.EventSticky;
 import com.yw.gourmet.rxbus.RxBus;
+import com.yw.gourmet.ui.detail.common.CommonDetailActivity;
+import com.yw.gourmet.ui.imgShow.ImgShowActivity;
+import com.yw.gourmet.utils.ShareTransitionUtil;
 import com.yw.gourmet.utils.StringHandleUtils;
 import com.yw.gourmet.utils.ToastUtils;
 import com.yw.gourmet.utils.WindowUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.MultipartBody;
 
@@ -235,8 +242,31 @@ public class MenuDetailActivity extends BaseActivity<MenuDetailPresenter> implem
 
                 break;
             case R.id.img_cover:
-                new MyDialogPhotoShowFragment().addImgString(shareListData.getCover())
-                        .show(getSupportFragmentManager(),"cover");
+                final String shareFlag = "tran"+(int)(Math.random()*1000);
+                Intent intent = new Intent(MenuDetailActivity.this, ImgShowActivity.class);
+                ArrayList<String> list = new ArrayList<String>();
+                list.add(shareListData.getCover());
+                intent.putStringArrayListExtra("img",list);
+                intent.putExtra("position",0);
+                intent.putExtra("shareFlag",shareFlag);
+
+                if (android.os.Build.VERSION.SDK_INT > 20) {
+                    setExitSharedElementCallback(new SharedElementCallback() {
+                        @Override
+                        public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+                            super.onMapSharedElements(names, sharedElements);
+                        }
+                    });
+                    ShareTransitionUtil.position = -1;
+                    img_cover.setTransitionName(shareFlag);
+                    startActivity(intent
+                            , ActivityOptions.makeSceneTransitionAnimation(MenuDetailActivity.this
+                                    , img_cover, shareFlag).toBundle());
+                } else {
+                    startActivity(intent);
+                }
+//                new MyDialogPhotoShowFragment().addImgString(shareListData.getCover())
+//                        .show(getSupportFragmentManager(),"cover");
                 break;
             case R.id.ll_comment:
                 if (ll_input.getVisibility() == View.VISIBLE){

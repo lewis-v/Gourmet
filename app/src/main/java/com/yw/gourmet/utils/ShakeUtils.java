@@ -15,16 +15,16 @@ public class ShakeUtils implements SensorEventListener {
     private static ShakeUtils instance;
     private SensorManager mSensorManager = null;
     private OnShakeListener mOnShakeListener = null;
-    private static final int SENSOR_VALUE = 19;
+    private static final int SENSOR_VALUE = 18;
 
     public static ShakeUtils getInstance(Context context){
         if (instance == null){
-            instance = new ShakeUtils(context);
+            instance = new ShakeUtils(context.getApplicationContext());
         }
         return instance;
     }
 
-    public ShakeUtils(Context context){
+    private ShakeUtils(Context context){
         mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
     }
 
@@ -40,6 +40,7 @@ public class ShakeUtils implements SensorEventListener {
 
     public void onPause(){
         mSensorManager.unregisterListener(this);
+        mOnShakeListener = null;
     }
 
     @Override

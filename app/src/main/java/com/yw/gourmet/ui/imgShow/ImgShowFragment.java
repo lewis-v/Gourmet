@@ -1,38 +1,25 @@
-package com.yw.gourmet.dialog;
+package com.yw.gourmet.ui.imgShow;
 
-import android.animation.ObjectAnimator;
-import android.app.Dialog;
-import android.graphics.Bitmap;
-import android.os.Build;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.transition.TransitionInflater;
-import android.support.v4.view.ViewPager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.yw.gourmet.GlideApp;
 import com.yw.gourmet.R;
 import com.yw.gourmet.adapter.MyImgViewPagerAdapter;
-import com.yw.gourmet.base.BaseDialogFragment;
-import com.yw.gourmet.utils.WindowUtil;
+import com.yw.gourmet.base.BaseFragment;
 import com.yw.gourmet.widget.MyViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
- * Created by LYW on 2017/12/8.
+ * auth: lewis-v
+ * time: 2018/3/14.
  */
 
-public class MyDialogPhotoShowFragment extends BaseDialogFragment implements View.OnClickListener{
+public class ImgShowFragment extends BaseFragment {
     private MyViewPager viewpager_photo;
     private MyImgViewPagerAdapter<PhotoView> adapter;
     private LinearLayout ll_dialog;
@@ -42,21 +29,13 @@ public class MyDialogPhotoShowFragment extends BaseDialogFragment implements Vie
     private String shareFlag;
 
     @Override
-    public void onStart() {
-        super.onStart();
-        getDialog().getWindow().setLayout((int) (WindowUtil.width), ViewGroup.LayoutParams.WRAP_CONTENT);
-    }
-
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Dialog dialog = new Dialog(getActivity());
-        dialog.getWindow().getAttributes().windowAnimations = R.style.ImgDialog;
-        return dialog;
+    protected int getLayoutId() {
+        return R.layout.fragment_my_dialog_photo_show;
     }
 
     @Override
     protected void initView() {
+        postponeEnterTransition();
         viewpager_photo = (MyViewPager)view.findViewById(R.id.viewpager_photo);
         adapter = new MyImgViewPagerAdapter<PhotoView>(list);
         viewpager_photo.setAdapter(adapter);
@@ -67,29 +46,15 @@ public class MyDialogPhotoShowFragment extends BaseDialogFragment implements Vie
         }
     }
 
-    @Override
-    protected int getLayoutId() {
-        return R.layout.fragment_my_dialog_photo_show;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setStyle(STYLE_NO_FRAME, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            setSharedElementEnterTransition( TransitionInflater.from(getContext()).inflateTransition(android.R.transition.move));
-        }
-
-
-    }
 
     public void setData(){
         if (imgString != null && imgString.size()>0){
             for (int len = imgString.size(),num = 0;num<len;num++){
                 final PhotoView photoView = new PhotoView(getContext());
                 final int i = num;
-                if (num == position){
+                if (position == num) {
                     photoView.setTransitionName(shareFlag);
+                    startPostponedEnterTransition();
                 }
                 GlideApp.with(this).asBitmap().load(imgString.get(num)).error(R.mipmap.load_fail)
                         .placeholder(R.mipmap.loading).into(photoView);
@@ -105,28 +70,29 @@ public class MyDialogPhotoShowFragment extends BaseDialogFragment implements Vie
         }
     }
 
-    public MyDialogPhotoShowFragment setImgString(List<String> imgString) {
+    public void dismiss(){
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.remove(this);
+        ft.commit();
+    }
+
+    public ImgShowFragment setImgString(List<String> imgString) {
         this.imgString = imgString;
         return this;
     }
 
-    public MyDialogPhotoShowFragment setPosition(int position) {
+    public ImgShowFragment setList(List<PhotoView> list) {
+        this.list = list;
+        return this;
+    }
+
+    public ImgShowFragment setPosition(int position) {
         this.position = position;
         return this;
     }
 
-    public MyDialogPhotoShowFragment addImgString(String path){
-        this.imgString.add(path);
-        return this;
-    }
-
-    public MyDialogPhotoShowFragment setShareFlag(String shareFlag) {
+    public ImgShowFragment setShareFlag(String shareFlag) {
         this.shareFlag = shareFlag;
         return this;
-    }
-
-    @Override
-    public void onClick(View v) {
-
     }
 }

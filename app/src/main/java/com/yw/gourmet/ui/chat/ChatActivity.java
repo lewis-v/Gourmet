@@ -1,8 +1,12 @@
 package com.yw.gourmet.ui.chat;
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.ActivityOptions;
+import android.content.Intent;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.SharedElementCallback;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -43,7 +47,9 @@ import com.yw.gourmet.listener.OnRefreshListener;
 import com.yw.gourmet.rxbus.EventSticky;
 import com.yw.gourmet.rxbus.RxBus;
 import com.yw.gourmet.ui.channel.ChannelActivity;
+import com.yw.gourmet.ui.imgShow.ImgShowActivity;
 import com.yw.gourmet.utils.SPUtils;
+import com.yw.gourmet.utils.ShareTransitionUtil;
 import com.yw.gourmet.utils.SoftInputUtils;
 import com.yw.gourmet.utils.StringHandleUtils;
 import com.yw.gourmet.utils.ToastUtils;
@@ -52,7 +58,9 @@ import com.yw.gourmet.widget.YWRecyclerView;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import id.zelory.compressor.Compressor;
 import io.reactivex.functions.Consumer;
@@ -135,7 +143,30 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
         adapter.setOnImgClickListener(new ChatAdapter.OnImgClickListener() {
             @Override
             public void onClick(View view, int position) {
-                new MyDialogPhotoShowFragment().addImgString(listData.get(position).getImg()).show(getSupportFragmentManager(),"img");
+                final String shareFlag = "tran"+(int)(Math.random()*1000);
+                Intent intent = new Intent(ChatActivity.this, ImgShowActivity.class);
+                ArrayList<String> list = new ArrayList<String>();
+                list.add(listData.get(position).getImg());
+                intent.putStringArrayListExtra("img", list);
+                intent.putExtra("position",0);
+                intent.putExtra("shareFlag",shareFlag);
+
+                if (android.os.Build.VERSION.SDK_INT > 20) {
+                    setExitSharedElementCallback(new SharedElementCallback() {
+                        @Override
+                        public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+                            super.onMapSharedElements(names, sharedElements);
+                        }
+                    });
+                    ShareTransitionUtil.position = -1;
+                    view.setTransitionName(shareFlag);
+                    startActivity(intent
+                            , ActivityOptions.makeSceneTransitionAnimation(ChatActivity.this
+                                    , view, shareFlag).toBundle());
+                } else {
+                    startActivity(intent);
+                }
+//                new MyDialogPhotoShowFragment().addImgString(listData.get(position).getImg()).show(getSupportFragmentManager(),"img");
             }
         });
         recycler_chat.setOnScrollListener(new YWRecyclerView.OnScrollListener() {

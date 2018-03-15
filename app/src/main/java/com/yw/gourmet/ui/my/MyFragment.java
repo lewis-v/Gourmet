@@ -20,9 +20,9 @@ import com.yw.gourmet.rxbus.RxBus;
 import com.yw.gourmet.rxbus.RxBusSubscriber;
 import com.yw.gourmet.rxbus.RxSubscriptions;
 import com.yw.gourmet.ui.chat.ChatActivity;
-import com.yw.gourmet.ui.draft.DraftActivity;
 import com.yw.gourmet.ui.collection.CollectionActivity;
 import com.yw.gourmet.ui.commentMy.CommentMyActivity;
+import com.yw.gourmet.ui.draft.DraftActivity;
 import com.yw.gourmet.ui.login.LoginActivity;
 import com.yw.gourmet.ui.myShare.MyShareActivity;
 import com.yw.gourmet.ui.personal.PersonalActivity;
@@ -139,7 +139,24 @@ public class MyFragment extends BaseFragment implements View.OnClickListener,MyC
         Intent intent = null;
         switch (view.getId()){
             case R.id.ll_set:
-                startActivity(new Intent(getContext(), PersonalActivity.class));
+                Intent intent1 = new Intent(getContext(), PersonalActivity.class);
+//                final String shareFlag = "tran"+(int)(Math.random()*1000);
+//                intent1.putExtra("shareFlag",shareFlag);
+//
+//                if (android.os.Build.VERSION.SDK_INT > 20) {
+//                    ShareTransitionUtil.position = -1;
+//                    setExitSharedElementCallback(new SharedElementCallback() {
+//                        @Override
+//                        public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+//                            super.onMapSharedElements(names, sharedElements);
+//                        }
+//                    });
+//                    img_header.setTransitionName(shareFlag);
+//                    startActivity(intent1
+//                            , ActivityOptions.makeSceneTransitionAnimation(getActivity(), img_header, shareFlag).toBundle());
+//                } else {
+                    startActivity(intent1);
+//                }
                 break;
             case R.id.bt_register:
                 startActivity(new Intent(getContext(), RegisteredActivity.class));
@@ -187,11 +204,11 @@ public class MyFragment extends BaseFragment implements View.OnClickListener,MyC
                 if (Constant.userData == null){
                     ToastUtils.showSingleToast("请登陆后再操作");
                 }else {
-                    Intent intent1 = new Intent(getContext(), ChatActivity.class);
+                    Intent intent2 = new Intent(getContext(), ChatActivity.class);
                     String put_id = Constant.userData.getUser_id();
-                    intent1.putExtra("put_id", put_id);
-                    intent1.putExtra("get_id", "0");
-                    startActivity(intent1);
+                    intent2.putExtra("put_id", put_id);
+                    intent2.putExtra("get_id", "0");
+                    startActivity(intent2);
                 }
                 break;
             case R.id.ll_reject:

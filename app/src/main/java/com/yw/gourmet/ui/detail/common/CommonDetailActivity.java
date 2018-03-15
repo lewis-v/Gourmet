@@ -1,8 +1,10 @@
 package com.yw.gourmet.ui.detail.common;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.app.SharedElementCallback;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -28,6 +30,7 @@ import com.yw.gourmet.Constant;
 import com.yw.gourmet.GlideApp;
 import com.yw.gourmet.R;
 import com.yw.gourmet.adapter.CommentAdapter;
+import com.yw.gourmet.adapter.ImgAdapter;
 import com.yw.gourmet.adapter.ImgAddAdapter;
 import com.yw.gourmet.base.BaseActivity;
 import com.yw.gourmet.data.BaseData;
@@ -39,14 +42,19 @@ import com.yw.gourmet.dialog.MyDialogPhotoShowFragment;
 import com.yw.gourmet.listener.OnItemClickListener;
 import com.yw.gourmet.rxbus.EventSticky;
 import com.yw.gourmet.rxbus.RxBus;
+import com.yw.gourmet.ui.chat.ChatActivity;
+import com.yw.gourmet.ui.imgShow.ImgShowActivity;
 import com.yw.gourmet.ui.personal.PersonalActivity;
+import com.yw.gourmet.utils.ShareTransitionUtil;
 import com.yw.gourmet.utils.StringHandleUtils;
 import com.yw.gourmet.utils.ToastUtils;
 import com.yw.gourmet.utils.WindowUtil;
 import com.yw.gourmet.widget.GlideCircleTransform;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.MultipartBody;
 
@@ -64,7 +72,7 @@ public class CommonDetailActivity extends BaseActivity<CommonDetailPresenter> im
     private Button bt_send;
     private ConstraintLayout constraint_comment;
     private NestedScrollView scroll_comment;
-    private ImgAddAdapter imgAdapter;
+    private ImgAdapter imgAdapter;
     private ShareListData<List<String>> listShareListData;
     private CommentAdapter commentAdapter;
     private List<CommentData> commentDataList = new ArrayList<>();
@@ -221,13 +229,36 @@ public class CommonDetailActivity extends BaseActivity<CommonDetailPresenter> im
         if (listShareListData.getImg() != null ){
             if (listShareListData.getImg().size() > 1) {//大于1张照片
                 shoViewTop(recycler_share,true);
-                imgAdapter = new ImgAddAdapter(listShareListData.getImg(), this);
-                imgAdapter.setChange(false);
+                imgAdapter = new ImgAdapter(this,listShareListData.getImg());
                 recycler_share.setAdapter(imgAdapter);
                 imgAdapter.setOnItemClickListener(new OnItemClickListener() {
                     @Override
                     public void OnClick(View v, int position) {
-                        new MyDialogPhotoShowFragment().setImgString(listShareListData.getImg()).setPosition(position).show(getSupportFragmentManager(),"imgs");
+                        final String shareFlag = "tran"+(int)(Math.random()*1000);
+                        Intent intent = new Intent(CommonDetailActivity.this, ImgShowActivity.class);
+                        intent.putStringArrayListExtra("img", (ArrayList<String>) listShareListData.getImg());
+                        intent.putExtra("position",position);
+                        intent.putExtra("shareFlag",shareFlag);
+
+                        if (android.os.Build.VERSION.SDK_INT > 20) {
+                            setExitSharedElementCallback(new SharedElementCallback() {
+                                @Override
+                                public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+                                    super.onMapSharedElements(names, sharedElements);
+                                    if (ShareTransitionUtil.position != -1) {
+                                        sharedElements.put(shareFlag, imgAdapter.getSparseArray().get(ShareTransitionUtil.position));
+                                    }
+                                }
+                            });
+                            ShareTransitionUtil.position = position;
+                            v.setTransitionName(shareFlag);
+                            startActivity(intent
+                                    , ActivityOptions.makeSceneTransitionAnimation(CommonDetailActivity.this
+                                            , v, shareFlag).toBundle());
+                        } else {
+                            startActivity(intent);
+                        }
+//                        new MyDialogPhotoShowFragment().setImgString(listShareListData.getImg()).setPosition(position).show(getSupportFragmentManager(),"imgs");
                     }
 
                     @Override
@@ -367,7 +398,28 @@ public class CommonDetailActivity extends BaseActivity<CommonDetailPresenter> im
                 showMoreMenu();
                 break;
             case R.id.img_share:
-                new MyDialogPhotoShowFragment().setImgString(listShareListData.getImg()).show(getSupportFragmentManager(),"img");
+                final String shareFlag = "tran"+(int)(Math.random()*1000);
+                Intent intent = new Intent(CommonDetailActivity.this, ImgShowActivity.class);
+                intent.putStringArrayListExtra("img", (ArrayList<String>) listShareListData.getImg());
+                intent.putExtra("position",0);
+                intent.putExtra("shareFlag",shareFlag);
+
+                if (android.os.Build.VERSION.SDK_INT > 20) {
+                    setExitSharedElementCallback(new SharedElementCallback() {
+                        @Override
+                        public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+                            super.onMapSharedElements(names, sharedElements);
+                        }
+                    });
+                    ShareTransitionUtil.position = -1;
+                    img_share.setTransitionName(shareFlag);
+                    startActivity(intent
+                            , ActivityOptions.makeSceneTransitionAnimation(CommonDetailActivity.this
+                                    , img_share, shareFlag).toBundle());
+                } else {
+                    startActivity(intent);
+                }
+//                new MyDialogPhotoShowFragment().setImgString(listShareListData.getImg()).show(getSupportFragmentManager(),"img");
                 break;
             case R.id.img_up:
 
@@ -439,9 +491,9 @@ public class CommonDetailActivity extends BaseActivity<CommonDetailPresenter> im
                 break;
             case R.id.img_header:
             case R.id.tv_nickname:
-                Intent intent = new Intent(this, PersonalActivity.class);
-                intent.putExtra("id",listShareListData.getUser_id());
-                startActivity(intent);
+                Intent intent1 = new Intent(this, PersonalActivity.class);
+                intent1.putExtra("id",listShareListData.getUser_id());
+                startActivity(intent1);
                 break;
         }
     }

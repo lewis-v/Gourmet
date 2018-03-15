@@ -1,11 +1,15 @@
 package com.yw.gourmet.adapter;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.SharedElementCallback;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,15 +31,21 @@ import com.bumptech.glide.request.target.Target;
 import com.yw.gourmet.Constant;
 import com.yw.gourmet.GlideApp;
 import com.yw.gourmet.R;
+import com.yw.gourmet.base.BaseActivity;
 import com.yw.gourmet.data.ShareListData;
 import com.yw.gourmet.dialog.MyDialogPhotoShowFragment;
 import com.yw.gourmet.listener.OnItemClickListener;
 import com.yw.gourmet.listener.OnMoreListener;
 import com.yw.gourmet.listener.OnReMarkListener;
+import com.yw.gourmet.ui.imgShow.ImgShowActivity;
+import com.yw.gourmet.ui.imgShow.ImgShowFragment;
 import com.yw.gourmet.ui.personal.PersonalActivity;
+import com.yw.gourmet.utils.ShareTransitionUtil;
 import com.yw.gourmet.widget.GlideCircleTransform;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by LYW on 2017/11/18.
@@ -103,7 +113,7 @@ public class ShareListAdapter extends RecyclerView.Adapter<ShareListAdapter.MyVi
     }
 
     @Override
-    public void onBindViewHolder(final MyViewHolder holder, int position) {
+    public void onBindViewHolder(final MyViewHolder holder, final int position) {
         if (position == listData.size()){
             holder.constraint_item.setVisibility(View.GONE);
             holder.tv_bottom.setVisibility(View.VISIBLE);
@@ -127,17 +137,17 @@ public class ShareListAdapter extends RecyclerView.Adapter<ShareListAdapter.MyVi
                 holder.tv_content.setVisibility(View.VISIBLE);
             }
             if (listData.get(position).getComment_num() > 0) {
-                holder.tv_comment.setText(listData.get(position).getComment_num() + "");
+                holder.tv_comment.setText(String.valueOf(listData.get(position).getComment_num()));
             } else {
                 holder.tv_comment.setText(R.string.comment);
             }
             if (listData.get(position).getGood_num() > 0) {
-                holder.tv_good.setText(listData.get(position).getGood_num() + "");
+                holder.tv_good.setText(String.valueOf(listData.get(position).getGood_num()));
             } else {
                 holder.tv_good.setText(R.string.good);
             }
             if (listData.get(position).getBad_num() > 0) {
-                holder.tv_bad.setText(listData.get(position).getBad_num() + "");
+                holder.tv_bad.setText(String.valueOf(listData.get(position).getBad_num()));
             } else {
                 holder.tv_bad.setText(R.string.bad);
             }
@@ -190,12 +200,31 @@ public class ShareListAdapter extends RecyclerView.Adapter<ShareListAdapter.MyVi
                     holder.img_share.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            new MyDialogPhotoShowFragment().setImgString(listData.get(holder.getLayoutPosition())
-                                    .getImg()).show(fragmentManager, "imgShow");
+                            final String shareFlag = "tran"+(int)(Math.random()*100);
+                            Intent intent = new Intent(context, ImgShowActivity.class);
+                            intent.putStringArrayListExtra("img", (ArrayList<String>) listData.get(holder.getLayoutPosition()).getImg());
+                            intent.putExtra("position",0);
+                            intent.putExtra("shareFlag",shareFlag);
+                            ShareTransitionUtil.position = -1;
+                            if (android.os.Build.VERSION.SDK_INT > 20) {
+                                ((BaseActivity)context).setExitSharedElementCallback(new SharedElementCallback() {
+                                    @Override
+                                    public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+                                        super.onMapSharedElements(names, sharedElements);
+                                    }
+                                });
+                                holder.ll_img.setTransitionName(shareFlag);
+                                context.startActivity(intent
+                                        , ActivityOptions.makeSceneTransitionAnimation((Activity) context, holder.ll_img, shareFlag).toBundle());
+                            } else {
+                                context.startActivity(intent);
+                            }
+//                            new MyDialogPhotoShowFragment().setImgString(listData.get(holder.getLayoutPosition())
+//                                    .getImg()).show(fragmentManager, "imgShow");
                         }
                     });
                 } else if (listData.get(position).getImg().size() > 1) {//多张图片
-                    ImgAdapter adapter = new ImgAdapter(context, listData.get(position).getImg());
+                    final ImgAdapter adapter = new ImgAdapter(context, listData.get(position).getImg());
                     Log.e("share",listData.get(position).getImg().toString());
                     holder.ll_img.setVisibility(View.GONE);
                     holder.recycler_share.setVisibility(View.VISIBLE);
@@ -206,8 +235,47 @@ public class ShareListAdapter extends RecyclerView.Adapter<ShareListAdapter.MyVi
                     adapter.setOnItemClickListener(new OnItemClickListener() {
                         @Override
                         public void OnClick(View v, int position) {
-                            new MyDialogPhotoShowFragment().setImgString(listData.get(holder.getLayoutPosition()).getImg())
-                                    .setPosition(position).show(fragmentManager, "imgShow");
+
+                            final String shareFlag = "tran"+(int)(Math.random()*1000);
+                            Intent intent = new Intent(context, ImgShowActivity.class);
+                            intent.putStringArrayListExtra("img", (ArrayList<String>) listData.get(holder.getLayoutPosition()).getImg());
+                            intent.putExtra("position",position);
+                            intent.putExtra("shareFlag",shareFlag);
+
+                            if (android.os.Build.VERSION.SDK_INT > 20) {
+                                ((BaseActivity)context).setExitSharedElementCallback(new SharedElementCallback() {
+                                    @Override
+                                    public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+                                        super.onMapSharedElements(names, sharedElements);
+                                        if (ShareTransitionUtil.position != -1) {
+                                            sharedElements.put(shareFlag, adapter.getSparseArray().get(ShareTransitionUtil.position));
+                                        }
+                                    }
+                                });
+                                ShareTransitionUtil.position = position;
+                                v.setTransitionName(shareFlag);
+                                context.startActivity(intent
+                                        , ActivityOptions.makeSceneTransitionAnimation((Activity) context, v, shareFlag).toBundle());
+                            } else {
+                                context.startActivity(intent);
+                            }
+
+//todo 本想用activity打开fragment的共享元素的，结果竟然不行
+//                            ((BaseActivity)context).getSupportFragmentManager().beginTransaction()
+//                                    .addToBackStack("img")
+//                                    .add(new ImgShowFragment().setImgString(listData.get(holder.getLayoutPosition()).getImg())
+//                                    .setPosition(position)
+//                                            .setShareFlag(shareFlag)
+//                                            ,"img")
+//                                    .addSharedElement(v,shareFlag)
+//                                    .commit();
+
+//                            v.setTransitionName(shareFlag);
+//                            fragmentManager.beginTransaction()
+//                                    .addSharedElement(v,shareFlag)
+//                                    .add(new MyDialogPhotoShowFragment().setImgString(listData.get(holder.getLayoutPosition()).getImg())
+//                                    .setPosition(position).setShareFlag(shareFlag), "imgShow")
+//                                    .commit();
                         }
 
                         @Override
@@ -288,7 +356,21 @@ public class ShareListAdapter extends RecyclerView.Adapter<ShareListAdapter.MyVi
                 public void onClick(View v) {
                     Intent intent = new Intent(context, PersonalActivity.class);
                     intent.putExtra("id", listData.get(holder.getLayoutPosition()).getUser_id());
-                    context.startActivity(intent);
+//                    final String shareFlag = "tran"+(int)(Math.random()*1000);
+//                    intent.putExtra("shareFlag",shareFlag);
+//                    if (android.os.Build.VERSION.SDK_INT > 20) {
+//                        ((BaseActivity)context).setExitSharedElementCallback(new SharedElementCallback() {
+//                            @Override
+//                            public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+//                                super.onMapSharedElements(names, sharedElements);
+//                            }
+//                        });
+//                        holder.img_header.setTransitionName(shareFlag);
+//                        context.startActivity(intent
+//                                , ActivityOptions.makeSceneTransitionAnimation((Activity) context, holder.img_header, shareFlag).toBundle());
+//                    } else {
+                        context.startActivity(intent);
+//                    }
                 }
             });
             holder.tv_nickname.setOnClickListener(new View.OnClickListener() {
@@ -296,7 +378,23 @@ public class ShareListAdapter extends RecyclerView.Adapter<ShareListAdapter.MyVi
                 public void onClick(View v) {
                     Intent intent = new Intent(context, PersonalActivity.class);
                     intent.putExtra("id", listData.get(holder.getLayoutPosition()).getUser_id());
-                    context.startActivity(intent);
+//                    final String shareFlag = "tran"+(int)(Math.random()*1000);
+//                    intent.putExtra("shareFlag",shareFlag);
+//
+//                    if (android.os.Build.VERSION.SDK_INT > 20) {
+//                        ShareTransitionUtil.position = -1;
+//                        ((BaseActivity)context).setExitSharedElementCallback(new SharedElementCallback() {
+//                            @Override
+//                            public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+//                                super.onMapSharedElements(names, sharedElements);
+//                            }
+//                        });
+//                        holder.img_header.setTransitionName(shareFlag);
+//                        context.startActivity(intent
+//                                , ActivityOptions.makeSceneTransitionAnimation((Activity) context, holder.img_header, shareFlag).toBundle());
+//                    } else {
+                        context.startActivity(intent);
+//                    }
                 }
             });
         }
@@ -309,14 +407,15 @@ public class ShareListAdapter extends RecyclerView.Adapter<ShareListAdapter.MyVi
 
     class MyViewHolder extends RecyclerView.ViewHolder{
         ConstraintLayout constraint_item;
-        ImageView img_header,img_share,img_more,img_cover,img_comment,img_good,img_bad;
+        ImageView img_share,img_more,img_cover,img_comment,img_good,img_bad;
+        ImageView img_header;
         TextView tv_nickname,tv_time,tv_content,tv_comment,tv_good,tv_bad,tv_title,tv_bottom;
         LinearLayout ll_img,ll_comment,ll_good,ll_bad,ll_content,ll_other;
         RecyclerView recycler_share;
         MyViewHolder(View itemView) {
             super(itemView);
             constraint_item = (ConstraintLayout)itemView.findViewById(R.id.constraint_item);
-            img_header = (ImageView)itemView.findViewById(R.id.img_header);
+            img_header = itemView.findViewById(R.id.img_header);
             img_share = (ImageView)itemView.findViewById(R.id.img_share);
             img_more = (ImageView)itemView.findViewById(R.id.img_more);
             img_cover = (ImageView)itemView.findViewById(R.id.img_cover);

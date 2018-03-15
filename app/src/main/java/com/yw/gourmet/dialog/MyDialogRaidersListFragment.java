@@ -2,6 +2,9 @@ package com.yw.gourmet.dialog;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.app.ActivityOptions;
+import android.content.Intent;
+import android.support.v4.app.SharedElementCallback;
 import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -35,7 +38,10 @@ import com.yw.gourmet.data.RaidersListData;
 import com.yw.gourmet.listener.OnAddListener;
 import com.yw.gourmet.listener.OnDeleteListener;
 import com.yw.gourmet.listener.OnEditDialogEnterClickListener;
+import com.yw.gourmet.ui.detail.common.CommonDetailActivity;
+import com.yw.gourmet.ui.imgShow.ImgShowActivity;
 import com.yw.gourmet.utils.BDUtil;
+import com.yw.gourmet.utils.ShareTransitionUtil;
 import com.yw.gourmet.utils.SoftInputUtils;
 import com.yw.gourmet.utils.StringHandleUtils;
 import com.yw.gourmet.utils.ToastUtils;
@@ -43,6 +49,7 @@ import com.yw.gourmet.utils.WindowUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * auth: lewis-v
@@ -264,8 +271,31 @@ public class MyDialogRaidersListFragment extends BaseDialogFragment implements V
                                 }
                             }).show(getFragmentManager(), "cover");
                 }else {
-                    new MyDialogPhotoShowFragment().addImgString(raidersData.getImg_cover())
-                            .show(getFragmentManager(),"cover");
+                    final String shareFlag = "tran"+(int)(Math.random()*1000);
+                    Intent intent = new Intent(getContext(), ImgShowActivity.class);
+                    ArrayList<String> list = new ArrayList<String>();
+                    list.add(raidersData.getImg_cover());
+                    intent.putStringArrayListExtra("img", list);
+                    intent.putExtra("position",0);
+                    intent.putExtra("shareFlag",shareFlag);
+
+                    if (android.os.Build.VERSION.SDK_INT > 20) {
+                        setExitSharedElementCallback(new SharedElementCallback() {
+                            @Override
+                            public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+                                super.onMapSharedElements(names, sharedElements);
+                            }
+                        });
+                        ShareTransitionUtil.position = -1;
+                        img_cover.setTransitionName(shareFlag);
+                        startActivity(intent
+                                , ActivityOptions.makeSceneTransitionAnimation(getActivity()
+                                        , img_cover, shareFlag).toBundle());
+                    } else {
+                        startActivity(intent);
+                    }
+//                    new MyDialogPhotoShowFragment().addImgString(raidersData.getImg_cover())
+//                            .show(getFragmentManager(),"cover");
                 }
                 break;
             case R.id.tv_cancel:

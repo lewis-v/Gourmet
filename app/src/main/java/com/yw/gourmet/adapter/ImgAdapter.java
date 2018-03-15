@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ import java.util.List;
 
 public class ImgAdapter extends RecyclerView.Adapter<ImgAdapter.MyViewHolder>{
     private List<String> listImg;
+    private SparseArray<View> sparseArray = new SparseArray<>();
     private Context context;
     private OnItemClickListener onItemClickListener;
 
@@ -48,6 +50,7 @@ public class ImgAdapter extends RecyclerView.Adapter<ImgAdapter.MyViewHolder>{
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
+        sparseArray.append(position,holder.img);
         GlideApp.with(context).load(listImg.get(position)).error(R.mipmap.load_fail)
                 .placeholder(R.mipmap.loading).into(holder.img);
         if (onItemClickListener != null){
@@ -77,5 +80,9 @@ public class ImgAdapter extends RecyclerView.Adapter<ImgAdapter.MyViewHolder>{
             super(itemView);
             img = (ImageView)itemView.findViewById(R.id.img);
         }
+    }
+
+    public SparseArray<View> getSparseArray() {
+        return sparseArray;
     }
 }

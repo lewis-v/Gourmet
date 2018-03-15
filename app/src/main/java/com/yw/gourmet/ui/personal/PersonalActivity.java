@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -18,6 +19,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.yw.gourmet.Constant;
 import com.yw.gourmet.GlideApp;
 import com.yw.gourmet.R;
@@ -102,6 +105,14 @@ public class PersonalActivity extends BaseActivity<PersonalPresenter> implements
 
         float_action_header = (FloatingActionButton)findViewById(R.id.float_action_header);
         float_action_header.setOnClickListener(this);
+//        if (android.os.Build.VERSION.SDK_INT > 20) {
+//            postponeEnterTransition();
+//            try {
+//                float_action_header.setTransitionName(getIntent().getStringExtra("shareFlag"));
+//            }catch (Exception e){
+//                e.printStackTrace();
+//            }
+//        }
 
         ll_tool = (LinearLayout) findViewById(R.id.ll_tool);
         ll_change_bottom = (LinearLayout)findViewById(R.id.ll_change_bottom);
@@ -337,8 +348,16 @@ public class PersonalActivity extends BaseActivity<PersonalPresenter> implements
             tv_sex.setText(Constant.userData.getSex());
             tv_address.setText(Constant.userData.getAddress());
             tv_introduction.setText(Constant.userData.getIntroduction());
-            GlideApp.with(this).load(Constant.userData.getImg_header()).placeholder(R.mipmap.loading).error(R.mipmap.load_fail)
-                    .transform(new GlideCircleTransform(this)).into(float_action_header);
+            GlideApp.with(this).asBitmap().load(Constant.userData.getImg_header()).placeholder(R.mipmap.loading).error(R.mipmap.load_fail)
+                    .transform(new GlideCircleTransform(this)).into(new SimpleTarget<Bitmap>() {
+                @Override
+                public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                    float_action_header.setImageBitmap(resource);
+//                    if (android.os.Build.VERSION.SDK_INT > 20) {
+//                        startPostponedEnterTransition();
+//                    }
+                }
+            });
             GlideApp.with(this).load(Constant.userData.getImg_header())
                     .placeholder(R.mipmap.loading).error(R.mipmap.load_fail)
                     .transform(new GlideCircleTransform(this))
@@ -545,9 +564,17 @@ public class PersonalActivity extends BaseActivity<PersonalPresenter> implements
         tv_sex.setText(model.getData().getSex());
         tv_address.setText(model.getData().getAddress());
         tv_introduction.setText(model.getData().getIntroduction());
-        GlideApp.with(this).load(model.getData().getImg_header()).error(R.mipmap.load_fail)
+        GlideApp.with(this).asBitmap().load(model.getData().getImg_header()).error(R.mipmap.load_fail)
                 .placeholder(R.mipmap.loading)
-                .transform(new GlideCircleTransform(this)).into(float_action_header);
+                .transform(new GlideCircleTransform(this)).into(new SimpleTarget<Bitmap>() {
+            @Override
+            public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                float_action_header.setImageBitmap(resource);
+//                if (android.os.Build.VERSION.SDK_INT > 20) {
+//                    startPostponedEnterTransition();
+//                }
+            }
+        });
         GlideApp.with(this).load(model.getData().getImg_header()).error(R.mipmap.load_fail)
                 .placeholder(R.mipmap.loading)
                 .transform(new GlideCircleTransform(this)).into(img_header);

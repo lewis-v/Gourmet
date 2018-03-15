@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,6 +39,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
     private OnImgClickListener onImgClickListener;
     private OnVoiceClickListener onVoiceClickListener;
     private UserData getUserData;//获取者的信息(左边)
+    private SparseArray<View> sparseArray = new SparseArray<>();
 
     public ChatAdapter(Context context, List<MessageListData> list) {
         this.context = context;
@@ -59,6 +61,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
                         .placeholder(R.mipmap.loading).error(R.mipmap.load_fail)
                         .transform(new GlideCircleTransform(context))
                         .into(holder.img_header_myself);
+                sparseArray.put(position,holder.img_myself);
                 switch (list.get(position).getType()) {
                     case MessageListData.TEXT:
                         holder.tv_myself.setVisibility(View.VISIBLE);
@@ -144,6 +147,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
                         .placeholder(R.mipmap.loading).error(R.mipmap.load_fail)
                         .transform(new GlideCircleTransform(context))
                         .into(holder.img_header_other);
+                sparseArray.put(position,holder.img_other);
                 switch (list.get(position).getType()) {
                     case MessageListData.TEXT:
                         holder.tv_other.setVisibility(View.VISIBLE);
@@ -252,6 +256,10 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
     public ChatAdapter setGetUserData(UserData getUserData) {
         this.getUserData = getUserData;
         return this;
+    }
+
+    public SparseArray<View> getSparseArray() {
+        return sparseArray;
     }
 
     public interface OnImgClickListener{

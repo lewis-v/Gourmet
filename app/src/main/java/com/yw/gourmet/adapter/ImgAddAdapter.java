@@ -5,6 +5,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,7 @@ public class ImgAddAdapter extends RecyclerView.Adapter<ImgAddAdapter.MyViewHold
     private OnAddListener onAddListener;
     private String addPath ;
     private boolean isChange = true;//是否可以修改,默认可以
+    private SparseArray<View> sparseArray = new SparseArray<>();
 
     public ImgAddAdapter(List<String> imgs, Context context) {
         this.imgs = imgs;
@@ -108,6 +110,7 @@ public class ImgAddAdapter extends RecyclerView.Adapter<ImgAddAdapter.MyViewHold
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
+        sparseArray.put(position,holder.img);
         if (imgs.size() <= position && isChange){
             if (position == MaxSize){
                 holder.img_delete.setVisibility(View.GONE);
@@ -163,6 +166,10 @@ public class ImgAddAdapter extends RecyclerView.Adapter<ImgAddAdapter.MyViewHold
                 }
             });
         }
+    }
+
+    public SparseArray<View> getSparseArray() {
+        return sparseArray;
     }
 
     @Override

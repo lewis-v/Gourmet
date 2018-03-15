@@ -1,7 +1,11 @@
 package com.yw.gourmet.adapter;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.SharedElementCallback;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,16 +21,21 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.yw.gourmet.R;
+import com.yw.gourmet.base.BaseActivity;
 import com.yw.gourmet.data.MenuPracticeData;
 import com.yw.gourmet.dialog.MyDialogPhotoChooseFragment;
 import com.yw.gourmet.dialog.MyDialogPhotoShowFragment;
 import com.yw.gourmet.listener.OnAddListener;
 import com.yw.gourmet.listener.OnDeleteListener;
 import com.yw.gourmet.listener.OnItemClickListener;
+import com.yw.gourmet.ui.detail.common.CommonDetailActivity;
+import com.yw.gourmet.ui.imgShow.ImgShowActivity;
+import com.yw.gourmet.utils.ShareTransitionUtil;
 import com.yw.gourmet.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Lewis-v on 2017/12/21.
@@ -163,7 +172,7 @@ public class PracticeAdapter extends RecyclerView.Adapter<PracticeAdapter.MyView
             holder.et_content.setFocusable(false);
             holder.recycler_practice.setLayoutManager(
                     new LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false));
-            ImgAddAdapter adapter = new ImgAddAdapter(list.get(position).getImg_practiceData(),context,imgMaxNum,false);
+            final ImgAddAdapter adapter = new ImgAddAdapter(list.get(position).getImg_practiceData(),context,imgMaxNum,false);
             holder.recycler_practice.setAdapter(adapter);
             if (onItemClickListener != null) {
                 holder.ll_item.setOnClickListener(new View.OnClickListener() {
@@ -183,8 +192,32 @@ public class PracticeAdapter extends RecyclerView.Adapter<PracticeAdapter.MyView
                 adapter.setOnItemClickListener(new OnItemClickListener() {
                     @Override
                     public void OnClick(View v, int position) {
-                        new MyDialogPhotoShowFragment().setImgString(list.get(holder.getLayoutPosition())
-                                .getImg_practiceData()).setPosition(position).show(fragmentManager,"img");
+                        final String shareFlag = "tran"+(int)(Math.random()*1000);
+                        Intent intent = new Intent(context, ImgShowActivity.class);
+                        intent.putStringArrayListExtra("img", (ArrayList<String>) list.get(position).getImg_practiceData());
+                        intent.putExtra("position",position);
+                        intent.putExtra("shareFlag",shareFlag);
+
+                        if (android.os.Build.VERSION.SDK_INT > 20) {
+                            ((BaseActivity)context).setExitSharedElementCallback(new SharedElementCallback() {
+                                @Override
+                                public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+                                    super.onMapSharedElements(names, sharedElements);
+                                    if (ShareTransitionUtil.position != -1) {
+                                        sharedElements.put(shareFlag, adapter.getSparseArray().get(ShareTransitionUtil.position));
+                                    }
+                                }
+                            });
+                            ShareTransitionUtil.position = position;
+                            v.setTransitionName(shareFlag);
+                            context.startActivity(intent
+                                    , ActivityOptions.makeSceneTransitionAnimation((Activity) context
+                                            , v, shareFlag).toBundle());
+                        } else {
+                            context.startActivity(intent);
+                        }
+//                        new MyDialogPhotoShowFragment().setImgString(list.get(holder.getLayoutPosition())
+//                                .getImg_practiceData()).setPosition(position).show(fragmentManager,"img");
                     }
 
                     @Override

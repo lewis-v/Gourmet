@@ -10,4 +10,8 @@
         <item name="android:navigationBarColor">@android:color/black</item>
 
     </style>
+
+    <style name="ImgTheme" parent="AppTheme">
+        <item name="android:windowContentTransitions">true</item>
+    </style>
 </resources>
