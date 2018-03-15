@@ -49,6 +49,7 @@
         <!-- 个人中心 -->
         <activity
             android:name=".ui.personal.PersonalActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <!-- 登录 -->
         <activity
@@ -108,7 +109,7 @@
         <!-- 聊天 -->
         <activity
             android:name=".ui.chat.ChatActivity"
-            android:launchMode="standard"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <!-- 普通分享详情 -->

@@ -36,12 +36,15 @@ public class ChannelActivity extends BaseActivity {
 
         viewpager = findViewById(R.id.viewpager);
         ImageView imageView = new ImageView(this);
+        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
         GlideApp.with(this).load(R.mipmap.channel0).error(R.mipmap.load_fail).into(imageView);
         list.add(imageView);
         imageView = new ImageView(this);
+        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
         GlideApp.with(this).load(R.mipmap.channel1).error(R.mipmap.load_fail).into(imageView);
         list.add(imageView);
         imageView = new ImageView(this);
+        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
         GlideApp.with(this).load(R.mipmap.channel2).error(R.mipmap.load_fail).into(imageView);
         list.add(imageView);
         adapter = new MyImgViewPagerAdapter<>(list);

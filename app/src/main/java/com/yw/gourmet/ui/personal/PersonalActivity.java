@@ -437,7 +437,7 @@ public class PersonalActivity extends BaseActivity<PersonalPresenter> implements
                 intent.putExtra("id",userData.getId());
                 startActivity(intent);
                 break;
-            case R.id.tv_send:
+            case R.id.tv_send:  
                 if (Constant.userData == null){
                     ToastUtils.showSingleToast("请登陆后再操作");
                 }else {

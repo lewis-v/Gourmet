@@ -32,7 +32,7 @@
 
     <style name="ImgDialog" parent="@android:style/Theme.Dialog">
         <item name="android:windowBackground">@android:color/black</item>
-        <item name="android:background">@android:color/transparent</item>
+        <item name="android:background">@android:color/black</item>
         <item name="android:windowEnterAnimation">@anim/anim_view_enter_scale</item>
         <item name="android:windowExitAnimation">@anim/anim_view_exit_scale</item>
     </style>
