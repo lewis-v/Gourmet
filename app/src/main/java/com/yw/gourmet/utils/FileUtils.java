@@ -1,7 +1,5 @@
 package com.yw.gourmet.utils;
 
-import android.util.Log;
-
 import java.io.File;
 
 /**
@@ -11,8 +9,8 @@ import java.io.File;
 public class FileUtils {
     /**
      * 删除文件或文件目录下的所有文件
-     * @param path
-     * @return
+     * @param file
+     * @return 删除的大小
      */
     public static long deleteFile(File file){
         long clearSize = 0;

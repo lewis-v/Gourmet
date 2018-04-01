@@ -7,6 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.yw.gourmet.ui.imgShow.ImgShowActivity">
+
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"
         app:layout_constraintTop_toTopOf="parent"
@@ -14,4 +15,15 @@
         android:scaleType="fitCenter"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+    <TextView
+        android:id="@+id/tv_save_img"
+        android:background="@drawable/back_save_img"
+        android:text="@string/save_img"
+        android:textColor="@color/close"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginBottom="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </android.support.constraint.ConstraintLayout>

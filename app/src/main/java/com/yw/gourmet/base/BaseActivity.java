@@ -302,6 +302,7 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
         ActivityStack.getScreenManager().popActivity(this);
         if (mRxSubSticky != null){
             mRxSubSticky.unsubscribe();
+            mRxSubSticky = null;
         }
     }
 

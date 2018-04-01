@@ -72,26 +72,27 @@ public class RejectActivity extends BaseActivity<RejectPresenter> implements Rej
         adapter.setListener(new OnItemClickListener() {
             @Override
             public void OnClick(View v, int position) {
-                Intent intent = null;
-                switch (listData.get(position).getType()) {
-                    case Constant.TypeFlag.SHARE:
-                        intent = new Intent(RejectActivity.this, CommonDetailActivity.class);
-                        break;
-                    case Constant.TypeFlag.DIARY:
-                        intent = new Intent(RejectActivity.this, DiaryDetailActivity.class);
-                        break;
-                    case Constant.TypeFlag.MENU:
-                        intent = new Intent(RejectActivity.this, MenuDetailActivity.class);
-                        break;
-                    case Constant.TypeFlag.RAIDERS:
-                        intent = new Intent(RejectActivity.this, RaidersDetailActivity.class);
-                        break;
-                }
-                if (intent != null){
-                    intent.putExtra("id",listData.get(position).getId());
-                    intent.putExtra("type",String.valueOf(listData.get(position).getType()));
-                    startActivity(intent);
-                }
+                ToastUtils.showSingleToast("分享已违规");
+//                Intent intent = null;
+//                switch (listData.get(position).getType()) {
+//                    case Constant.TypeFlag.SHARE:
+//                        intent = new Intent(RejectActivity.this, CommonDetailActivity.class);
+//                        break;
+//                    case Constant.TypeFlag.DIARY:
+//                        intent = new Intent(RejectActivity.this, DiaryDetailActivity.class);
+//                        break;
+//                    case Constant.TypeFlag.MENU:
+//                        intent = new Intent(RejectActivity.this, MenuDetailActivity.class);
+//                        break;
+//                    case Constant.TypeFlag.RAIDERS:
+//                        intent = new Intent(RejectActivity.this, RaidersDetailActivity.class);
+//                        break;
+//                }
+//                if (intent != null){
+//                    intent.putExtra("id",listData.get(position).getId());
+//                    intent.putExtra("type",String.valueOf(listData.get(position).getType()));
+//                    startActivity(intent);
+//                }
 
             }
 

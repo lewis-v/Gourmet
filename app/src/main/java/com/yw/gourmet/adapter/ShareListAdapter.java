@@ -4,15 +4,11 @@ import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.SharedElementCallback;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
@@ -23,22 +19,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.yw.gourmet.Constant;
 import com.yw.gourmet.GlideApp;
 import com.yw.gourmet.R;
 import com.yw.gourmet.base.BaseActivity;
 import com.yw.gourmet.data.ShareListData;
-import com.yw.gourmet.dialog.MyDialogPhotoShowFragment;
 import com.yw.gourmet.listener.OnItemClickListener;
 import com.yw.gourmet.listener.OnMoreListener;
 import com.yw.gourmet.listener.OnReMarkListener;
 import com.yw.gourmet.ui.imgShow.ImgShowActivity;
-import com.yw.gourmet.ui.imgShow.ImgShowFragment;
 import com.yw.gourmet.ui.personal.PersonalActivity;
 import com.yw.gourmet.utils.ShareTransitionUtil;
 import com.yw.gourmet.widget.GlideCircleTransform;
@@ -259,23 +248,6 @@ public class ShareListAdapter extends RecyclerView.Adapter<ShareListAdapter.MyVi
                             } else {
                                 context.startActivity(intent);
                             }
-
-//todo 本想用activity打开fragment的共享元素的，结果竟然不行
-//                            ((BaseActivity)context).getSupportFragmentManager().beginTransaction()
-//                                    .addToBackStack("img")
-//                                    .add(new ImgShowFragment().setImgString(listData.get(holder.getLayoutPosition()).getImg())
-//                                    .setPosition(position)
-//                                            .setShareFlag(shareFlag)
-//                                            ,"img")
-//                                    .addSharedElement(v,shareFlag)
-//                                    .commit();
-
-//                            v.setTransitionName(shareFlag);
-//                            fragmentManager.beginTransaction()
-//                                    .addSharedElement(v,shareFlag)
-//                                    .add(new MyDialogPhotoShowFragment().setImgString(listData.get(holder.getLayoutPosition()).getImg())
-//                                    .setPosition(position).setShareFlag(shareFlag), "imgShow")
-//                                    .commit();
                         }
 
                         @Override
