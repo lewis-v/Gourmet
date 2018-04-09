@@ -56,6 +56,9 @@ public class SetActivity extends BaseActivity<SetPresenter> implements View.OnCl
 
         tv_out = (TextView)findViewById(R.id.tv_out);
         tv_out.setOnClickListener(this);
+        if (Constant.userData == null){
+            tv_out.setVisibility(View.GONE);
+        }
 
         switch_audio = findViewById(R.id.switch_audio);
         AudioPlayMode audioMode = AudioPlayMode.getByTypeName(SPUtils.getSharedIntData(this,"audio_play_mode"));

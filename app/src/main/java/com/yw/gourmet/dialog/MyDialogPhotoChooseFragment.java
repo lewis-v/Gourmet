@@ -178,7 +178,7 @@ public class MyDialogPhotoChooseFragment extends BaseDialogFragment implements V
                 }
                 if (isCrop){
                     String cropPath = path+new Date()+".jpg";
-                    UCrop uCrop = UCrop.of(Uri.fromFile(new File(list.get(0))),Uri.fromFile(new File(cropPath)));
+                    UCrop uCrop = UCrop.of(uri,Uri.fromFile(new File(cropPath)));
                     if (ratio != 0){
                         uCrop.withAspectRatio(1,ratio);
                     }
@@ -195,6 +195,7 @@ public class MyDialogPhotoChooseFragment extends BaseDialogFragment implements V
                 if (onCropListener != null){
                     onCropListener.OnCrop(UriToFileUtil.getPath(getContext(),resultUri),getTag());
                 }
+
                 dismiss();
             }
         }else if (resultCode == UCrop.RESULT_ERROR){

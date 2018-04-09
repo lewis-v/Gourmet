@@ -265,7 +265,9 @@ public class MenuActivity extends BaseActivity<MenuPresenter> implements View.On
             }else if (status == 0){
                 tv_power.setText("私有");
             }
-            GlideApp.with(this).load(saveData.getCover()).placeholder(R.mipmap.loading).into(img_cover);
+            GlideApp.with(this).load(saveData.getCover()).placeholder(R.mipmap.loading)
+                    .error(R.mipmap.load_fail).into(img_cover);
+            coverPath = saveData.getCover();
             difficultLevel = saveData.getDifficult_level();
             setDifficultLevel(difficultLevel);
             String play = saveData.getPlay_time();

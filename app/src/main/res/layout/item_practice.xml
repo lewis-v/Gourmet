@@ -22,8 +22,6 @@
         <EditText
             android:id="@+id/et_content"
             android:background="@null"
-            android:inputType="text"
-            android:imeOptions="actionDone"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:layout_width="match_parent"

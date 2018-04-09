@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.SharedElementCallback;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -156,7 +157,6 @@ public class PracticeAdapter extends RecyclerView.Adapter<PracticeAdapter.MyView
                             addAdapterList.remove(holder.getLayoutPosition());
                             notifyItemRemoved(holder.getLayoutPosition());
                             notifyItemRangeChanged(holder.getLayoutPosition(),list.size() - holder.getLayoutPosition());
-                            Log.i("---list---",list.toString());
                         }
                     });
                 }
@@ -170,6 +170,7 @@ public class PracticeAdapter extends RecyclerView.Adapter<PracticeAdapter.MyView
             holder.et_content.setText(list.get(position).getContent());
             holder.et_content.setEnabled(false);
             holder.et_content.setFocusable(false);
+            holder.et_content.setTextColor(Color.BLACK);
             holder.recycler_practice.setLayoutManager(
                     new LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false));
             final ImgAddAdapter adapter = new ImgAddAdapter(list.get(position).getImg_practiceData(),context,imgMaxNum,false);
@@ -194,7 +195,7 @@ public class PracticeAdapter extends RecyclerView.Adapter<PracticeAdapter.MyView
                     public void OnClick(View v, int position) {
                         final String shareFlag = "tran"+(int)(Math.random()*1000);
                         Intent intent = new Intent(context, ImgShowActivity.class);
-                        intent.putStringArrayListExtra("img", (ArrayList<String>) list.get(position).getImg_practiceData());
+                        intent.putStringArrayListExtra("img", (ArrayList<String>) list.get(holder.getLayoutPosition()).getImg_practiceData());
                         intent.putExtra("position",position);
                         intent.putExtra("shareFlag",shareFlag);
 

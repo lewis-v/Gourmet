@@ -231,6 +231,17 @@
         <activity android:name=".ui.imgShow.ImgShowActivity"
             android:launchMode="singleTask"
             android:theme="@style/ImgTheme"/>
+        <!--7.0的apk安装-->
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.yw.gourmet.fileprovider"
+            android:grantUriPermissions="true"
+            android:exported="false"
+            >
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
 
 </manifest>

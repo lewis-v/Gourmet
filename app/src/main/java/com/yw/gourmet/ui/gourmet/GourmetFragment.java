@@ -82,7 +82,7 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
 
             @Override
             public void onLoadLast() {
-                if (!adapter.isEnd()) {
+                if (!adapter.isEnd() && !isLoadMore) {
                     isLoadMore = true;
                     MultipartBody.Builder builder = new MultipartBody.Builder()
                             .setType(MultipartBody.FORM)

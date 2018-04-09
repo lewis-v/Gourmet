@@ -32,8 +32,11 @@ public abstract class BaseDialogFragment<P extends BasePresenter> extends Dialog
     @Override
     public void onStart() {
         super.onStart();
-        getDialog().getWindow().setLayout((int) (WindowUtil.width * 0.75), ViewGroup.LayoutParams.WRAP_CONTENT);
-
+        try {
+            getDialog().getWindow().setLayout((int) (WindowUtil.width * 0.75), ViewGroup.LayoutParams.WRAP_CONTENT);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 //        getDialog().setContentView(view);
     }
 

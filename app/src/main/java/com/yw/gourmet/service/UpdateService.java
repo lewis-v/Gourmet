@@ -204,7 +204,7 @@ public class UpdateService extends Service {
                 .Builder(this,String.valueOf(UPDATE_ID))
                 .setContentTitle("更新失败,请重试")
                 .setContentText("点击重试")
-                .setContentIntent(getDefalutIntent(Notification.FLAG_AUTO_CANCEL))//设置点击意图
+                .setContentIntent(getDefaultIntent(Notification.FLAG_AUTO_CANCEL))//设置点击意图
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setAutoCancel(true)
                 .build();
@@ -216,7 +216,7 @@ public class UpdateService extends Service {
      * @param flags
      * @return
      */
-    public PendingIntent getDefalutIntent(int flags){
+    public PendingIntent getDefaultIntent(int flags){
         Intent myintent = new Intent();
         myintent.setAction("reUpdate");
         PendingIntent pendingIntent= PendingIntent.getBroadcast(this, 0, myintent, flags);
@@ -230,17 +230,27 @@ public class UpdateService extends Service {
     private void install(String filePath) {
         File apkFile = new File(filePath);
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//            Uri contentUri = FileProvider.getUriForFile(this
+//                    , getPackageName()+".fileprovider"
+//                    , apkFile);
+//            intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
+//        } else {
+//            intent.setDataAndType(Uri.fromFile(apkFile), "application/vnd.android.package-archive");
+//        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            Uri contentUri = FileProvider.getUriForFile(this
-                    , getPackageName()+".fileprovider"
-                    , apkFile);
+            Uri contentUri = FileProvider.getUriForFile(this, "com.yw.gourmet.fileprovider", apkFile);
             intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
         } else {
             intent.setDataAndType(Uri.fromFile(apkFile), "application/vnd.android.package-archive");
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }
-        startActivity(intent);
+        if (getPackageManager().queryIntentActivities(intent, 0).size() > 0) {
+            startActivity(intent);
+        }
     }
 
     /**

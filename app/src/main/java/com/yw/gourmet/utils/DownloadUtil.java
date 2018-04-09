@@ -51,7 +51,7 @@ public class DownloadUtil {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 InputStream is = null;
-                byte[] buf = new byte[2048];
+                byte[] buf = new byte[8192];
                 int len = 0;
                 FileOutputStream fos = null; // 储存下载文件的目录
                 String savePath = isExistDir(saveDir);

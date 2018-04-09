@@ -68,7 +68,7 @@ public class MenuPresenter extends MenuContract.Presenter{
                 }
                 if (model.getStatus() == 0){
                     mView.onPutMenuSuccess(model);
-                }else if (model.getStatus() == 1){
+                }else{
                     mView.onFail(model.getMessage());
                 }
             }
