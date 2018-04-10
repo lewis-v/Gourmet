@@ -186,6 +186,7 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment {
         clearThread();
         if (mRxSubSticky != null){
             mRxSubSticky.unsubscribe();
+            RxSubscriptions.remove(mRxSubSticky);
             mRxSubSticky = null;
         }
     }

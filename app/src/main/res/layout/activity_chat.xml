@@ -90,7 +90,7 @@
         android:layout_height="44dp">
         <ImageView
             android:id="@+id/img_type"
-            android:src="@drawable/keyboard"
+            android:src="@drawable/voice"
             android:padding="5dp"
             android:layout_width="40dp"
             android:layout_height="40dp" />
