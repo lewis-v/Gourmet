@@ -362,7 +362,7 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
                 }
             }
         });
-        audioPlayMode = AudioPlayMode.getByTypeName(SPUtils.getSharedIntData(this,"audio_play_mode"));
+        audioPlayMode = AudioPlayMode.getByTypeName(SPUtils.getSharedIntData(getApplicationContext(),"audio_play_mode"));
     }
 
     public void getPermission(){
@@ -405,7 +405,7 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
         switch (event.getAction()){
             case MotionEvent.ACTION_DOWN:
                 isCancelVoice = false;
-                AudioRecoderManager.getInstance().start(this);
+                AudioRecoderManager.getInstance().start(getApplicationContext());
                 return true;
             case MotionEvent.ACTION_MOVE:
                 if (WindowUtil.height - event.getRawY() > ll_bottom.getHeight()){
@@ -418,9 +418,9 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
                 return true;
             case MotionEvent.ACTION_UP:
                 if (isCancelVoice){
-                    AudioRecoderManager.getInstance().cancel(this);
+                    AudioRecoderManager.getInstance().cancel(getApplicationContext());
                 }else {
-                    AudioRecoderManager.getInstance().stop(this);
+                    AudioRecoderManager.getInstance().stop(getApplicationContext());
                 }
                 return true;
         }
@@ -823,6 +823,6 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
         if (iMessageGet != null){
             MessageCenter.getInstance().removeMessageHandle(iMessageGet);
         }
-        AudioRecoderManager.getInstance().destroy(this);
+        AudioRecoderManager.getInstance().destroy(getApplicationContext());
     }
 }

@@ -21,12 +21,13 @@ import com.yw.gourmet.base.BaseActivity;
 import com.yw.gourmet.utils.ImageUtil;
 import com.yw.gourmet.utils.ShareTransitionUtil;
 import com.yw.gourmet.utils.ToastUtils;
+import com.yw.gourmet.widget.MyViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ImgShowActivity extends BaseActivity implements View.OnClickListener{
-    private ViewPager viewpager;
+    private MyViewPager viewpager;
     private List<String> imgList;
     private TextView tv_save_img;
     private MyImgViewPagerAdapter<PhotoView> adapter;
@@ -47,6 +48,7 @@ public class ImgShowActivity extends BaseActivity implements View.OnClickListene
         tv_save_img.setOnClickListener(this);
 
         viewpager = findViewById(R.id.viewpager);
+        viewpager.setPagingEnabled(true);
         final Intent intent = getIntent();
         if (intent == null ){
             finish();
