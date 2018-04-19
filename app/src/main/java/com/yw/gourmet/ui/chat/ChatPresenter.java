@@ -60,7 +60,6 @@ public class ChatPresenter extends ChatContract.Presenter {
                 return true;
             }
         };
-        MessageCenter.getInstance().addMessageHandleTop(iMessageSendEvent);
     }
 
     @Override
@@ -219,6 +218,18 @@ public class ChatPresenter extends ChatContract.Presenter {
         }));
     }
 
+    @Override
+    void onPause() {
+        if (iMessageSendEvent != null){
+            MessageCenter.getInstance().removeMessageHandle(iMessageSendEvent);
+        }
+    }
+
+    @Override
+    void onResume() {
+        MessageCenter.getInstance().addMessageHandleTop(iMessageSendEvent);
+    }
+
 
     @Override
     void updataDB(final MessageListData messageListData){
@@ -239,9 +250,6 @@ public class ChatPresenter extends ChatContract.Presenter {
         super.onDestroy();
         if (executors != null) {
             executors.shutdownNow();
-        }
-        if (iMessageSendEvent != null){
-            MessageCenter.getInstance().removeMessageHandle(iMessageSendEvent);
         }
     }
 }

@@ -287,7 +287,6 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
                 return false;
             }
         };
-        MessageCenter.getInstance().addMessageHandleTop(iMessageGet);
         //初始化录音
         AudioRecoderManager.getInstance().setAudioRecoderListener(new AudioRecoderListener() {
             @Override
@@ -382,8 +381,18 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
     protected void onResume() {
         super.onResume();
         RxBus.getDefault().postSticky(new EventSticky("notification:"+put_id));
+        mPresenter.onResume();
+        MessageCenter.getInstance().addMessageHandleTop(iMessageGet);
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mPresenter.onPause();
+        if (iMessageGet != null){
+            MessageCenter.getInstance().removeMessageHandle(iMessageGet);
+        }
+    }
 
     /**
      * 加载历史记录
@@ -820,9 +829,6 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (iMessageGet != null){
-            MessageCenter.getInstance().removeMessageHandle(iMessageGet);
-        }
         AudioRecoderManager.getInstance().destroy(getApplicationContext());
     }
 }

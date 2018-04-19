@@ -39,5 +39,7 @@ public interface ChatContract {
         abstract void insertDB(MessageListData messageListData);
         abstract void updataDB(MessageListData messageListData);
         abstract void getUserInfo(List<MultipartBody.Part> parts);
+        abstract void onPause();
+        abstract void onResume();
     }
 }
