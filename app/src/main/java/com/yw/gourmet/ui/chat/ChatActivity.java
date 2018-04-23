@@ -1,7 +1,6 @@
 package com.yw.gourmet.ui.chat;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Build;
@@ -26,11 +25,9 @@ import android.widget.TextView;
 import com.yw.gourmet.Constant;
 import com.yw.gourmet.R;
 import com.yw.gourmet.adapter.ChatAdapter;
-import com.yw.gourmet.audio.play.AudioPlayImp;
 import com.yw.gourmet.audio.play.AudioPlayListener;
 import com.yw.gourmet.audio.play.AudioPlayManager;
 import com.yw.gourmet.audio.play.AudioPlayMode;
-import com.yw.gourmet.audio.play.AudioPlayStatus;
 import com.yw.gourmet.audio.recoder.AudioRecoderData;
 import com.yw.gourmet.audio.recoder.AudioRecoderListener;
 import com.yw.gourmet.audio.recoder.AudioRecoderManager;
@@ -42,11 +39,9 @@ import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.data.MessageListData;
 import com.yw.gourmet.data.UserData;
 import com.yw.gourmet.dialog.MyDialogPhotoChooseFragment;
-import com.yw.gourmet.dialog.MyDialogPhotoShowFragment;
 import com.yw.gourmet.listener.OnRefreshListener;
 import com.yw.gourmet.rxbus.EventSticky;
 import com.yw.gourmet.rxbus.RxBus;
-import com.yw.gourmet.ui.channel.ChannelActivity;
 import com.yw.gourmet.ui.imgShow.ImgShowActivity;
 import com.yw.gourmet.utils.SPUtils;
 import com.yw.gourmet.utils.ShareTransitionUtil;
@@ -58,7 +53,6 @@ import com.yw.gourmet.widget.YWRecyclerView;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -91,6 +85,7 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
     private boolean isLoadHistory = false;//是否在加载历史中
     private boolean isCancelVoice = false;//是否取消语音
     private AudioPlayMode audioPlayMode = AudioPlayMode.MEGAPHONE;//语音播放模式,默认扩音器
+    private boolean isResume = false;//是否前台
 
     @Override
     protected int getLayoutId() {
@@ -265,28 +260,40 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
             @Override
             public boolean onGetMessage(final MessageListData message) {
                 if (message.getPut_id().equals(get_id)) {
-                    message.setUser_id(Constant.userData.getUser_id())
-                            .setIs_read(0)
-                            .setCli_id(listData.size() == 0?0:listData.get(listData.size()-1).getCli_id()+1);
-                    mPresenter.insertDB(message);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            listData.add(message);
-                            adapter.notifyItemInserted(listData.size() - 1);
-                            recycler_chat.smoothScrollToPosition(listData.size()-1);
-                            MultipartBody.Builder builder1 = new MultipartBody.Builder()
-                                    .setType(MultipartBody.FORM)
-                                    .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
-                                    .addFormDataPart("id",message.getId());
-                            mPresenter.setMessageRead(builder1.build().parts());
-                        }
-                    });
-                    return true;
+                    if (isResume) {
+                        message.setUser_id(Constant.userData.getUser_id())
+                                .setIs_read(0)
+                                .setCli_id(listData.size() == 0 ? 0 : listData.get(listData.size() - 1).getCli_id() + 1);
+                        mPresenter.insertDB(message);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                listData.add(message);
+                                adapter.notifyItemInserted(listData.size() - 1);
+                                recycler_chat.smoothScrollToPosition(listData.size() - 1);
+                                MultipartBody.Builder builder1 = new MultipartBody.Builder()
+                                        .setType(MultipartBody.FORM)
+                                        .addFormDataPart("token", Constant.userData == null ? "0" : Constant.userData.getToken())
+                                        .addFormDataPart("id", message.getId());
+                                mPresenter.setMessageRead(builder1.build().parts());
+                            }
+                        });
+                        return true;
+                    }else {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                listData.add(message);
+                                adapter.notifyItemInserted(listData.size() - 1);
+                                recycler_chat.smoothScrollToPosition(listData.size() - 1);
+                            }
+                        });
+                    }
                 }
                 return false;
             }
         };
+        MessageCenter.getInstance().addMessageHandleTop(iMessageGet);
         //初始化录音
         AudioRecoderManager.getInstance().setAudioRecoderListener(new AudioRecoderListener() {
             @Override
@@ -380,18 +387,17 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
     @Override
     protected void onResume() {
         super.onResume();
-        RxBus.getDefault().postSticky(new EventSticky("notification:"+put_id));
+        RxBus.getDefault().postSticky(new EventSticky("notification:"+get_id));
         mPresenter.onResume();
-        MessageCenter.getInstance().addMessageHandleTop(iMessageGet);
+        setAllMessageRead();
+        isResume = true;
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         mPresenter.onPause();
-        if (iMessageGet != null){
-            MessageCenter.getInstance().removeMessageHandle(iMessageGet);
-        }
+        isResume = false;
     }
 
     /**
@@ -441,7 +447,9 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
         listData.get(position).setSendStatus(MessageListData.SEND_SUCCESS)
                 .setId(messageListData.getId());
         adapter.notifyItemChanged(position);
-        mPresenter.updataDB(listData.get(position));
+        if (isResume) {
+            mPresenter.updataDB(listData.get(position));
+        }
     }
 
     @Override
@@ -449,7 +457,9 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
         Log.e(TAG,msg);
         listData.get(position).setSendStatus(MessageListData.SEND_FAIL);
         adapter.notifyItemChanged(position);
-        mPresenter.updataDB(listData.get(position));
+        if (isResume) {
+            mPresenter.updataDB(listData.get(position));
+        }
     }
 
     @Override
@@ -463,6 +473,13 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
             MessageDataUtil.insert(messageListData);
         }
         recycler_chat.scrollToPosition(listData.size() - 1);
+        setAllMessageRead();
+    }
+
+    /**
+     * 设置所有消息已读
+     */
+    public void setAllMessageRead(){
         MultipartBody.Builder builder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
@@ -517,7 +534,6 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
     @Override
     public void onGetHistorySuccess(final List<MessageListData> model) {
         if (listData.size() == 0){
-            Log.e(TAG, String.valueOf(listData.size()));
             MultipartBody.Builder builder = new MultipartBody.Builder()
                     .setType(MultipartBody.FORM)
                     .addFormDataPart("token",Constant.userData == null?"0":Constant.userData.getToken())
@@ -830,5 +846,8 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
     protected void onDestroy() {
         super.onDestroy();
         AudioRecoderManager.getInstance().destroy(getApplicationContext());
+        if (iMessageGet != null){
+            MessageCenter.getInstance().removeMessageHandle(iMessageGet);
+        }
     }
 }

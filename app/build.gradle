@@ -15,7 +15,7 @@ android {
     buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "com.yw.gourmet"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 26
         versionCode 9
         versionName "1.0.8"
@@ -131,5 +131,6 @@ dependencies {
     //内存泄漏检测
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
-
+    //数据库查看
+    debugCompile 'com.amitshekhar.android:debug-db:1.0.0'
 }

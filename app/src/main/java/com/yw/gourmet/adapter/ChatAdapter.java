@@ -1,11 +1,9 @@
 package com.yw.gourmet.adapter;
 
 import android.content.Context;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.SparseArray;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,12 +16,11 @@ import android.widget.TextView;
 import com.yw.gourmet.Constant;
 import com.yw.gourmet.GlideApp;
 import com.yw.gourmet.R;
+import com.yw.gourmet.base.BaseViewHolder;
 import com.yw.gourmet.data.MessageListData;
 import com.yw.gourmet.data.UserData;
-import com.yw.gourmet.listener.OnItemClickListener;
 import com.yw.gourmet.listener.OnRefreshListener;
 import com.yw.gourmet.utils.WindowUtil;
-import com.yw.gourmet.widget.GlideCircleTransform;
 
 import java.util.List;
 
@@ -31,7 +28,15 @@ import java.util.List;
  * Created by Lewis-v on 2017/12/29.
  */
 
-public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
+public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder<MessageListData>>{
+    public static final int TEXT_MY = 0;
+    public static final int IMG_MY = 1;
+    public static final int VOICE_MY = 2;
+    public static final int TEXT_OTHER = 3;
+    public static final int IMG_OTHER = 4;
+    public static final int VOICE_OTHER = 5;
+    public static final int NOT_SUPPORT = -1;
+
     private Context context;
     private int VoiceMaxLength = WindowUtil.width/2;
     private List<MessageListData> list;
@@ -47,186 +52,63 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
     }
 
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new MyViewHolder(LayoutInflater.from(context).inflate(R.layout.item_chat,parent,false));
+    public int getItemViewType(int position) {
+        int result = NOT_SUPPORT;
+        switch (list.get(position).getType()){
+            case MessageListData.TEXT:
+                if (isMySelf(list.get(position).getPut_id())) {
+                    result =  TEXT_MY;
+                }else {
+                    result =  TEXT_OTHER;
+                }
+                break;
+            case MessageListData.IMG:
+                if (isMySelf(list.get(position).getPut_id())) {
+                    result =  IMG_MY;
+                }else {
+                    result =  IMG_OTHER;
+                }
+                break;
+            case MessageListData.VOICE:
+                if (isMySelf(list.get(position).getPut_id())) {
+                    result =  VOICE_MY;
+                }else {
+                    result =  VOICE_OTHER;
+                }
+                break;
+        }
+        Log.e("TYPE:", String.valueOf(result));
+        return result;
     }
 
     @Override
-    public void onBindViewHolder(final MyViewHolder holder, int position) {
-        if (Constant.userData != null){
-            if (Constant.userData.getUser_id().equals(list.get(position).getPut_id())){//自己发送的
-                holder.ll_other.setVisibility(View.GONE);
-                holder.ll_myself.setVisibility(View.VISIBLE);
-                GlideApp.with(context).load(Constant.userData.getImg_header())
-                        .placeholder(R.mipmap.loading).error(R.mipmap.load_fail)
-                        .transform(new GlideCircleTransform(context))
-                        .into(holder.img_header_myself);
-                sparseArray.put(position,holder.img_myself);
-                switch (list.get(position).getType()) {
-                    case MessageListData.TEXT:
-                        holder.tv_myself.setVisibility(View.VISIBLE);
-                        holder.ll_text_my.setVisibility(View.VISIBLE);
-                        holder.img_myself.setVisibility(View.GONE);
-                        holder.tv_myself.setText(list.get(position).getContent());
-                        holder.img_voice_my.setVisibility(View.GONE);
-                        break;
-                    case MessageListData.VOICE:
-                        holder.ll_text_my.setVisibility(View.VISIBLE);
-                        holder.tv_myself.setVisibility(View.VISIBLE);
-                        holder.img_myself.setVisibility(View.GONE);
-                        holder.tv_myself.setVisibility(View.GONE);
-                        holder.img_voice_my.setVisibility(View.VISIBLE);
-                        LinearLayout.LayoutParams paramsV = (LinearLayout.LayoutParams) holder.img_voice_my.getLayoutParams();
-                        paramsV.setMargins(VoiceMaxLength*list.get(position).getLength()/60000
-                                ,paramsV.topMargin,paramsV.rightMargin,paramsV.bottomMargin);
-                        holder.img_voice_my.setLayoutParams(paramsV);
-                        if (onVoiceClickListener != null){
-                            holder.ll_text_my.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    onVoiceClickListener.onVoiceClick(v,holder.getLayoutPosition());
-                                }
-                            });
-                        }
-                        break;
-                    case MessageListData.IMG:
-                        holder.tv_myself.setVisibility(View.GONE);
-                        holder.ll_text_my.setVisibility(View.GONE);
-                        holder.img_myself.setVisibility(View.VISIBLE);
-                        GlideApp.with(context).load(list.get(position).getImg())
-                                .placeholder(R.mipmap.loading).error(R.mipmap.load_fail)
-                                .into(holder.img_myself);
-                        if (onImgClickListener != null){
-                            holder.img_myself.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    onImgClickListener.onClick(v,holder.getLayoutPosition());
-                                }
-                            });
-                        }
-                        break;
-                }
-                if (list.get(position).getType() > MessageListData.OTHER){
-                    holder.tv_myself.setVisibility(View.VISIBLE);
-                    holder.ll_text_my.setVisibility(View.VISIBLE);
-                    holder.img_myself.setVisibility(View.GONE);
-                    holder.tv_myself.setText("此版本不支持此类型消息,请更新APP");
-                    holder.img_voice_my.setVisibility(View.GONE);
-                }
-                holder.fl_sending_myself.removeAllViews();
-                switch (list.get(position).getSendStatus()) {
-                    case MessageListData.SENDING:
-                        holder.fl_sending_myself.setVisibility(View.VISIBLE);
-                        holder.fl_sending_myself.setOnClickListener(null);
-                        holder.fl_sending_myself.addView(new ProgressBar(context));
-                        break;
-                    case MessageListData.SEND_SUCCESS:
-                        holder.fl_sending_myself.setVisibility(View.INVISIBLE);
-                        holder.fl_sending_myself.setOnClickListener(null);
-                        break;
-                    case MessageListData.SEND_FAIL:
-                        holder.fl_sending_myself.setVisibility(View.VISIBLE);
-                        ImageView imageViewMyself = new ImageView(context);
-                        imageViewMyself.setImageResource(R.drawable.refresh);
-                        holder.fl_sending_myself.addView(imageViewMyself);
-                        if (onRefreshListener != null){
-                            holder.fl_sending_myself.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    onRefreshListener.OnRefresh(v,holder.getLayoutPosition());
-                                }
-                            });
-                        }
-                        break;
-                }
-
-            }else {//别人发送的
-                holder.ll_other.setVisibility(View.VISIBLE);
-                holder.ll_myself.setVisibility(View.GONE);
-                GlideApp.with(context).load(getUserData == null?list.get(position).getImg_header():getUserData.getImg_header())
-                        .placeholder(R.mipmap.loading).error(R.mipmap.load_fail)
-                        .transform(new GlideCircleTransform(context))
-                        .into(holder.img_header_other);
-                sparseArray.put(position,holder.img_other);
-                switch (list.get(position).getType()) {
-                    case MessageListData.TEXT:
-                        holder.tv_other.setVisibility(View.VISIBLE);
-                        holder.ll_text_other.setVisibility(View.VISIBLE);
-                        holder.img_other.setVisibility(View.GONE);
-                        holder.tv_other.setText(list.get(position).getContent());
-                        holder.img_voice_other.setVisibility(View.GONE);
-                        break;
-                    case MessageListData.VOICE:
-                        holder.ll_text_other.setVisibility(View.VISIBLE);
-                        holder.tv_other.setVisibility(View.VISIBLE);
-                        holder.img_other.setVisibility(View.GONE);
-                        holder.tv_other.setVisibility(View.GONE);
-                        holder.img_voice_other.setVisibility(View.VISIBLE);
-                        LinearLayout.LayoutParams paramsV = (LinearLayout.LayoutParams) holder.img_voice_other.getLayoutParams();
-                        paramsV.setMargins(paramsV.leftMargin,paramsV.topMargin
-                                ,VoiceMaxLength*list.get(position).getLength()/60000,paramsV.bottomMargin);
-                        holder.img_voice_other.setLayoutParams(paramsV);
-                        if (onVoiceClickListener != null){
-                            holder.ll_text_other.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    onVoiceClickListener.onVoiceClick(v,holder.getLayoutPosition());
-                                }
-                            });
-                        }
-                        break;
-                    case MessageListData.IMG:
-                        holder.tv_other.setVisibility(View.GONE);
-                        holder.ll_text_other.setVisibility(View.GONE);
-                        holder.img_other.setVisibility(View.VISIBLE);
-                        GlideApp.with(context).load(list.get(position).getImg())
-                                .placeholder(R.mipmap.loading).error(R.mipmap.load_fail)
-                                .into(holder.img_other);
-                        if (onImgClickListener != null){
-                            holder.img_other.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    onImgClickListener.onClick(v,holder.getLayoutPosition());
-                                }
-                            });
-                        }
-                        break;
-                }
-                if (list.get(position).getType() > MessageListData.OTHER){
-                    holder.tv_other.setVisibility(View.VISIBLE);
-                    holder.ll_text_other.setVisibility(View.VISIBLE);
-                    holder.img_other.setVisibility(View.GONE);
-                    holder.tv_other.setText("此版本不支持此类型消息,请更新APP");
-                    holder.img_voice_other.setVisibility(View.GONE);
-                }
-                holder.fl_sending_other.removeAllViews();
-                switch (list.get(position).getSendStatus()) {
-                    case MessageListData.SENDING:
-                        holder.fl_sending_other.setVisibility(View.VISIBLE);
-                        holder.fl_sending_other.setOnClickListener(null);
-                        holder.fl_sending_other.addView(new ProgressBar(context));
-                        break;
-                    case MessageListData.SEND_SUCCESS:
-                        holder.fl_sending_other.setVisibility(View.INVISIBLE);
-                        holder.fl_sending_other.setOnClickListener(null);
-                        break;
-                    case MessageListData.SEND_FAIL:
-                        holder.fl_sending_other.setVisibility(View.VISIBLE);
-                        ImageView imageViewMyself = new ImageView(context);
-                        imageViewMyself.setImageResource(R.drawable.refresh);
-                        holder.fl_sending_other.addView(imageViewMyself);
-                        if (onRefreshListener != null){
-                            holder.fl_sending_other.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    onRefreshListener.OnRefresh(v,holder.getLayoutPosition());
-                                }
-                            });
-                        }
-                        break;
-                }
-            }
+    public BaseViewHolder<MessageListData> onCreateViewHolder(ViewGroup parent, int viewType) {
+        BaseViewHolder<MessageListData> holder = new MyTextHolder(LayoutInflater.from(context).inflate(R.layout.item_chat_text,parent,false),viewType);
+        switch (viewType){
+            case TEXT_MY:
+                holder =  new MyTextHolder(LayoutInflater.from(context).inflate(R.layout.item_chat_text_myself, parent, false), viewType);
+                break;
+            case TEXT_OTHER:
+                holder =  new OtherTextHolder(LayoutInflater.from(context).inflate(R.layout.item_chat_text_other, parent, false), viewType);
+                break;
+            case IMG_MY:
+                holder =  new MyImgHolder(LayoutInflater.from(context).inflate(R.layout.item_chat_img_myself, parent, false), viewType);
+                break;
+            case IMG_OTHER:
+                holder =  new OtherImgHolder(LayoutInflater.from(context).inflate(R.layout.item_chat_img_other, parent, false), viewType);
+                break;
+            case VOICE_MY:
+                holder =   new MyVoiceHolder(LayoutInflater.from(context).inflate(R.layout.item_chat_voice_myself, parent, false), viewType);
+                break;
+            case VOICE_OTHER:
+                holder =  new OtherVoiceHolder(LayoutInflater.from(context).inflate(R.layout.item_chat_voice_other, parent, false), viewType);
         }
+        return holder;
+    }
+
+    @Override
+    public void onBindViewHolder(final BaseViewHolder<MessageListData> holder, int position) {
+        holder.onBind(list.get(position));
     }
 
     @Override
@@ -270,31 +152,238 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
         void onVoiceClick(View view,int position);
     }
 
-    class MyViewHolder extends RecyclerView.ViewHolder {
-        LinearLayout ll_item,ll_text_my,ll_text_other;
-        LinearLayout ll_other,ll_myself;
-        ImageView img_header_other,img_header_myself,img_other,img_myself,img_voice_my,img_voice_other;
-        TextView tv_nickname,tv_other,tv_myself;
-        FrameLayout fl_sending_other,fl_sending_myself;
+    public boolean isMySelf(String id){
+        if (id.equals(Constant.userData.getUser_id())){
+            return true;
+        }
+        return false;
+    }
 
-        public MyViewHolder(View itemView) {
-            super(itemView);
-            ll_item = itemView.findViewById(R.id.ll_item);
-            ll_myself = itemView.findViewById(R.id.ll_myself);
-            ll_other = itemView.findViewById(R.id.ll_other);
-            ll_text_my = itemView.findViewById(R.id.ll_text_my);
-            ll_text_other = itemView.findViewById(R.id.ll_text_other);
-            img_header_myself = itemView.findViewById(R.id.img_header_myself);
-            img_header_other = itemView.findViewById(R.id.img_header_other);
-            img_other = itemView.findViewById(R.id.img_other);//发送的图像
-            img_myself = itemView.findViewById(R.id.img_myself);
-            img_voice_my = itemView.findViewById(R.id.img_voice_my);
-            img_voice_other = itemView.findViewById(R.id.img_voice_other);
-            tv_myself = itemView.findViewById(R.id.tv_myself);
-            tv_nickname = itemView.findViewById(R.id.tv_nickname);
-            tv_other = itemView.findViewById(R.id.tv_other);
-            fl_sending_other = itemView.findViewById(R.id.fl_sending_other);
-            fl_sending_myself = itemView.findViewById(R.id.fl_sending_myself);
+    abstract class ChatViewHolder extends BaseViewHolder<MessageListData> {
+        ImageView img_header;
+        FrameLayout fl_status;
+
+        public ChatViewHolder(View itemView, int type) {
+            super(itemView, type);
+            init(itemView);
+        }
+
+        @Override
+        public void onBind(MessageListData data) {
+            if (data.getPut_id().equals(Constant.userData.getUser_id())) {
+                if (Constant.userData.getImg_header() == null) {
+                    GlideApp.with(context).load(data.getImg_header()).error(R.mipmap.load_fail)
+                            .placeholder(R.mipmap.loading).into(img_header);
+                }else {
+                    GlideApp.with(context).load(Constant.userData.getImg_header()).error(R.mipmap.load_fail)
+                            .placeholder(R.mipmap.loading).into(img_header);
+                }
+            }else {
+                if (getGetUserData() == null) {
+                    GlideApp.with(context).load(data.getImg_header()).error(R.mipmap.load_fail)
+                            .placeholder(R.mipmap.loading).into(img_header);
+                }else {
+                    GlideApp.with(context).load(getGetUserData().getImg_header()).error(R.mipmap.load_fail)
+                            .placeholder(R.mipmap.loading).into(img_header);
+                }
+            }
+            fl_status.removeAllViews();
+            switch (data.getSendStatus()){
+                case MessageListData.SENDING:
+                    fl_status.addView(new ProgressBar(context));
+                    fl_status.setOnClickListener(null);
+                    break;
+                case MessageListData.SEND_SUCCESS:
+                    fl_status.setOnClickListener(null);
+                    break;
+                case MessageListData.SEND_FAIL:
+                    ImageView imageView = new ImageView(context);
+                    imageView.setImageResource(R.drawable.refresh);
+                    fl_status.addView(imageView);
+                    if (onRefreshListener != null){
+                        imageView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                onRefreshListener.OnRefresh(v,getLayoutPosition());
+                            }
+                        });
+                    }
+                    break;
+            }
+        }
+
+        public void init(View itemView){
+            img_header = itemView.findViewById(R.id.img_header);
+            fl_status = itemView.findViewById(R.id.fl_sending);
+        }
+    }
+
+    class MyTextHolder extends ChatViewHolder {
+        TextView tv_content;
+
+        public MyTextHolder(View itemView, int type) {
+            super(itemView, type);
+        }
+
+        @Override
+        public void onBind(MessageListData data) {
+            super.onBind(data);
+            tv_content.setText(data.getContent());
+        }
+
+        @Override
+        public void init(View itemView) {
+            super.init(itemView);
+            tv_content = itemView.findViewById(R.id.tv_myself);
+        }
+    }
+
+    class OtherTextHolder extends ChatViewHolder {
+        TextView tv_content;
+
+        public OtherTextHolder(View itemView, int type) {
+            super(itemView, type);
+        }
+
+        @Override
+        public void onBind(MessageListData data) {
+            super.onBind(data);
+            tv_content.setText(data.getContent());
+        }
+
+        @Override
+        public void init(View itemView) {
+            super.init(itemView);
+            tv_content = itemView.findViewById(R.id.tv_other);
+        }
+    }
+
+
+
+    class MyImgHolder extends ChatViewHolder{
+        ImageView img;
+
+        public MyImgHolder(View itemView, int type) {
+            super(itemView, type);
+        }
+
+        @Override
+        public void onBind(MessageListData data) {
+            super.onBind(data);
+            GlideApp.with(context).load(data.getImg()).error(R.mipmap.load_fail)
+                    .placeholder(R.mipmap.loading).into(img);
+            if (onImgClickListener != null){
+                img.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onImgClickListener.onClick(v,getLayoutPosition());
+                    }
+                });
+            }
+        }
+
+        @Override
+        public void init(View itemView) {
+            super.init(itemView);
+            img = itemView.findViewById(R.id.img_myself);
+        }
+    }
+
+    class OtherImgHolder extends ChatViewHolder{
+        ImageView img;
+
+        public OtherImgHolder(View itemView, int type) {
+            super(itemView, type);
+        }
+
+        @Override
+        public void onBind(MessageListData data) {
+            super.onBind(data);
+            GlideApp.with(context).load(data.getImg()).error(R.mipmap.load_fail)
+                    .placeholder(R.mipmap.loading).into(img);
+            if (onImgClickListener != null){
+                img.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onImgClickListener.onClick(v,getLayoutPosition());
+                    }
+                });
+            }
+        }
+
+        @Override
+        public void init(View itemView) {
+            super.init(itemView);
+            img = itemView.findViewById(R.id.img_other);
+        }
+    }
+
+
+    class MyVoiceHolder extends ChatViewHolder {
+        LinearLayout ll;
+
+        public MyVoiceHolder(View itemView, int type) {
+            super(itemView, type);
+        }
+
+        @Override
+        public void onBind( MessageListData data) {
+            super.onBind(data);
+            if (data.getPut_id().equals(Constant.userData.getUser_id())) {
+                ll.setPadding(VoiceMaxLength * data.getLength() / 60000, ll.getPaddingTop()
+                        , ll.getPaddingRight(), ll.getPaddingBottom());
+            }else {
+                ll.setPadding(ll.getPaddingLeft(), ll.getPaddingTop()
+                        , VoiceMaxLength * data.getLength() / 60000, ll.getPaddingBottom());
+            }
+            if (onVoiceClickListener != null){
+                ll.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onVoiceClickListener.onVoiceClick(v,getLayoutPosition());
+                    }
+                });
+            }
+        }
+
+        @Override
+        public void init(View itemView) {
+            super.init(itemView);
+            ll = itemView.findViewById(R.id.ll_voice_my);
+        }
+    }
+
+    class OtherVoiceHolder extends ChatViewHolder {
+        LinearLayout ll;
+
+        public OtherVoiceHolder(View itemView, int type) {
+            super(itemView, type);
+        }
+
+        @Override
+        public void onBind( MessageListData data) {
+            super.onBind(data);
+            if (data.getPut_id().equals(Constant.userData.getUser_id())) {
+                ll.setPadding(VoiceMaxLength * data.getLength() / 60000, ll.getPaddingTop()
+                        , ll.getPaddingRight(), ll.getPaddingBottom());
+            }else {
+                ll.setPadding(ll.getPaddingLeft(), ll.getPaddingTop()
+                        , VoiceMaxLength * data.getLength() / 60000, ll.getPaddingBottom());
+            }
+            if (onVoiceClickListener != null){
+                ll.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onVoiceClickListener.onVoiceClick(v,getLayoutPosition());
+                    }
+                });
+            }
+        }
+
+        @Override
+        public void init(View itemView) {
+            super.init(itemView);
+            ll = itemView.findViewById(R.id.ll_voice_other);
         }
     }
 }

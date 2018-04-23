@@ -28,6 +28,7 @@ import okhttp3.MultipartBody;
 public class ChatPresenter extends ChatContract.Presenter {
     private ExecutorService executors;
     private IMessageSendEvent iMessageSendEvent;
+    private boolean isResume = false;
 
     public ChatPresenter(){
         super();
@@ -45,8 +46,11 @@ public class ChatPresenter extends ChatContract.Presenter {
                         }
                     }
                 });
-
-                return true;
+                if (isResume) {
+                    return true;
+                }else {
+                    return false;
+                }
             }
 
             @Override
@@ -57,9 +61,14 @@ public class ChatPresenter extends ChatContract.Presenter {
                         mView.onSendFail(msg,position);
                     }
                 });
-                return true;
+                if (isResume) {
+                    return true;
+                }else {
+                    return false;
+                }
             }
         };
+        MessageCenter.getInstance().addMessageHandleTop(iMessageSendEvent);
     }
 
     @Override
@@ -220,14 +229,12 @@ public class ChatPresenter extends ChatContract.Presenter {
 
     @Override
     void onPause() {
-        if (iMessageSendEvent != null){
-            MessageCenter.getInstance().removeMessageHandle(iMessageSendEvent);
-        }
+        isResume = false;
     }
 
     @Override
     void onResume() {
-        MessageCenter.getInstance().addMessageHandleTop(iMessageSendEvent);
+        isResume = true;
     }
 
 
@@ -250,6 +257,9 @@ public class ChatPresenter extends ChatContract.Presenter {
         super.onDestroy();
         if (executors != null) {
             executors.shutdownNow();
+        }
+        if (iMessageSendEvent != null){
+            MessageCenter.getInstance().removeMessageHandle(iMessageSendEvent);
         }
     }
 }

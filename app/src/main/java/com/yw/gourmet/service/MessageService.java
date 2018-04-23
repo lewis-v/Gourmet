@@ -103,6 +103,12 @@ public class MessageService extends Service {
         MessageCenter.getInstance().addMessageHandle(iMessageSendEvent);
     }
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        setRxBus();
+    }
+
     /**
      * 消息发送失败通知
      * @param messageListData
@@ -166,7 +172,7 @@ public class MessageService extends Service {
                                             .setPriority(Notification.PRIORITY_HIGH)
                                             .build();
                                         notifyManager.notify(id,notification);
-
+                                    Log.i(TAG,"push:"+id);
                                 }
                             });
                         }
@@ -252,6 +258,7 @@ public class MessageService extends Service {
                                 if (strings.length==2 && notifyManager != null){
                                     try {
                                         notifyManager.cancel(Integer.parseInt(strings[1]));
+                                        Log.i(TAG,"cancel:"+strings[1]);
                                     }catch (Exception e){
                                         e.printStackTrace();
                                     }
@@ -274,6 +281,11 @@ public class MessageService extends Service {
         }
         if (rxManager != null) {
             rxManager.clear();
+        }
+        if (mRxSubSticky != null){
+            mRxSubSticky.unsubscribe();
+            RxSubscriptions.remove(mRxSubSticky);
+            mRxSubSticky = null;
         }
     }
 
