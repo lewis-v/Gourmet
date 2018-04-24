@@ -5,8 +5,6 @@ import android.content.Context;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 
-import com.yw.gourmet.utils.ToastUtils;
-
 import static android.support.v4.content.PermissionChecker.PERMISSION_DENIED;
 
 /**
@@ -16,44 +14,38 @@ import static android.support.v4.content.PermissionChecker.PERMISSION_DENIED;
 
 public class AudioRecoderManager {
     private IAudioRecoder iAudioRecoder;
-    private IAudioRecoderSetting iAudioRecoderSetting;
 
     private static final class Instance{
         private static final AudioRecoderManager instance = new AudioRecoderManager();
     }
 
     private AudioRecoderManager() {
-        AudioRecoderImp audioRecoderImp = new AudioRecoderImp();
-        iAudioRecoder = audioRecoderImp;
-        iAudioRecoderSetting = audioRecoderImp;
+        iAudioRecoder = new AudioRecoderImp();
+        //给一个默认的录音配置
+        iAudioRecoder.setAudioData(new AudioRecoderData());
     }
 
     public static AudioRecoderManager getInstance(){
         return Instance.instance;
     }
 
-    public AudioRecoderManager setSaveFloder(String saveFloder) {
-        iAudioRecoderSetting.setSaveFloder(saveFloder);
+    /**
+     * 设置录音实现
+     * @param impl
+     * @return
+     */
+    public AudioRecoderManager setAudioImpl(IAudioRecoder impl){
+        iAudioRecoder = impl;
         return this;
     }
 
-    public AudioRecoderManager setSAMPLEING_RATE(int SAMPLEING_RATE){
-        iAudioRecoderSetting.setSAMPLEING_RATE(SAMPLEING_RATE);
-        return this;
-    }
-
-    public AudioRecoderManager setMAX_LENGTH(int MAX_LENGTH){
-        iAudioRecoderSetting.setMAX_LENGTH(MAX_LENGTH);
-        return this;
-    }
-
-    public AudioRecoderManager setMIN_LENGTH(int MIN_LENGTH){
-        iAudioRecoderSetting.setMIN_LENGTH(MIN_LENGTH);
+    public AudioRecoderManager setAudioRecoderData(AudioRecoderData audioRecoderData){
+        iAudioRecoder.setAudioData(audioRecoderData);
         return this;
     }
 
     public AudioRecoderManager setAudioRecoderListener(AudioRecoderListener audioRecoderListener){
-        iAudioRecoderSetting.setAudioRecoderListener(audioRecoderListener);
+        iAudioRecoder.setAudioRecoderListener(audioRecoderListener);
         return this;
     }
 
@@ -61,7 +53,6 @@ public class AudioRecoderManager {
         if (isPermission(context)) {
             iAudioRecoder.start();
         }else {
-            ToastUtils.showSingleToast("无录音/读写权限");
             iAudioRecoder.putERR(new RuntimeException("no permission"),"无录音/读写权限");
         }
         return this;
@@ -71,7 +62,6 @@ public class AudioRecoderManager {
         if (isPermission(context)) {
             iAudioRecoder.stop();
         }else {
-            ToastUtils.showSingleToast("无录音/读写权限");
             iAudioRecoder.putERR(new RuntimeException("no permission"),"无录音/读写权限");
         }
         return this;
@@ -81,7 +71,6 @@ public class AudioRecoderManager {
         if (isPermission(context)) {
             iAudioRecoder.destroy();
         }else {
-            ToastUtils.showSingleToast("无录音/读写权限");
             iAudioRecoder.putERR(new RuntimeException("no permission"),"无录音/读写权限");
         }
         return this;
@@ -91,7 +80,6 @@ public class AudioRecoderManager {
         if (isPermission(context)) {
             iAudioRecoder.cancel();
         }else {
-            ToastUtils.showSingleToast("无录音/读写权限");
             iAudioRecoder.putERR(new RuntimeException("no permission"),"无录音/读写权限");
         }
         return this;

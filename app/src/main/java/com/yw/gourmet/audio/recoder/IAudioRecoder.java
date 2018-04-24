@@ -10,5 +10,7 @@ public interface IAudioRecoder {
     void stop();
     void cancel();
     void destroy();
-    void putERR(Exception e,String msg);
+    void putERR(Exception e, String msg);
+    void setAudioData(AudioRecoderData audioData);
+    void setAudioRecoderListener(AudioRecoderListener audioRecoderListener);
 }

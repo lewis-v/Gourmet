@@ -15,8 +15,8 @@ import static android.media.MediaRecorder.MEDIA_RECORDER_INFO_MAX_DURATION_REACH
  * time: 2018/2/25.
  */
 
-public class AudioRecoderImp implements IAudioRecoder ,IAudioRecoderSetting{
-    public static final String TAG = "AudioRecoderImp";
+public class AudioRecoderImp implements IAudioRecoder {
+    private static final String TAG = "AudioRecoderImp";
     private AudioRecoderData audioRecoderData;
     private MediaRecorder mMediaRecorder;
     private AudioRecoderListener audioRecoderListener;
@@ -27,7 +27,6 @@ public class AudioRecoderImp implements IAudioRecoder ,IAudioRecoderSetting{
 
     public AudioRecoderImp() {
         handler = new Handler(Looper.getMainLooper());
-        audioRecoderData = new AudioRecoderData();
     }
 
     public void start(){
@@ -58,17 +57,11 @@ public class AudioRecoderImp implements IAudioRecoder ,IAudioRecoderSetting{
             });
         }
         try {
-            /* ②setAudioSource/setVedioSource */
             mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);// 设置麦克风
-            /* ②设置音频文件的编码：AAC/AMR_NB/AMR_MB/Default 声音的（波形）的采样 */
-            mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.AMR_NB);
-            /*
-             * ②设置输出文件的格式：THREE_GPP/MPEG-4/RAW_AMR/Default THREE_GPP(3gp格式
-             * ，H263视频/ARM音频编码)、MPEG-4、RAW_AMR(只支持音频且音频编码要求为AMR_NB)
-             */
-            mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+            mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.AMR_WB);
+            mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_WB);
 
-            audioRecoderData.setFilePath( audioRecoderData.getFolderPath() + "AUDIO_"+System.currentTimeMillis() + ".amr" );
+            audioRecoderData.setFilePath( audioRecoderData.getFolderPath() + "AUDIO_"+System.currentTimeMillis() + ".aac" );
             Log.e(TAG,audioRecoderData.getFilePath());
             File file = new File(audioRecoderData.getFolderPath());
             if (!file.exists()){
@@ -78,14 +71,10 @@ public class AudioRecoderImp implements IAudioRecoder ,IAudioRecoderSetting{
             if (!file.exists()){
                 file.createNewFile();
             }
-            /* ③准备 */
             mMediaRecorder.setOutputFile(audioRecoderData.getFilePath());
             mMediaRecorder.setMaxDuration(audioRecoderData.getMAX_LENGTH());
             mMediaRecorder.prepare();
-            /* ④开始 */
             mMediaRecorder.start();
-            // AudioRecord audioRecord.
-            /* 获取开始时间* */
             audioRecoderData.setStartTime(System.currentTimeMillis());
             if (audioRecoderListener != null){
                 audioRecoderListener.onStart();
@@ -116,7 +105,8 @@ public class AudioRecoderImp implements IAudioRecoder ,IAudioRecoderSetting{
     public void stop() {
         if (mMediaRecorder == null) {
             return;
-        }if (status == AudioRecoderStatus.FREE ){//空闲中
+        }
+        if (status == AudioRecoderStatus.FREE ){//空闲中
             if (audioRecoderListener != null){
                 audioRecoderListener.onFail(new RuntimeException("AudioRecoder is FREE"),"录音空闲中,无需停止");
             }
@@ -132,7 +122,6 @@ public class AudioRecoderImp implements IAudioRecoder ,IAudioRecoderSetting{
             handler.removeCallbacks(audioRecoderThread);
         }
         audioRecoderData.setEndTime(System.currentTimeMillis());
-        //有一些网友反应在5.0以上在调用stop的时候会报错，翻阅了一下谷歌文档发现上面确实写的有可能会报错的情况，捕获异常清理一下就行了，感谢大家反馈！
         try {
             mMediaRecorder.stop();
             mMediaRecorder.reset();
@@ -228,6 +217,11 @@ public class AudioRecoderImp implements IAudioRecoder ,IAudioRecoderSetting{
         }
     }
 
+    @Override
+    public void setAudioData(AudioRecoderData audioData) {
+        this.audioRecoderData = audioData;
+    }
+
 
     //获取录音分贝
     private class AudioRecoderThread implements Runnable{
@@ -251,27 +245,9 @@ public class AudioRecoderImp implements IAudioRecoder ,IAudioRecoderSetting{
         }
     }
 
+    @Override
     public void setAudioRecoderListener(AudioRecoderListener audioRecoderListener) {
         this.audioRecoderListener = audioRecoderListener;
     }
 
-    @Override
-    public void setMIN_LENGTH(int MIN_LENGTH) {
-        audioRecoderData.setMIN_LENGTH(MIN_LENGTH);
-    }
-
-    @Override
-    public void setSaveFloder(String saveFloder) {
-        audioRecoderData.setFolderPath(saveFloder);
-    }
-
-    @Override
-    public void setSAMPLEING_RATE(int SAMPLEING_RATE) {
-        audioRecoderData.setSAMPLEING_RATE(SAMPLEING_RATE);
-    }
-
-    @Override
-    public void setMAX_LENGTH(int MAX_LENGTH) {
-        audioRecoderData.setMAX_LENGTH(MAX_LENGTH);
-    }
 }

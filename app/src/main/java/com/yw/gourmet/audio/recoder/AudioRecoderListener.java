@@ -8,7 +8,7 @@ package com.yw.gourmet.audio.recoder;
 public interface AudioRecoderListener {
     void onStart();
     void onStop(AudioRecoderData audioRecoderData);
-    void onFail(Exception e,String msg);
+    void onFail(Exception e, String msg);
     void onCancel();
     void onSoundSize(int level);
 }

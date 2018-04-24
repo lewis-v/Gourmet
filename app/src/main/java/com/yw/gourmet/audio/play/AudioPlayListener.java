@@ -7,8 +7,8 @@ package com.yw.gourmet.audio.play;
 
 public interface AudioPlayListener {
     void onPlay(String audioPath);
-    void onProgress(int progress,int maxSize);
+    void onProgress(int progress, int maxSize);
     void onPause();
     void onStop();
-    void onFail(Exception e,String msg);
+    void onFail(Exception e, String msg);
 }

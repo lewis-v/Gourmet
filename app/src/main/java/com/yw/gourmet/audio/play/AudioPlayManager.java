@@ -2,14 +2,14 @@ package com.yw.gourmet.audio.play;
 
 import android.Manifest;
 import android.content.Context;
-import android.media.AudioManager;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 
-import com.yw.gourmet.utils.ToastUtils;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static android.support.v4.content.PermissionChecker.PERMISSION_DENIED;
 
@@ -19,38 +19,63 @@ import static android.support.v4.content.PermissionChecker.PERMISSION_DENIED;
  */
 
 public class AudioPlayManager {
-    public static final String TAG = "AudioPlayManager";
+    private static final String TAG = "AudioPlayManager";
     private static final int PLAY = 0;//播放
     private static final int PAUSE = 1;//暂停
     private static final int CONTINUE = 2;//继续播放
     private static final int STOP = 3;//停止
     private static final int QUIT = -1;//退出消息队列
 
+    private static volatile AudioPlayManager instance = null;
     private IAudioPlay iAudioPlay;
+    private IClearCache iClearCache;
+    private IAudioCache iAudioCache;
+    private ExecutorService executors;
     private PlayThread playThread;
 
-
-    private static final class Instance{
-        private static final AudioPlayManager instance = new AudioPlayManager();
-    }
-
     public static AudioPlayManager getInstance(){
-        return Instance.instance;
+        if (instance == null){
+            synchronized (AudioPlayManager.class){
+                if (instance == null){
+                    instance = new AudioPlayManager();
+                }
+            }
+        }
+        return instance;
     }
 
     private AudioPlayManager() {
-        iAudioPlay = new AudioPlayCacheImp();
+        iAudioPlay = new AudioPlayImp();
+        iAudioCache = new AudioPlayDiskCacheImp();
+        iAudioPlay.setAudioCache(iAudioCache);
+        iClearCache = new ClearCache(iAudioCache.getAudioPlayData().getCACHE_DIR());
+        executors = Executors.newCachedThreadPool();
         playThread = new PlayThread();
-        playThread.start();
+        executors.execute(playThread);
     }
 
     public AudioPlayManager init(Context context){
-        iAudioPlay.init(context);
+        iAudioPlay.init(context.getApplicationContext());
         return this;
     }
 
     public AudioPlayManager setPlayListener(AudioPlayListener audioPlayListener){
-        ((IAudioInfo)iAudioPlay).setAudioPlayListener(audioPlayListener);
+        (iAudioPlay).setAudioPlayListener(audioPlayListener);
+        return this;
+    }
+
+    /**
+     * 设置缓存模式，默认为磁盘缓存，可自定义缓存模式
+     * @param iAudioCache
+     * @return
+     */
+    public AudioPlayManager setAudioCache(IAudioCache iAudioCache){
+        iAudioPlay.setAudioCache(iAudioCache);
+        return this;
+    }
+
+    public AudioPlayManager setAudioPlayData(AudioPlayData audioPlayData){
+
         return this;
     }
 
@@ -61,7 +86,7 @@ public class AudioPlayManager {
      */
    public AudioPlayManager play(String audioPath ,Context context, AudioPlayMode mode){
        if (isPermission(context)) {
-           if (((IAudioInfo) iAudioPlay).getStatus() == AudioPlayStatus.PLAYING && ((IAudioInfo) iAudioPlay).getAudioPath().equals(audioPath)) {
+           if ((iAudioPlay).getStatus() == AudioPlayStatus.PLAYING && (iAudioPlay).getAudioPath().equals(audioPath)) {
                stop();
            } else {
                Message message = new Message();
@@ -71,7 +96,6 @@ public class AudioPlayManager {
                playThread.handler.sendMessage(message);
            }
        }else {
-           ToastUtils.showSingleToast("无读取权限");
            iAudioPlay.putERR(new RuntimeException("no permission"),"无读取权限");
        }
         return this;
@@ -91,7 +115,7 @@ public class AudioPlayManager {
      * @return
      */
    public AudioPlayStatus getPlayStatus(){
-       return ((IAudioInfo)iAudioPlay).getStatus();
+       return (iAudioPlay).getStatus();
    }
 
     private class PlayThread extends Thread{
@@ -118,6 +142,7 @@ public class AudioPlayManager {
                             stopPLay();
                             break;
                         case QUIT:
+                            stopPLay();
                             Looper.myLooper().quit();
                             break;
                     }
@@ -126,8 +151,9 @@ public class AudioPlayManager {
             };
             Looper.loop();
         }
+
         private void play(String audioPath,AudioPlayMode mode){
-            while (((IAudioInfo)iAudioPlay).getStatus() == AudioPlayStatus.STOPING){
+            while ((iAudioPlay).getStatus() == AudioPlayStatus.STOPING){
                 try {
                     Thread.sleep(10);
                 } catch (InterruptedException e) {
@@ -135,7 +161,7 @@ public class AudioPlayManager {
                     return;
                 }
             }
-            if (((IAudioInfo)iAudioPlay).getStatus() != AudioPlayStatus.FREE ){
+            if ((iAudioPlay).getStatus() != AudioPlayStatus.FREE ){
                 iAudioPlay.stop();
             }
             iAudioPlay.play(audioPath,mode);
@@ -147,14 +173,44 @@ public class AudioPlayManager {
     }
 
     /**
-     * 释放资源
+     * 获取缓存大小，此过程可能耗时，建议开子线程
+     * @return
+     */
+    public long getCacheSize(Context context){
+        if (isPermission(context)) {
+            return iClearCache.getCacheSize();
+        }else {
+            iAudioPlay.putERR(new RuntimeException("no permission"),"无读取权限");
+        }
+        return 0;
+    }
+
+    /**
+     * 清理缓存，此过程可能耗时，建议开子线程
+     * @return
+     */
+    public long clearCache(Context context){
+        if (isPermission(context)) {
+            return iClearCache.clearCache();
+        }else {
+            iAudioPlay.putERR(new RuntimeException("no permission"),"无读取权限");
+        }
+        return 0;
+    }
+
+    /**
+     * 释放资源,按道理不用调用释放的，如果调用了的话会停止播放线程，释放此单例
      */
     public void destory(){
         if (playThread != null){
             playThread.handler.sendEmptyMessage(QUIT);
             playThread.interrupt();
+            playThread = null;
         }
-
+        executors.shutdownNow();
+        executors = null;
+        iAudioPlay.destroy();
+        instance = null;
     }
 
     /**
@@ -165,7 +221,8 @@ public class AudioPlayManager {
     public boolean isPermission(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
                 && ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE)
-                == PERMISSION_DENIED ) {
+                == PERMISSION_DENIED && ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                == PERMISSION_DENIED) {
             return false;
         }
         return true;

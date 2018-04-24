@@ -846,6 +846,7 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
     protected void onDestroy() {
         super.onDestroy();
         AudioRecoderManager.getInstance().destroy(getApplicationContext());
+        AudioPlayManager.getInstance().destory();
         if (iMessageGet != null){
             MessageCenter.getInstance().removeMessageHandle(iMessageGet);
         }

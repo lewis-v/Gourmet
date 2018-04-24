@@ -65,6 +65,12 @@ public class MessageService extends Service {
     private Subscription mRxSubSticky;
 
     public MessageService() {
+
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
         rxManager = new RxManager();
         iMessageSendEvent = new IMessageSendEvent() {
             @Override
@@ -101,11 +107,6 @@ public class MessageService extends Service {
             }
         };
         MessageCenter.getInstance().addMessageHandle(iMessageSendEvent);
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
         setRxBus();
     }
 

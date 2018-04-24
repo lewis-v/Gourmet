@@ -1,26 +1,29 @@
 package com.yw.gourmet.audio.play;
 
-import android.os.Environment;
-
 /**
  * auth: lewis-v
  * time: 2018/2/28.
  */
 
-public abstract class AudioPlayCache extends AudioPlayImp {
-    private String CACHE_DIR = Environment.getExternalStorageDirectory()+"/data/gourmet/chat/audio";//默认缓存地址
+public abstract class AudioPlayCache implements IAudioCache {
+    protected AudioPlayData audioPlayData = new AudioPlayData();
 
     @Override
-    protected String handlePlayPath(String audioPath) {
+    public String handlePlayPath(String audioPath) {
         if (audioPath.startsWith("http")){//检测是否缓存
             String cacheData = getCachePath(audioPath);
             if (cacheData != null){//已有缓存,返回本地缓存地址
                 return cacheData;
             }else{//无缓存,进行缓存
-                return downCache(audioPath);
+                String path = downCache(audioPath);
+                if (path == null){
+                    return audioPath;
+                }else {
+                    return path;
+                }
             }
         }
-        return super.handlePlayPath(audioPath);
+        return audioPath;
     }
 
     /**
@@ -37,12 +40,13 @@ public abstract class AudioPlayCache extends AudioPlayImp {
      */
     abstract protected String downCache(String audioPath);
 
-    public String getCACHE_DIR() {
-        return CACHE_DIR;
+    @Override
+    public void setAudioPlayData(AudioPlayData audioPlayData) {
+        this.audioPlayData = audioPlayData;
     }
 
-    public AudioPlayCache setCACHE_DIR(String CACHE_DIR) {
-        this.CACHE_DIR = CACHE_DIR;
-        return this;
+    @Override
+    public AudioPlayData getAudioPlayData() {
+        return audioPlayData;
     }
 }

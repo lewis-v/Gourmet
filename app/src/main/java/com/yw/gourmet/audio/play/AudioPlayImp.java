@@ -14,12 +14,13 @@ import java.io.IOException;
  * time: 2018/2/27.
  */
 
-public class AudioPlayImp implements IAudioPlay,IAudioInfo{
+public class AudioPlayImp implements IAudioPlay {
     public final static String TAG = "AudioPlayImp";
     private AudioPlayListener audioPlayListener;
     private MediaPlayer mPlayer;
     private AudioPlayStatus status = AudioPlayStatus.FREE;
     private String audioPath;//播放地址
+    private IAudioCache iAudioCache;
 
     public AudioPlayImp() {
 
@@ -132,7 +133,7 @@ public class AudioPlayImp implements IAudioPlay,IAudioInfo{
      * @return
      */
     protected MediaPlayer readyPlay(String audioFile) throws IOException {
-        MediaPlayer mPlayer = new MediaPlayer();
+        mPlayer = new MediaPlayer();
         mPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
             @Override
             public boolean onError(MediaPlayer mp, int what, int extra) {
@@ -182,6 +183,9 @@ public class AudioPlayImp implements IAudioPlay,IAudioInfo{
      * @return
      */
     protected String handlePlayPath(String audioPath){
+        if (iAudioCache != null){
+            return iAudioCache.handlePlayPath(audioPath);
+        }
         return audioPath;
     }
 
@@ -196,5 +200,16 @@ public class AudioPlayImp implements IAudioPlay,IAudioInfo{
     @Override
     public String getAudioPath() {
         return audioPath;
+    }
+
+    @Override
+    public void setAudioCache(IAudioCache iAudioCache) {
+        this.iAudioCache = iAudioCache;
+    }
+
+    @Override
+    public void destroy() {
+        stop();
+        audioPlayListener = null;
     }
 }
