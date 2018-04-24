@@ -138,14 +138,13 @@ public class CommonShareActivity extends BaseActivity<CommonSharePresenter> impl
                         @Override
                         public void run() {
                             new MyDialogPhotoChooseFragment().setType(MyDialogPhotoChooseFragment.PHOTO)
-                                    .setChooseNum(maxSize - imgs.size()+1)
+                                    .setChooseNum(maxSize - imgs.size())
                                     .setOnPhotoChooseListener(CommonShareActivity.this).show(getSupportFragmentManager(),"");
                         }
                     });
                     break;
                 case "take_photo"://拍照
                     new MyDialogPhotoChooseFragment().setType(MyDialogPhotoChooseFragment.TAKE_PHOTO)
-                            .setChooseNum(maxSize - imgs.size()+1)
                             .setOnPhotoChooseListener(CommonShareActivity.this).show(getSupportFragmentManager(),"");
                     break;
                 case "new":

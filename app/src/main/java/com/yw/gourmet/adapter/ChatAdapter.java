@@ -2,7 +2,6 @@ package com.yw.gourmet.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -77,7 +76,6 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder<MessageList
                 }
                 break;
         }
-        Log.e("TYPE:", String.valueOf(result));
         return result;
     }
 
@@ -165,7 +163,6 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder<MessageList
 
         public ChatViewHolder(View itemView, int type) {
             super(itemView, type);
-            init(itemView);
         }
 
         @Override
@@ -211,7 +208,7 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder<MessageList
                     break;
             }
         }
-
+        @Override
         public void init(View itemView){
             img_header = itemView.findViewById(R.id.img_header);
             fl_status = itemView.findViewById(R.id.fl_sending);

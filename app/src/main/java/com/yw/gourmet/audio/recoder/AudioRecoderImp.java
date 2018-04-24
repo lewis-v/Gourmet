@@ -203,8 +203,8 @@ public class AudioRecoderImp implements IAudioRecoder {
     public void destroy() {
         if (status == AudioRecoderStatus.RECODERING){
             stop();
-            audioRecoderListener = null;
         }
+        audioRecoderListener = null;
     }
 
     @Override
