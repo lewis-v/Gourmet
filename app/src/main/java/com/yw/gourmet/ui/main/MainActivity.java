@@ -90,7 +90,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         viewpager.setOffscreenPageLimit(3);
         adapter = new MyFragmentAdapter(getSupportFragmentManager(),fragmentList);
         viewpager.setAdapter(adapter);
-        viewpager.setCurrentItem(0);
+        viewpager.setCurrentItem(getIntent().getIntExtra("position",0));
         viewpager.setPageTransformer(true,new DepthPageTransformer());
         initPermission();
         mPresenter.getVersion();

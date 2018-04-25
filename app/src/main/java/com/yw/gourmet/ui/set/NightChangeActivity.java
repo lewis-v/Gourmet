@@ -61,12 +61,12 @@ public class NightChangeActivity extends AppCompatActivity {
         view_parent.setBackgroundColor(startBack);
         img.setImageResource(startImg);
 
-        new Handler(getMainLooper()).post(new Runnable() {
+        new Handler(getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
                 ObjectAnimator imgStartAnimator = ObjectAnimator.ofFloat(img,"Y",img.getY(), WindowUtil.height);
                 final ObjectAnimator imgEndAnimator = ObjectAnimator.ofFloat(img,"Y", WindowUtil.height,img.getY());
-                imgStartAnimator.setDuration(1300);
+                imgStartAnimator.setDuration(1000);
                 imgEndAnimator.setDuration(1300);
                 imgStartAnimator.addListener(new Animator.AnimatorListener() {
                     @Override
@@ -105,7 +105,9 @@ public class NightChangeActivity extends AppCompatActivity {
 
                     @Override
                     public void onAnimationEnd(Animator animation) {
-                        startActivity(new Intent(NightChangeActivity.this, MainActivity.class));
+                        Intent intent = new Intent(NightChangeActivity.this, MainActivity.class);
+                        intent.putExtra("position",3);
+                        startActivity(intent);
                         startActivity(new Intent(NightChangeActivity.this,SetActivity.class));
                         finish();
                     }
@@ -122,6 +124,11 @@ public class NightChangeActivity extends AppCompatActivity {
                 });
 
             }
-        });
+        },500);
+    }
+
+    @Override
+    public void onBackPressed() {
+
     }
 }
