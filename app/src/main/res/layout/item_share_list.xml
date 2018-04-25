@@ -15,7 +15,7 @@
         app:cardMaxElevation="5dp">
     <android.support.constraint.ConstraintLayout
         android:id="@+id/constraint_item"
-        android:background="@drawable/ll_back_change"
+        android:background="@drawable/back_change_circle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 

@@ -57,8 +57,8 @@
     <Button
         android:id="@+id/bt_register"
         android:text="@string/register"
-        android:textColor="@android:color/white"
-        android:background="@drawable/back_change"
+        android:textColor="@color/white"
+        android:background="@drawable/back_change_circle_orange"
         app:layout_constraintTop_toBottomOf="@+id/dev"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

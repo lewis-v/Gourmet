@@ -8,10 +8,11 @@
     android:layout_marginBottom="4dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardMaxElevation="5dp">
+    app:cardMaxElevation="5dp"
+    app:cardBackgroundColor="@color/white">
     <LinearLayout
+        android:background="@drawable/back_change_circle"
         android:orientation="vertical"
-        android:background="@drawable/ll_back_change"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 

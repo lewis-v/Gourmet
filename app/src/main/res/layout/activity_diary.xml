@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/view_parent"
     android:orientation="vertical"
-    android:background="@android:color/white"
+    android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.yw.gourmet.ui.share.diary.DiaryActivity">
@@ -100,7 +100,7 @@
             android:id="@+id/tv_power"
             android:visibility="gone"
             android:gravity="center"
-            android:textColor="@android:color/white"
+            android:textColor="@color/white"
             android:layout_marginRight="10dp"
             android:text="@string/public_type"
             android:background="@drawable/circle_back"
@@ -114,6 +114,7 @@
         android:layout_weight="1">
         <jp.wasabeef.richeditor.RichEditor
             android:id="@+id/richeditor_diary"
+            android:background="@color/white"
             android:layout_margin="10dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
@@ -127,7 +128,7 @@
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="20dp"
             android:src="@drawable/add"
-            android:tint="@android:color/white"
+            android:tint="@color/white"
             android:layout_width="60dp"
             android:layout_height="60dp"/>
         <FrameLayout

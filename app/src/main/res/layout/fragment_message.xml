@@ -8,7 +8,7 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         app:contentInsetStart="0dp"
-        android:background="@android:color/white"
+        android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="40dp">
         <LinearLayout
@@ -86,15 +86,15 @@
                 android:id="@+id/bt_register_message"
                 android:text="@string/register"
                 android:layout_marginRight="20dp"
-                android:textColor="@android:color/white"
-                android:background="@drawable/back_change"
+                android:textColor="@color/white"
+                android:background="@drawable/back_change_circle_orange"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <Button
                 android:id="@+id/bt_login_message"
                 android:layout_marginLeft="20dp"
-                android:textColor="@android:color/white"
-                android:background="@drawable/back_change"
+                android:textColor="@color/white"
+                android:background="@drawable/back_change_circle_orange"
                 android:text="@string/login"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>

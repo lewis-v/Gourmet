@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:background="@android:color/white"
+    android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.yw.gourmet.ui.reject.RejectActivity">
@@ -31,7 +31,7 @@
                 android:layout_height="40dp" />
             <TextView
                 android:id="@+id/tv_clear"
-                android:background="@drawable/ll_back_change"
+                android:background="@drawable/back_change_circle"
                 android:text="@string/clear_all"
                 android:gravity="center"
                 android:textColor="@color/close"

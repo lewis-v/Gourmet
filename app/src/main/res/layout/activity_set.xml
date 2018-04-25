@@ -11,7 +11,7 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         app:contentInsetStart="0dp"
-        android:background="@android:color/white"
+        android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="40dp">
 
@@ -56,7 +56,7 @@
 
     <LinearLayout
         android:id="@+id/ll_change_password"
-        android:background="@drawable/ll_back_change"
+        android:background="@drawable/back_change"
         android:padding="8dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
@@ -80,8 +80,33 @@
         android:layout_height="1px"/>
 
     <LinearLayout
+        android:id="@+id/ll_night_mode"
+        android:background="@drawable/back_change"
+        android:padding="8dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:text="@string/night_mode"
+            android:textSize="16sp"
+            android:textColor="@color/word_black"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/switch_night"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <LinearLayout
+        android:background="@color/dev"
+        android:layout_width="match_parent"
+        android:layout_height="1px"/>
+
+    <LinearLayout
         android:id="@+id/ll_audio_play_mode"
-        android:background="@drawable/ll_back_change"
+        android:background="@drawable/back_change"
         android:padding="8dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
@@ -113,7 +138,7 @@
 
     <LinearLayout
         android:id="@+id/ll_clear"
-        android:background="@drawable/ll_back_change"
+        android:background="@drawable/back_change"
         android:padding="8dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
@@ -139,7 +164,7 @@
 
     <LinearLayout
         android:id="@+id/ll_feedback"
-        android:background="@drawable/ll_back_change"
+        android:background="@drawable/back_change"
         android:padding="8dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
@@ -166,7 +191,7 @@
 
     <LinearLayout
         android:id="@+id/ll_customer_service"
-        android:background="@drawable/ll_back_change"
+        android:background="@drawable/back_change"
         android:padding="8dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
@@ -192,7 +217,7 @@
 
     <LinearLayout
         android:id="@+id/ll_about"
-        android:background="@drawable/ll_back_change"
+        android:background="@drawable/back_change"
         android:padding="8dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
@@ -222,7 +247,7 @@
         android:textSize="16sp"
         android:gravity="center"
         android:textColor="@color/colorAccent"
-        android:background="@drawable/ll_back_change"
+        android:background="@drawable/back_change"
         android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="40dp" />

@@ -9,7 +9,7 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         app:contentInsetStart="0dp"
-        android:background="@android:color/white"
+        android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="40dp">
         <LinearLayout
@@ -43,7 +43,7 @@
 
     <LinearLayout
         android:id="@+id/ll_header"
-        android:background="@drawable/ll_back_change"
+        android:background="@drawable/back_change"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="50dp">
@@ -86,7 +86,7 @@
     <LinearLayout
         android:id="@+id/ll_nickname"
         android:padding="15dp"
-        android:background="@drawable/ll_back_change"
+        android:background="@drawable/back_change"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="50dp">
@@ -119,7 +119,7 @@
     <LinearLayout
         android:id="@+id/ll_sex"
         android:padding="15dp"
-        android:background="@drawable/ll_back_change"
+        android:background="@drawable/back_change"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="50dp">
@@ -152,7 +152,7 @@
     <LinearLayout
         android:id="@+id/ll_address"
         android:padding="15dp"
-        android:background="@drawable/ll_back_change"
+        android:background="@drawable/back_change"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="50dp">
@@ -185,7 +185,7 @@
     <LinearLayout
         android:id="@+id/ll_introduction"
         android:padding="15dp"
-        android:background="@drawable/ll_back_change"
+        android:background="@drawable/back_change"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="50dp">

@@ -10,7 +10,7 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         app:contentInsetStart="0dp"
-        android:background="@android:color/white"
+        android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="40dp">
 
@@ -30,7 +30,7 @@
                 android:id="@+id/tv_set"
                 android:text="@string/setting"
                 android:gravity="center"
-                android:background="@drawable/ll_back_change"
+                android:background="@drawable/back_change_circle"
                 android:layout_alignParentRight="true"
                 android:paddingRight="10dp"
                 android:paddingLeft="10dp"
@@ -64,7 +64,7 @@
                 android:id="@+id/ll_set"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/ll_back_change"
+                android:background="@drawable/back_change"
                 android:gravity="center_vertical">
 
                 <ImageView
@@ -95,7 +95,7 @@
                 android:layout_height="1px"/>
 
             <LinearLayout
-                android:background="@android:color/white"
+                android:background="@color/white"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
@@ -106,7 +106,7 @@
                     android:layout_width="0dp"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
-                    android:background="@drawable/ll_back_change"
+                    android:background="@drawable/back_change_circle"
                     android:gravity="center_horizontal"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -131,7 +131,7 @@
                     android:layout_width="0dp"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
-                    android:background="@drawable/ll_back_change"
+                    android:background="@drawable/back_change_circle"
                     android:gravity="center_horizontal"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -156,7 +156,7 @@
                     android:layout_width="0dp"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
-                    android:background="@drawable/ll_back_change"
+                    android:background="@drawable/back_change_circle"
                     android:gravity="center_horizontal"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -181,7 +181,7 @@
                     android:layout_width="0dp"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
-                    android:background="@drawable/ll_back_change"
+                    android:background="@drawable/back_change_circle"
                     android:gravity="center_horizontal"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -211,7 +211,7 @@
 
             <LinearLayout
                 android:id="@+id/ll_top"
-                android:background="@drawable/ll_back_change"
+                android:background="@drawable/back_change"
                 android:padding="8dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
@@ -243,7 +243,7 @@
 
             <LinearLayout
                 android:id="@+id/ll_collection"
-                android:background="@drawable/ll_back_change"
+                android:background="@drawable/back_change"
                 android:padding="8dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
@@ -273,7 +273,7 @@
                 android:layout_height="1px"/>
             <LinearLayout
                 android:id="@+id/ll_comment"
-                android:background="@drawable/ll_back_change"
+                android:background="@drawable/back_change"
                 android:padding="8dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
@@ -304,7 +304,7 @@
 
             <LinearLayout
                 android:id="@+id/ll_reject"
-                android:background="@drawable/ll_back_change"
+                android:background="@drawable/back_change"
                 android:padding="8dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
@@ -338,7 +338,7 @@
 
             <LinearLayout
                 android:id="@+id/ll_customer_service"
-                android:background="@drawable/ll_back_change"
+                android:background="@drawable/back_change"
                 android:padding="8dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
@@ -370,7 +370,7 @@
 
             <LinearLayout
                 android:id="@+id/ll_draft"
-                android:background="@drawable/ll_back_change"
+                android:background="@drawable/back_change"
                 android:padding="8dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
@@ -429,15 +429,15 @@
                 android:id="@+id/bt_register"
                 android:text="@string/register"
                 android:layout_marginRight="20dp"
-                android:textColor="@android:color/white"
-                android:background="@drawable/back_change"
+                android:textColor="@color/white"
+                android:background="@drawable/back_change_circle_orange"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <Button
                 android:id="@+id/bt_login"
                 android:layout_marginLeft="20dp"
-                android:textColor="@android:color/white"
-                android:background="@drawable/back_change"
+                android:textColor="@color/white"
+                android:background="@drawable/back_change_circle_orange"
                 android:text="@string/login"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>

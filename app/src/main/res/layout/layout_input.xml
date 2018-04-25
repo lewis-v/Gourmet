@@ -37,7 +37,7 @@
         <Button
             android:id="@+id/bt_send"
             android:text="@string/send"
-            android:textColor="@android:color/white"
+            android:textColor="@color/white"
             android:background="@drawable/bt_back_login"
             android:layout_margin="5dp"
             android:layout_width="50dp"

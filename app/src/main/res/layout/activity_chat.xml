@@ -3,14 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/view_parent"
-    android:background="@android:color/white"
+    android:background="@color/white"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.yw.gourmet.ui.chat.ChatActivity">
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
-        android:background="@android:color/white"
+        android:background="@color/white"
         app:contentInsetStart="0dp"
         android:layout_width="match_parent"
         android:layout_height="40dp">
@@ -71,7 +71,7 @@
                 android:layout_margin="10dp"
                 android:text="@string/test_text"
                 android:textSize="16sp"
-                android:textColor="@android:color/white"
+                android:textColor="@color/white"
                 android:layout_centerHorizontal="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -83,7 +83,7 @@
         android:layout_height="1dp" />
     <LinearLayout
         android:id="@+id/ll_bottom"
-        android:background="@android:color/white"
+        android:background="@color/white"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:padding="2dp"
@@ -116,7 +116,7 @@
             <TextView
                 android:id="@+id/tv_voice"
                 android:visibility="gone"
-                android:background="@drawable/ll_back_change"
+                android:background="@drawable/back_change_circle"
                 android:gravity="center"
                 android:text="@string/touch_say"
                 android:layout_width="match_parent"
@@ -136,11 +136,11 @@
                 android:id="@+id/tv_send"
                 android:visibility="gone"
                 android:text="@string/send"
-                android:textColor="@android:color/white"
+                android:textColor="@color/white"
                 android:gravity="center"
                 android:padding="5dp"
                 android:layout_gravity="center"
-                android:background="@drawable/back_change"
+                android:background="@drawable/back_change_circle_orange"
                 android:layout_width="40dp"
                 android:layout_height="wrap_content" />
         </FrameLayout>
@@ -159,7 +159,7 @@
         <LinearLayout
             android:id="@+id/ll_img"
             android:orientation="vertical"
-            android:background="@drawable/ll_back_change"
+            android:background="@drawable/back_change_circle"
             android:gravity="center"
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -182,7 +182,7 @@
         <LinearLayout
             android:id="@+id/ll_take_photo"
             android:orientation="vertical"
-            android:background="@drawable/ll_back_change"
+            android:background="@drawable/back_change_circle"
             android:gravity="center"
             android:layout_width="0dp"
             android:layout_weight="1"

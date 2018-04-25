@@ -137,4 +137,5 @@
     <string name="audio_receiver_mode">听筒模式</string>
     <string name="save_img">保存照片</string>
     <string name="not_support">此版本不支持此类型消息,请更新APP</string>
+    <string name="night_mode">夜间模式</string>
 </resources>

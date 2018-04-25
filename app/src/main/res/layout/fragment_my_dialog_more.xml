@@ -7,7 +7,7 @@
     android:layout_height="wrap_content">
     <LinearLayout
         android:id="@+id/ll_collection"
-        android:background="@drawable/ll_back_change"
+        android:background="@drawable/back_change_circle"
         android:orientation="vertical"
         android:gravity="center_horizontal"
         android:layout_marginTop="10dp"
@@ -42,7 +42,7 @@
 
     <LinearLayout
         android:id="@+id/ll_share_people"
-        android:background="@drawable/ll_back_change"
+        android:background="@drawable/back_change_circle"
         android:orientation="vertical"
         android:gravity="center_horizontal"
         app:layout_constraintTop_toBottomOf="@+id/share_text"
@@ -63,7 +63,7 @@
 
     <LinearLayout
         android:id="@+id/ll_share_friend"
-        android:background="@drawable/ll_back_change"
+        android:background="@drawable/back_change_circle"
         android:orientation="vertical"
         android:gravity="center_horizontal"
         app:layout_constraintTop_toBottomOf="@+id/share_text"
@@ -91,7 +91,7 @@
     <TextView
         android:id="@+id/tv_cancel"
         app:layout_constraintTop_toBottomOf="@+id/view_dev"
-        android:background="@drawable/ll_back_change"
+        android:background="@drawable/back_change_circle"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"

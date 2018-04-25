@@ -265,9 +265,11 @@ public class MenuActivity extends BaseActivity<MenuPresenter> implements View.On
             }else if (status == 0){
                 tv_power.setText("私有");
             }
-            GlideApp.with(this).load(saveData.getCover()).placeholder(R.mipmap.loading)
-                    .error(R.mipmap.load_fail).into(img_cover);
             coverPath = saveData.getCover();
+            if (coverPath != null && coverPath.length()>1) {
+                GlideApp.with(this).load(coverPath).placeholder(R.mipmap.loading)
+                        .error(R.mipmap.load_fail).into(img_cover);
+            }
             difficultLevel = saveData.getDifficult_level();
             setDifficultLevel(difficultLevel);
             String play = saveData.getPlay_time();
@@ -281,11 +283,14 @@ public class MenuActivity extends BaseActivity<MenuPresenter> implements View.On
             et_introduction.setText(saveData.getIntroduction());
             et_tip.setText(saveData.getTip());
             listIngredient.clear();
-            listIngredient.addAll(saveData.getIngredient());
-            Log.e("---ingre---",saveData.getIngredient().toString());
+            if (saveData.getIngredient() != null && saveData.getIngredient().size()>0) {
+                listIngredient.addAll(saveData.getIngredient());
+            }
             adapterIngredient.notifyDataSetChanged();
             listPractice.clear();
-            listPractice.addAll(saveData.getPractice());
+            if (saveData.getPractice() != null && saveData.getPractice().size()>0) {
+                listPractice.addAll(saveData.getPractice());
+            }
             adapterPractice.notifyDataSetChanged();
         }
     }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">@android:color/white</color>
-    <color name="colorPrimaryDark">@android:color/white</color>
+    <color name="colorPrimary">@color/white</color>
+    <color name="colorPrimaryDark">@color/white</color>
     <color name="colorAccent">#ff8200</color>
 
 
@@ -25,6 +25,7 @@
     <color name="transparent">#00000000</color>
     <color name="choose_back">#ffc389</color>
     <color name="back_message_num">#dfE64A19</color>
+    <color name="white">@android:color/white</color>
 
     <color name="theme_orange_primary">#FF5722</color>
     <color name="theme_orange_dark">#E64A19</color>

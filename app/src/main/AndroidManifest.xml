@@ -231,6 +231,10 @@
         <activity android:name=".ui.imgShow.ImgShowActivity"
             android:launchMode="singleTask"
             android:theme="@style/ImgTheme"/>
+        <!--夜间模式切换-->
+        <activity android:name=".ui.set.NightChangeActivity"
+            android:launchMode="singleInstance"
+            android:theme="@style/transparent"/>
         <!--7.0的apk安装-->
         <provider
             android:name="android.support.v4.content.FileProvider"

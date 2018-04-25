@@ -14,7 +14,7 @@ public class AudioRecoderData implements Cloneable{
     //文件路径
     private String filePath;
     //文件夹路径
-    private String FolderPath = Environment.getExternalStorageDirectory()+"/data/chat/audio";
+    private String FolderPath = Environment.getExternalStorageDirectory()+"/data/chat/audio/";
     private long startTime;
     private long endTime;
 

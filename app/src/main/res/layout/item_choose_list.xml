@@ -2,7 +2,7 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/constraint_item"
-    android:background="@drawable/ll_back_change"
+    android:background="@drawable/back_change_circle"
     app:layout_constraintHorizontal_chainStyle="spread_inside"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">

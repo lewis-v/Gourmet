@@ -8,14 +8,15 @@
     <FrameLayout
         android:id="@+id/fl_sending"
         android:layout_gravity="center_vertical"
-        android:layout_margin="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:layout_width="30dp"
         android:layout_height="30dp"/>
     <ImageView
         android:id="@+id/img_myself"
-        android:layout_marginRight="10dp"
+        android:layout_margin="10dp"
         android:layout_width="100dp"
-        android:scaleType="fitCenter"
+        android:scaleType="centerCrop"
         android:layout_height="100dp"/>
 
     <ImageView

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/view_parent"
     android:orientation="vertical"
-    android:background="@android:color/white"
+    android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <android.support.v7.widget.Toolbar
@@ -90,7 +90,7 @@
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:gravity="center"
-                android:textColor="@android:color/white"
+                android:textColor="@color/white"
                 android:text="@string/public_type"
                 android:background="@drawable/circle_back"
                 android:layout_width="wrap_content"

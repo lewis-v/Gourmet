@@ -22,6 +22,7 @@ import com.yw.gourmet.data.InitData;
 import com.yw.gourmet.dialog.MyDialogTipFragment;
 import com.yw.gourmet.listener.MyAction;
 import com.yw.gourmet.rxbus.RxBus;
+import com.yw.gourmet.rxbus.RxSubscriptions;
 import com.yw.gourmet.service.UpdateService;
 import com.yw.gourmet.ui.about.AboutActivity;
 import com.yw.gourmet.ui.gourmet.GourmetFragment;
@@ -292,5 +293,6 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         super.onDestroy();
         //清除观察者
         RxBus.getDefault().removeAllStickyEvents();
+        RxSubscriptions.clear();
     }
 }

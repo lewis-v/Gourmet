@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 import com.yw.gourmet.Constant;
 import com.yw.gourmet.R;
 import com.yw.gourmet.base.BaseActivity;
+import com.yw.gourmet.dao.data.messageData.MessageDataUtil;
 import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.data.InitData;
 import com.yw.gourmet.data.UserData;
@@ -73,6 +74,7 @@ public class FlashActivity extends BaseActivity<FlashPresenter> implements Flash
     public void onLoginSuccess(final BaseData<UserData> model) {
         SPUtils.setSharedStringData(getApplicationContext(),"token",model.getData().getToken());
         Constant.userData = model.getData();
+        MessageDataUtil.setSendingToFail();
         Thread thread = new WaitThread(new Runnable() {
             @Override
             public void run() {

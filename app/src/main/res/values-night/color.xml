@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorAccent">#ff8200</color>
+
+    <color name="menu_back">#efa1a1a1</color>
+    <color name="menu_color">#333333</color>
+    <color name="ui_back">#bbbbbb</color>
+    <color name="dev">#b6b8cb</color>
+    <color name="close">#939393</color>
+    <color name="more_color">#636363</color>
+    <color name="word_black">@color/menu_color</color>
+    <color name="login_edit_back">#8fdfd5d6</color>
+    <color name="common_divider_narrow">#b6b8cb</color>
+    <color name="list_more">#c4c4c4</color>
+    <color name="close_back">#7f939393</color>
+    <color name="img_back">#8f000000</color>
+    <color name="change_back">#8f939393</color>
+    <color name="blue_light">#cbc7ff</color>
+    <color name="search_back">#8fcacaca</color>
+    <color name="search_text">#757474</color>
+    <color name="viewpager_point_back">#3fffffff</color>
+    <color name="transparent">#00000000</color>
+    <color name="choose_back">#ffc389</color>
+    <color name="back_message_num">#dfE64A19</color>
+    <color name="white">#646464</color>
+</resources>

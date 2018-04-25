@@ -10,6 +10,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -77,6 +78,7 @@ public class PersonalActivity extends BaseActivity<PersonalPresenter> implements
     private RecyclerView recycler_top;
     private ShareListAdapter adapter;
     private List<ShareListData<List<String>>> listTop = new ArrayList<>();
+    private NestedScrollView scroll;
 
     /**
      * 初始化UI
@@ -85,6 +87,8 @@ public class PersonalActivity extends BaseActivity<PersonalPresenter> implements
     protected void initView() {
         toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        scroll = findViewById(R.id.scroll);
 
         tv_nickname = (TextView)findViewById(R.id.tv_nickname);
         tv_sex = (TextView)findViewById(R.id.tv_sex);

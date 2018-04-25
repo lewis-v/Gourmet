@@ -2,6 +2,7 @@
 <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scroll"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
@@ -25,7 +26,7 @@
         <LinearLayout
             android:id="@+id/ll_change_detail"
             android:visibility="gone"
-            android:background="@drawable/ll_back_change"
+            android:background="@drawable/back_change"
             android:padding="8dp"
             android:gravity="center_vertical"
             android:orientation="horizontal"
@@ -64,7 +65,7 @@
             android:layout_height="1px"/>
         <LinearLayout
             android:padding="15dp"
-            android:background="@android:color/white"
+            android:background="@color/white"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -92,7 +93,7 @@
 
         <LinearLayout
             android:padding="15dp"
-            android:background="@android:color/white"
+            android:background="@color/white"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -120,7 +121,7 @@
 
         <LinearLayout
             android:padding="15dp"
-            android:background="@android:color/white"
+            android:background="@color/white"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -148,7 +149,7 @@
 
         <LinearLayout
             android:padding="15dp"
-            android:background="@android:color/white"
+            android:background="@color/white"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -180,7 +181,7 @@
         <!--置顶内容3个-->
         <LinearLayout
             android:orientation="horizontal"
-            android:background="@android:color/white"
+            android:background="@color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <TextView
@@ -189,7 +190,6 @@
                 android:paddingLeft="15dp"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
-                android:textColor="@color/more_color"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content" />
@@ -200,7 +200,6 @@
                 android:paddingRight="15dp"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
-                android:textColor="@color/more_color"
                 android:textSize="14sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />

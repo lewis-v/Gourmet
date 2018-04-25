@@ -305,6 +305,7 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
 
             @Override
             public void onStop(AudioRecoderData audioRecoderData) {
+                tv_voice.setText(R.string.touch_say);
                 rl_voice.setVisibility(View.GONE);
                 sendVoiceMessage(audioRecoderData);
             }
@@ -312,6 +313,7 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
             @Override
             public void onFail(Exception e,String msg) {
                 e.printStackTrace();
+                tv_voice.setText(R.string.touch_say);
                 rl_voice.setVisibility(View.GONE);
                 if (msg.equals("无录音/读写权限")){
                     getPermission();
@@ -320,6 +322,7 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
 
             @Override
             public void onCancel() {
+                tv_voice.setText(R.string.touch_say);
                 rl_voice.setVisibility(View.GONE);
             }
 
@@ -342,7 +345,7 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
         AudioPlayManager.getInstance().setPlayListener(new AudioPlayListener() {
             @Override
             public void onPlay(String audioPath) {
-
+                adapter.voicePlay(audioPath);
             }
 
             @Override
@@ -353,15 +356,18 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
             @Override
             public void onPause() {
                 Log.e(TAG,"pause");
+                adapter.voiceStop();
             }
 
             @Override
             public void onStop() {
                 Log.e(TAG,"stop");
+                adapter.voiceStop();
             }
 
             @Override
             public void onFail(Exception e, String msg) {
+                adapter.voiceStop();
                 e.printStackTrace();
                 if (msg.equals("无读取权限")){
                     getPermission();
@@ -425,19 +431,21 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
             case MotionEvent.ACTION_MOVE:
                 if (WindowUtil.height - event.getRawY() > ll_bottom.getHeight()){
                     tv_voice_tip.setText("松开手指,取消发送");
+                    tv_voice.setText("松开手指,取消发送");
                     isCancelVoice = true;
                 }else {
+                    tv_voice.setText("松开 结束");
                     tv_voice_tip.setText("手指上滑,取消发送");
                     isCancelVoice = false;
                 }
-                return true;
+                return false;
             case MotionEvent.ACTION_UP:
                 if (isCancelVoice){
                     AudioRecoderManager.getInstance().cancel(getApplicationContext());
                 }else {
                     AudioRecoderManager.getInstance().stop(getApplicationContext());
                 }
-                return true;
+                return false;
         }
         return false;
     }
@@ -591,21 +599,9 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
                 break;
             case R.id.img_type:
                 if (sendMode == TEXT){
-                    img_type.setImageResource(R.drawable.keyboard);
-                    img_emoticon.setVisibility(View.GONE);
-                    et_chat.setVisibility(View.GONE);
-                    tv_voice.setVisibility(View.VISIBLE);
-                    tv_send.setVisibility(View.GONE);
-                    sendMode = VOICE;
+                    setMode(VOICE);
                 }else if (sendMode == VOICE){
-                    img_type.setImageResource(R.drawable.voice);
-                    img_emoticon.setVisibility(View.VISIBLE);
-                    et_chat.setVisibility(View.VISIBLE);
-                    tv_voice.setVisibility(View.GONE);
-                    if (et_chat.getText().toString().trim().length()>0){
-                        tv_send.setVisibility(View.VISIBLE);
-                    }
-                    sendMode = TEXT;
+                   setMode(TEXT);
                 }
                 if (ll_add_other.getVisibility() == View.VISIBLE){
                     ll_add_other.setVisibility(View.GONE);
@@ -618,6 +614,9 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
                 if (ll_add_other.getVisibility() == View.VISIBLE){
                     setAddViewShow(false);
                 }else {
+                    if (sendMode == VOICE){
+                        setMode(TEXT);
+                    }
                     setAddViewShow(true);
                 }
                 hideSoftInput(et_chat);
@@ -646,6 +645,26 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
             case R.id.img_emoticon:
 
                 break;
+        }
+    }
+
+    public void setMode(int mode){
+        if (mode == VOICE){
+            img_type.setImageResource(R.drawable.keyboard);
+            img_emoticon.setVisibility(View.GONE);
+            et_chat.setVisibility(View.GONE);
+            tv_voice.setVisibility(View.VISIBLE);
+            tv_send.setVisibility(View.GONE);
+            sendMode = VOICE;
+        }else if (mode == TEXT){
+            img_type.setImageResource(R.drawable.voice);
+            img_emoticon.setVisibility(View.VISIBLE);
+            et_chat.setVisibility(View.VISIBLE);
+            tv_voice.setVisibility(View.GONE);
+            if (et_chat.getText().toString().trim().length()>0){
+                tv_send.setVisibility(View.VISIBLE);
+            }
+            sendMode = TEXT;
         }
     }
 

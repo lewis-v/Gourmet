@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/viewpager"
     android:orientation="vertical"
-    android:background="@android:color/white"
+    android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.yw.gourmet.ui.search.keySearch.KeySearchActivity">
@@ -63,7 +63,7 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_friend"
             android:visibility="gone"
-            android:background="@android:color/white"
+            android:background="@color/white"
             android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>

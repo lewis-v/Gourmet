@@ -11,5 +11,5 @@
         android:color="@color/choose_back"
         android:width="1dp"/>
     <solid
-        android:color="@android:color/white"/>
+        android:color="@color/white"/>
 </shape>

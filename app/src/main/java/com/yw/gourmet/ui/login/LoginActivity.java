@@ -9,6 +9,7 @@ import com.yw.gourmet.Constant;
 import com.yw.gourmet.GlideApp;
 import com.yw.gourmet.R;
 import com.yw.gourmet.base.BaseActivity;
+import com.yw.gourmet.dao.data.messageData.MessageDataUtil;
 import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.data.UserData;
 import com.yw.gourmet.push.PushManager;
@@ -77,6 +78,7 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
     public void onLoginSuccess(BaseData<UserData> model) {
         onSuccess(model.getMessage());
         Constant.userData = model.getData();
+        MessageDataUtil.setSendingToFail();
         SPUtils.setSharedStringData(getApplicationContext(),"token",model.getData().getToken());
         SPUtils.setSharedStringData(getApplicationContext(),"id",et_id.getText().toString());
         SPUtils.setSharedStringData(getApplicationContext(),"img_header",model.getData().getImg_header());

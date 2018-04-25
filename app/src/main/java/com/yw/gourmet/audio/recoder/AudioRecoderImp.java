@@ -5,6 +5,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
+import com.yw.gourmet.Constant;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -61,7 +63,7 @@ public class AudioRecoderImp implements IAudioRecoder {
             mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.AMR_WB);
             mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_WB);
 
-            audioRecoderData.setFilePath( audioRecoderData.getFolderPath() + "AUDIO_"+System.currentTimeMillis() + ".aac" );
+            audioRecoderData.setFilePath( audioRecoderData.getFolderPath() + "AUDIO_"+System.currentTimeMillis() + Constant.userData.getUser_id()+".amr" );
             Log.e(TAG,audioRecoderData.getFilePath());
             File file = new File(audioRecoderData.getFolderPath());
             if (!file.exists()){

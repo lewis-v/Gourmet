@@ -9,7 +9,7 @@
     android:layout_height="match_parent">
     <TextView
         android:id="@+id/tv_collect"
-        android:background="@drawable/ll_back_change"
+        android:background="@drawable/back_change"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         android:paddingTop="5dp"
@@ -26,7 +26,7 @@
 
     <TextView
         android:id="@+id/tv_share"
-        android:background="@drawable/ll_back_change"
+        android:background="@drawable/back_change"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         android:paddingTop="5dp"
@@ -42,7 +42,7 @@
         android:layout_height="1px"/>
     <TextView
         android:id="@+id/tv_complaint"
-        android:background="@drawable/ll_back_change"
+        android:background="@drawable/back_change"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         android:paddingTop="5dp"

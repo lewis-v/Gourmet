@@ -198,10 +198,14 @@ public class RaidersActivity extends BaseActivity<RaidersPresenter> implements V
                 tv_power.setText("私有");
             }
             tagList.clear();
-            tagList.addAll(saveData.getRaiders_type());
+            if (saveData.getRaiders_type() != null && saveData.getRaiders_type().size()>0) {
+                tagList.addAll(saveData.getRaiders_type());
+            }
             tagAdapter.notifyDataSetChanged();
             raidersListData.clear();
-            raidersListData.addAll(saveData.getRaiders_content());
+            if (saveData.getRaiders_content()!= null && saveData.getRaiders_content().size()>0) {
+                raidersListData.addAll(saveData.getRaiders_content());
+            }
             raidersListAdapter.notifyDataSetChanged();
         }
     }

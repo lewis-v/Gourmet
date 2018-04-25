@@ -1,7 +1,11 @@
 package com.yw.gourmet.adapter;
 
 import android.content.Context;
+import android.graphics.drawable.AnimationDrawable;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,6 +48,7 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder<MessageList
     private OnVoiceClickListener onVoiceClickListener;
     private UserData getUserData;//获取者的信息(左边)
     private SparseArray<View> sparseArray = new SparseArray<>();
+    private String playPath = "";//播放语音的地址
 
     public ChatAdapter(Context context, List<MessageListData> list) {
         this.context = context;
@@ -81,25 +86,25 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder<MessageList
 
     @Override
     public BaseViewHolder<MessageListData> onCreateViewHolder(ViewGroup parent, int viewType) {
-        BaseViewHolder<MessageListData> holder = new MyTextHolder(LayoutInflater.from(context).inflate(R.layout.item_chat_text,parent,false),viewType);
+        BaseViewHolder<MessageListData> holder = new MyTextHolderBase(LayoutInflater.from(context).inflate(R.layout.item_chat_text,parent,false),viewType);
         switch (viewType){
             case TEXT_MY:
-                holder =  new MyTextHolder(LayoutInflater.from(context).inflate(R.layout.item_chat_text_myself, parent, false), viewType);
+                holder =  new MyTextHolderBase(LayoutInflater.from(context).inflate(R.layout.item_chat_text_myself, parent, false), viewType);
                 break;
             case TEXT_OTHER:
-                holder =  new OtherTextHolder(LayoutInflater.from(context).inflate(R.layout.item_chat_text_other, parent, false), viewType);
+                holder =  new OtherTextHolderBase(LayoutInflater.from(context).inflate(R.layout.item_chat_text_other, parent, false), viewType);
                 break;
             case IMG_MY:
-                holder =  new MyImgHolder(LayoutInflater.from(context).inflate(R.layout.item_chat_img_myself, parent, false), viewType);
+                holder =  new MyImgHolderBase(LayoutInflater.from(context).inflate(R.layout.item_chat_img_myself, parent, false), viewType);
                 break;
             case IMG_OTHER:
-                holder =  new OtherImgHolder(LayoutInflater.from(context).inflate(R.layout.item_chat_img_other, parent, false), viewType);
+                holder =  new OtherImgHolderBase(LayoutInflater.from(context).inflate(R.layout.item_chat_img_other, parent, false), viewType);
                 break;
             case VOICE_MY:
-                holder =   new MyVoiceHolder(LayoutInflater.from(context).inflate(R.layout.item_chat_voice_myself, parent, false), viewType);
+                holder =   new MyVoiceHolderBase(LayoutInflater.from(context).inflate(R.layout.item_chat_voice_myself, parent, false), viewType);
                 break;
             case VOICE_OTHER:
-                holder =  new OtherVoiceHolder(LayoutInflater.from(context).inflate(R.layout.item_chat_voice_other, parent, false), viewType);
+                holder =  new OtherVoiceHolderBase(LayoutInflater.from(context).inflate(R.layout.item_chat_voice_other, parent, false), viewType);
         }
         return holder;
     }
@@ -157,11 +162,11 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder<MessageList
         return false;
     }
 
-    abstract class ChatViewHolder extends BaseViewHolder<MessageListData> {
+    abstract class BaseChatViewHolder extends BaseViewHolder<MessageListData> {
         ImageView img_header;
         FrameLayout fl_status;
 
-        public ChatViewHolder(View itemView, int type) {
+        public BaseChatViewHolder(View itemView, int type) {
             super(itemView, type);
         }
 
@@ -215,10 +220,10 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder<MessageList
         }
     }
 
-    class MyTextHolder extends ChatViewHolder {
+    class MyTextHolderBase extends BaseChatViewHolder {
         TextView tv_content;
 
-        public MyTextHolder(View itemView, int type) {
+        public MyTextHolderBase(View itemView, int type) {
             super(itemView, type);
         }
 
@@ -235,10 +240,10 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder<MessageList
         }
     }
 
-    class OtherTextHolder extends ChatViewHolder {
+    class OtherTextHolderBase extends BaseChatViewHolder {
         TextView tv_content;
 
-        public OtherTextHolder(View itemView, int type) {
+        public OtherTextHolderBase(View itemView, int type) {
             super(itemView, type);
         }
 
@@ -257,10 +262,10 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder<MessageList
 
 
 
-    class MyImgHolder extends ChatViewHolder{
+    class MyImgHolderBase extends BaseChatViewHolder {
         ImageView img;
 
-        public MyImgHolder(View itemView, int type) {
+        public MyImgHolderBase(View itemView, int type) {
             super(itemView, type);
         }
 
@@ -286,10 +291,10 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder<MessageList
         }
     }
 
-    class OtherImgHolder extends ChatViewHolder{
+    class OtherImgHolderBase extends BaseChatViewHolder {
         ImageView img;
 
-        public OtherImgHolder(View itemView, int type) {
+        public OtherImgHolderBase(View itemView, int type) {
             super(itemView, type);
         }
 
@@ -316,23 +321,19 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder<MessageList
     }
 
 
-    class MyVoiceHolder extends ChatViewHolder {
+    class MyVoiceHolderBase extends BaseChatViewHolder {
         LinearLayout ll;
+        ImageView img_voice_my;
 
-        public MyVoiceHolder(View itemView, int type) {
+        public MyVoiceHolderBase(View itemView, int type) {
             super(itemView, type);
         }
 
         @Override
         public void onBind( MessageListData data) {
             super.onBind(data);
-            if (data.getPut_id().equals(Constant.userData.getUser_id())) {
-                ll.setPadding(VoiceMaxLength * data.getLength() / 60000, ll.getPaddingTop()
-                        , ll.getPaddingRight(), ll.getPaddingBottom());
-            }else {
-                ll.setPadding(ll.getPaddingLeft(), ll.getPaddingTop()
-                        , VoiceMaxLength * data.getLength() / 60000, ll.getPaddingBottom());
-            }
+            ll.setPadding(VoiceMaxLength * data.getLength() / 60000, ll.getPaddingTop()
+                    , ll.getPaddingRight(), ll.getPaddingBottom());
             if (onVoiceClickListener != null){
                 ll.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -340,6 +341,19 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder<MessageList
                         onVoiceClickListener.onVoiceClick(v,getLayoutPosition());
                     }
                 });
+            }
+            if (data.getSendStatus() != MessageListData.SEND_FAIL
+                    && data.getSendStatus() != MessageListData.SENDING){
+                TextView tv_length = new TextView(context);
+                tv_length.setText(data.getLength()/1000+"\"");
+                fl_status.addView(tv_length);
+            }
+            if (data.getImg().equals(playPath)){
+                img_voice_my.setImageResource(R.drawable.anim_voice_play);
+                ((AnimationDrawable)img_voice_my.getDrawable()).start();
+            }else {
+//                ((AnimationDrawable)img_voice_my.getDrawable()).stop();
+                img_voice_my.setImageResource(R.drawable.voice_item);
             }
         }
 
@@ -347,26 +361,23 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder<MessageList
         public void init(View itemView) {
             super.init(itemView);
             ll = itemView.findViewById(R.id.ll_voice_my);
+            img_voice_my = itemView.findViewById(R.id.img_voice_my);
         }
     }
 
-    class OtherVoiceHolder extends ChatViewHolder {
+    class OtherVoiceHolderBase extends BaseChatViewHolder {
         LinearLayout ll;
+        ImageView img_voice_other;
 
-        public OtherVoiceHolder(View itemView, int type) {
+        public OtherVoiceHolderBase(View itemView, int type) {
             super(itemView, type);
         }
 
         @Override
         public void onBind( MessageListData data) {
             super.onBind(data);
-            if (data.getPut_id().equals(Constant.userData.getUser_id())) {
-                ll.setPadding(VoiceMaxLength * data.getLength() / 60000, ll.getPaddingTop()
-                        , ll.getPaddingRight(), ll.getPaddingBottom());
-            }else {
-                ll.setPadding(ll.getPaddingLeft(), ll.getPaddingTop()
-                        , VoiceMaxLength * data.getLength() / 60000, ll.getPaddingBottom());
-            }
+            ll.setPadding(ll.getPaddingLeft(), ll.getPaddingTop()
+                    , VoiceMaxLength * data.getLength() / 60000, ll.getPaddingBottom());
             if (onVoiceClickListener != null){
                 ll.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -375,12 +386,62 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder<MessageList
                     }
                 });
             }
+            if (data.getSendStatus() != MessageListData.SEND_FAIL
+                    && data.getSendStatus() != MessageListData.SENDING){
+                TextView tv_length = new TextView(context);
+                tv_length.setText(data.getLength()/1000+"\"");
+                fl_status.addView(tv_length);
+            }
+            if (data.getImg().equals(playPath)){
+                img_voice_other.setImageResource(R.drawable.anim_voice_play);
+                ((AnimationDrawable)img_voice_other.getDrawable()).start();
+            }else {
+//                ((AnimationDrawable)img_voice_my.getDrawable()).stop();
+                img_voice_other.setImageResource(R.drawable.voice_item);
+            }
         }
 
         @Override
         public void init(View itemView) {
             super.init(itemView);
             ll = itemView.findViewById(R.id.ll_voice_other);
+            img_voice_other = itemView.findViewById(R.id.img_voice_other);
         }
     }
+
+    public void voiceStop(){
+        final int cachePosition = getPositionByImg(playPath);
+        playPath = "";
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                notifyItemChanged(cachePosition);
+            }
+        });
+    }
+
+    public void voicePlay(String path){
+        final int cachePosition = getPositionByImg(playPath);
+        playPath = path;
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                notifyItemChanged(cachePosition);
+                notifyItemChanged(getPositionByImg(playPath));
+            }
+        });
+    }
+
+    public int getPositionByImg(String img){
+        int position = 0;
+        for (MessageListData data : list){
+            if (data.getImg() != null && data.getImg().equals(img)){
+                return position;
+            }
+            position++;
+        }
+        return -1;
+    }
+
+
 }

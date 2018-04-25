@@ -106,8 +106,8 @@
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginTop="50dp"
         android:text="@string/enter"
-        android:textColor="@android:color/white"
-        android:background="@drawable/back_change"
+        android:textColor="@color/white"
+        android:background="@drawable/back_change_circle_orange"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 </android.support.constraint.ConstraintLayout>

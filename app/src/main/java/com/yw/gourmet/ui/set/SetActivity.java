@@ -2,6 +2,7 @@ package com.yw.gourmet.ui.set;
 
 import android.content.Intent;
 import android.os.Environment;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -11,6 +12,8 @@ import android.widget.TextView;
 
 import com.yw.gourmet.Constant;
 import com.yw.gourmet.R;
+import com.yw.gourmet.audio.play.AudioPlayData;
+import com.yw.gourmet.audio.play.AudioPlayManager;
 import com.yw.gourmet.audio.play.AudioPlayMode;
 import com.yw.gourmet.base.BaseActivity;
 import com.yw.gourmet.dialog.MyDialogFeedBackFragment;
@@ -29,9 +32,10 @@ import java.util.List;
 public class SetActivity extends BaseActivity<SetPresenter> implements View.OnClickListener,SetContract.View{
     private LinearLayout ll_back,ll_clear,ll_about,ll_change_password,ll_customer_service,ll_feedback;
     private TextView tv_out;
-    private SwitchCompat switch_audio;
+    private SwitchCompat switch_audio,switch_night;
     private final static String path = Environment.getExternalStorageDirectory().getPath() + "/data/gourmet/Img/";//图片存储目录
-    private List<File> clearFiles = Arrays.asList(new File(path));//可以清理的文件目录
+    private final static String audioPath = Environment.getExternalStorageDirectory().getPath()+"/data/chat/audio";//语音缓存目录
+    private List<File> clearFiles = Arrays.asList(new File(path),new File(audioPath));//可以清理的文件目录
 
     /**
      * 初始化UI
@@ -75,6 +79,23 @@ public class SetActivity extends BaseActivity<SetPresenter> implements View.OnCl
                 }else {
                     SPUtils.setSharedIntData(SetActivity.this,"audio_play_mode",AudioPlayMode.MEGAPHONE.getTypeName());
                 }
+            }
+        });
+
+        switch_night = findViewById(R.id.switch_night);
+        switch_night.setChecked(SPUtils.getSharedBooleanData(this,"NIGHT"));
+        switch_night.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SPUtils.setSharedBooleanData(SetActivity.this,"NIGHT",isChecked);
+                if (isChecked) {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                }else {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                }
+                Intent intent = new Intent(SetActivity.this,NightChangeActivity.class);
+                intent.putExtra("night",isChecked);
+                startActivity(intent);
             }
         });
     }

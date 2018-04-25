@@ -155,6 +155,7 @@ public class AudioPlayImp implements IAudioPlay {
         }else {
             File file = new File(audioFile);
             FileInputStream fis = new FileInputStream(file);
+            Log.e(TAG,file.getAbsolutePath());
             mPlayer.setDataSource(fis.getFD());
         }
         return mPlayer;

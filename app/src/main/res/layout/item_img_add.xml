@@ -12,7 +12,7 @@
     <ImageView
         android:id="@+id/img_delete"
         android:src="@drawable/close"
-        android:tint="@android:color/white"
+        android:tint="@color/white"
         android:background="@color/close_back"
         android:layout_alignParentRight="true"
         android:padding="2dp"

@@ -2,6 +2,7 @@ package com.yw.gourmet.ui.set;
 
 import com.yw.gourmet.base.rx.RxApiCallback;
 import com.yw.gourmet.base.rx.RxSubscriberCallBack;
+import com.yw.gourmet.dao.data.audioCacheData.AudioCacheUtil;
 import com.yw.gourmet.utils.FileUtils;
 import com.yw.gourmet.utils.ThreadUtils;
 
@@ -27,6 +28,7 @@ public class SetPresenter extends SetContract.Presenter{
                         for (File file : path){
                             size += FileUtils.deleteFile(file);
                         }
+                        AudioCacheUtil.clearAll();
                         return size;
                     }
                 })).observeOn(Schedulers.io())

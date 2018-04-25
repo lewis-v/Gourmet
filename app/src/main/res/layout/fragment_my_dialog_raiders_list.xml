@@ -88,7 +88,7 @@
     <ImageView
         android:id="@+id/img_address_search"
         android:src="@drawable/search"
-        android:tint="@android:color/white"
+        android:tint="@color/white"
         android:background="@drawable/bt_back_login"
         app:layout_constraintTop_toTopOf="@+id/et_address"
         app:layout_constraintBottom_toBottomOf="@+id/et_address"
@@ -119,7 +119,7 @@
         <ImageView
             android:id="@+id/img_introduction"
             android:src="@drawable/more"
-            android:tint="@android:color/white"
+            android:tint="@color/white"
             android:background="@drawable/circle_back"
             android:layout_marginBottom="-10dp"
             android:layout_width="wrap_content"

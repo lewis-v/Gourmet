@@ -52,7 +52,6 @@ public class MessageFragment extends BaseFragment<MessagePresenter> implements M
     private LinearLayout ll_message;
     private ConstraintLayout constraint_message;
     private Button bt_login,bt_register;
-    private Subscription mRxSubSticky;
     private IMessageGet iMessageGet;
 
     /**
@@ -200,53 +199,20 @@ public class MessageFragment extends BaseFragment<MessagePresenter> implements M
         }
     }
 
-    public void setRxBus(){
-        if (mRxSubSticky != null && !mRxSubSticky.isUnsubscribed()) {
-            RxSubscriptions.remove(mRxSubSticky);
-        } else {
-            EventSticky s = RxBus.getDefault().getStickyEvent(EventSticky.class);
-            Log.i("FFF", "获取到StickyEvent--->" + s);
-
-            mRxSubSticky = RxBus.getDefault().toObservableSticky(EventSticky.class)
-                    .flatMap(new Func1<EventSticky, Observable<EventSticky>>() {
-                        @Override
-                        public Observable<EventSticky> call(EventSticky eventSticky) {
-                            return Observable.just(eventSticky)
-                                    .map(new Func1<EventSticky, EventSticky>() {
-                                        @Override
-                                        public EventSticky call(EventSticky eventSticky) {
-                                            // 这里模拟产生 Error
-                                            return eventSticky;
-                                        }
-                                    })
-                                    .doOnError(new Action1<Throwable>() {
-                                        @Override
-                                        public void call(Throwable throwable) {
-                                            Log.e("FFF", "onError--Sticky");
-                                        }
-                                    })
-                                    .onErrorResumeNext(Observable.<EventSticky>empty());
-                        }
-                    })
-                    .subscribe(new RxBusSubscriber<EventSticky>() {
-                        @Override
-                        protected void onEvent(EventSticky eventSticky) {
-                            Log.i("FFF", "onNext--Sticky-->" + eventSticky.event);
-                            switch (eventSticky.event){
-                                case "out":
-                                    if (Constant.userData == null){
-                                        constraint_message.setVisibility(View.VISIBLE);
-                                        ll_message.setVisibility(View.GONE);
-                                    }else {
-                                        constraint_message.setVisibility(View.GONE);
-                                        ll_message.setVisibility(View.VISIBLE);
-                                        swipeToLoadLayout.setRefreshing(true);
-                                    }
-                                    break;
-                            }
-                        }
-                    });
-            RxSubscriptions.add(mRxSubSticky);
+    @Override
+    public void onGetEvent(EventSticky eventSticky) {
+        super.onGetEvent(eventSticky);
+        switch (eventSticky.event){
+            case "out":
+                if (Constant.userData == null){
+                    constraint_message.setVisibility(View.VISIBLE);
+                    ll_message.setVisibility(View.GONE);
+                }else {
+                    constraint_message.setVisibility(View.GONE);
+                    ll_message.setVisibility(View.VISIBLE);
+                    swipeToLoadLayout.setRefreshing(true);
+                }
+                break;
         }
     }
 }

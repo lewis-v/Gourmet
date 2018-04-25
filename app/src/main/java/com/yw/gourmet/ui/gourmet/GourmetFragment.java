@@ -391,6 +391,8 @@ public class GourmetFragment extends BaseFragment<GourmetPresenter> implements G
         super.onDestroy();
         if (mRxSubSticky != null) {
             mRxSubSticky.unsubscribe();
+            RxSubscriptions.remove(mRxSubSticky);
+            mRxSubSticky = null;
         }
     }
 }

@@ -2,7 +2,7 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/constraint_item"
-    android:background="@drawable/ll_back_change"
+    android:background="@drawable/back_change"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="60dp">
@@ -23,7 +23,7 @@
         app:layout_constraintRight_toRightOf="@+id/img_header"
         android:text="@string/test_num"
         android:gravity="center"
-        android:textColor="@android:color/white"
+        android:textColor="@color/white"
         android:textSize="12sp"
         android:background="@drawable/back_message_num"
         android:layout_width="wrap_content"

@@ -3,6 +3,7 @@ package com.yw.gourmet.dao.data.messageData;
 import android.util.Log;
 
 import com.yw.gourmet.Constant;
+import com.yw.gourmet.adapter.ChatAdapter;
 import com.yw.gourmet.dao.GreenDaoManager;
 import com.yw.gourmet.dao.gen.MessageListDataDao;
 import com.yw.gourmet.data.MessageListData;
@@ -11,6 +12,9 @@ import org.greenrobot.greendao.query.Query;
 import org.greenrobot.greendao.query.WhereCondition;
 
 import java.util.List;
+
+import static com.yw.gourmet.data.MessageListData.SENDING;
+import static com.yw.gourmet.data.MessageListData.SEND_FAIL;
 
 /**
  * auth: lewis-v
@@ -103,5 +107,27 @@ public class MessageDataUtil {
         List<MessageListData> MessageListData = nQuery.list();
         Log.e("---dao---",MessageListData.toString());
         return MessageListData;
+    }
+
+    /**
+     * 登录时将正在发送的消息设置为发送失败
+     * @return
+     */
+    public static List<MessageListData> setSendingToFail(){
+        List<MessageListData> messageListData = null;
+        if (Constant.userData != null) {
+            Query<MessageListData> nQuery = GreenDaoManager.getInstance().getmDaoSession().getMessageListDataDao().queryBuilder()
+                    .where(MessageListDataDao.Properties.User_id.eq(Constant.userData.getUser_id())
+                    ,MessageListDataDao.Properties.SendStatus.eq(SENDING))
+                    .build();
+            messageListData = nQuery.list();
+            if (messageListData != null){
+                for (MessageListData data : messageListData){
+                    data.setSendStatus(SEND_FAIL);
+                    updata(data);
+                }
+            }
+        }
+        return messageListData;
     }
 }

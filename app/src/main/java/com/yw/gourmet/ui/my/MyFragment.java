@@ -49,7 +49,6 @@ public class MyFragment extends BaseFragment implements View.OnClickListener,MyC
     private TextView tv_nickname,tv_set,tv_diary,tv_menu,tv_raiders,tv_share;
     private Button bt_login,bt_register;
     private ConstraintLayout constraint_my;
-    private Subscription mRxSubSticky;
     private ImageView img_header;
     private LinearLayout ll_top;
 
@@ -234,76 +233,43 @@ public class MyFragment extends BaseFragment implements View.OnClickListener,MyC
         }
     }
 
-    public void setRxBus(){
-        if (mRxSubSticky != null && !mRxSubSticky.isUnsubscribed()) {
-            RxSubscriptions.remove(mRxSubSticky);
-        } else {
-            EventSticky s = RxBus.getDefault().getStickyEvent(EventSticky.class);
-            Log.i("FFF", "获取到StickyEvent--->" + s);
+    @Override
+    public void onGetEvent(EventSticky eventSticky) {
+        super.onGetEvent(eventSticky);
+        switch (eventSticky.event){
+            case "out":
+                if (Constant.userData == null){
+                    scroll_my.setVisibility(View.GONE);
+                    constraint_my.setVisibility(View.VISIBLE);
+                }else if (Constant.userData != null
+                        && scroll_my.getVisibility() != View.VISIBLE){
+                    scroll_my.setVisibility(View.VISIBLE);
+                    setData();
+                    constraint_my.setVisibility(View.GONE);
+                }
+                break;
+            case "change_detail":
+                if (Constant.userData != null) {
+                    setData();
+                }
+                break;
+            case "share_common":
+                Constant.userData.setCommon_num(Constant.userData.getCommon_num()+1);
+                tv_share.setText(String.valueOf(Constant.userData.getCommon_num()));
+                break;
+            case "share_diary":
+                Constant.userData.setDiary_num(Constant.userData.getDiary_num()+1);
+                tv_diary.setText(String.valueOf(Constant.userData.getDiary_num()));
+                break;
+            case "share_menu":
+                Constant.userData.setMenu_num(Constant.userData.getMenu_num()+1);
+                tv_menu.setText(String.valueOf(Constant.userData.getMenu_num()));
+                break;
+            case "share_raider":
+                Constant.userData.setRaiders_num(Constant.userData.getRaiders_num()+1);
+                tv_raiders.setText(String.valueOf(Constant.userData.getRaiders_num()));
+                break;
 
-            mRxSubSticky = RxBus.getDefault().toObservableSticky(EventSticky.class)
-                    .flatMap(new Func1<EventSticky, Observable<EventSticky>>() {
-                        @Override
-                        public Observable<EventSticky> call(EventSticky eventSticky) {
-                            return Observable.just(eventSticky)
-                                    .map(new Func1<EventSticky, EventSticky>() {
-                                        @Override
-                                        public EventSticky call(EventSticky eventSticky) {
-                                            // 这里模拟产生 Error
-                                            return eventSticky;
-                                        }
-                                    })
-                                    .doOnError(new Action1<Throwable>() {
-                                        @Override
-                                        public void call(Throwable throwable) {
-                                            Log.e("FFF", "onError--Sticky");
-                                        }
-                                    })
-                                    .onErrorResumeNext(Observable.<EventSticky>empty());
-                        }
-                    })
-                    .subscribe(new RxBusSubscriber<EventSticky>() {
-                        @Override
-                        protected void onEvent(EventSticky eventSticky) {
-                            Log.i("FFF", "onNext--Sticky-->" + eventSticky.event);
-                            switch (eventSticky.event){
-                                case "out":
-                                    if (Constant.userData == null){
-                                        scroll_my.setVisibility(View.GONE);
-                                        constraint_my.setVisibility(View.VISIBLE);
-                                    }else if (Constant.userData != null
-                                            && scroll_my.getVisibility() != View.VISIBLE){
-                                        scroll_my.setVisibility(View.VISIBLE);
-                                        setData();
-                                        constraint_my.setVisibility(View.GONE);
-                                    }
-                                    break;
-                                case "change_detail":
-                                    if (Constant.userData != null) {
-                                        setData();
-                                    }
-                                    break;
-                                case "share_common":
-                                    Constant.userData.setCommon_num(Constant.userData.getCommon_num()+1);
-                                    tv_share.setText(String.valueOf(Constant.userData.getCommon_num()));
-                                    break;
-                                case "share_diary":
-                                    Constant.userData.setDiary_num(Constant.userData.getDiary_num()+1);
-                                    tv_diary.setText(String.valueOf(Constant.userData.getDiary_num()));
-                                    break;
-                                case "share_menu":
-                                    Constant.userData.setMenu_num(Constant.userData.getMenu_num()+1);
-                                    tv_menu.setText(String.valueOf(Constant.userData.getMenu_num()));
-                                    break;
-                                case "share_raider":
-                                    Constant.userData.setRaiders_num(Constant.userData.getRaiders_num()+1);
-                                    tv_raiders.setText(String.valueOf(Constant.userData.getRaiders_num()));
-                                    break;
-
-                            }
-                        }
-                    });
-            RxSubscriptions.add(mRxSubSticky);
         }
     }
 
