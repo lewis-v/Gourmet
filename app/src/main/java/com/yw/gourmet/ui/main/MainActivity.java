@@ -291,8 +291,5 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //清除观察者
-        RxBus.getDefault().removeAllStickyEvents();
-        RxSubscriptions.clear();
     }
 }
