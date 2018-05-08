@@ -35,14 +35,14 @@ public class ChatPresenter extends ChatContract.Presenter {
         executors = Executors.newSingleThreadExecutor();
         iMessageSendEvent = new IMessageSendEvent() {
             @Override
-            public boolean onSendMessageResult(final BaseData<MessageListData> message, MessageListData MessageListData, final int position) {
+            public boolean onSendMessageResult(final BaseData<MessageListData> message, final MessageListData MessageListData, final int position) {
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
                         if (message.getStatus() == 0) {
-                            mView.onSendSuccess(message.getData(),position);
+                            mView.onSendSuccess(MessageListData,position);
                         }else {
-                            mView.onSendFail(message.getMessage(),position);
+                            mView.onSendFail(MessageListData,message.getMessage(),position);
                         }
                     }
                 });
@@ -54,11 +54,11 @@ public class ChatPresenter extends ChatContract.Presenter {
             }
 
             @Override
-            public boolean onSendMessageFail(MessageListData message, final int position, final String msg) {
+            public boolean onSendMessageFail(final MessageListData message, final int position, final String msg) {
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
-                        mView.onSendFail(msg,position);
+                        mView.onSendFail(message,msg,position);
                     }
                 });
                 if (isResume) {

@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.yw.gourmet.Constant;
 import com.yw.gourmet.center.MessageCenter;
 import com.yw.gourmet.data.MessageListData;
 import com.yw.gourmet.ui.flash.FlashActivity;
@@ -49,11 +50,13 @@ public class PushReceiver extends BroadcastReceiver {
 
             } else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent.getAction())) {
                 Log.d(TAG, "[MyReceiver] 接收到推送下来的自定义消息: " + bundle.getString(JPushInterface.EXTRA_MESSAGE));
-                try {
-                    MessageCenter.getInstance().pushMessage(
-                            new Gson().fromJson(bundle.getString(JPushInterface.EXTRA_EXTRA), MessageListData.class));
-                }catch (Exception e){
-                    Log.e(TAG,"转换出错");
+                if (Constant.userData != null) {//用户登录才进行分发,否则忽略信息
+                    try {
+                        MessageCenter.getInstance().pushMessage(
+                                new Gson().fromJson(bundle.getString(JPushInterface.EXTRA_EXTRA), MessageListData.class));
+                    } catch (Exception e) {
+                        Log.e(TAG, "转换出错");
+                    }
                 }
             } else if (JPushInterface.ACTION_NOTIFICATION_RECEIVED.equals(intent.getAction())) {
                 Log.d(TAG, "[MyReceiver] 接收到推送下来的通知");

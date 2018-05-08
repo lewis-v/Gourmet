@@ -138,4 +138,5 @@
     <string name="save_img">保存照片</string>
     <string name="not_support">此版本不支持此类型消息,请更新APP</string>
     <string name="night_mode">夜间模式</string>
+    <string name="voice_chat">语音聊天</string>
 </resources>

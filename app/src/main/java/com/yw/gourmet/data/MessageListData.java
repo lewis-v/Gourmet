@@ -13,7 +13,8 @@ public class MessageListData {
     public final static int TEXT = 0;//文本
     public final static int VOICE = 1;//语音
     public final static int IMG = 2;//图片
-    public final static int OTHER = 3;//其他不支持类型
+    public final static int VOICE_CHAT = 3;//语聊
+    public final static int OTHER = 4;//其他不支持类型
     //消息发送状态
     public final static int SENDING = 3;//发送中
     public final static int SEND_SUCCESS = 4;//发送成功

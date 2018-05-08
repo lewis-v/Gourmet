@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.view.View;
 
 /**
  * auth: lewis-v
@@ -44,6 +45,17 @@ public class YWRecyclerView extends RecyclerView {
                 }
             }
         }
+    }
+
+    public synchronized int getAllHeihgt(){
+        int height = 0;
+        for (int i = getLayoutManager().getChildCount();i>=0;i--){
+            View child;
+            if ((child = getLayoutManager().getChildAt(i))!=null) {
+                height += child.getHeight();
+            }
+        }
+        return height;
     }
 
     public YWRecyclerView setOnScrollListener(OnScrollListener onScrollListener) {

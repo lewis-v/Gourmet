@@ -5,7 +5,6 @@ import android.graphics.drawable.AnimationDrawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +22,7 @@ import com.yw.gourmet.base.BaseViewHolder;
 import com.yw.gourmet.data.MessageListData;
 import com.yw.gourmet.data.UserData;
 import com.yw.gourmet.listener.OnRefreshListener;
+import com.yw.gourmet.utils.TimeUtils;
 import com.yw.gourmet.utils.WindowUtil;
 
 import java.util.List;
@@ -38,6 +38,8 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder<MessageList
     public static final int TEXT_OTHER = 3;
     public static final int IMG_OTHER = 4;
     public static final int VOICE_OTHER = 5;
+    public static final int VOICE_CHAT_MY = 6;//语音聊天
+    public static final int VOICE_CHAT_OTHER = 7;//语音聊天
     public static final int NOT_SUPPORT = -1;
 
     private Context context;
@@ -80,13 +82,20 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder<MessageList
                     result =  VOICE_OTHER;
                 }
                 break;
+            case MessageListData.VOICE_CHAT:
+                if (isMySelf(list.get(position).getPut_id())) {
+                    result =  VOICE_CHAT_MY;
+                }else {
+                    result =  VOICE_CHAT_OTHER;
+                }
+                break;
         }
         return result;
     }
 
     @Override
     public BaseViewHolder<MessageListData> onCreateViewHolder(ViewGroup parent, int viewType) {
-        BaseViewHolder<MessageListData> holder = new MyTextHolderBase(LayoutInflater.from(context).inflate(R.layout.item_chat_text,parent,false),viewType);
+        BaseViewHolder<MessageListData> holder = null;
         switch (viewType){
             case TEXT_MY:
                 holder =  new MyTextHolderBase(LayoutInflater.from(context).inflate(R.layout.item_chat_text_myself, parent, false), viewType);
@@ -105,6 +114,16 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder<MessageList
                 break;
             case VOICE_OTHER:
                 holder =  new OtherVoiceHolderBase(LayoutInflater.from(context).inflate(R.layout.item_chat_voice_other, parent, false), viewType);
+                break;
+            case VOICE_CHAT_MY:
+                holder =  new MyVoiceChatHolder(LayoutInflater.from(context).inflate(R.layout.item_voice_chat_my, parent, false), viewType);
+                break;
+            case VOICE_CHAT_OTHER:
+                holder =  new OtherVoiceChatHolder(LayoutInflater.from(context).inflate(R.layout.item_voice_chat_other, parent, false), viewType);
+                break;
+        }
+        if (holder == null){
+           holder = new MyTextHolderBase(LayoutInflater.from(context).inflate(R.layout.item_chat_text,parent,false),viewType);
         }
         return holder;
     }
@@ -141,6 +160,21 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder<MessageList
     public ChatAdapter setGetUserData(UserData getUserData) {
         this.getUserData = getUserData;
         return this;
+    }
+
+    /**
+     * 通过_id获取位置,这个有可能会获取不到
+     * @return
+     */
+    public int getPositionBy_id(long _id){
+        int position = 0;
+        for (MessageListData data : list){
+            if (data.get_id() == _id){
+                return position;
+            }
+            position++;
+        }
+        return -1;
     }
 
     public SparseArray<View> getSparseArray() {
@@ -352,7 +386,7 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder<MessageList
                 img_voice_my.setImageResource(R.drawable.anim_voice_play);
                 ((AnimationDrawable)img_voice_my.getDrawable()).start();
             }else {
-//                ((AnimationDrawable)img_voice_my.getDrawable()).stop();
+//                ((AnimationDrawable)img_voice_my.getDrawable()).destroy();
                 img_voice_my.setImageResource(R.drawable.voice_item);
             }
         }
@@ -396,7 +430,7 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder<MessageList
                 img_voice_other.setImageResource(R.drawable.anim_voice_play);
                 ((AnimationDrawable)img_voice_other.getDrawable()).start();
             }else {
-//                ((AnimationDrawable)img_voice_my.getDrawable()).stop();
+//                ((AnimationDrawable)img_voice_my.getDrawable()).destroy();
                 img_voice_other.setImageResource(R.drawable.voice_item);
             }
         }
@@ -406,6 +440,58 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder<MessageList
             super.init(itemView);
             ll = itemView.findViewById(R.id.ll_voice_other);
             img_voice_other = itemView.findViewById(R.id.img_voice_other);
+        }
+    }
+
+    class MyVoiceChatHolder extends BaseChatViewHolder{
+        TextView tv_content;
+
+        public MyVoiceChatHolder(View itemView, int type) {
+            super(itemView, type);
+        }
+
+        @Override
+        public void onBind(MessageListData data) {
+            super.onBind(data);
+            if (data.getLength()>0){
+                tv_content.setText("聊天时长  "+ TimeUtils.getVoiceChatLength(data.getLength()));
+            }else if (data.getImg() != null && data.getImg().length() > 0){
+                tv_content.setText(data.getImg());
+            }else {
+                tv_content.setText("已取消");
+            }
+        }
+
+        @Override
+        public void init(View itemView) {
+            super.init(itemView);
+            tv_content = itemView.findViewById(R.id.tv_content);
+        }
+    }
+
+    class OtherVoiceChatHolder extends BaseChatViewHolder{
+        TextView tv_content;
+
+        public OtherVoiceChatHolder(View itemView, int type) {
+            super(itemView, type);
+        }
+
+        @Override
+        public void onBind(MessageListData data) {
+            super.onBind(data);
+            if (data.getLength()>0){
+                tv_content.setText("聊天时长  "+ TimeUtils.getVoiceChatLength(data.getLength()));
+            }else if (data.getImg() != null && data.getImg().length() > 0){
+                tv_content.setText(data.getImg());
+            }else {
+                tv_content.setText("已取消");
+            }
+        }
+
+        @Override
+        public void init(View itemView) {
+            super.init(itemView);
+            tv_content = itemView.findViewById(R.id.tv_content);
         }
     }
 

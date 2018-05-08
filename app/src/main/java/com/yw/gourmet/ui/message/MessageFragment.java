@@ -104,19 +104,21 @@ public class MessageFragment extends BaseFragment<MessagePresenter> implements M
         iMessageGet = new IMessageGet() {
             @Override
             public boolean onGetMessage(MessageListData message) {
-                for (int len = listData.size(),num = 0;num < len;num++){
-                    if(listData.get(num).getPut_id().equals(message.getPut_id())
-                            || listData.get(num).getGet_id().equals(message.getPut_id())){//消息是这里的
-                        listData.get(num).setContent(message.getContent())
-                                .setPut_time(message.getPut_time())
-                                .addUnReadNum();
-                        final int finalNum = num;
-                        swipe_target.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                adapter.notifyItemChanged(finalNum);
-                            }
-                        });
+                if (message.getType() != MessageListData.VOICE_CHAT) {//忽略语聊
+                    for (int len = listData.size(), num = 0; num < len; num++) {
+                        if (listData.get(num).getPut_id().equals(message.getPut_id())
+                                || listData.get(num).getGet_id().equals(message.getPut_id())) {//消息是这里的
+                            listData.get(num).setContent(message.getContent())
+                                    .setPut_time(message.getPut_time())
+                                    .addUnReadNum();
+                            final int finalNum = num;
+                            swipe_target.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    adapter.notifyItemChanged(finalNum);
+                                }
+                            });
+                        }
                     }
                 }
                 return false;

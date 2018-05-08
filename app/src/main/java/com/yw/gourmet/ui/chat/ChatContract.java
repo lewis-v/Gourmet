@@ -18,7 +18,7 @@ import okhttp3.MultipartBody;
 public interface ChatContract {
     interface View extends BaseView{
         void onSendSuccess(MessageListData MessageListData,int position);
-        void onSendFail(String msg,int position);
+        void onSendFail(MessageListData message,String msg,int position);
         void onGetDetailSuccess(BaseData<List<MessageListData>> model);
         void onUpImgSuccess(BaseData<String> model,int position);
         void onUpImgFail(String msg,int position);
