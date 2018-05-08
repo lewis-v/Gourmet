@@ -27,7 +27,7 @@ public class MessageDataUtil {
     /**
      * 插入数据
      */
-    public static void insert(MessageListData data) {
+    public static int insert(MessageListData data) {
         if (data.getCli_id() == -1) {
             List<MessageListData> messageListData = GreenDaoManager.getInstance().getmDaoSession().getMessageListDataDao().queryBuilder()
                     .where(MessageListDataDao.Properties.User_id.eq(Constant.userData.getUser_id())
@@ -35,11 +35,11 @@ public class MessageDataUtil {
                             , MessageListDataDao.Properties.Put_id.in(data.getGet_id(), data.getPut_id()))
                     .orderDesc(MessageListDataDao.Properties.Cli_id).limit(1).build().list();
             if (messageListData != null && messageListData.size()>0){
-                data.setCli_id(messageListData.get(0).getCli_id());
+                data.setCli_id(messageListData.get(0).getCli_id()+1);
             }
-
         }
         GreenDaoManager.getInstance().getmDaoSession().getMessageListDataDao().insert(data);
+        return data.getCli_id();
     }
 
     /**

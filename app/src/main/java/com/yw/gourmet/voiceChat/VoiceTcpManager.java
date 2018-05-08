@@ -27,9 +27,9 @@ import static com.yw.gourmet.voiceChat.VoiceChatData.IP;
 public class VoiceTcpManager {
     private static final String TAG = "VoiceTcpManager";
     private List<VoiceListener> voiceListeners = new ArrayList<>();
-    private Socket socket,voiceSocket;
+    private Socket socket, voiceSocket;
     private ExecutorService executors;
-    private Future future,cmdFuture;
+    private Future future, cmdFuture;
     private long time = 0;
     private boolean isApply = false;//是否接受
 
@@ -84,7 +84,7 @@ public class VoiceTcpManager {
                     String data = String.valueOf(STOP);
                     try {
                         sendData(getOutStream(), data.getBytes(CODE));
-                        if (socket!=null && !socket.isClosed()) {
+                        if (socket != null && !socket.isClosed()) {
                             socket.close();
                             socket = null;
                         }
@@ -117,17 +117,17 @@ public class VoiceTcpManager {
                     //等待新端口号返回
                     CMD cmd = handleCMD(getData(socket.getInputStream()));
                     Log.i("get", cmd.toString());
-                    if (cmd.CMD_CODE == CMD.PORT){
+                    if (cmd.CMD_CODE == CMD.PORT) {
                         int port = Integer.parseInt(cmd.data[0].toString());
                         socket.close();
-                        socket = new Socket(IP,port);
+                        socket = new Socket(IP, port);
                     }
                     //等待对方接受语聊
                     cmd = handleCMD(getData(socket.getInputStream()));
                     Log.i("get", cmd.toString());
                     if (cmd.CMD_CODE == YES) {
                         isApply = true;
-                        voiceSocket = new Socket(IP,Integer.parseInt(cmd.data[0].toString()));
+                        voiceSocket = new Socket(IP, Integer.parseInt(cmd.data[0].toString()));
                         cmdFuture = executors.submit(new CMDRunnable(socket));
                         time = System.currentTimeMillis();
                         if (voiceListeners != null) {
@@ -135,6 +135,13 @@ public class VoiceTcpManager {
                                 voiceListener.onConnect(voiceSocket);
                             }
                         }
+                    } else if (cmd.CMD_CODE == CMD.ERR) {
+                        if (voiceListeners != null) {
+                            for (VoiceListener voiceListener : voiceListeners) {
+                                voiceListener.onGetCmd(cmd);
+                            }
+                        }
+                        Log.i("result:", "拒绝语聊");
                     } else {
                         if (voiceListeners != null) {
                             for (VoiceListener voiceListener : voiceListeners) {
@@ -150,10 +157,10 @@ public class VoiceTcpManager {
                         }
                     }
                     e.printStackTrace();
-                }catch (Exception e){
+                } catch (Exception e) {
                     if (voiceListeners != null) {
                         for (VoiceListener voiceListener : voiceListeners) {
-                            voiceListener.Err( "语聊出错");
+                            voiceListener.Err("语聊出错");
                         }
                     }
                     e.printStackTrace();
@@ -166,7 +173,7 @@ public class VoiceTcpManager {
     /**
      * 接受准备
      */
-    public void prepare(final int port){
+    public void prepare(final int port) {
         executors.execute(new Runnable() {
             @Override
             public void run() {
@@ -205,10 +212,10 @@ public class VoiceTcpManager {
                         }
                     }
                     e.printStackTrace();
-                } catch (Exception e){
+                } catch (Exception e) {
                     if (voiceListeners != null) {
                         for (VoiceListener voiceListener : voiceListeners) {
-                            voiceListener.Err( "语聊出错");
+                            voiceListener.Err("语聊出错");
                         }
                     }
                     e.printStackTrace();
@@ -235,7 +242,7 @@ public class VoiceTcpManager {
                 try {
                     socket.getOutputStream().write((NO + "").getBytes(CODE));
                     socket.getOutputStream().flush();
-                    Log.i("cancel","拒绝语聊");
+                    Log.i("cancel", "拒绝语聊");
                     if (voiceListeners != null) {
                         for (VoiceListener voiceListener : voiceListeners) {
                             voiceListener.onStoped(0, "拒绝语聊");
@@ -248,10 +255,10 @@ public class VoiceTcpManager {
                         }
                     }
                     e.printStackTrace();
-                } catch (Exception e){
+                } catch (Exception e) {
                     if (voiceListeners != null) {
                         for (VoiceListener voiceListener : voiceListeners) {
-                            voiceListener.Err( "语聊出错");
+                            voiceListener.Err("语聊出错");
                         }
                     }
                     e.printStackTrace();
@@ -320,7 +327,7 @@ public class VoiceTcpManager {
      * @return
      */
     public long getTime() {
-        return isApply?System.currentTimeMillis() - time:0;
+        return isApply ? System.currentTimeMillis() - time : 0;
     }
 
     public void removeListener(VoiceListener voiceListener) {
@@ -374,7 +381,7 @@ public class VoiceTcpManager {
             }
         }
         byte[] data = new byte[size];
-        Log.i("get",new String(data,CODE));
+        Log.i("get", new String(data, CODE));
         inputStream.read(data);
         return data;
     }
@@ -397,11 +404,11 @@ public class VoiceTcpManager {
                         byte[] data = new byte[size];
                         socket.getInputStream().read(data);
                         CMD cmd = handleCMD(data);
-                        if (cmd.CMD_CODE == CMD.PORT){
-                            Log.i(TAG,IP+":"+Integer.parseInt(cmd.data[0].toString()));
-                            voiceSocket = new Socket(IP,Integer.parseInt(cmd.data[0].toString()));
+                        if (cmd.CMD_CODE == CMD.PORT) {
+                            Log.i(TAG, IP + ":" + Integer.parseInt(cmd.data[0].toString()));
+                            voiceSocket = new Socket(IP, Integer.parseInt(cmd.data[0].toString()));
                             time = System.currentTimeMillis();
-                            Log.i(TAG,"通知");
+                            Log.i(TAG, "通知");
                             if (voiceListeners != null) {
                                 for (VoiceListener voiceListener : voiceListeners) {
                                     voiceListener.onConnect(voiceSocket);
@@ -414,15 +421,13 @@ public class VoiceTcpManager {
                             }
                         }
                     }
-                }
-                catch (InterruptedException e) {
+                } catch (InterruptedException e) {
                     return;
-                }
-                catch( Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                     if (voiceListeners != null) {
                         for (VoiceListener voiceListener : voiceListeners) {
-                            voiceListener.onStoped(0,"断开连接");
+                            voiceListener.onStoped(0, "断开连接");
                         }
                     }
                     return;

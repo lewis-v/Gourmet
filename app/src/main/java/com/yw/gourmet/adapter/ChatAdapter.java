@@ -458,7 +458,7 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder<MessageList
             }else if (data.getImg() != null && data.getImg().length() > 0){
                 tv_content.setText(data.getImg());
             }else {
-                tv_content.setText("已取消");
+                tv_content.setText("语聊取消");
             }
         }
 
@@ -484,7 +484,7 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder<MessageList
             }else if (data.getImg() != null && data.getImg().length() > 0){
                 tv_content.setText(data.getImg());
             }else {
-                tv_content.setText("已取消");
+                tv_content.setText("语聊取消");
             }
         }
 

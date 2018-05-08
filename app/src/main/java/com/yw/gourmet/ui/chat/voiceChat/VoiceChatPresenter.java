@@ -28,7 +28,7 @@ public class VoiceChatPresenter extends VoiceChatContract.Presenter {
                 bind = (VoiceChatService.MyBind) service;
                 if (bind.setListener(new VoiceChatService.ChatListener() {
                     @Override
-                    public void onCancel(String msg) {
+                    public void onCancel(String[] msg) {
                         mView.onCancel(msg);
                     }
 

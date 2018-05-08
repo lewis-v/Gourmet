@@ -21,6 +21,7 @@ import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.data.InitData;
 import com.yw.gourmet.dialog.MyDialogTipFragment;
 import com.yw.gourmet.listener.MyAction;
+import com.yw.gourmet.push.PushReceiver;
 import com.yw.gourmet.rxbus.RxBus;
 import com.yw.gourmet.rxbus.RxSubscriptions;
 import com.yw.gourmet.service.UpdateService;
@@ -57,6 +58,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         super.onCreate(savedInstanceState);
         WindowUtil.initWindowUtil(getWindowManager());
         DisplayUtils.init(this);
+        PushReceiver.isInit = true;
     }
 
     @Override

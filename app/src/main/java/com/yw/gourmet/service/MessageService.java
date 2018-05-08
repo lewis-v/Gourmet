@@ -115,7 +115,7 @@ public class MessageService extends Service {
                 if (intent != null) {
                     String apply_id, recevice_id, content, img, name;
                     content = intent.getStringExtra("content");
-                    ToastUtils.showSingleToast(content);
+                    ToastUtils.showSingleToast(intent.getStringExtra("toast"));
                     System.out.println("结束:" + content);
                     if ((apply_id = intent.getStringExtra("apply_id")) != null
                             && apply_id.equals(Constant.userData.getUser_id())) {//是自己发起的就进行处理,否则不处理
@@ -143,8 +143,8 @@ public class MessageService extends Service {
                         executorService.execute(new Runnable() {
                             @Override
                             public void run() {
-                                MessageDataUtil.insert(data);
-                                sendMessage(builder.build().parts(), data, 0);
+                                int clentId = MessageDataUtil.insert(data);
+                                sendMessage(builder.build().parts(), data.setCli_id(clentId), 0);
 
                             }
                         });

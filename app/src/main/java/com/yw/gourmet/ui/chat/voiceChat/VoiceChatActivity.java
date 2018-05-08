@@ -163,7 +163,7 @@ public class VoiceChatActivity extends BaseActivity<VoiceChatPresenter> implemen
                     mode = CHANGE;
                     mPresenter.reject();
                 } else {//其他状态为挂断
-                    mPresenter.stop("语聊已取消");
+                    mPresenter.stop("语聊取消");
                 }
                 break;
         }
@@ -246,7 +246,7 @@ public class VoiceChatActivity extends BaseActivity<VoiceChatPresenter> implemen
     }
 
     @Override
-    public void onCancel(final String msg) {
+    public void onCancel(final String[] msg) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -254,12 +254,13 @@ public class VoiceChatActivity extends BaseActivity<VoiceChatPresenter> implemen
                     return;
                 }
                 isEnd = true;
-                tv_tip.setText(msg);
+                tv_tip.setText(msg[0]);
                 Intent intent = new Intent();
                 intent.setAction(ACTION);
                 intent.putExtra("recevice_id", getIntent().getStringExtra("recevice_id"));
                 intent.putExtra("apply_id", getIntent().getStringExtra("apply_id"));
-                intent.putExtra("content", msg);
+                intent.putExtra("content", msg[0]);
+                intent.putExtra("toast",msg.length>1?msg[1]:msg[0]);
                 intent.putExtra("img", getIntent().getStringExtra("img"));
                 intent.putExtra("name", getIntent().getStringExtra("name"));
                 intent.putExtra("time", (int)(mPresenter.getTime()/1000));

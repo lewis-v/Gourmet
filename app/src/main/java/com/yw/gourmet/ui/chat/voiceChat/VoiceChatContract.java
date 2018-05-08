@@ -13,7 +13,7 @@ public interface VoiceChatContract {
         void onApplySuccess();
         void onRejectSuccess();
         void onStopSuccess();
-        void onCancel(String msg);
+        void onCancel(String[] msg);
     }
 
     abstract class Presenter extends BasePresenter<View>{

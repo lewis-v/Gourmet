@@ -697,6 +697,7 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
                     setAddViewShow(true);
                 }
                 hideSoftInput(et_chat);
+                moveListBottom();
                 et_chat.clearFocus();
                 break;
             case R.id.ll_img:
@@ -726,6 +727,7 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
                 break;
             case R.id.ll_voice_chat://发起语音聊天
                 hideSoftInput(et_chat);
+            if (adapter.getGetUserData() != null) {
                 Intent intent = new Intent(this, VoiceChatService.class);
                 intent.putExtra("name", adapter.getGetUserData().getNickname());
                 intent.putExtra("img", adapter.getGetUserData().getImg_header());
@@ -735,6 +737,9 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
                 intent.putExtra("apply", true);
                 startService(intent);
                 break;
+            }else {
+                ToastUtils.showSingleToast("服务器繁忙!请稍后再试");
+            }
         }
     }
 

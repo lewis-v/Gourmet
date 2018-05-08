@@ -31,6 +31,7 @@ import cn.jpush.android.api.JPushInterface;
 public class PushReceiver extends BroadcastReceiver {
     private static final String TAG = "---JPush---";
     private NotificationManager nm;
+    public static boolean isInit = false;
 
     @Override
     public void onReceive(Context context, Intent intent) {

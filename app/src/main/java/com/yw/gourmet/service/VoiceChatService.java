@@ -57,7 +57,7 @@ public class VoiceChatService extends Service {
                 isConnect = false;
                 stopMusic();
                 if (chatListener != null) {
-                    chatListener.onCancel(errMsg);
+                    chatListener.onCancel(new String[]{errMsg});
                     stopSelf();
                 }
             }
@@ -67,7 +67,7 @@ public class VoiceChatService extends Service {
                 isConnect = false;
                 stopMusic();
                 if (chatListener != null) {
-                    chatListener.onCancel("语聊结束");
+                    chatListener.onCancel(new String[]{"语聊结束"});
                     stopSelf();
                 }
             }
@@ -77,7 +77,7 @@ public class VoiceChatService extends Service {
                 isConnect = false;
                 stopMusic();
                 if (chatListener != null) {
-                    chatListener.onCancel(msg);
+                    chatListener.onCancel(new String[]{msg});
                     stopSelf();
                 }
             }
@@ -88,7 +88,19 @@ public class VoiceChatService extends Service {
                 if (cmd.CMD_CODE == CMD.STOP) {
                     stopMusic();
                     if (chatListener != null) {
-                        chatListener.onCancel("对方已挂断");
+                        chatListener.onCancel(new String[]{"对方已挂断"});
+                        stopSelf();
+                    }
+                }else if (cmd.CMD_CODE == CMD.ERR){
+                    stopMusic();
+                    if (chatListener != null) {
+                        String[] strs = new String[cmd.data.length];
+                        int i = 0;
+                        for (Object data : cmd.data){
+                            strs[i] = data.toString();
+                            i++;
+                        }
+                        chatListener.onCancel(strs);
                         stopSelf();
                     }
                 }
@@ -190,7 +202,7 @@ public class VoiceChatService extends Service {
     }
 
     public interface ChatListener {
-        void onCancel(String msg);
+        void onCancel(String[] msg);
 
         void onConnect();
     }
