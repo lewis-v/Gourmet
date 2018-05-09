@@ -26,12 +26,17 @@ import static com.yw.gourmet.voiceChat.VoiceChatData.IP;
 
 public class VoiceTcpManager {
     private static final String TAG = "VoiceTcpManager";
+    public static final int DEFAULT = 0;//默认模式
+    public static final int CONNECT = 1;//已连接服务器
+    public static final int CONNECT_ERR = -1;//连接失败
+
     private List<VoiceListener> voiceListeners = new ArrayList<>();
     private Socket socket, voiceSocket;
     private ExecutorService executors;
     private Future future, cmdFuture;
     private long time = 0;
     private boolean isApply = false;//是否接受
+    private volatile int mode = DEFAULT;
 
     public VoiceTcpManager() {
         executors = Executors.newCachedThreadPool();
@@ -179,12 +184,18 @@ public class VoiceTcpManager {
             public void run() {
                 try {
                     socket = new Socket(IP, port);
+                    mode = CONNECT;
                 } catch (IOException e) {
                     e.printStackTrace();
+                    mode = CONNECT_ERR;
                 }
                 cmdFuture = executors.submit(new CMDRunnable(socket));
             }
         });
+    }
+
+    public int getMode() {
+        return mode;
     }
 
     /**

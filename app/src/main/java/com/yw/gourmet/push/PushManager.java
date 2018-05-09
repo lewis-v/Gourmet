@@ -35,8 +35,8 @@ public class PushManager {
      * @param context
      */
     public PushManager initPush(Context context){
-        JPushInterface.init(context);
         context.startService(new Intent(context, MessageService.class));
+        JPushInterface.init(context);
         return this;
     }
 

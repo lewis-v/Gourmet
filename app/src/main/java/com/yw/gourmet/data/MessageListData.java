@@ -3,6 +3,7 @@ package com.yw.gourmet.data;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Transient;
 
 /**
  * Created by LYW on 2017/11/26.
@@ -39,7 +40,8 @@ public class MessageListData {
     private int un_read_num;//未读数量
     private int length;//音频时间
     private String put_id;
-
+    @Transient
+    private long service_time;//推送是的服务器时间,自定义中才有
 
 
     public MessageListData() {
@@ -251,7 +253,6 @@ public class MessageListData {
                 ", cli_id=" + cli_id +
                 ", user_id='" + user_id + '\'' +
                 ", id='" + id + '\'' +
-                ", put_id='" + put_id + '\'' +
                 ", get_id='" + get_id + '\'' +
                 ", nickname='" + nickname + '\'' +
                 ", content='" + content + '\'' +
@@ -265,6 +266,8 @@ public class MessageListData {
                 ", is_read=" + is_read +
                 ", un_read_num=" + un_read_num +
                 ", length=" + length +
+                ", put_id='" + put_id + '\'' +
+                ", service_time=" + service_time +
                 '}';
     }
 
@@ -273,6 +276,15 @@ public class MessageListData {
         return this._id;
     }
 
+
+    public long getService_time() {
+        return service_time;
+    }
+
+    public MessageListData setService_time(long service_time) {
+        this.service_time = service_time;
+        return this;
+    }
 
     public MessageListData set_id(Long _id) {
         this._id = _id;

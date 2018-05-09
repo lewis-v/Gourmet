@@ -33,6 +33,7 @@ import com.yw.gourmet.dao.data.messageData.MessageDataUtil;
 import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.data.MessageListData;
 import com.yw.gourmet.push.PushManager;
+import com.yw.gourmet.push.PushReceiver;
 import com.yw.gourmet.rxbus.EventSticky;
 import com.yw.gourmet.rxbus.RxBus;
 import com.yw.gourmet.rxbus.RxBusSubscriber;
@@ -124,7 +125,7 @@ public class MessageService extends Service {
                         data.setImg(content);
                         data.setLength(intent.getIntExtra("time", 0));
                         data.setType(MessageListData.VOICE_CHAT);
-                        data.set_id(System.currentTimeMillis());
+                        data.set_id(System.nanoTime());
                         data.setUser_id(Constant.userData.getUser_id());
                         data.setPut_id(Constant.userData.getUser_id());
                         data.setGet_id(recevice_id).setIs_read(1)
@@ -194,22 +195,30 @@ public class MessageService extends Service {
                 public boolean onGetMessage(final MessageListData message) {
                     if (message.getType() == MessageListData.VOICE_CHAT) {//语聊申请
                         if ((message.getId() == null || message.getId().length() <= 0)) {//未进过服务器数据库处理的数据不是聊天数据
-                            Intent chatIntent = new Intent(MessageService.this, VoiceChatService.class);
-                            chatIntent.putExtra("name", message.getNickname());
-                            chatIntent.putExtra("img", message.getImg_header());
-                            try {
-                                chatIntent.putExtra("port", Integer.parseInt(message.getImg()));
-                            } catch (Exception e) {
-                                chatIntent.putExtra("port", 0);
+                            if (PushReceiver.isInit) {
+                                handleVoiceChatApply(message);
+                            }else {
+                                executorService.execute(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        while (!PushReceiver.isInit){
+                                            Log.i(TAG, String.valueOf(PushReceiver.isInit));
+                                            try {
+                                                Thread.sleep(100);
+                                            } catch (InterruptedException e) {
+                                                return;
+                                            }
+                                        }
+                                        handleVoiceChatApply(message);
+                                    }
+                                });
                             }
-                            chatIntent.putExtra("apply_id", message.getPut_id());
-                            chatIntent.putExtra("recevice_id", message.getGet_id());
-                            chatIntent.putExtra("apply", false);
-                            startService(chatIntent);
                         } else {//有id,为语聊后的消息通知
                             executorService.execute(new Runnable() {
                                 @Override
                                 public void run() {
+                                    message.setUser_id(Constant.userData.getUser_id())
+                                            .setIs_read(0);
                                     MessageDataUtil.insert(message);
                                 }
                             });
@@ -256,6 +265,21 @@ public class MessageService extends Service {
             MessageCenter.getInstance().addMessageHandle(iMessageGet);
         }
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    public void handleVoiceChatApply(MessageListData message){
+        Intent chatIntent = new Intent(MessageService.this, VoiceChatService.class);
+        chatIntent.putExtra("name", message.getNickname());
+        chatIntent.putExtra("img", message.getImg_header());
+        try {
+            chatIntent.putExtra("port", Integer.parseInt(message.getImg()));
+        } catch (Exception e) {
+            chatIntent.putExtra("port", 0);
+        }
+        chatIntent.putExtra("apply_id", message.getPut_id());
+        chatIntent.putExtra("recevice_id", message.getGet_id());
+        chatIntent.putExtra("apply", false);
+        startService(chatIntent);
     }
 
     /**

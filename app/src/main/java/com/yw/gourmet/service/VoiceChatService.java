@@ -6,6 +6,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.IBinder;
+import android.os.Process;
 import android.util.Log;
 
 import com.yw.gourmet.ui.chat.voiceChat.VoiceChatActivity;
@@ -13,6 +14,7 @@ import com.yw.gourmet.voiceChat.CMD;
 import com.yw.gourmet.voiceChat.VoiceChatData;
 import com.yw.gourmet.voiceChat.VoiceChatManager;
 import com.yw.gourmet.voiceChat.VoiceListener;
+import com.yw.gourmet.voiceChat.VoiceTcpManager;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -136,17 +138,27 @@ public class VoiceChatService extends Service {
                     mediaPlayer.setAudioStreamType(AudioManager.STREAM_VOICE_CALL);
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Process.killProcess(Process.myPid());
+                    stopSelf();
+                    return  super.onStartCommand(intent, flags, startId);
                 }
                 VoiceChatManager.getInstance().applyVoiceChat(voiceListener, apply_id, recevice_id);
                 chatIntent.putExtra("apply", true);
             } else {
+                if (VoiceChatManager.getInstance().prepare(voiceListener, port) == VoiceTcpManager.CONNECT_ERR){
+                    Process.killProcess(Process.myPid());
+                    stopSelf();
+                    return  super.onStartCommand(intent, flags, startId);
+                }
                 try {
                     mediaPlayer.setDataSource(this,VoiceChatData.receiveUri);
                     mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Process.killProcess(Process.myPid());
+                    stopSelf();
+                    return  super.onStartCommand(intent, flags, startId);
                 }
-                VoiceChatManager.getInstance().prepare(voiceListener, port);
                 chatIntent.putExtra("apply", false);
             }
             try {

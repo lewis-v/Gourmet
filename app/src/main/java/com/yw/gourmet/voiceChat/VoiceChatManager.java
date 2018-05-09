@@ -127,9 +127,17 @@ public class VoiceChatManager {
     /**
      * 接受准备
      */
-    public void prepare(VoiceListener voiceListener, final int port) {
+    public int prepare(VoiceListener voiceListener, final int port) {
         this.voiceListener = voiceListener;
         voiceTcpManager.prepare(port);
+        while (voiceTcpManager.getMode() == VoiceTcpManager.DEFAULT){
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                return VoiceTcpManager.CONNECT_ERR;
+            }
+        }
+        return voiceTcpManager.getMode();
     }
 
     /**

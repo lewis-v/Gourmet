@@ -39,6 +39,7 @@
             android:layout_height="1px"/>
         <com.aspsine.swipetoloadlayout.SwipeToLoadLayout
             android:id="@+id/swipeToLoadLayout"
+            android:focusableInTouchMode="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <com.yw.gourmet.swipAnim.RefreshHeaderView

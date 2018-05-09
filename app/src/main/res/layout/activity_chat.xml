@@ -50,6 +50,7 @@
 
     <FrameLayout
         android:id="@+id/fl_chat"
+        android:focusableInTouchMode="true"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -58,6 +59,7 @@
 
         <com.yw.gourmet.widget.YWRecyclerView
             android:id="@+id/recycler_chat"
+            android:focusableInTouchMode="true"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 

@@ -53,6 +53,7 @@
         android:layout_height="match_parent">
         <android.support.constraint.ConstraintLayout
             android:id="@+id/coordinator_menu"
+            android:focusableInTouchMode="true"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context="com.yw.gourmet.ui.share.menu.MenuActivity">

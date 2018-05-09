@@ -38,7 +38,11 @@ public class MessageDataUtil {
                 data.setCli_id(messageListData.get(0).getCli_id()+1);
             }
         }
-        GreenDaoManager.getInstance().getmDaoSession().getMessageListDataDao().insert(data);
+        try {
+            GreenDaoManager.getInstance().getmDaoSession().getMessageListDataDao().insert(data);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         return data.getCli_id();
     }
 

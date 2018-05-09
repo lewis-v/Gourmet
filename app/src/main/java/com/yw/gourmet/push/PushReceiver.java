@@ -31,7 +31,7 @@ import cn.jpush.android.api.JPushInterface;
 public class PushReceiver extends BroadcastReceiver {
     private static final String TAG = "---JPush---";
     private NotificationManager nm;
-    public static boolean isInit = false;
+    public static volatile boolean isInit = false;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -40,8 +40,8 @@ public class PushReceiver extends BroadcastReceiver {
                 nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             }
             Bundle bundle = intent.getExtras();
-            String json= printBundle(bundle);
-            Log.e(TAG,json);
+            String json = printBundle(bundle);
+            Log.e(TAG, json);
 
 
             if (JPushInterface.ACTION_REGISTRATION_ID.equals(intent.getAction())) {
@@ -50,15 +50,10 @@ public class PushReceiver extends BroadcastReceiver {
                 //send the Registration Id to your server...
 
             } else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent.getAction())) {
-                Log.d(TAG, "[MyReceiver] 接收到推送下来的自定义消息: " + bundle.getString(JPushInterface.EXTRA_MESSAGE));
-                if (Constant.userData != null) {//用户登录才进行分发,否则忽略信息
-                    try {
-                        MessageCenter.getInstance().pushMessage(
-                                new Gson().fromJson(bundle.getString(JPushInterface.EXTRA_EXTRA), MessageListData.class));
-                    } catch (Exception e) {
-                        Log.e(TAG, "转换出错");
-                    }
-                }
+                final String data = bundle.getString(JPushInterface.EXTRA_MESSAGE);
+                Log.d(TAG, "[MyReceiver] 接收到推送下来的自定义消息: " + data);
+                handleMessage(bundle.getString(JPushInterface.EXTRA_EXTRA));
+
             } else if (JPushInterface.ACTION_NOTIFICATION_RECEIVED.equals(intent.getAction())) {
                 Log.d(TAG, "[MyReceiver] 接收到推送下来的通知");
                 String notifactionId = bundle.getString(JPushInterface.EXTRA_MSG_ID);
@@ -75,13 +70,16 @@ public class PushReceiver extends BroadcastReceiver {
                 Log.d(TAG, "[MyReceiver] 用户收到到RICH PUSH CALLBACK: " + bundle.getString(JPushInterface.EXTRA_EXTRA));
                 //在这里根据 JPushInterface.EXTRA_EXTRA 的内容处理代码，比如打开新的Activity， 打开一个网页等..
 
-            } else if(JPushInterface.ACTION_CONNECTION_CHANGE.equals(intent.getAction())) {
+            } else if (JPushInterface.ACTION_CONNECTION_CHANGE.equals(intent.getAction())) {
                 boolean connected = intent.getBooleanExtra(JPushInterface.EXTRA_CONNECTION_CHANGE, false);
-                Log.w(TAG, "[MyReceiver]" + intent.getAction() +" connected state change to "+connected);
+                Log.w(TAG, "[MyReceiver]" + intent.getAction() + " connected state change to " + connected);
             } else {
                 Log.d(TAG, "[MyReceiver] Unhandled intent - " + intent.getAction());
             }
-        } catch (Exception e){
+        } catch (
+                Exception e)
+
+        {
             e.printStackTrace();
         }
 
@@ -93,7 +91,7 @@ public class PushReceiver extends BroadcastReceiver {
         for (String key : bundle.keySet()) {
             if (key.equals(JPushInterface.EXTRA_NOTIFICATION_ID)) {
                 sb.append("\nkey:" + key + ", value:" + bundle.getInt(key));
-            }else if(key.equals(JPushInterface.EXTRA_CONNECTION_CHANGE)){
+            } else if (key.equals(JPushInterface.EXTRA_CONNECTION_CHANGE)) {
                 sb.append("\nkey:" + key + ", value:" + bundle.getBoolean(key));
             } else if (key.equals(JPushInterface.EXTRA_EXTRA)) {
                 if (TextUtils.isEmpty(bundle.getString(JPushInterface.EXTRA_EXTRA))) {
@@ -103,12 +101,12 @@ public class PushReceiver extends BroadcastReceiver {
 
                 try {
                     JSONObject json = new JSONObject(bundle.getString(JPushInterface.EXTRA_EXTRA));
-                    Iterator<String> it =  json.keys();
+                    Iterator<String> it = json.keys();
 
                     while (it.hasNext()) {
                         String myKey = it.next().toString();
                         sb.append("\nkey:" + key + ", value: [" +
-                                myKey + " - " +json.optString(myKey) + "]");
+                                myKey + " - " + json.optString(myKey) + "]");
                     }
                 } catch (JSONException e) {
                     Log.e(TAG, "Get message extra JSON error!");
@@ -120,7 +118,27 @@ public class PushReceiver extends BroadcastReceiver {
         return sb.toString();
     }
 
-    private void receivingNotification(Context context, Bundle bundle){
+    /**
+     * 处理接收到的自定义消息
+     *
+     * @param get
+     */
+    public void handleMessage(String get) {
+        if (Constant.userData != null) {//用户登录才进行分发,否则忽略信息
+            try {
+                MessageListData message = new Gson().fromJson(get, MessageListData.class);
+                if (message.getType() != MessageListData.VOICE_CHAT
+                        || message.getId() != null && message.getId().length() != 0//进过服务器数据库处理的,为聊天结束
+                        || message.getService_time() - (System.currentTimeMillis() + Constant.serviceTime) < 60 * 1000) {//60秒内的语聊请求才算有效
+                    MessageCenter.getInstance().pushMessage(message);
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "转换出错");
+            }
+        }
+    }
+
+    private void receivingNotification(Context context, Bundle bundle) {
         String title = bundle.getString(JPushInterface.EXTRA_NOTIFICATION_TITLE);
         Log.d(TAG, " title : " + title);
         String message = bundle.getString(JPushInterface.EXTRA_ALERT);
@@ -131,6 +149,7 @@ public class PushReceiver extends BroadcastReceiver {
 
     /**
      * 判断程序是否在前台
+     *
      * @param context
      * @return
      */
@@ -142,7 +161,7 @@ public class PushReceiver extends BroadcastReceiver {
                 if (appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_BACKGROUND) {
                     Log.i("后台", appProcess.processName);
                     return true;
-                }else{
+                } else {
                     Log.i("前台", appProcess.processName);
                     return false;
                 }

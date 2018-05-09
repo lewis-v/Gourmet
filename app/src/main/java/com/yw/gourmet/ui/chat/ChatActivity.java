@@ -288,9 +288,12 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
         iMessageGet = new IMessageGet() {
             @Override
             public boolean onGetMessage(final MessageListData message) {
-                if (message.getPut_id().equals(get_id)) {
-                    if (message.getId() == null || message.getId().length() <= 0) {//没有id的说明未经过服务器数据库处理的,这些统一由后台服务处理
+                if (message.getGet_id().equals(Constant.userData.getUser_id())) {
+                    if (message.getId() != null && message.getId().length() > 0) {//没有id的说明未经过服务器数据库处理的,这些统一由后台服务处理
                         if (message.getType() == MessageListData.VOICE_CHAT) {//语聊结束后的信息
+                            message.setUser_id(Constant.userData.getUser_id())
+                                    .setIs_read(0)
+                                    .setCli_id(listData.size() == 0 ? 0 : listData.get(listData.size() - 1).getCli_id() + 1);
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -504,11 +507,11 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
             adapter.notifyItemInserted(listData.size() - 1);
             moveListBottom();
         } else {
-            listData.get(position).setSendStatus(MessageListData.SEND_SUCCESS)
-                    .setId(messageListData.getId());
-            if (messageListData.get_id() != listData.get(position).get_id()) {//位置变了,需要重新获取位置
+            if (!messageListData.get_id().equals(listData.get(position).get_id())) {//位置变了,需要重新获取位置
                 position = adapter.getPositionBy_id(messageListData.get_id());
             }
+            listData.get(position).setSendStatus(MessageListData.SEND_SUCCESS)
+                    .setId(messageListData.getId());
             adapter.notifyItemChanged(position);
         }
         if (isResume) {
@@ -789,7 +792,7 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
         MessageListData data = new MessageListData();
         data.setContent(StringHandleUtils.deleteEnter(et_chat.getText().toString().trim()));
         data.setType(TEXT);
-        data.set_id(System.currentTimeMillis());
+        data.set_id(System.nanoTime());
         data.setUser_id(Constant.userData.getUser_id());
         data.setPut_id(put_id);
         data.setGet_id(get_id).setIs_read(0)
@@ -821,7 +824,7 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
     public synchronized void sendImgMessage(final String path) {
         MessageListData messageListData = new MessageListData();
         messageListData.setType(MessageListData.IMG).setImg(path).setIs_read(0)
-                .set_id(System.currentTimeMillis())
+                .set_id(System.nanoTime())
                 .setCli_id(listData.size() == 0 ? 0 : listData.get(listData.size() - 1).getCli_id() + 1)
                 .setPut_id(put_id).setGet_id(get_id).setImg_header(Constant.userData.getImg_header())
                 .setUser_id(Constant.userData.getUser_id())
@@ -857,7 +860,7 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
     public synchronized void sendVoiceMessage(AudioRecoderData audioRecoderData) {
         MessageListData messageListData = new MessageListData();
         messageListData.setType(MessageListData.VOICE).setImg(audioRecoderData.getFilePath())
-                .set_id(System.currentTimeMillis())
+                .set_id(System.nanoTime())
                 .setPut_id(put_id).setGet_id(get_id).setImg_header(Constant.userData.getImg_header())
                 .setLength((int) (audioRecoderData.getEndTime() - audioRecoderData.getStartTime()))
                 .setUser_id(Constant.userData.getUser_id())

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -58,7 +59,6 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         super.onCreate(savedInstanceState);
         WindowUtil.initWindowUtil(getWindowManager());
         DisplayUtils.init(this);
-        PushReceiver.isInit = true;
     }
 
     @Override
@@ -288,6 +288,8 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         if (isFunction){
             addFragmentFunction(false);
         }
+        PushReceiver.isInit = true;
+        Log.i("Main", String.valueOf(PushReceiver.isInit));
     }
 
     @Override
