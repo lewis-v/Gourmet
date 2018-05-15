@@ -22,7 +22,7 @@ import static com.yw.gourmet.data.MessageListData.SEND_FAIL;
  */
 
 public class MessageDataUtil {
-    public static final int LOAD_HISTORY_COUNT = 20;//一次加载历史记录的默认条数
+    public static final int LOAD_HISTORY_COUNT = 40;//一次加载历史记录的默认条数
 
     /**
      * 插入数据

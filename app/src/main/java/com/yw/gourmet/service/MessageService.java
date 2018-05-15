@@ -312,6 +312,7 @@ public class MessageService extends Service {
             @Override
             public void onSuccess(BaseData<MessageListData> model) {
                 Log.e(TAG, model.getData().toString());
+                messageListData.setId(model.getData().getId());
                 MessageCenter.getInstance().pushSendMessageResult(model, messageListData, position);
             }
 

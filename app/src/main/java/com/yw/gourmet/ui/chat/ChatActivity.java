@@ -502,14 +502,21 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
 
     @Override
     public void onSendSuccess(MessageListData messageListData, int position) {
+        Log.i(TAG,"success:"+position+";size:"+listData.size());
+        for (MessageListData data : listData){
+            Log.i(TAG,"success:"+data.toString());
+
+        }
         if (messageListData.getType() == MessageListData.VOICE_CHAT) {
             listData.add(messageListData);
             adapter.notifyItemInserted(listData.size() - 1);
             moveListBottom();
         } else {
+            Log.i(TAG,"success:"+messageListData.get_id()+":"+listData.get(position).get_id());
             if (!messageListData.get_id().equals(listData.get(position).get_id())) {//位置变了,需要重新获取位置
                 position = adapter.getPositionBy_id(messageListData.get_id());
             }
+            Log.i(TAG,"success:"+position);
             listData.get(position).setSendStatus(MessageListData.SEND_SUCCESS)
                     .setId(messageListData.getId());
             adapter.notifyItemChanged(position);
@@ -526,11 +533,11 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (recycler_chat.getAllHeihgt() >= (chatHeight == 0?fl_chat.getHeight():chatHeight )){
-                    ((LinearLayoutManager)recycler_chat.getLayoutManager()).setStackFromEnd(true);
-                }else {
-                    ((LinearLayoutManager)recycler_chat.getLayoutManager()).setStackFromEnd(false);
-                }
+//                if (recycler_chat.getAllHeihgt() >= (chatHeight == 0?fl_chat.getHeight():chatHeight )){
+//                    ((LinearLayoutManager)recycler_chat.getLayoutManager()).setStackFromEnd(true);
+//                }else {
+//                    ((LinearLayoutManager)recycler_chat.getLayoutManager()).setStackFromEnd(false);
+//                }
                 recycler_chat.smoothScrollToPosition(listData.size() - 1);
             }
         });
@@ -891,9 +898,6 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
      */
     public synchronized void reSendMessage(final int position) {
         MessageListData data = listData.get(position);
-        data.setSendStatus(MessageListData.SENDING);
-        mPresenter.updataDB(data);
-        adapter.notifyItemChanged(position);
         MultipartBody.Builder builder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("token", Constant.userData == null ? "0" : Constant.userData.getToken())
@@ -911,8 +915,13 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
                             .addFormDataPart("img", data.getImg());
                     mPresenter.sendMessage(builder.build().parts(), data, position);
                 } else {
+                    File ImgFile = new File(data.getImg());
+                    if (!fileIsExist(ImgFile)){
+                        ToastUtils.showSingleToast("图片已不存在");
+                        return;
+                    }
                     new Compressor(this)
-                            .compressToFileAsFlowable(new File(data.getImg()))
+                            .compressToFileAsFlowable(ImgFile)
                             .subscribeOn(Schedulers.io())
                             .observeOn(Schedulers.io())
                             .subscribe(new Consumer<File>() {
@@ -937,6 +946,10 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
                     mPresenter.sendMessage(builder.build().parts(), data, position);
                 } else {
                     File file = new File(data.getImg());
+                    if (!fileIsExist(file)){
+                        ToastUtils.showSingleToast("语音文件已不存在");
+                        return;
+                    }
                     AudioRecoderData audioRecoderData = new AudioRecoderData();
                     audioRecoderData.setFilePath(data.getImg());
                     audioRecoderData.setStartTime(0);
@@ -950,7 +963,17 @@ public class ChatActivity extends BaseActivity<ChatPresenter> implements ChatCon
                 }
                 break;
         }
+        data.setSendStatus(MessageListData.SENDING);
+        mPresenter.updataDB(data);
+        adapter.notifyItemChanged(position);
 
+    }
+
+    public boolean fileIsExist(File file){
+        if (file.exists()){
+            return true;
+        }
+        return false;
     }
 
     @Override

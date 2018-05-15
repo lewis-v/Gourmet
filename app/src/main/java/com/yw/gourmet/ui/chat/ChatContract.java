@@ -16,30 +16,49 @@ import okhttp3.MultipartBody;
  */
 
 public interface ChatContract {
-    interface View extends BaseView{
-        void onSendSuccess(MessageListData MessageListData,int position);
-        void onSendFail(MessageListData message,String msg,int position);
+    interface View extends BaseView {
+        void onSendSuccess(MessageListData MessageListData, int position);
+
+        void onSendFail(MessageListData message, String msg, int position);
+
         void onGetDetailSuccess(BaseData<List<MessageListData>> model);
-        void onUpImgSuccess(BaseData<String> model,int position);
-        void onUpImgFail(String msg,int position);
-        void onUpAudioSuccess(BaseData<String> model,int position,AudioRecoderData data);
-        void onUpAudioFail(String msg,int position);
+
+        void onUpImgSuccess(BaseData<String> model, int position);
+
+        void onUpImgFail(String msg, int position);
+
+        void onUpAudioSuccess(BaseData<String> model, int position, AudioRecoderData data);
+
+        void onUpAudioFail(String msg, int position);
+
         void onGetHistorySuccess(List<MessageListData> model);
+
         void onGetHistoryFail(String msg);
-        void  onGetUserInfoSuccess(UserData model);
+
+        void onGetUserInfoSuccess(UserData model);
     }
 
-    abstract class Presenter extends BasePresenter<View>{
-        abstract void sendMessage(List<MultipartBody.Part> parts,MessageListData messageListData,int position);
+    abstract class Presenter extends BasePresenter<View> {
+        abstract void sendMessage(List<MultipartBody.Part> parts, MessageListData messageListData, int position);
+
         abstract void getMessageDetail(List<MultipartBody.Part> parts);
+
         abstract void setMessageRead(List<MultipartBody.Part> parts);
-        abstract void upImg(List<MultipartBody.Part> parts,int position);
+
+        abstract void upImg(List<MultipartBody.Part> parts, int position);
+
         abstract void upAudio(List<MultipartBody.Part> parts, int position, AudioRecoderData data);
-        abstract void getHistory(String put_id,String get_id,int startId);
+
+        abstract void getHistory(String put_id, String get_id, int startId);
+
         abstract void insertDB(MessageListData messageListData);
+
         abstract void updataDB(MessageListData messageListData);
+
         abstract void getUserInfo(List<MultipartBody.Part> parts);
+
         abstract void onPause();
+
         abstract void onResume();
     }
 }

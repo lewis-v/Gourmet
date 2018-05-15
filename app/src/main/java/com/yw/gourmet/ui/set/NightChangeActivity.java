@@ -108,7 +108,9 @@ public class NightChangeActivity extends AppCompatActivity {
                         Intent intent = new Intent(NightChangeActivity.this, MainActivity.class);
                         intent.putExtra("position",3);
                         startActivity(intent);
+                        overridePendingTransition(R.anim.anim_view_enter_alpha,0);
                         startActivity(new Intent(NightChangeActivity.this,SetActivity.class));
+                        overridePendingTransition(R.anim.anim_view_enter_alpha,0);
                         finish();
                     }
 

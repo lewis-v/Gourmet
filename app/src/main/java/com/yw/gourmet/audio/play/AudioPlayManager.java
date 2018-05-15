@@ -203,7 +203,9 @@ public class AudioPlayManager {
      */
     public void destory(){
         if (playThread != null){
-            playThread.handler.sendEmptyMessage(QUIT);
+            if (playThread.handler != null) {
+                playThread.handler.sendEmptyMessage(QUIT);
+            }
             playThread.interrupt();
             playThread = null;
         }
