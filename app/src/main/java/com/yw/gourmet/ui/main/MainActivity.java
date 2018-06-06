@@ -203,7 +203,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
             img_search.setImageResource(R.drawable.search);
         }
         if (position != 3) {
-            img_my.setImageResource(R.drawable.search);
+            img_my.setImageResource(R.drawable.my);
         }
     }
 
