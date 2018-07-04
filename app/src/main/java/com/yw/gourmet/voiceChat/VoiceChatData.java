@@ -11,7 +11,7 @@ import com.yw.gourmet.R;
  */
 
 public class VoiceChatData {
-    public static final String IP = "39.108.236.30";
+    public static String IP = "39.108.236.30";
     public static final int PORT = 47999;
     public static final String CODE = "utf-8";
     public static final String ACTION = "VOICE_CHAT_END";

@@ -11,16 +11,20 @@ import android.widget.ProgressBar;
 
 import com.yw.gourmet.Constant;
 import com.yw.gourmet.R;
+import com.yw.gourmet.api.Api;
 import com.yw.gourmet.base.BaseActivity;
 import com.yw.gourmet.dao.data.messageData.MessageDataUtil;
 import com.yw.gourmet.data.BaseData;
 import com.yw.gourmet.data.InitData;
 import com.yw.gourmet.data.UserData;
+import com.yw.gourmet.dialog.MyDialogTipFragment;
 import com.yw.gourmet.push.PushManager;
 import com.yw.gourmet.ui.channel.ChannelActivity;
 import com.yw.gourmet.ui.chat.ChatActivity;
 import com.yw.gourmet.ui.main.MainActivity;
 import com.yw.gourmet.utils.SPUtils;
+import com.yw.gourmet.utils.ToastUtils;
+import com.yw.gourmet.voiceChat.VoiceChatData;
 
 import java.util.List;
 
@@ -33,6 +37,7 @@ public class FlashActivity extends BaseActivity<FlashPresenter> implements Flash
     private volatile boolean isFinish = false;
     private ProgressBar progress;
     private ValueAnimator valueAnimator;
+    private int num = 0;//重新连接次数
 
     /**
      * 初始化UI
@@ -121,9 +126,16 @@ public class FlashActivity extends BaseActivity<FlashPresenter> implements Flash
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
+                //因服务器迁移的临时做法
+                num++;
+                if (num == 4){
+                    Api.reSet("http://120.79.65.50:47423");
+                    VoiceChatData.IP = "120.79.65.50";
+                    ToastUtils.showSingleToast("由于种种原因,服务器可能过期了\n,现尝试连接到新的服务器");
+                }
                 mPresenter.Init();
             }
-        },1000);//失败后每1000ms重试一次
+        },3000);//失败后每3000ms重试一次
     }
 
     @Override

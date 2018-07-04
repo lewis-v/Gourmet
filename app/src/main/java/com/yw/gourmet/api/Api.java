@@ -37,7 +37,7 @@ import rx.Observable;
  */
 
 public class Api {
-    public final static String API_BASE_URL = "http://39.108.236.30:47423";//这里是服务器连接的接口的固定部分 39.108.236.30
+    public static String API_BASE_URL = "http://39.108.236.30:47423";//这里是服务器连接的接口的固定部分 39.108.236.30/120.79.65.50
     public static Api instance;//单例
     private ApiService service;//声明apiservier,下面要通过这个调用与服务器交互的方法
     private OkHttpClient okHttpClient;
@@ -58,6 +58,14 @@ public class Api {
         }
     };
 
+    /**
+     * 因服务器迁移临时加入的方法,此处不建议使用,后期会直接删除
+     * @param url
+     */
+    public static void reSet(String url){
+        API_BASE_URL = url;
+        instance = new Api();
+    }
 
     public Api() {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();//打印出请求的信息的拦截器
